@@ -1,11 +1,13 @@
 import Reveal from "./Reveal";
 import Button from "./Button";
+import { PhoneIcon } from "./icons";
 
 type CtaBannerProps = {
   eyebrow?: string;
   title?: string;
   description?: string;
   secondaryLabel?: string;
+  secondaryHref?: string;
 };
 
 export default function CtaBanner({
@@ -13,12 +15,13 @@ export default function CtaBanner({
   title = "Sẵn sàng bắt đầu cùng MAX OFFICE?",
   description = "Nhận tư vấn miễn phí trong 15 phút — đội ngũ chuyên viên sẽ liên hệ và đề xuất giải pháp phù hợp với bạn.",
   secondaryLabel = "Đặt lịch tư vấn",
+  secondaryHref = "/#lead",
 }: CtaBannerProps) {
   return (
     <section id="lead" className="py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <Reveal
-          className="relative flex flex-wrap items-center justify-between gap-8 overflow-hidden rounded-[24px] bg-gradient-to-tr from-navy to-primary-dark p-8 shadow-[0_30px_70px_rgba(11,31,58,0.28)] sm:p-12 lg:p-16"
+          className="relative grid grid-cols-1 items-center gap-8 overflow-hidden rounded-[24px] bg-gradient-to-tr from-navy to-primary-dark p-8 shadow-[0_30px_70px_rgba(11,31,58,0.28)] sm:p-12 lg:grid-cols-[1.8fr_1fr] lg:p-16"
         >
           <div
             aria-hidden
@@ -39,18 +42,30 @@ export default function CtaBanner({
               {description}
             </p>
             <p className="mt-3 text-[13.5px] text-white/55">
-              Hotline: 089 8082 188 · Email: maxoffice247@gmail.com
+              Hotline: 089 8082 188 · Email: cskh@maxoffice.vn
             </p>
           </div>
-          <div className="relative flex flex-wrap gap-3.5">
-            <Button href="tel:0898082188" variant="primary">
+          <div className="relative flex flex-col gap-3">
+            <Button
+              href="tel:0898082188"
+              variant="primary"
+              icon={<PhoneIcon className="h-3.5 w-3.5" />}
+              className="w-full !px-5 !py-3 !text-[13.5px]"
+            >
               Gọi ngay 089 8082 188
             </Button>
             <Button
-              href="https://zalo.me/0898082188"
+              href="tel:0932357357"
+              variant="primary"
+              icon={<PhoneIcon className="h-3.5 w-3.5" />}
+              className="w-full !px-5 !py-3 !text-[13.5px]"
+            >
+              Gọi ngay 0932 357 357
+            </Button>
+            <Button
+              href={secondaryHref}
               variant="outline"
-              target="_blank"
-              rel="noopener"
+              className="w-full !px-5 !py-3 !text-[13.5px]"
             >
               {secondaryLabel}
             </Button>

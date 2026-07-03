@@ -47,7 +47,7 @@ export default function Footer() {
               <br />
               Hotline: 089 8082 188 – 0932 357 357
               <br />
-              Email: maxoffice247@gmail.com
+              Email: cskh@maxoffice.vn
             </p>
           </div>
           <div>

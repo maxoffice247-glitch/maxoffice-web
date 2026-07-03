@@ -26,7 +26,7 @@ const RELATED_SERVICES = [
 const FAQS = [
   { q: "Chi phí thành lập công ty có gì khác nhau giữa các loại hình?", a: "Hộ kinh doanh có chi phí thấp nhất, phù hợp mô hình nhỏ. Công ty TNHH và Cổ phần có chi phí cao hơn nhưng có tư cách pháp nhân, phù hợp mở rộng quy mô." },
   { q: "Đăng ký kèm Văn phòng ảo giúp tiết kiệm bao nhiêu?", a: "Mức giá kèm Văn phòng ảo thấp hơn đáng kể so với đăng ký thành lập riêng lẻ — ví dụ Hộ kinh doanh chỉ từ 800.000đ thay vì 1.000.000đ." },
-  { q: "Lệ phí môn bài được tính như thế nào trong công cụ này?", a: "Công cụ áp dụng mức 300.000đ cho vốn điều lệ từ 10 tỷ đồng trở xuống, và 1.000.000đ/năm cho vốn trên 10 tỷ đồng." },
+  { q: "Chi phí trên đã bao gồm lệ phí môn bài chưa?", a: "Từ 01/01/2026, lệ phí môn bài đã được bãi bỏ theo Nghị quyết 198/2025/QH15 nên công cụ không còn tính khoản này — chi phí hiển thị chỉ gồm phí dịch vụ thành lập." },
   { q: "Kế toán thuế trọn gói có bắt buộc phải đăng ký không?", a: "Không bắt buộc. Đây là dịch vụ tuỳ chọn thêm — bạn có thể chọn \"Có\" trong công cụ để xem chi phí ước tính." },
   { q: "Kết quả tính toán có phải báo giá chính thức không?", a: "Đây là ước tính tham khảo. Đội ngũ MAX OFFICE sẽ gửi báo giá chính xác sau khi tư vấn chi tiết theo ngành nghề và loại hình cụ thể." },
   { q: "Tôi chưa xác định vốn điều lệ thì phải làm sao?", a: "Bạn có thể nhập 0 hoặc một con số dự kiến — chuyên viên MAX OFFICE sẽ tư vấn mức vốn điều lệ phù hợp khi liên hệ tư vấn." },

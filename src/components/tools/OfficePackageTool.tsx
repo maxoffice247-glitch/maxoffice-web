@@ -7,31 +7,24 @@ import Reveal from "../Reveal";
 import Button from "../Button";
 import { CheckCircleIcon, BuildingIcon, UsersIcon, KeyIcon, ScreenIcon } from "../icons";
 
-type Employees = "1" | "2-3" | "4-10" | "tren-10";
-type Budget = "duoi-500k" | "500k-2trieu" | "2-5trieu" | "tren-5trieu";
+type SpaceNeed = "khong" | "linh-hoat" | "rieng";
+type Budget = "duoi-2trieu" | "2-4.5trieu" | "4.5-10trieu" | "tren-10trieu";
 type YesNo = "yes" | "no";
 type MeetingFreq = "khong" | "it" | "thuong-xuyen";
 
 type Answers = {
-  employees: Employees | "";
+  employees: string;
   budget: Budget | "";
   needLegalAddress: YesNo | "";
-  needPrivateSpace: YesNo | "";
+  spaceNeed: SpaceNeed | "";
   meetingFreq: MeetingFreq | "";
 };
 
-const EMPLOYEES_OPTIONS: { value: Employees; label: string }[] = [
-  { value: "1", label: "1 người" },
-  { value: "2-3", label: "2-3 người" },
-  { value: "4-10", label: "4-10 người" },
-  { value: "tren-10", label: "Trên 10 người" },
-];
-
 const BUDGET_OPTIONS: { value: Budget; label: string }[] = [
-  { value: "duoi-500k", label: "Dưới 500.000đ" },
-  { value: "500k-2trieu", label: "500.000đ - 2.000.000đ" },
-  { value: "2-5trieu", label: "2.000.000đ - 5.000.000đ" },
-  { value: "tren-5trieu", label: "Trên 5.000.000đ" },
+  { value: "duoi-2trieu", label: "Dưới 2.000.000đ" },
+  { value: "2-4.5trieu", label: "2.000.000đ - 4.500.000đ" },
+  { value: "4.5-10trieu", label: "4.500.000đ - 10.000.000đ" },
+  { value: "tren-10trieu", label: "Trên 10.000.000đ" },
 ];
 
 const YES_NO_OPTIONS: { value: YesNo; label: string }[] = [
@@ -39,11 +32,19 @@ const YES_NO_OPTIONS: { value: YesNo; label: string }[] = [
   { value: "no", label: "Không" },
 ];
 
+const SPACE_NEED_OPTIONS: { value: SpaceNeed; label: string }[] = [
+  { value: "khong", label: "Không cần — chỉ cần địa chỉ đăng ký" },
+  { value: "linh-hoat", label: "Cần chỗ ngồi, nhưng linh hoạt không cố định" },
+  { value: "rieng", label: "Cần không gian / phòng riêng cố định" },
+];
+
 const MEETING_OPTIONS: { value: MeetingFreq; label: string }[] = [
-  { value: "khong", label: "Không họp / hiếm khi" },
-  { value: "it", label: "1-3 lần/tháng" },
+  { value: "khong", label: "Không bao giờ họp trực tiếp" },
+  { value: "it", label: "Thỉnh thoảng (1-3 lần/tháng)" },
   { value: "thuong-xuyen", label: "Thường xuyên (>3 lần/tháng)" },
 ];
+
+const COWORKING_PRICE_PER_HEAD = 2000000;
 
 const PACKAGES = {
   "van-phong-ao": {
@@ -60,9 +61,9 @@ const PACKAGES = {
     icon: UsersIcon,
     name: "Chỗ ngồi linh động",
     price: "2.000.000đ",
-    unit: "/ tháng",
+    unit: "/ người / tháng",
     reason:
-      "Với quy mô đội ngũ nhỏ, chỗ ngồi linh động giúp bạn có nơi làm việc chuyên nghiệp mà không phải cam kết không gian cố định.",
+      "Với nhu cầu chỗ ngồi linh hoạt, không cố định, chỗ ngồi linh động giúp đội ngũ có nơi làm việc chuyên nghiệp mà không phải cam kết không gian riêng.",
   },
   "van-phong-tron-goi": {
     slug: "van-phong-tron-goi",
@@ -71,7 +72,16 @@ const PACKAGES = {
     price: "4.500.000đ",
     unit: "/ tháng",
     reason:
-      "Bạn cần không gian riêng cho đội ngũ — văn phòng trọn gói sẵn sàng sử dụng ngay với đầy đủ tiện ích.",
+      "Bạn cần không gian riêng cơ bản cho đội ngũ 4-6 người — văn phòng trọn gói sẵn sàng sử dụng ngay với đầy đủ tiện ích.",
+  },
+  "phong-rieng-lon": {
+    slug: "van-phong-tron-goi",
+    icon: KeyIcon,
+    name: "Gói phòng riêng lớn",
+    price: "10.000.000đ",
+    unit: "/ tháng",
+    reason:
+      "Đội ngũ 7-10 người cần phòng riêng rộng hơn (khoảng 20m²) — gói phòng riêng lớn đáp ứng đủ không gian và tiện ích cho quy mô này.",
   },
   "phong-hop": {
     slug: "phong-hop",
@@ -80,34 +90,28 @@ const PACKAGES = {
     price: "150.000đ",
     unit: "/ giờ",
     reason:
-      "Bạn họp khá thường xuyên nhưng không cần không gian cố định — đặt phòng họp theo giờ sẽ tối ưu chi phí hơn.",
+      "Bạn không cần chỗ ngồi cố định nhưng thỉnh thoảng cần gặp khách hàng/đối tác — đặt phòng họp theo giờ sẽ tối ưu chi phí hơn.",
   },
 } as const;
 
 type PackageKey = keyof typeof PACKAGES;
 
 function recommend(a: Answers): PackageKey {
-  const { employees, budget, needLegalAddress, needPrivateSpace, meetingFreq } = a;
+  const { spaceNeed, meetingFreq, employees } = a;
 
-  if (needPrivateSpace === "yes") {
-    return "van-phong-tron-goi";
+  // Chỉ cần địa chỉ pháp lý, không cần không gian làm việc.
+  if (spaceNeed === "khong") {
+    return meetingFreq === "khong" ? "van-phong-ao" : "phong-hop";
   }
-  if (needLegalAddress === "yes" && budget === "duoi-500k") {
-    return "van-phong-ao";
-  }
-  if (meetingFreq === "thuong-xuyen" && needLegalAddress !== "yes") {
-    return "phong-hop";
-  }
-  if (employees === "1" || employees === "2-3") {
+
+  // Cần chỗ ngồi, nhưng linh hoạt, không cố định — tính theo đầu người.
+  if (spaceNeed === "linh-hoat") {
     return "cho-ngoi-linh-dong";
   }
-  if (needLegalAddress === "yes") {
-    return "van-phong-ao";
-  }
-  if (budget === "duoi-500k") return "van-phong-ao";
-  if (budget === "500k-2trieu") return "cho-ngoi-linh-dong";
-  if (budget === "2-5trieu") return "van-phong-tron-goi";
-  return "van-phong-tron-goi";
+
+  // spaceNeed === "rieng": cần không gian/phòng riêng cố định — chọn theo quy mô.
+  const n = Number(employees) || 0;
+  return n >= 7 ? "phong-rieng-lon" : "van-phong-tron-goi";
 }
 
 function PillGroup<T extends string>({
@@ -139,28 +143,26 @@ function PillGroup<T extends string>({
   );
 }
 
-const QUESTIONS: {
-  key: keyof Answers;
-  label: string;
-}[] = [
-  { key: "employees", label: "Số nhân viên hiện tại của bạn?" },
-  { key: "budget", label: "Ngân sách hàng tháng dự kiến?" },
-  { key: "needLegalAddress", label: "Bạn có cần địa chỉ đăng ký kinh doanh hợp pháp không?" },
-  { key: "needPrivateSpace", label: "Bạn có cần không gian làm việc riêng, cố định không?" },
-  { key: "meetingFreq", label: "Tần suất họp với khách hàng/đối tác mỗi tháng?" },
-];
+const inputClass =
+  "w-full max-w-[200px] rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none";
 
 export default function OfficePackageTool() {
   const [answers, setAnswers] = useState<Answers>({
     employees: "",
     budget: "",
     needLegalAddress: "",
-    needPrivateSpace: "",
+    spaceNeed: "",
     meetingFreq: "",
   });
   const [result, setResult] = useState<PackageKey | null>(null);
 
-  const allAnswered = Object.values(answers).every((v) => v !== "");
+  const allAnswered =
+    answers.employees !== "" &&
+    Number(answers.employees) > 0 &&
+    answers.budget !== "" &&
+    answers.needLegalAddress !== "" &&
+    answers.spaceNeed !== "" &&
+    answers.meetingFreq !== "";
 
   const handleSubmit = () => {
     if (!allAnswered) return;
@@ -172,13 +174,15 @@ export default function OfficePackageTool() {
       employees: "",
       budget: "",
       needLegalAddress: "",
-      needPrivateSpace: "",
+      spaceNeed: "",
       meetingFreq: "",
     });
     setResult(null);
   };
 
   const pkg = result ? PACKAGES[result] : null;
+  const employeeCount = Number(answers.employees) || 0;
+  const coworkingTotal = employeeCount * COWORKING_PRICE_PER_HEAD;
 
   return (
     <section className="py-9">
@@ -192,48 +196,69 @@ export default function OfficePackageTool() {
         {!result ? (
           <Reveal className="mx-auto max-w-[760px] rounded-2xl border border-line bg-white p-7 sm:p-9">
             <div className="space-y-7">
-              {QUESTIONS.map((q) => (
-                <div key={q.key}>
-                  <label className="mb-3 block text-[15px] font-bold text-navy">
-                    {q.label}
-                  </label>
-                  {q.key === "employees" && (
-                    <PillGroup
-                      options={EMPLOYEES_OPTIONS}
-                      value={answers.employees}
-                      onChange={(v) => setAnswers((a) => ({ ...a, employees: v }))}
-                    />
-                  )}
-                  {q.key === "budget" && (
-                    <PillGroup
-                      options={BUDGET_OPTIONS}
-                      value={answers.budget}
-                      onChange={(v) => setAnswers((a) => ({ ...a, budget: v }))}
-                    />
-                  )}
-                  {q.key === "needLegalAddress" && (
-                    <PillGroup
-                      options={YES_NO_OPTIONS}
-                      value={answers.needLegalAddress}
-                      onChange={(v) => setAnswers((a) => ({ ...a, needLegalAddress: v }))}
-                    />
-                  )}
-                  {q.key === "needPrivateSpace" && (
-                    <PillGroup
-                      options={YES_NO_OPTIONS}
-                      value={answers.needPrivateSpace}
-                      onChange={(v) => setAnswers((a) => ({ ...a, needPrivateSpace: v }))}
-                    />
-                  )}
-                  {q.key === "meetingFreq" && (
-                    <PillGroup
-                      options={MEETING_OPTIONS}
-                      value={answers.meetingFreq}
-                      onChange={(v) => setAnswers((a) => ({ ...a, meetingFreq: v }))}
-                    />
-                  )}
+              <div>
+                <label className="mb-3 block text-[15px] font-bold text-navy">
+                  Số nhân viên hiện tại của bạn?
+                </label>
+                <div className="flex items-center gap-2.5">
+                  <input
+                    type="number"
+                    min={1}
+                    inputMode="numeric"
+                    placeholder="Ví dụ: 3"
+                    value={answers.employees}
+                    onChange={(e) =>
+                      setAnswers((a) => ({ ...a, employees: e.target.value }))
+                    }
+                    className={inputClass}
+                  />
+                  <span className="text-[13.5px] text-body-text">người</span>
                 </div>
-              ))}
+              </div>
+
+              <div>
+                <label className="mb-3 block text-[15px] font-bold text-navy">
+                  Ngân sách hàng tháng dự kiến?
+                </label>
+                <PillGroup
+                  options={BUDGET_OPTIONS}
+                  value={answers.budget}
+                  onChange={(v) => setAnswers((a) => ({ ...a, budget: v }))}
+                />
+              </div>
+
+              <div>
+                <label className="mb-3 block text-[15px] font-bold text-navy">
+                  Bạn có cần địa chỉ đăng ký kinh doanh hợp pháp không?
+                </label>
+                <PillGroup
+                  options={YES_NO_OPTIONS}
+                  value={answers.needLegalAddress}
+                  onChange={(v) => setAnswers((a) => ({ ...a, needLegalAddress: v }))}
+                />
+              </div>
+
+              <div>
+                <label className="mb-3 block text-[15px] font-bold text-navy">
+                  Nhu cầu không gian làm việc của bạn?
+                </label>
+                <PillGroup
+                  options={SPACE_NEED_OPTIONS}
+                  value={answers.spaceNeed}
+                  onChange={(v) => setAnswers((a) => ({ ...a, spaceNeed: v }))}
+                />
+              </div>
+
+              <div>
+                <label className="mb-3 block text-[15px] font-bold text-navy">
+                  Tần suất họp với khách hàng/đối tác mỗi tháng?
+                </label>
+                <PillGroup
+                  options={MEETING_OPTIONS}
+                  value={answers.meetingFreq}
+                  onChange={(v) => setAnswers((a) => ({ ...a, meetingFreq: v }))}
+                />
+              </div>
             </div>
 
             <button
@@ -246,7 +271,7 @@ export default function OfficePackageTool() {
             </button>
             {!allAnswered && (
               <p className="mt-3 text-center text-[12.5px] text-body-text">
-                Vui lòng trả lời đầy đủ {QUESTIONS.length} câu hỏi để xem kết quả.
+                Vui lòng trả lời đầy đủ các câu hỏi (số nhân viên lớn hơn 0) để xem kết quả.
               </p>
             )}
           </Reveal>
@@ -263,10 +288,23 @@ export default function OfficePackageTool() {
                 <h3 className="mb-2 font-display text-[26px] font-extrabold text-white">
                   {pkg.name}
                 </h3>
-                <div className="font-mono text-[32px] font-bold text-white">
-                  {pkg.price}
-                  <span className="text-[16px] font-medium text-white/70">{pkg.unit}</span>
-                </div>
+                {result === "cho-ngoi-linh-dong" ? (
+                  <>
+                    <div className="font-mono text-[32px] font-bold text-white">
+                      {coworkingTotal.toLocaleString("vi-VN")}đ
+                      <span className="text-[16px] font-medium text-white/70"> / tháng</span>
+                    </div>
+                    <p className="mt-2 text-[13.5px] text-white/70">
+                      2.000.000đ/người × {employeeCount} người ={" "}
+                      {coworkingTotal.toLocaleString("vi-VN")}đ/tháng
+                    </p>
+                  </>
+                ) : (
+                  <div className="font-mono text-[32px] font-bold text-white">
+                    {pkg.price}
+                    <span className="text-[16px] font-medium text-white/70">{pkg.unit}</span>
+                  </div>
+                )}
               </div>
               <div className="p-7 sm:p-9">
                 <p className="mb-6 text-[15px] leading-relaxed text-body-text">

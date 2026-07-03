@@ -10,8 +10,8 @@ const CHANNELS = [
   {
     icon: BuildingIcon,
     label: "Email",
-    value: "maxoffice247@gmail.com",
-    href: "mailto:maxoffice247@gmail.com",
+    value: "cskh@maxoffice.vn",
+    href: "mailto:cskh@maxoffice.vn",
   },
 ];
 

@@ -123,7 +123,7 @@ export default function Header() {
               icon={<PhoneIcon />}
               className="max-sm:hidden !py-3"
             >
-              Hotline: 089 8082 188
+              089 8082 188
             </Button>
             <button
               type="button"

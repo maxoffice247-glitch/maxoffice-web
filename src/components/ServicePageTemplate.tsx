@@ -24,7 +24,7 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
       "@type": "Organization",
       name: "MAX OFFICE",
       telephone: "+84898082188",
-      email: "maxoffice247@gmail.com",
+      email: "cskh@maxoffice.vn",
       address: {
         "@type": "PostalAddress",
         streetAddress: "Số 10 Sông Thao, P. Tân Sơn Hoà",
@@ -114,7 +114,7 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
       />
       <ServiceCrossLinks currentSlug={data.slug} />
       <ServiceLeadForm serviceName={data.name} />
-      <CtaBanner />
+      <CtaBanner secondaryHref="#lead-form" />
     </main>
   );
 }

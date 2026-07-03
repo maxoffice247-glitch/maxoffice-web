@@ -10,7 +10,7 @@ import { KeyIcon, DocumentCheckIcon, BadgePercentIcon, ArrowRightSmallIcon } fro
 export const metadata: Metadata = {
   title: "Tiện Ích Miễn Phí - Công Cụ Hỗ Trợ Doanh Nghiệp | MAX OFFICE",
   description:
-    "3 công cụ miễn phí giúp bạn chọn gói văn phòng phù hợp, tính chi phí thành lập công ty và tính lệ phí môn bài — nhanh chóng, chính xác, không mất phí.",
+    "Công cụ miễn phí giúp bạn chọn gói văn phòng phù hợp, tính chi phí thành lập công ty và cập nhật quy định mới nhất về lệ phí môn bài — nhanh chóng, chính xác, không mất phí.",
 };
 
 const TOOLS = [
@@ -19,18 +19,21 @@ const TOOLS = [
     icon: KeyIcon,
     title: "Chọn gói văn phòng phù hợp",
     desc: "Trả lời 5 câu hỏi ngắn để nhận gợi ý gói văn phòng tối ưu nhất cho nhu cầu và ngân sách của bạn.",
+    linkLabel: "Dùng công cụ ngay",
   },
   {
     slug: "tinh-chi-phi-thanh-lap",
     icon: DocumentCheckIcon,
     title: "Tính chi phí thành lập công ty",
     desc: "Ước tính chi phí thành lập Hộ kinh doanh, Công ty TNHH hoặc Công ty Cổ phần theo bảng giá mới nhất.",
+    linkLabel: "Dùng công cụ ngay",
   },
   {
     slug: "tinh-le-phi-mon-bai",
     icon: BadgePercentIcon,
-    title: "Tính lệ phí môn bài",
-    desc: "Tính chính xác mức lệ phí môn bài cần đóng theo loại hình doanh nghiệp và vốn điều lệ.",
+    title: "Lệ phí môn bài đã bãi bỏ",
+    desc: "Cập nhật quy định mới nhất: từ 01/01/2026, lệ phí môn bài đã chính thức bãi bỏ theo Nghị quyết 198/2025/QH15.",
+    linkLabel: "Xem quy định mới",
   },
 ];
 
@@ -41,7 +44,7 @@ export default function TienIchPage() {
         image="/images/khong-gian-lam-viec.png"
         eyebrow="Tiện ích"
         title="Công cụ miễn phí hỗ trợ doanh nghiệp"
-        description="3 công cụ tính toán miễn phí giúp bạn ra quyết định nhanh chóng — chọn đúng gói văn phòng, ước tính chi phí thành lập và lệ phí môn bài."
+        description="Công cụ miễn phí giúp bạn ra quyết định nhanh chóng — chọn đúng gói văn phòng, ước tính chi phí thành lập và cập nhật quy định thuế, phí mới nhất."
       />
       <Breadcrumb items={[{ label: "Tiện ích" }]} />
 
@@ -69,7 +72,7 @@ export default function TienIchPage() {
                     icon={<ArrowRightSmallIcon />}
                     className="group-hover:gap-2.5"
                   >
-                    Dùng công cụ ngay
+                    {tool.linkLabel}
                   </Button>
                 </div>
               </RevealItem>

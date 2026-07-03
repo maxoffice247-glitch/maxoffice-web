@@ -23,10 +23,6 @@ const SETUP_FEES: Record<EntityType, { included: number; standalone: number; lab
   "co-phan": { included: 1500000, standalone: 2000000, label: "Công ty Cổ phần" },
 };
 
-const MON_BAI_UNDER_10TY = 300000;
-const MON_BAI_OVER_10TY = 1000000;
-const TEN_TY = 10_000_000_000;
-
 const KE_TOAN_STARTUP = 800000;
 const KE_TOAN_BUSINESS = 1500000;
 
@@ -42,8 +38,6 @@ export default function SetupCostTool() {
   const [needAccounting, setNeedAccounting] = useState<"yes" | "no" | "">("");
   const [submitted, setSubmitted] = useState(false);
 
-  const capitalNumber = Number(capital.replace(/[^\d]/g, "")) || 0;
-
   const allAnswered =
     entityType !== "" && withVirtualOffice !== "" && capital !== "" && needAccounting !== "";
 
@@ -51,16 +45,12 @@ export default function SetupCostTool() {
     if (!submitted || entityType === "" || withVirtualOffice === "") return null;
     const fee = SETUP_FEES[entityType];
     const setupCost = withVirtualOffice === "yes" ? fee.included : fee.standalone;
-    const monBai = capitalNumber > TEN_TY ? MON_BAI_OVER_10TY : MON_BAI_UNDER_10TY;
-    const oneTimeTotal = setupCost + monBai;
     return {
       entityLabel: fee.label,
       setupCost,
-      monBai,
-      oneTimeTotal,
       needAccounting: needAccounting === "yes",
     };
-  }, [submitted, entityType, withVirtualOffice, capitalNumber, needAccounting]);
+  }, [submitted, entityType, withVirtualOffice, needAccounting]);
 
   const handleSubmit = () => {
     if (!allAnswered) return;
@@ -226,25 +216,18 @@ export default function SetupCostTool() {
             </div>
             <div className="p-7 sm:p-8">
               <ul className="mb-5 space-y-3.5">
-                <li className="flex items-center justify-between border-b border-line pb-3.5">
-                  <span className="text-[14.5px] text-body-text">Phí dịch vụ thành lập</span>
-                  <span className="font-mono text-[16px] font-bold text-navy">
-                    {formatVND(result.setupCost)}
-                  </span>
-                </li>
-                <li className="flex items-center justify-between border-b border-line pb-3.5">
-                  <span className="text-[14.5px] text-body-text">Lệ phí môn bài (năm đầu)</span>
-                  <span className="font-mono text-[16px] font-bold text-navy">
-                    {formatVND(result.monBai)}
-                  </span>
-                </li>
                 <li className="flex items-center justify-between">
                   <span className="text-[15px] font-bold text-navy">Tổng chi phí ban đầu</span>
                   <span className="font-mono text-[22px] font-bold text-primary">
-                    {formatVND(result.oneTimeTotal)}
+                    {formatVND(result.setupCost)}
                   </span>
                 </li>
               </ul>
+              <p className="mb-6 flex items-start gap-2 rounded-xl bg-primary-tint p-3.5 text-[12.5px] leading-relaxed text-navy">
+                <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                Từ 01/01/2026, lệ phí môn bài đã được bãi bỏ theo Nghị quyết 198/2025/QH15 nên
+                không còn tính vào chi phí ban đầu.
+              </p>
 
               {result.needAccounting && (
                 <div className="mb-6 rounded-xl bg-primary-tint p-4">

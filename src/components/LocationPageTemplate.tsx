@@ -21,7 +21,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
     name: `MAX OFFICE - ${data.name}`,
     image: data.image,
     telephone: "+84898082188",
-    email: "maxoffice247@gmail.com",
+    email: "cskh@maxoffice.vn",
     address: {
       "@type": "PostalAddress",
       streetAddress: data.address,
@@ -86,6 +86,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         title="Đặt lịch tham quan miễn phí ngay hôm nay"
         description={`Ghé thăm trực tiếp văn phòng ${data.name} — đội ngũ MAX OFFICE sẽ đón tiếp và tư vấn giải pháp phù hợp với bạn.`}
         secondaryLabel="Đặt lịch tham quan miễn phí"
+        secondaryHref="#lead-form"
       />
     </main>
   );

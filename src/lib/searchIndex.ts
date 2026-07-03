@@ -241,9 +241,9 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "Ước tính chi phí thành lập theo bảng giá mới nhất",
   },
   {
-    title: "Công cụ tính lệ phí môn bài",
+    title: "Lệ phí môn bài đã bãi bỏ",
     category: "Tiện ích",
     href: "/tien-ich/tinh-le-phi-mon-bai",
-    desc: "Tính chính xác lệ phí môn bài cần đóng",
+    desc: "Cập nhật quy định mới: bãi bỏ từ 01/01/2026 theo Nghị quyết 198/2025/QH15",
   },
 ];
