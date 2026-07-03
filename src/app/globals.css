@@ -1,26 +1,136 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #1565c0;
+  --color-primary-dark: #0d47a1;
+  --color-primary-tint: #e9f2fc;
+  --color-accent: #e53935;
+  --color-accent-dark: #c62828;
+  --color-navy: #0b1f3a;
+  --color-ink: #0f1b2d;
+  --color-body-text: #4b5768;
+  --color-line: #e5e9f0;
+  --color-bg: #fafaf9;
+  --color-bg-tint: #f3f7fc;
+
+  --shadow-soft: 0 2px 8px rgba(15, 27, 45, 0.06);
+  --shadow-card: 0 10px 30px rgba(15, 27, 45, 0.08);
+  --shadow-float: 0 24px 60px rgba(11, 31, 58, 0.18);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-be-vietnam-pro);
+  --font-display: var(--font-be-vietnam-pro);
+  --font-mono: var(--font-inter);
+
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-tint: var(--color-primary-tint);
+  --color-accent: var(--color-accent);
+  --color-accent-dark: var(--color-accent-dark);
+  --color-navy: var(--color-navy);
+  --color-ink: var(--color-ink);
+  --color-body-text: var(--color-body-text);
+  --color-line: var(--color-line);
+  --color-bg: var(--color-bg);
+  --color-bg-tint: var(--color-bg-tint);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-card: var(--shadow-card);
+  --shadow-float: var(--shadow-float);
+
+  --ease-premium: cubic-bezier(0.22, 0.9, 0.32, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+@keyframes pulse-call {
+  0% {
+    box-shadow:
+      0 10px 24px rgba(0, 0, 0, 0.22),
+      0 0 0 0 rgba(229, 57, 53, 0.45);
+  }
+  70% {
+    box-shadow:
+      0 10px 24px rgba(0, 0, 0, 0.22),
+      0 0 0 14px rgba(229, 57, 53, 0);
+  }
+  100% {
+    box-shadow:
+      0 10px 24px rgba(0, 0, 0, 0.22),
+      0 0 0 0 rgba(229, 57, 53, 0);
+  }
+}
+
+.animate-pulse-call {
+  animation: pulse-call 2.4s infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 70s linear infinite;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--color-line);
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary);
+}
+
+/* Justified alignment for long description paragraphs (service/location/about
+   intros). text-justify: inter-word keeps Vietnamese diacritics readable by
+   stretching the spaces between words rather than letter-spacing. */
+.text-justify-vn {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Marquee is functional content (auto-scrolling logo list), not a
+     decorative motion effect — keep it running even for users who have
+     requested reduced motion. It already offers a pause-on-hover control. */
+  .animate-marquee {
+    animation-duration: 70s !important;
+    animation-iteration-count: infinite !important;
+  }
 }
