@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import Button from "../Button";
+import CurrencyInput from "../CurrencyInput";
 import { CheckCircleIcon, DocumentCheckIcon } from "../icons";
 
 type EntityType = "ho-kinh-doanh" | "tnhh-1tv" | "tnhh-2tv" | "co-phan";
@@ -136,12 +137,10 @@ export default function SetupCostTool() {
                   <label className="mb-1.5 block text-[13px] font-bold text-navy">
                     Vốn điều lệ dự kiến (VNĐ)
                   </label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
+                  <CurrencyInput
                     placeholder="Ví dụ: 1.000.000.000"
                     value={capital}
-                    onChange={(e) => setCapital(e.target.value)}
+                    onChange={setCapital}
                     className={inputClass}
                   />
                 </div>
