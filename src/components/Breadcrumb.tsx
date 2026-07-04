@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HomeIcon, ChevronRightIcon } from "./icons";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export type BreadcrumbItem = {
   label: string;
@@ -7,8 +8,26 @@ export type BreadcrumbItem = {
 };
 
 export default function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Trang chủ", item: `${SITE_URL}/` },
+      ...items.map((item, i) => ({
+        "@type": "ListItem",
+        position: i + 2,
+        name: item.label,
+        ...(item.href ? { item: `${SITE_URL}${item.href}` } : {}),
+      })),
+    ],
+  };
+
   return (
     <nav aria-label="Breadcrumb" className="border-b border-line bg-bg-tint">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="mx-auto max-w-[1240px] px-5 py-3.5 sm:px-8">
         <ol className="flex flex-wrap items-center gap-1.5 text-[13px] text-body-text">
           <li className="flex items-center gap-1.5">

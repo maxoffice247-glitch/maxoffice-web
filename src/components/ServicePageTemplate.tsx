@@ -12,6 +12,7 @@ import Testimonials from "./Testimonials";
 import Faq from "./Faq";
 import CtaBanner from "./CtaBanner";
 import type { ServiceData } from "@/lib/servicesData";
+import { SITE_URL, SITE_NAME, COMPANY_PHONE, COMPANY_EMAIL } from "@/lib/siteConfig";
 
 export default function ServicePageTemplate({ data }: { data: ServiceData }) {
   const serviceSchema = {
@@ -22,9 +23,9 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
     description: data.heroDescription,
     provider: {
       "@type": "Organization",
-      name: "MAX OFFICE",
-      telephone: "+84898082188",
-      email: "cskh@maxoffice.vn",
+      name: SITE_NAME,
+      telephone: COMPANY_PHONE,
+      email: COMPANY_EMAIL,
       address: {
         "@type": "PostalAddress",
         streetAddress: "Số 10 Sông Thao, P. Tân Sơn Hoà",
@@ -36,20 +37,8 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
       "@type": "City",
       name: "Thành phố Hồ Chí Minh",
     },
-    image: data.image,
-  };
-
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: data.faqs.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: f.a,
-      },
-    })),
+    image: `${SITE_URL}${data.image}`,
+    url: `${SITE_URL}/services/${data.slug}`,
   };
 
   return (
@@ -57,10 +46,6 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       <PageHero

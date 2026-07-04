@@ -62,8 +62,27 @@ export default function Faq({
 }: FaqProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
+  const faqSchema =
+    items.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: items.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: { "@type": "Answer", text: item.a },
+          })),
+        }
+      : null;
+
   return (
     <section id={id} className={`py-9 ${tint ? "bg-bg-tint" : ""}`}>
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <SectionHead eyebrow={eyebrow} title={title} description={description} />
         <Reveal className="mx-auto max-w-[800px]">

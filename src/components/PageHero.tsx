@@ -28,7 +28,7 @@ export default function PageHero({
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(11,19,35,0.55)] via-[rgba(11,19,35,0.62)] to-[rgba(9,15,28,0.74)]" />
-        <div className="absolute inset-x-0 top-0 h-[110px] bg-gradient-to-b from-[rgba(6,12,24,0.72)] to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[110px] bg-gradient-to-b from-[rgba(6,12,24,0.85)] to-transparent" />
       </div>
 
       <motion.div

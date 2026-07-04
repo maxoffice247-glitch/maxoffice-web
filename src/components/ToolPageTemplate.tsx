@@ -35,23 +35,8 @@ export default function ToolPageTemplate({
   defaultService?: string;
   children: ReactNode;
 }) {
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
-
   return (
     <main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-
       <PageHero
         image="/images/khong-gian-lam-viec.png"
         eyebrow="Tiện ích miễn phí"

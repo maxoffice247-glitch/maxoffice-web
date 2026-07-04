@@ -13,22 +13,23 @@ import Testimonials from "./Testimonials";
 import Faq from "./Faq";
 import CtaBanner from "./CtaBanner";
 import type { LocationData } from "@/lib/locationsData";
+import { SITE_URL, COMPANY_PHONE, COMPANY_EMAIL } from "@/lib/siteConfig";
 
 export default function LocationPageTemplate({ data }: { data: LocationData }) {
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: `MAX OFFICE - ${data.name}`,
-    image: data.image,
-    telephone: "+84898082188",
-    email: "cskh@maxoffice.vn",
+    image: `${SITE_URL}${data.image}`,
+    telephone: COMPANY_PHONE,
+    email: COMPANY_EMAIL,
     address: {
       "@type": "PostalAddress",
       streetAddress: data.address,
       addressLocality: "Thành phố Hồ Chí Minh",
       addressCountry: "VN",
     },
-    url: `https://maxoffice.vn/locations/${data.slug}`,
+    url: `${SITE_URL}/locations/${data.slug}`,
     priceRange: "299000-4500000",
   };
 

@@ -10,6 +10,7 @@ import ShareButtons from "@/components/ShareButtons";
 import NewsletterForm from "@/components/NewsletterForm";
 import Faq from "@/components/Faq";
 import { BLOG_POSTS, getBlogPost, getCategoryName } from "@/lib/blogData";
+import { SITE_URL, SITE_NAME } from "@/lib/siteConfig";
 
 export async function generateStaticParams() {
   return BLOG_POSTS.map((p) => ({ slug: p.slug }));
@@ -23,9 +24,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getBlogPost(slug);
   if (!post) return {};
+  const categoryName = getCategoryName(post.categorySlug);
   return {
-    title: `${post.title} | Blog MAX OFFICE`,
-    description: post.excerpt,
+    title: `${post.title} — ${categoryName} | Blog MAX OFFICE`,
+    description: `${post.excerpt} Chuyên mục: ${categoryName}.`,
   };
 }
 
@@ -49,12 +51,12 @@ export default async function BlogArticlePage({
     author: { "@type": "Organization", name: post.author },
     publisher: {
       "@type": "Organization",
-      name: "MAX OFFICE",
-      logo: { "@type": "ImageObject", url: "https://maxoffice.vn/images/logo-blue.png" },
+      name: SITE_NAME,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/images/logo-blue.png` },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://maxoffice.vn/blog/${post.slug}`,
+      "@id": `${SITE_URL}/blog/${post.slug}`,
     },
   };
 
