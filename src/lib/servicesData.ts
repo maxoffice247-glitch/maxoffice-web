@@ -34,9 +34,8 @@ function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
 }
 
-function locationNames(slugs: string[]): string {
-  const names = slugs.map((slug) => LOCATIONS_LIST.find((l) => l.slug === slug)?.name.split(",")[0] ?? slug);
-  return names.length === LOCATIONS_LIST.length ? "Tất cả chi nhánh" : names.join(", ");
+function locationNames(slugs: string[]): string[] {
+  return slugs.map((slug) => LOCATIONS_LIST.find((l) => l.slug === slug)?.name.split(",")[0] ?? slug);
 }
 
 const VO_MATRIX_PRICING: ServicePricing = {
@@ -48,7 +47,7 @@ const VO_MATRIX_PRICING: ServicePricing = {
       name: plan.name,
       price: formatVND(plan.price),
       unit: plan.duration,
-      locationsLabel: locationNames(getLocationsForPlan(key)),
+      locations: locationNames(getLocationsForPlan(key)),
       featured: key === "base",
     };
   }),

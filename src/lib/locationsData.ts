@@ -108,6 +108,8 @@ export type LocationData = {
   diningItems: DiningItem[];
   faqs: FaqItem[];
   testimonials: Testimonial[];
+  /** Chi nhánh khác có gói văn phòng ảo giá thấp hơn (Gói 299k/START), hiển thị khi chi nhánh này chỉ bán gói cao cấp. */
+  lowerTierAlternatives?: { slug: string; name: string }[];
 };
 
 const IMAGE = "/images/khong-gian-lam-viec.png";
@@ -430,20 +432,20 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     address: "238-240-242 Nguyễn Oanh, Phường Gò Vấp, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Nguyễn Oanh Gò Vấp",
     heroDescription:
-      "Chi nhánh khu vực Gò Vấp — đông dân cư, giá tốt, giao thông thuận tiện, phù hợp cho doanh nghiệp vừa và nhỏ mới khởi nghiệp.",
-    metaTitle: "Văn Phòng Ảo & Trọn Gói Gò Vấp Nguyễn Oanh | Từ 595K/Tháng",
+      "Văn phòng ảo hạng A tại Gò Vấp — một trong số ít lựa chọn chất lượng cao tại khu vực, mức giá cạnh tranh trực tiếp với thị trường nhưng đi kèm nhiều đặc quyền vượt trội.",
+    metaTitle: "Văn Phòng Ảo Hạng A Tại Gò Vấp Nguyễn Oanh | Từ 595K/Tháng",
     metaDescription:
-      "Thuê văn phòng ảo, văn phòng trọn gói tại Nguyễn Oanh, Gò Vấp — khu vực đông dân, giao thông thuận tiện, văn phòng ảo từ 595.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), phù hợp doanh nghiệp mới.",
+      "Văn phòng ảo tại Nguyễn Oanh, Gò Vấp — toà nhà hạng A, một trong số ít lựa chọn chất lượng cao tại khu vực. Từ 595.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), kèm tư vấn AI, ưu tiên hỗ trợ 24/7, phòng họp.",
     image: IMAGE,
     intro: [
-      "Văn phòng Nguyễn Oanh nằm tại 238-240-242 Nguyễn Oanh, Phường Gò Vấp — một trong những khu vực đông dân cư và sôi động bậc nhất TP.HCM. Đây là chi nhánh phù hợp cho các doanh nghiệp vừa và nhỏ, hộ kinh doanh và startup đang tìm kiếm địa chỉ văn phòng với chi phí hợp lý nhưng vẫn đảm bảo đầy đủ tính pháp lý.",
-      "Khu vực Gò Vấp từ lâu đã là nơi tập trung đông đảo dân cư và các hộ kinh doanh nhỏ lẻ, tạo nên môi trường kinh doanh năng động với nhu cầu dịch vụ văn phòng ảo và kế toán thuế cao. Văn phòng Nguyễn Oanh của MAX OFFICE cung cấp các gói ORIGIN, ORIGIN+ và RISE, với mức giá khởi điểm chỉ từ 595.000đ/tháng cho văn phòng ảo.",
+      "Văn phòng Nguyễn Oanh nằm tại 238-240-242 Nguyễn Oanh, Phường Gò Vấp, toạ lạc trong một toà nhà hạng A — chất lượng xây dựng và tiện ích vượt trội so với mặt bằng chung khu vực. Đây là lựa chọn phù hợp cho doanh nghiệp đang tăng trưởng, cần địa chỉ uy tín cùng các tiện ích hỗ trợ vận hành thực chất như tư vấn tự động hoá AI, ưu tiên hỗ trợ 24/7 và phòng họp đi kèm.",
+      "Khu vực Gò Vấp hiện có rất ít đơn vị khai thác văn phòng ảo đạt chuẩn hạng A — nguồn cung khan hiếm khiến mặt bằng giá chung tại đây thường từ 595.000đ/tháng trở lên. Văn phòng Nguyễn Oanh của MAX OFFICE cung cấp các gói ORIGIN, ORIGIN+ và RISE ở đúng mức giá cạnh tranh này, nhưng đi kèm nhiều đặc quyền mà các lựa chọn khác trong khu vực thường không có.",
       "Trục đường Nguyễn Oanh là một trong những tuyến đường chính của Gò Vấp, kết nối thuận tiện đến các khu vực lân cận như Phú Nhuận, Tân Bình và trung tâm thành phố. Giao thông khu vực khá thuận lợi với nhiều tuyến xe buýt và dễ dàng di chuyển bằng taxi, xe công nghệ.",
-      "Tại chi nhánh này, khách hàng có thể sử dụng đầy đủ dịch vụ từ văn phòng ảo, chỗ ngồi linh động, phòng họp theo giờ đến dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp các hộ kinh doanh, công ty nhỏ tại khu vực Gò Vấp vận hành đúng luật ngay từ ngày đầu mà không phải di chuyển xa.",
+      "Tại chi nhánh này, khách hàng có thể sử dụng đầy đủ dịch vụ từ văn phòng ảo, chỗ ngồi linh động, phòng họp theo giờ đến dịch vụ thành lập doanh nghiệp và kế toán thuế — phù hợp với doanh nghiệp tại khu vực Gò Vấp muốn vận hành từ một địa chỉ hạng A mà không phải di chuyển xa vào trung tâm.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Nguyễn Oanh Gò Vấp",
     benefits: [
-      { icon: BadgePercentIcon, title: "Chi phí hợp lý", desc: "Văn phòng ảo (gói ORIGIN) khởi điểm từ 595.000đ/tháng, phù hợp doanh nghiệp mới khởi nghiệp." },
+      { icon: BadgePercentIcon, title: "Chất lượng hạng A, giá cạnh tranh khu vực", desc: "Toà nhà hạng A hiếm có tại Gò Vấp — mức giá từ 595.000đ/tháng ngang bằng mặt bằng chung khu vực, nhưng đi kèm nhiều tiện ích vượt trội." },
       { icon: UsersIcon, title: "Khu vực đông dân cư", desc: "Thuận tiện tiếp cận khách hàng, đối tác trong khu vực Gò Vấp." },
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh đến Phú Nhuận, Tân Bình và trung tâm thành phố." },
       { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế cho hộ kinh doanh và công ty." },
@@ -473,9 +475,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { name: "Chợ Gò Vấp", desc: "Thuận tiện mua sắm thực phẩm, ăn uống nhanh." },
     ],
     faqs: [
-      { q: "Văn phòng Nguyễn Oanh có phù hợp cho hộ kinh doanh không?", a: "Rất phù hợp. Khu vực Gò Vấp có nhiều hộ kinh doanh, chi nhánh này hỗ trợ đầy đủ dịch vụ đăng ký kinh doanh với chi phí hợp lý." },
+      { q: "Văn phòng Nguyễn Oanh có phù hợp cho hộ kinh doanh không?", a: "Phù hợp nếu bạn cần địa chỉ tại một toà nhà hạng A cùng các tiện ích đi kèm như tư vấn AI, ưu tiên hỗ trợ 24/7 và phòng họp. Khu vực Gò Vấp hiện có rất ít lựa chọn văn phòng ảo hạng A, nên chi nhánh này áp dụng các gói từ ORIGIN trở lên (595.000đ/tháng) — mức giá cạnh tranh với mặt bằng chung khu vực chứ không phải mức giá thấp nhất hệ thống. Nếu bạn cần gói giá thấp hơn (Gói 299k hoặc START) để tối ưu chi phí ban đầu, MAX OFFICE có sẵn tại các chi nhánh Hoàng Việt, Bàu Cát 2, Lam Sơn, Hoàng Kế Viêm, CMT8, Sông Thao và Điện Biên Phủ." },
       { q: "Địa chỉ tại Nguyễn Oanh có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý để đăng ký kinh doanh, đăng ký thuế." },
-      { q: "Giá văn phòng ảo tại đây có khác gì so với các chi nhánh khác không?", a: "Có. Chi nhánh Nguyễn Oanh chỉ áp dụng các gói ORIGIN, ORIGIN+ và RISE (không có Gói 299k/START/BASE), văn phòng ảo tại đây từ 595.000đ/tháng — mức giá và gói khả dụng có thể khác nhau tuỳ chi nhánh." },
+      { q: "Giá văn phòng ảo tại đây có khác gì so với các chi nhánh khác không?", a: "Có. Nguyễn Oanh là toà nhà hạng A — phân khúc hiếm tại Gò Vấp, nên chi nhánh này chỉ áp dụng các gói từ ORIGIN trở lên (595.000đ/tháng), không có Gói 299k/START/BASE. Đổi lại, các gói này đi kèm tư vấn AI, ưu tiên hỗ trợ 24/7 và phòng họp mà các lựa chọn giá thấp hơn không có." },
       { q: "Khu vực Gò Vấp có thuận tiện di chuyển đến trung tâm thành phố không?", a: "Có. Trục đường Nguyễn Oanh — Phan Văn Trị kết nối khá nhanh đến Phú Nhuận và trung tâm TP.HCM." },
       { q: "Tôi có thể thuê chỗ ngồi linh động tại chi nhánh này không?", a: "Có. Chi nhánh cung cấp đầy đủ dịch vụ chỗ ngồi linh động, phù hợp freelancer và nhóm nhỏ tại khu vực Gò Vấp." },
       { q: "Chi nhánh có hỗ trợ kế toán thuế cho hộ kinh doanh không?", a: "Có. Dịch vụ kế toán thuế trọn gói từ 800.000đ/tháng được cung cấp đầy đủ tại đây." },
@@ -483,9 +485,18 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Văn phòng có chỗ đỗ xe cho khách vãng lai không?", a: "Có. Khu vực giữ xe máy và hỗ trợ đỗ ô tô ngay tại toà nhà." },
     ],
     testimonials: [
-      { quote: "Mình mở hộ kinh doanh nhỏ tại Gò Vấp, chi nhánh Nguyễn Oanh hỗ trợ thủ tục rất nhanh và tận tình.", initial: "L", name: "Ngọc Lan", role: "Chủ shop, Lan's Beauty Store" },
+      { quote: "Toà nhà hạng A, cơ sở vật chất tốt hơn hẳn các văn phòng ảo mình từng xem qua ở Gò Vấp — xứng đáng với mức giá.", initial: "L", name: "Ngọc Lan", role: "Giám đốc, Lan's Beauty Group" },
       { quote: "Vị trí gần nhà nên mình chọn chi nhánh này để đăng ký kinh doanh, tiết kiệm thời gian di chuyển.", initial: "T", name: "Anh Tuấn", role: "CEO, Việt Phát Trading" },
       { quote: "Nhân viên tư vấn nhiệt tình, giải thích rõ ràng về chi phí, không phát sinh gì thêm.", initial: "M", name: "Thảo My", role: "Founder, Handmade Corner" },
+    ],
+    lowerTierAlternatives: [
+      { slug: "hoang-viet", name: "Hoàng Việt, Tân Bình" },
+      { slug: "bau-cat", name: "Bàu Cát 2, Tân Bình" },
+      { slug: "lam-son", name: "Lam Sơn, Tân Bình" },
+      { slug: "hoang-ke-viem", name: "Hoàng Kế Viêm, Tân Bình" },
+      { slug: "cmt8", name: "CMT8, Quận 10" },
+      { slug: "song-thao", name: "Sông Thao, Tân Bình" },
+      { slug: "dien-bien-phu", name: "Điện Biên Phủ, Quận 1" },
     ],
   },
 

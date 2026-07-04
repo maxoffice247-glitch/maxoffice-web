@@ -1,3 +1,4 @@
+import Link from "next/link";
 import PageHero from "./PageHero";
 import Breadcrumb from "./Breadcrumb";
 import LocationIntro from "./LocationIntro";
@@ -68,6 +69,32 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       <LocationDining name={data.name} items={data.diningItems} />
       <LocationMap name={data.name} address={data.address} />
       <LocationServicesList name={data.name} slug={data.slug} />
+      {data.lowerTierAlternatives && data.lowerTierAlternatives.length > 0 && (
+        <section className="pb-9">
+          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+            <div className="rounded-2xl border border-line bg-bg-tint p-6 sm:p-7">
+              <p className="mb-2 text-[14.5px] font-bold text-navy">
+                Cần gói văn phòng ảo giá thấp hơn?
+              </p>
+              <p className="mb-4 text-[13.5px] leading-relaxed text-body-text">
+                Chi nhánh {data.name} hiện chỉ áp dụng các gói từ ORIGIN trở lên. Nếu bạn cần gói
+                Gói 299k hoặc START để tối ưu chi phí ban đầu, các chi nhánh sau đang cung cấp:
+              </p>
+              <div className="flex flex-wrap gap-2.5">
+                {data.lowerTierAlternatives.map((loc) => (
+                  <Link
+                    key={loc.slug}
+                    href={`/locations/${loc.slug}`}
+                    className="rounded-full border border-line bg-white px-4 py-2 text-[13px] font-semibold text-primary transition-colors duration-200 hover:border-primary/40 hover:bg-primary-tint"
+                  >
+                    {loc.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
       <Testimonials
         eyebrow="Khách hàng nói gì"
         title="Khách hàng đánh giá gì về chi nhánh này"

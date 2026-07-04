@@ -161,7 +161,7 @@ export const LOCATION_VO_PLANS: Record<string, VirtualOfficePlanKey[]> = {
   "song-thao": ["start", "base"],
   "dien-bien-phu": ["start", "base"],
   "nguyen-oanh": ["origin", "origin-plus", "rise"],
-  "yen-the": ["base", "origin", "origin-plus"],
+  "yen-the": ["base", "origin", "origin-plus", "rise"],
   "cong-hoa": ["base", "origin", "origin-plus"],
   "tan-thang": ["base", "origin", "origin-plus"],
   "cuu-long": ["base"],

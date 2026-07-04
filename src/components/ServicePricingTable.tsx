@@ -1,7 +1,19 @@
 import SectionHead from "./SectionHead";
 import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import Button from "./Button";
+import LocationCountBadge from "./LocationCountBadge";
+import ScrollFadeContainer from "./ScrollFadeContainer";
 import { CheckCircleIcon, CloseIcon } from "./icons";
+
+/**
+ * Below `md`, the table still needs horizontal scroll, and CSS forces `overflow-y` to
+ * behave as non-visible on any ancestor with `overflow-x: auto` — which breaks
+ * viewport-relative `position: sticky`. So below `md` we bound the table in its own
+ * scrollport (sticky top-0, relative to that box) instead of the page. From `md` up the
+ * compacted table fits without horizontal scroll, so there's no such ancestor and sticky
+ * resolves against the real page scroll — top offset must then clear the fixed site header.
+ */
+const STICKY_TOP = "top-0 md:top-[90px]";
 
 type SinglePricing = {
   mode: "single";
@@ -36,7 +48,7 @@ type MatrixPlan = {
   name: string;
   price: string;
   unit: string;
-  locationsLabel: string;
+  locations: string[];
   featured?: boolean;
 };
 type MatrixFeatureRow = {
@@ -189,58 +201,68 @@ export default function ServicePricingTable({
 
         {pricing.mode === "matrix" && (
           <div>
-            <Reveal className="overflow-x-auto rounded-2xl border border-line bg-white shadow-soft">
-              <table className="w-full min-w-[820px] border-collapse text-left">
-                <thead>
-                  <tr className="border-b border-line bg-bg-tint">
-                    <th className="sticky left-0 z-10 bg-bg-tint px-5 py-4 text-[13px] font-bold text-navy">
-                      Tính năng
-                    </th>
-                    {pricing.plans.map((plan) => (
+            <Reveal className="mx-auto w-fit max-w-full rounded-2xl border border-line bg-white shadow-soft">
+              <ScrollFadeContainer className="max-h-[480px] overflow-auto rounded-2xl md:max-h-none md:overflow-visible">
+                <table className="border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-line">
                       <th
-                        key={plan.key}
-                        className={`px-4 py-4 text-center ${plan.featured ? "bg-primary-tint" : ""}`}
+                        className={`sticky ${STICKY_TOP} md:left-0 z-30 w-[140px] bg-bg-tint px-2.5 py-3 text-[12.5px] font-bold text-navy sm:w-[160px]`}
                       >
-                        <div className={`text-[13.5px] font-bold ${plan.featured ? "text-primary" : "text-navy"}`}>
-                          {plan.name}
-                        </div>
-                        <div className="mt-1 font-mono text-[16px] font-bold text-primary">
-                          {plan.price}
-                        </div>
-                        <div className="text-[11px] font-medium text-body-text">{plan.unit}</div>
-                        <div className="mt-1.5 text-[10.5px] leading-snug text-body-text/70">
-                          {plan.locationsLabel}
-                        </div>
+                        Tính năng
                       </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {pricing.features.map((row, i) => (
-                    <tr
-                      key={row.label}
-                      className={i % 2 === 1 ? "bg-bg-tint/50" : ""}
-                    >
-                      <td className="sticky left-0 z-10 bg-inherit px-5 py-3 text-[13px] font-medium text-navy">
-                        {row.label}
-                      </td>
-                      {row.values.map((v, ci) => (
-                        <td key={ci} className="px-4 py-3 text-center">
-                          {v === true && (
-                            <CheckCircleIcon className="mx-auto h-4 w-4 text-primary" />
-                          )}
-                          {v === "addon" && (
-                            <span className="text-[10.5px] font-bold text-accent">+phí</span>
-                          )}
-                          {v === false && (
-                            <CloseIcon className="mx-auto h-3.5 w-3.5 text-line" />
-                          )}
-                        </td>
+                      {pricing.plans.map((plan) => (
+                        <th
+                          key={plan.key}
+                          className={`sticky ${STICKY_TOP} z-20 px-1.5 py-3 text-center ${
+                            plan.featured ? "bg-primary-tint" : "bg-bg-tint"
+                          }`}
+                        >
+                          <div className={`text-[13px] font-bold ${plan.featured ? "text-primary" : "text-navy"}`}>
+                            {plan.name}
+                          </div>
+                          <div className="mt-1 font-mono text-[15.5px] font-bold text-primary">
+                            {plan.price}
+                          </div>
+                          <div className="text-[10.5px] font-medium text-body-text">{plan.unit}</div>
+                          <div className="mt-1.5 flex justify-center">
+                            <LocationCountBadge locations={plan.locations} />
+                          </div>
+                        </th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {pricing.features.map((row, i) => (
+                      <tr key={row.label}>
+                        <td
+                          className={`static md:sticky md:left-0 md:z-10 w-[140px] px-2.5 py-2.5 text-[12.5px] leading-snug font-medium text-navy sm:w-[160px] ${
+                            i % 2 === 1 ? "bg-[#f9fbfe]" : "bg-white"
+                          }`}
+                        >
+                          {row.label}
+                        </td>
+                        {row.values.map((v, ci) => (
+                          <td
+                            key={ci}
+                            className={`px-1.5 py-2.5 text-center ${i % 2 === 1 ? "bg-bg-tint/50" : ""}`}
+                          >
+                            {v === true && (
+                              <CheckCircleIcon className="mx-auto h-4 w-4 text-primary" />
+                            )}
+                            {v === "addon" && (
+                              <span className="text-[10px] font-bold text-accent">+phí</span>
+                            )}
+                            {v === false && (
+                              <CloseIcon className="mx-auto h-3.5 w-3.5 text-line" />
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </ScrollFadeContainer>
             </Reveal>
             {pricing.addonNote && (
               <p className="mt-4 text-center text-[12.5px] text-body-text">{pricing.addonNote}</p>
