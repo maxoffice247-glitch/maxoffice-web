@@ -6,8 +6,7 @@ import Reveal from "../Reveal";
 import Button from "../Button";
 import CurrencyInput from "../CurrencyInput";
 import { CheckCircleIcon, DocumentCheckIcon } from "../icons";
-
-type EntityType = "ho-kinh-doanh" | "tnhh-1tv" | "tnhh-2tv" | "co-phan";
+import { SETUP_FEES, type EntityType } from "@/lib/setupFees";
 
 const ENTITY_OPTIONS: { value: EntityType; label: string }[] = [
   { value: "ho-kinh-doanh", label: "Hộ kinh doanh" },
@@ -15,14 +14,6 @@ const ENTITY_OPTIONS: { value: EntityType; label: string }[] = [
   { value: "tnhh-2tv", label: "Công ty TNHH 2 thành viên trở lên" },
   { value: "co-phan", label: "Công ty Cổ phần" },
 ];
-
-// Updated pricing (supersedes the outdated figures in the original prompt).
-const SETUP_FEES: Record<EntityType, { included: number; standalone: number; label: string }> = {
-  "ho-kinh-doanh": { included: 800000, standalone: 1000000, label: "Hộ kinh doanh" },
-  "tnhh-1tv": { included: 1299000, standalone: 1500000, label: "Công ty TNHH 1 thành viên" },
-  "tnhh-2tv": { included: 1299000, standalone: 1500000, label: "Công ty TNHH 2 thành viên trở lên" },
-  "co-phan": { included: 1500000, standalone: 2000000, label: "Công ty Cổ phần" },
-};
 
 const KE_TOAN_STARTUP = 800000;
 const KE_TOAN_BUSINESS = 1500000;

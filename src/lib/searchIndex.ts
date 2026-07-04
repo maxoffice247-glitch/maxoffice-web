@@ -246,4 +246,40 @@ export const SEARCH_INDEX: SearchItem[] = [
     href: "/tien-ich/tinh-le-phi-mon-bai",
     desc: "Cập nhật quy định mới: bãi bỏ từ 01/01/2026 theo Nghị quyết 198/2025/QH15",
   },
+  {
+    title: "Checklist thành lập doanh nghiệp",
+    category: "Tiện ích",
+    href: "/tien-ich/checklist-thanh-lap-doanh-nghiep",
+    desc: "Các bước và giấy tờ cần chuẩn bị khi thành lập doanh nghiệp, tải PDF miễn phí",
+  },
+  {
+    title: "Checklist mở chi nhánh",
+    category: "Tiện ích",
+    href: "/tien-ich/checklist-mo-chi-nhanh",
+    desc: "Các bước và giấy tờ khi mở chi nhánh công ty, tải PDF miễn phí",
+  },
+  {
+    title: "Checklist thay đổi giấy phép kinh doanh",
+    category: "Tiện ích",
+    href: "/tien-ich/checklist-thay-doi-giay-phep-kinh-doanh",
+    desc: "Các bước khi đổi tên, địa chỉ, ngành nghề hoặc vốn điều lệ",
+  },
+  {
+    title: "So sánh Văn phòng ảo & Văn phòng trọn gói",
+    category: "Tiện ích",
+    href: "/tien-ich/so-sanh-van-phong-ao-va-tron-goi",
+    desc: "Bảng so sánh tính năng, chi phí và đối tượng phù hợp",
+  },
+  {
+    title: "So sánh Công ty TNHH & Công ty Cổ phần",
+    category: "Tiện ích",
+    href: "/tien-ich/so-sanh-tnhh-va-co-phan",
+    desc: "Vốn điều lệ, cơ cấu quản lý và chi phí thành lập",
+  },
+  {
+    title: "Quy trình thành lập doanh nghiệp",
+    category: "Tiện ích",
+    href: "/tien-ich/quy-trinh-thanh-lap-doanh-nghiep",
+    desc: "Timeline tương tác toàn bộ hành trình thành lập doanh nghiệp",
+  },
 ];

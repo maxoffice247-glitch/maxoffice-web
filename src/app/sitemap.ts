@@ -9,6 +9,12 @@ const TOOL_SLUGS = [
   "chon-goi-van-phong",
   "tinh-chi-phi-thanh-lap",
   "tinh-le-phi-mon-bai",
+  "checklist-thanh-lap-doanh-nghiep",
+  "checklist-mo-chi-nhanh",
+  "checklist-thay-doi-giay-phep-kinh-doanh",
+  "so-sanh-van-phong-ao-va-tron-goi",
+  "so-sanh-tnhh-va-co-phan",
+  "quy-trinh-thanh-lap-doanh-nghiep",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

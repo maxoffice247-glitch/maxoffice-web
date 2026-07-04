@@ -74,12 +74,18 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
         <SearchProvider>
-          <Header />
+          <div className="print:hidden">
+            <Header />
+          </div>
           <div className="pb-24 sm:pb-0">{children}</div>
-          <Footer />
-          <FloatingButtons />
-          <MobileBottomNav />
-          <SearchOverlay />
+          <div className="print:hidden">
+            <Footer />
+          </div>
+          <div className="print:hidden">
+            <FloatingButtons />
+            <MobileBottomNav />
+            <SearchOverlay />
+          </div>
         </SearchProvider>
       </body>
     </html>

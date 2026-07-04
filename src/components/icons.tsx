@@ -396,3 +396,22 @@ export function TrendingUpIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function DownloadIcon({ className }: IconProps) {
+  return (
+    <svg className={className} {...base}>
+      <path d="M12 3v12m0 0l-4-4m4 4l4-4" />
+      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+    </svg>
+  );
+}
+
+export function RouteIcon({ className }: IconProps) {
+  return (
+    <svg className={className} {...base}>
+      <circle cx="5" cy="6" r="2.2" />
+      <circle cx="19" cy="18" r="2.2" />
+      <path d="M5 8.2V13a3 3 0 0 0 3 3h8a3 3 0 0 1 3 3v-1.2" />
+    </svg>
+  );
+}

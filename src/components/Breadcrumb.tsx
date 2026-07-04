@@ -23,7 +23,7 @@ export default function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
   };
 
   return (
-    <nav aria-label="Breadcrumb" className="border-b border-line bg-bg-tint">
+    <nav aria-label="Breadcrumb" className="border-b border-line bg-bg-tint print:hidden">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}

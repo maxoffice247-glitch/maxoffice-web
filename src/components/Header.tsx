@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { PhoneIcon, MenuIcon, CloseIcon, SearchIcon } from "./icons";
 import Button from "./Button";
 import MegaMenu from "./MegaMenu";
+import ToolsMegaMenu from "./ToolsMegaMenu";
 import { useSearch } from "./SearchContext";
 
 const NAV_LINKS_BEFORE = [
@@ -13,9 +14,9 @@ const NAV_LINKS_BEFORE = [
   { label: "Về chúng tôi", href: "/ve-chung-toi" },
 ];
 
+const NAV_LINKS_MIDDLE = [{ label: "Địa điểm", href: "/dia-diem" }];
+
 const NAV_LINKS_AFTER = [
-  { label: "Địa điểm", href: "/dia-diem" },
-  { label: "Tiện ích", href: "/tien-ich" },
   { label: "Kiến thức", href: "/knowledge-center" },
   { label: "Bảng giá", href: "/bang-gia" },
   { label: "Liên hệ", href: "/lien-he" },
@@ -93,6 +94,18 @@ export default function Header() {
               </Link>
             ))}
             <MegaMenu solid={solid} />
+            {NAV_LINKS_MIDDLE.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className={`text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-300 hover:text-accent ${
+                  solid ? "text-ink" : "text-white/90"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <ToolsMegaMenu solid={solid} />
             {NAV_LINKS_AFTER.map((link) => (
               <Link
                 key={link.label}
