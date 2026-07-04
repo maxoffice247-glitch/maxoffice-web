@@ -1,9 +1,39 @@
+import type { ComponentType } from "react";
 import SectionHead from "./SectionHead";
 import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import Button from "./Button";
 import LocationCountBadge from "./LocationCountBadge";
 import ScrollFadeContainer from "./ScrollFadeContainer";
-import { CheckCircleIcon, CloseIcon } from "./icons";
+import HeaderOffsetProvider from "./HeaderOffsetProvider";
+import {
+  CheckCircleIcon,
+  CloseIcon,
+  CalendarIcon,
+  TrendingUpIcon,
+  RocketIcon,
+  BadgePercentIcon,
+} from "./icons";
+
+const PROMO_ICONS: ComponentType<{ className?: string }>[] = [
+  CalendarIcon,
+  TrendingUpIcon,
+  RocketIcon,
+  BadgePercentIcon,
+];
+
+/** Bolds+recolors "X-Y tháng" / "N%" spans within a promo line so the offer number pops. */
+function highlightPromoNumber(text: string) {
+  const parts = text.split(/(\d+-\d+ tháng|\d+%)/g);
+  return parts.map((part, i) =>
+    /^(\d+-\d+ tháng|\d+%)$/.test(part) ? (
+      <span key={i} className="font-bold text-primary">
+        {part}
+      </span>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
+}
 
 /**
  * Below `md`, the table still needs horizontal scroll, and CSS forces `overflow-y` to
@@ -11,9 +41,12 @@ import { CheckCircleIcon, CloseIcon } from "./icons";
  * viewport-relative `position: sticky`. So below `md` we bound the table in its own
  * scrollport (sticky top-0, relative to that box) instead of the page. From `md` up the
  * compacted table fits without horizontal scroll, so there's no such ancestor and sticky
- * resolves against the real page scroll — top offset must then clear the fixed site header.
+ * resolves against the real page scroll — top offset must clear the fixed site header. The
+ * site header resizes between its tall/transparent and short/solid states as the page
+ * scrolls, so the offset uses `--header-h`, measured live by HeaderOffsetProvider, instead
+ * of a fixed guess that can drift out of sync and leave a gap the first row shows through.
  */
-const STICKY_TOP = "top-0 md:top-[90px]";
+const STICKY_TOP = "top-0 md:top-[var(--header-h)]";
 
 type SinglePricing = {
   mode: "single";
@@ -201,90 +234,109 @@ export default function ServicePricingTable({
 
         {pricing.mode === "matrix" && (
           <div>
-            <Reveal className="mx-auto w-fit max-w-full rounded-2xl border border-line bg-white shadow-soft">
-              <ScrollFadeContainer className="max-h-[480px] overflow-auto rounded-2xl md:max-h-none md:overflow-visible">
-                <table className="border-collapse text-left">
-                  <thead>
-                    <tr className="border-b border-line">
-                      <th
-                        className={`sticky ${STICKY_TOP} md:left-0 z-30 w-[140px] bg-bg-tint px-2.5 py-3 text-[12.5px] font-bold text-navy sm:w-[160px]`}
-                      >
-                        Tính năng
-                      </th>
-                      {pricing.plans.map((plan) => (
+            <div className="mx-auto w-fit max-w-full">
+            <HeaderOffsetProvider>
+              <Reveal className="rounded-2xl border border-line bg-white shadow-soft">
+                <ScrollFadeContainer className="max-h-[480px] overflow-auto rounded-2xl md:max-h-none md:overflow-visible">
+                  <table className="border-collapse text-left">
+                    <thead>
+                      <tr className="border-b border-line">
                         <th
-                          key={plan.key}
-                          className={`sticky ${STICKY_TOP} z-20 px-1.5 py-3 text-center ${
-                            plan.featured ? "bg-primary-tint" : "bg-bg-tint"
-                          }`}
+                          className={`sticky ${STICKY_TOP} left-0 z-30 w-[190px] border-r border-line bg-bg-tint px-6 py-3 text-[12.5px] font-bold text-navy shadow-[2px_0_6px_rgba(15,27,45,0.08)] sm:w-[210px]`}
                         >
-                          <div className={`text-[13px] font-bold ${plan.featured ? "text-primary" : "text-navy"}`}>
-                            {plan.name}
-                          </div>
-                          <div className="mt-1 font-mono text-[15.5px] font-bold text-primary">
-                            {plan.price}
-                          </div>
-                          <div className="text-[10.5px] font-medium text-body-text">{plan.unit}</div>
-                          <div className="mt-1.5 flex justify-center">
-                            <LocationCountBadge locations={plan.locations} />
-                          </div>
+                          Tính năng
                         </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pricing.features.map((row, i) => (
-                      <tr key={row.label}>
-                        <td
-                          className={`static md:sticky md:left-0 md:z-10 w-[140px] px-2.5 py-2.5 text-[12.5px] leading-snug font-medium text-navy sm:w-[160px] ${
-                            i % 2 === 1 ? "bg-[#f9fbfe]" : "bg-white"
-                          }`}
-                        >
-                          {row.label}
-                        </td>
-                        {row.values.map((v, ci) => (
-                          <td
-                            key={ci}
-                            className={`px-1.5 py-2.5 text-center ${i % 2 === 1 ? "bg-bg-tint/50" : ""}`}
+                        {pricing.plans.map((plan) => (
+                          <th
+                            key={plan.key}
+                            className={`sticky ${STICKY_TOP} z-20 px-[26px] py-3 text-center ${
+                              plan.featured ? "bg-primary-tint" : "bg-bg-tint"
+                            }`}
                           >
-                            {v === true && (
-                              <CheckCircleIcon className="mx-auto h-4 w-4 text-primary" />
-                            )}
-                            {v === "addon" && (
-                              <span className="text-[10px] font-bold text-accent">+phí</span>
-                            )}
-                            {v === false && (
-                              <CloseIcon className="mx-auto h-3.5 w-3.5 text-line" />
-                            )}
-                          </td>
+                            <div className={`text-[13px] font-bold ${plan.featured ? "text-primary" : "text-navy"}`}>
+                              {plan.name}
+                            </div>
+                            <div className="mt-1 font-mono text-[15.5px] font-bold text-primary">
+                              {plan.price}
+                            </div>
+                            <div className="text-[10.5px] font-medium text-body-text">{plan.unit}</div>
+                            <div className="mt-1.5 flex justify-center">
+                              <LocationCountBadge locations={plan.locations} />
+                            </div>
+                          </th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </ScrollFadeContainer>
-            </Reveal>
+                    </thead>
+                    <tbody>
+                      {pricing.features.map((row, i) => (
+                        <tr key={row.label}>
+                          <td
+                            className={`sticky left-0 z-10 w-[190px] border-r border-line px-6 py-2.5 text-[12.5px] leading-snug font-medium text-navy shadow-[2px_0_6px_rgba(15,27,45,0.08)] sm:w-[210px] ${
+                              i % 2 === 1 ? "bg-[#f9fbfe]" : "bg-white"
+                            }`}
+                          >
+                            {row.label}
+                          </td>
+                          {row.values.map((v, ci) => (
+                            <td
+                              key={ci}
+                              className={`px-[26px] py-2.5 text-center ${i % 2 === 1 ? "bg-bg-tint/50" : ""}`}
+                            >
+                              {v === true && (
+                                <CheckCircleIcon className="mx-auto h-4 w-4 text-primary" />
+                              )}
+                              {v === "addon" && (
+                                <span className="text-[10px] font-bold text-accent">+phí</span>
+                              )}
+                              {v === false && (
+                                <CloseIcon className="mx-auto h-3.5 w-3.5 text-line" />
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </ScrollFadeContainer>
+              </Reveal>
+            </HeaderOffsetProvider>
             {pricing.addonNote && (
               <p className="mt-4 text-center text-[12.5px] text-body-text">{pricing.addonNote}</p>
             )}
             {pricing.promoNotes && pricing.promoNotes.length > 0 && (
-              <div className="mx-auto mt-6 max-w-[640px] rounded-2xl border-2 border-accent/25 bg-accent/5 p-5">
-                <p className="mb-2 text-[13.5px] font-bold text-navy">Khuyến mãi chung (áp dụng mọi gói)</p>
-                <ul className="space-y-1.5">
-                  {pricing.promoNotes.map((note) => (
-                    <li key={note} className="flex items-start gap-2 text-[13px] text-body-text">
-                      <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
-                      {note}
-                    </li>
-                  ))}
-                </ul>
+              <div className="mt-6 w-full rounded-2xl border-2 border-primary/20 bg-primary-tint p-6 sm:p-7">
+                <div className="mb-5 flex items-center gap-2.5">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                    <BadgePercentIcon className="h-4 w-4" />
+                  </span>
+                  <p className="text-[15.5px] font-bold text-navy">Khuyến mãi chung (áp dụng mọi gói)</p>
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {pricing.promoNotes.map((note, i) => {
+                    const Icon = PROMO_ICONS[i % PROMO_ICONS.length];
+                    return (
+                      <div
+                        key={note}
+                        className="flex items-start gap-3 rounded-xl bg-white p-4 shadow-[0_2px_8px_rgba(15,27,45,0.05)]"
+                      >
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-tint text-primary">
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        <p className="text-[15px] leading-relaxed text-navy">
+                          {highlightPromoNumber(note)}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
                 {pricing.promoEffectiveDate && (
-                  <p className="mt-3 text-[11.5px] text-body-text/70">
+                  <p className="mt-4 text-[11.5px] text-body-text/70">
                     Áp dụng từ {pricing.promoEffectiveDate}.
                   </p>
                 )}
               </div>
             )}
+            </div>
             <div className="mt-7 text-center">
               <Button href="#lead-form" variant="primary">
                 Nhận tư vấn miễn phí
