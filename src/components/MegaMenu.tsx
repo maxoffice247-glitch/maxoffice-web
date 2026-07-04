@@ -45,7 +45,7 @@ const MEGA_SERVICES = [
     slug: "thanh-lap-doanh-nghiep",
     icon: DocumentCheckIcon,
     title: "Thành lập doanh nghiệp",
-    desc: "Tư vấn hồ sơ, thủ tục nhanh gọn — Từ 800.000đ*",
+    desc: "Tư vấn hồ sơ, thủ tục nhanh gọn — Từ 1.299.000đ*",
   },
   {
     slug: "ke-toan-thue",

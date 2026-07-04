@@ -14,11 +14,11 @@ import {
 export const metadata: Metadata = {
   title: "So Sánh Văn Phòng Ảo & Văn Phòng Trọn Gói | MAX OFFICE",
   description:
-    "So sánh chi tiết Văn phòng ảo (299.000đ/tháng) và Văn phòng trọn gói (từ 4.500.000đ/tháng): tính năng, ưu nhược điểm, phù hợp với ai — giúp bạn chọn đúng gói.",
+    "So sánh chi tiết Văn phòng ảo (từ 299.000đ/tháng, 6 gói) và Văn phòng trọn gói (từ 4.500.000đ/tháng): tính năng, ưu nhược điểm, phù hợp với ai — giúp bạn chọn đúng gói.",
 };
 
 const ROWS: ComparisonTableRow[] = [
-  { label: "Giá", left: "299.000đ/tháng", right: "Từ 4.500.000đ/tháng" },
+  { label: "Giá", left: "Từ 299.000đ/tháng (6 gói, tuỳ chi nhánh)", right: "Từ 4.500.000đ/tháng" },
   {
     label: "Không gian vật lý",
     left: "Không có — chỉ địa chỉ đăng ký, không có chỗ ngồi cố định",

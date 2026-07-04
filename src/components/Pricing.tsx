@@ -2,6 +2,7 @@ import SectionHead from "./SectionHead";
 import { RevealGroup, RevealItem } from "./Reveal";
 import Button from "./Button";
 import { CheckCircleIcon } from "./icons";
+import { VO_PROMO_NOTES, VO_PROMO_EFFECTIVE_DATE } from "@/lib/virtualOfficePlans";
 
 type Plan = {
   name: string;
@@ -13,18 +14,65 @@ type Plan = {
   note?: boolean;
 };
 
-const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string }[] = [
+const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; promoNotes?: string[]; promoEffectiveDate?: string }[] = [
   {
-    title: "Văn phòng & Coworking",
+    title: "Văn phòng ảo — 6 gói dịch vụ",
     cols: "sm:grid-cols-2 lg:grid-cols-3",
+    footnote:
+      "*Gói và mức giá cụ thể tuỳ theo chi nhánh — xem chi tiết từng chi nhánh tại trang Văn phòng ảo.",
+    promoNotes: VO_PROMO_NOTES,
+    promoEffectiveDate: VO_PROMO_EFFECTIVE_DATE,
     plans: [
       {
-        name: "Văn phòng ảo",
+        name: "Gói 299k",
         price: "299.000đ",
         unit: "/ tháng",
-        desc: "Địa chỉ đăng ký kinh doanh hợp lệ, phù hợp cá nhân & doanh nghiệp mới.",
-        features: ["Địa chỉ đăng ký kinh doanh", "Nhận thư hộ", "Lễ tân chuyên nghiệp"],
+        desc: "Cạnh tranh nhất — chỉ áp dụng tại 5 chi nhánh. Bảng hiệu tính riêng.",
+        features: ["Địa chỉ đăng ký kinh doanh", "Lễ tân, Wifi", "Tham gia Workshop"],
+        note: true,
       },
+      {
+        name: "START",
+        price: "350.000đ",
+        unit: "/ tháng",
+        desc: "Đầy đủ nhận diện cơ bản cho doanh nghiệp mới.",
+        features: ["Bảng tên Mica & bảng hiệu công ty", "Lễ tân, Wifi", "Tham gia Workshop"],
+      },
+      {
+        name: "BASE",
+        price: "500.000đ",
+        unit: "/ tháng",
+        desc: "Thêm tư vấn pháp lý & thuế cùng không gian tiếp khách.",
+        features: ["Tất cả mục của START", "Guest Lounge, In-photo 100 tờ/năm", "Tư vấn Pháp lý & Thuế, AI Biz Health"],
+        featured: true,
+      },
+      {
+        name: "ORIGIN",
+        price: "595.000đ",
+        unit: "/ tháng",
+        desc: "Thêm tư vấn tự động hoá AI và hỗ trợ ưu tiên.",
+        features: ["Tất cả mục của BASE", "Miễn phí tư vấn tự động hoá AI", "Ưu tiên hỗ trợ 24/7"],
+      },
+      {
+        name: "ORIGIN+",
+        price: "699.000đ",
+        unit: "/ tháng",
+        desc: "Có phòng họp nhỏ đi kèm hàng năm.",
+        features: ["Tất cả mục của ORIGIN", "Phòng họp nhỏ 24h/năm", "Ưu tiên hỗ trợ 24/7"],
+      },
+      {
+        name: "RISE",
+        price: "1.199.000đ",
+        unit: "/ tháng",
+        desc: "Cao cấp nhất — phòng họp lớn, chỗ ngồi linh hoạt hàng tháng.",
+        features: ["Tất cả mục của ORIGIN+", "Phòng họp lớn 4h/năm, Flex Desk 4h/tháng", "Giảm 50% phí phòng họp VIP"],
+      },
+    ],
+  },
+  {
+    title: "Văn phòng & Coworking khác",
+    cols: "sm:grid-cols-2 lg:grid-cols-4",
+    plans: [
       {
         name: "Văn phòng trọn gói",
         price: "4.500.000đ",
@@ -58,33 +106,25 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string }[
   },
   {
     title: "Thành lập doanh nghiệp",
-    cols: "sm:grid-cols-2 lg:grid-cols-3",
+    cols: "sm:grid-cols-2 max-w-[700px] mx-auto",
     footnote:
-      "*Áp dụng khi đăng ký kèm Văn phòng ảo tại MAX OFFICE. Không kèm văn phòng ảo, giá thông thường: Hộ kinh doanh 1.000.000đ · Công ty TNHH 1.500.000đ · Công ty Cổ phần 2.000.000đ.",
+      "*Giá Gói 1 áp dụng khi đăng ký kèm Văn phòng ảo tại MAX OFFICE (giá thường: 1.500.000đ). Áp dụng chung cho mọi loại hình doanh nghiệp — Hộ kinh doanh, Công ty TNHH, Công ty Cổ phần.",
     plans: [
       {
-        name: "Hộ kinh doanh",
-        price: "800.000đ",
-        unit: "trọn gói",
-        desc: "Phù hợp mô hình kinh doanh nhỏ, hộ gia đình, cá nhân khởi nghiệp.",
-        features: ["Tư vấn ngành nghề kinh doanh", "Soạn hồ sơ đăng ký", "Nhận giấy phép nhanh chóng"],
-        note: true,
-      },
-      {
-        name: "Công ty TNHH",
+        name: "Gói 1 — Cơ bản",
         price: "1.299.000đ",
-        unit: "trọn gói",
-        desc: "Loại hình phổ biến nhất, phù hợp phần lớn doanh nghiệp vừa và nhỏ.",
-        features: ["Tư vấn cơ cấu vốn góp", "Soạn điều lệ công ty", "Hỗ trợ khắc dấu & mã số thuế"],
+        unit: "trọn gói · 5-7 ngày",
+        desc: "Giấy phép, con dấu, đăng bố cáo và mở tài khoản ngân hàng.",
+        features: ["Giấy chứng nhận đăng ký doanh nghiệp", "Con dấu công ty", "Đăng bố cáo & mở tài khoản ngân hàng"],
         note: true,
       },
       {
-        name: "Công ty Cổ phần",
-        price: "1.500.000đ",
-        unit: "trọn gói",
-        desc: "Phù hợp doanh nghiệp có kế hoạch huy động vốn, mở rộng cổ đông.",
-        features: ["Tư vấn cơ cấu cổ đông", "Soạn hồ sơ phát hành cổ phần", "Hỗ trợ thủ tục sau thành lập"],
-        note: true,
+        name: "Gói 2 — Đầy đủ",
+        price: "2.800.000đ",
+        unit: "trọn gói · 5-7 ngày",
+        desc: "Tất cả hạng mục Gói 1, cộng khai thuế ban đầu, chữ ký số và hoá đơn điện tử.",
+        features: ["Tất cả hạng mục Gói 1", "Hồ sơ khai thuế ban đầu", "Chữ ký số & hoá đơn điện tử 100 số"],
+        featured: true,
       },
     ],
   },
@@ -179,6 +219,24 @@ export default function Pricing() {
               </RevealGroup>
               {group.footnote && (
                 <p className="mt-5 text-[12.5px] text-body-text">{group.footnote}</p>
+              )}
+              {group.promoNotes && group.promoNotes.length > 0 && (
+                <div className="mx-auto mt-6 max-w-[640px] rounded-2xl border-2 border-accent/25 bg-accent/5 p-5">
+                  <p className="mb-2 text-[13.5px] font-bold text-navy">Khuyến mãi chung (áp dụng mọi gói)</p>
+                  <ul className="space-y-1.5">
+                    {group.promoNotes.map((note) => (
+                      <li key={note} className="flex items-start gap-2 text-[13px] text-body-text">
+                        <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
+                        {note}
+                      </li>
+                    ))}
+                  </ul>
+                  {group.promoEffectiveDate && (
+                    <p className="mt-3 text-[11.5px] text-body-text/70">
+                      Áp dụng từ {group.promoEffectiveDate}.
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           ))}

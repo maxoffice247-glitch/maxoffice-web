@@ -10,14 +10,13 @@ import {
   CalculatorIcon,
   ArrowRightSmallIcon,
 } from "./icons";
+import { getPlansForLocation } from "@/lib/virtualOfficePlans";
 
-const AVAILABLE_SERVICES = [
-  {
-    slug: "van-phong-ao",
-    icon: BuildingIcon,
-    title: "Văn phòng ảo",
-    price: "Từ 299.000đ/tháng",
-  },
+function formatVND(n: number) {
+  return n.toLocaleString("vi-VN") + "đ";
+}
+
+const OTHER_SERVICES = [
   {
     slug: "van-phong-tron-goi",
     icon: KeyIcon,
@@ -50,7 +49,11 @@ const AVAILABLE_SERVICES = [
   },
 ];
 
-export default function LocationServicesList({ name }: { name: string }) {
+export default function LocationServicesList({ name, slug }: { name: string; slug: string }) {
+  const voPlans = getPlansForLocation(slug);
+  const cheapest = voPlans.reduce((min, p) => (p.price < min.price ? p : min), voPlans[0]);
+  const voPlanNames = voPlans.map((p) => p.name).join(", ");
+
   return (
     <section className="py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -60,7 +63,28 @@ export default function LocationServicesList({ name }: { name: string }) {
           description="Toàn bộ 6 dịch vụ cốt lõi của MAX OFFICE đều được cung cấp tại chi nhánh này với mức giá minh bạch, không phát sinh."
         />
         <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {AVAILABLE_SERVICES.map((svc) => (
+          <RevealItem>
+            <Link
+              href="/services/van-phong-ao"
+              className="group flex h-full flex-col justify-between rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
+            >
+              <div>
+                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
+                  <BuildingIcon className="h-5 w-5" />
+                </span>
+                <h3 className="mb-1.5 text-[15.5px] font-bold text-navy">Văn phòng ảo</h3>
+                <p className="font-mono text-[13.5px] font-bold text-primary">
+                  Từ {formatVND(cheapest.price)}/tháng
+                </p>
+                <p className="mt-1 text-[12px] text-body-text">Gói khả dụng: {voPlanNames}</p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-bold text-accent">
+                Xem chi tiết
+                <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
+              </span>
+            </Link>
+          </RevealItem>
+          {OTHER_SERVICES.map((svc) => (
             <RevealItem key={svc.slug}>
               <Link
                 href={`/services/${svc.slug}`}

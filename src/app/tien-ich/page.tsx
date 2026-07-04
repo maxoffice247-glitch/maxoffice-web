@@ -39,7 +39,7 @@ const TOOL_GROUPS = [
         slug: "tinh-chi-phi-thanh-lap",
         icon: DocumentCheckIcon,
         title: "Tính chi phí thành lập công ty",
-        desc: "Ước tính chi phí thành lập Hộ kinh doanh, Công ty TNHH hoặc Công ty Cổ phần theo bảng giá mới nhất.",
+        desc: "Ước tính chi phí thành lập theo Gói 1, Gói 2 và các dịch vụ pháp lý sửa đổi theo bảng giá mới nhất.",
         linkLabel: "Dùng công cụ ngay",
       },
       {

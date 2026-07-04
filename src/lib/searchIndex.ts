@@ -34,13 +34,19 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Thành lập doanh nghiệp",
     category: "Dịch vụ",
     href: "/services/thanh-lap-doanh-nghiep",
-    desc: "Từ 800.000đ* — Hộ kinh doanh, Công ty TNHH, Công ty Cổ phần",
+    desc: "Từ 1.299.000đ* — Gói 1 & Gói 2, áp dụng chung mọi loại hình",
   },
   {
     title: "Kế toán & thuế",
     category: "Dịch vụ",
     href: "/services/ke-toan-thue",
     desc: "Từ 800.000đ/tháng — kê khai thuế, sổ sách minh bạch",
+  },
+  {
+    title: "Dịch vụ pháp lý sửa đổi doanh nghiệp",
+    category: "Dịch vụ",
+    href: "/dich-vu/dich-vu-phap-ly-sua-doi",
+    desc: "Đổi tên, địa chỉ, đại diện pháp luật, vốn điều lệ... ưu đãi combo từ 2 dịch vụ",
   },
   {
     title: "Điện Biên Phủ, Quận 1",
@@ -124,7 +130,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Bảng giá Thành lập doanh nghiệp",
     category: "Bảng giá",
     href: "/bang-gia",
-    desc: "Hộ kinh doanh, Công ty TNHH, Công ty Cổ phần",
+    desc: "Gói 1 & Gói 2, áp dụng chung mọi loại hình doanh nghiệp",
   },
   {
     title: "Bảng giá Kế toán & Thuế",

@@ -6,6 +6,8 @@ import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import Button from "../Button";
 import { CheckCircleIcon, BuildingIcon, UsersIcon, KeyIcon, ScreenIcon } from "../icons";
+import { LOCATIONS_LIST } from "@/lib/locationsData";
+import { getPlansForLocation, getCheapestPlanForLocation } from "@/lib/virtualOfficePlans";
 
 type SpaceNeed = "khong" | "linh-hoat" | "rieng";
 type Budget = "duoi-2trieu" | "2-4.5trieu" | "4.5-10trieu" | "tren-10trieu";
@@ -18,6 +20,7 @@ type Answers = {
   needLegalAddress: YesNo | "";
   spaceNeed: SpaceNeed | "";
   meetingFreq: MeetingFreq | "";
+  location: string;
 };
 
 const BUDGET_OPTIONS: { value: Budget; label: string }[] = [
@@ -46,6 +49,10 @@ const MEETING_OPTIONS: { value: MeetingFreq; label: string }[] = [
 
 const COWORKING_PRICE_PER_HEAD = 2000000;
 
+function formatVND(n: number) {
+  return n.toLocaleString("vi-VN") + "đ";
+}
+
 const PACKAGES = {
   "van-phong-ao": {
     slug: "van-phong-ao",
@@ -54,7 +61,7 @@ const PACKAGES = {
     price: "299.000đ",
     unit: "/ tháng",
     reason:
-      "Bạn chỉ cần địa chỉ đăng ký kinh doanh hợp lệ, chưa cần không gian làm việc cố định — đây là lựa chọn tiết kiệm nhất.",
+      "Bạn chỉ cần địa chỉ đăng ký kinh doanh hợp lệ, chưa cần không gian làm việc cố định — đây là lựa chọn tiết kiệm nhất. Văn phòng ảo có 6 gói (Gói 299k, START, BASE, ORIGIN, ORIGIN+, RISE), gói và mức giá cụ thể tuỳ theo chi nhánh bạn chọn.",
   },
   "cho-ngoi-linh-dong": {
     slug: "cho-ngoi-linh-dong",
@@ -146,6 +153,9 @@ function PillGroup<T extends string>({
 const inputClass =
   "w-full max-w-[200px] rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none";
 
+const selectClass =
+  "w-full max-w-[340px] rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink transition-colors duration-200 focus:border-primary focus:outline-none";
+
 export default function OfficePackageTool() {
   const [answers, setAnswers] = useState<Answers>({
     employees: "",
@@ -153,6 +163,7 @@ export default function OfficePackageTool() {
     needLegalAddress: "",
     spaceNeed: "",
     meetingFreq: "",
+    location: "",
   });
   const [result, setResult] = useState<PackageKey | null>(null);
 
@@ -176,6 +187,7 @@ export default function OfficePackageTool() {
       needLegalAddress: "",
       spaceNeed: "",
       meetingFreq: "",
+      location: "",
     });
     setResult(null);
   };
@@ -184,13 +196,19 @@ export default function OfficePackageTool() {
   const employeeCount = Number(answers.employees) || 0;
   const coworkingTotal = employeeCount * COWORKING_PRICE_PER_HEAD;
 
+  const voLocationName = answers.location
+    ? LOCATIONS_LIST.find((l) => l.slug === answers.location)?.name
+    : undefined;
+  const voCheapest = answers.location ? getCheapestPlanForLocation(answers.location) : undefined;
+  const voPlans = answers.location ? getPlansForLocation(answers.location) : [];
+
   return (
     <section className="py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <SectionHead
           eyebrow="Công cụ miễn phí"
           title="Chọn gói văn phòng phù hợp với bạn"
-          description="Trả lời 5 câu hỏi ngắn để nhận gợi ý gói dịch vụ tối ưu nhất cho nhu cầu và ngân sách của doanh nghiệp bạn."
+          description="Trả lời vài câu hỏi ngắn để nhận gợi ý gói dịch vụ tối ưu nhất cho nhu cầu và ngân sách của doanh nghiệp bạn."
         />
 
         {!result ? (
@@ -259,6 +277,27 @@ export default function OfficePackageTool() {
                   onChange={(v) => setAnswers((a) => ({ ...a, meetingFreq: v }))}
                 />
               </div>
+
+              <div>
+                <label className="mb-3 block text-[15px] font-bold text-navy">
+                  Bạn dự định đăng ký tại chi nhánh nào? (không bắt buộc)
+                </label>
+                <select
+                  value={answers.location}
+                  onChange={(e) => setAnswers((a) => ({ ...a, location: e.target.value }))}
+                  className={selectClass}
+                >
+                  <option value="">Chưa xác định</option>
+                  {LOCATIONS_LIST.map((l) => (
+                    <option key={l.slug} value={l.slug}>
+                      {l.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-2 text-[12px] text-body-text">
+                  Nếu gợi ý là Văn phòng ảo, chọn chi nhánh giúp bạn thấy đúng gói và giá khả dụng tại đó.
+                </p>
+              </div>
             </div>
 
             <button
@@ -297,6 +336,18 @@ export default function OfficePackageTool() {
                     <p className="mt-2 text-[13.5px] text-white/70">
                       2.000.000đ/người × {employeeCount} người ={" "}
                       {coworkingTotal.toLocaleString("vi-VN")}đ/tháng
+                    </p>
+                  </>
+                ) : result === "van-phong-ao" ? (
+                  <>
+                    <div className="font-mono text-[32px] font-bold text-white">
+                      {voCheapest ? `Từ ${formatVND(voCheapest.price)}` : "Từ 299.000đ"}
+                      <span className="text-[16px] font-medium text-white/70"> / tháng</span>
+                    </div>
+                    <p className="mt-2 text-[13.5px] text-white/70">
+                      {voCheapest && voLocationName
+                        ? `Tại chi nhánh ${voLocationName}: ${voPlans.map((p) => p.name).join(", ")}`
+                        : "Mức giá cụ thể tuỳ chi nhánh — chọn chi nhánh ở bước trước để xem chi tiết."}
                     </p>
                   </>
                 ) : (

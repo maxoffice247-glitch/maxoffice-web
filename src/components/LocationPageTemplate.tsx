@@ -67,7 +67,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       />
       <LocationDining name={data.name} items={data.diningItems} />
       <LocationMap name={data.name} address={data.address} />
-      <LocationServicesList name={data.name} />
+      <LocationServicesList name={data.name} slug={data.slug} />
       <Testimonials
         eyebrow="Khách hàng nói gì"
         title="Khách hàng đánh giá gì về chi nhánh này"

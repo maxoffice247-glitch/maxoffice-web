@@ -3,21 +3,13 @@ import ToolPageTemplate from "@/components/ToolPageTemplate";
 import SectionHead from "@/components/SectionHead";
 import ComparisonTable, { type ComparisonTableRow } from "@/components/ComparisonTable";
 import { RevealGroup, RevealItem } from "@/components/Reveal";
-import { SETUP_FEES } from "@/lib/setupFees";
 import { TagIcon, CheckCircleIcon, KeyIcon, TrendingUpIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
   title: "So Sánh Công Ty TNHH & Công Ty Cổ Phần | MAX OFFICE",
   description:
-    "So sánh Công ty TNHH và Công ty Cổ phần: vốn điều lệ, cơ cấu quản lý, khả năng huy động vốn và chi phí thành lập theo bảng giá MAX OFFICE hiện hành.",
+    "So sánh Công ty TNHH và Công ty Cổ phần: số lượng thành viên/cổ đông, vốn điều lệ, cơ cấu quản lý và khả năng huy động vốn — giúp bạn chọn đúng loại hình.",
 };
-
-function formatVND(n: number) {
-  return n.toLocaleString("vi-VN") + "đ";
-}
-
-const tnhh = SETUP_FEES["tnhh-1tv"];
-const coPhan = SETUP_FEES["co-phan"];
 
 const ROWS: ComparisonTableRow[] = [
   {
@@ -41,16 +33,6 @@ const ROWS: ComparisonTableRow[] = [
     right: "Linh hoạt hơn, có thể phát hành cổ phần để huy động vốn",
   },
   {
-    label: "Chi phí thành lập (kèm Văn phòng ảo)",
-    left: formatVND(tnhh.included),
-    right: formatVND(coPhan.included),
-  },
-  {
-    label: "Chi phí thành lập (đăng ký riêng)",
-    left: formatVND(tnhh.standalone),
-    right: formatVND(coPhan.standalone),
-  },
-  {
     label: "Phù hợp với",
     left: "Doanh nghiệp nhỏ và vừa, số lượng thành viên ít, muốn cơ cấu quản lý đơn giản",
     right: "Doanh nghiệp có kế hoạch mở rộng, gọi vốn từ nhiều nhà đầu tư",
@@ -58,29 +40,29 @@ const ROWS: ComparisonTableRow[] = [
 ];
 
 const BENEFITS = [
-  { icon: TagIcon, title: "Giá đúng bảng hiện hành", desc: "Số liệu chi phí thành lập lấy đúng theo bảng giá MAX OFFICE đang áp dụng." },
+  { icon: TagIcon, title: "Thông tin chính xác", desc: "Nêu đúng khác biệt pháp lý và cơ cấu giữa hai loại hình theo quy định hiện hành." },
   { icon: CheckCircleIcon, title: "So sánh khách quan", desc: "Nêu rõ khác biệt về cơ cấu, vốn và khả năng huy động vốn để bạn tự quyết định." },
   { icon: HeadsetIcon, title: "Tư vấn thêm miễn phí", desc: "Chưa chắc chắn nên chọn loại hình nào? Liên hệ để được tư vấn theo đúng kế hoạch kinh doanh." },
 ];
 
 const RELATED_SERVICES = [
-  { slug: "thanh-lap-doanh-nghiep", name: "Thành lập doanh nghiệp", desc: "Từ 800.000đ kèm Văn phòng ảo" },
+  { slug: "thanh-lap-doanh-nghiep", name: "Thành lập doanh nghiệp", desc: "Từ 1.299.000đ kèm Văn phòng ảo" },
   { slug: "ke-toan-thue", name: "Kế toán & thuế", desc: "Từ 800.000đ/tháng" },
   { slug: "van-phong-ao", name: "Văn phòng ảo", desc: "Từ 299.000đ/tháng" },
 ];
 
 const FAQS = [
-  { q: "Tôi có thể chuyển đổi từ TNHH sang Cổ phần sau này không?", a: "Có. Doanh nghiệp có thể chuyển đổi loại hình khi có nhu cầu mở rộng — MAX OFFICE có thể tư vấn thủ tục khi bạn cần." },
+  { q: "Tôi có thể chuyển đổi từ TNHH sang Cổ phần sau này không?", a: "Có. Đây là một trong các dịch vụ pháp lý sửa đổi MAX OFFICE cung cấp — liên hệ để được tư vấn thủ tục khi bạn cần." },
   { q: "Công ty TNHH 1 thành viên và 2 thành viên khác nhau thế nào?", a: "Khác nhau về số lượng chủ sở hữu góp vốn — TNHH 1 thành viên chỉ có 1 chủ sở hữu, TNHH 2 thành viên trở lên có từ 2 đến 50 thành viên góp vốn." },
   { q: "Công ty Cổ phần có bắt buộc niêm yết chứng khoán không?", a: "Không. Công ty Cổ phần không bắt buộc niêm yết — chỉ niêm yết khi doanh nghiệp đủ điều kiện và có nhu cầu huy động vốn qua thị trường chứng khoán." },
-  { q: "Chi phí thành lập trên đã bao gồm những gì?", a: "Đây là phí dịch vụ MAX OFFICE hỗ trợ soạn hồ sơ và thủ tục thành lập. Từ 01/01/2026, lệ phí môn bài đã được bãi bỏ nên không phát sinh thêm khoản này." },
+  { q: "Chi phí thành lập giữa TNHH và Cổ phần có khác nhau không?", a: "Không. Chi phí thành lập được tính theo gói dịch vụ (Gói 1 hoặc Gói 2), áp dụng chung cho mọi loại hình doanh nghiệp — xem chi tiết tại công cụ Tính chi phí thành lập công ty hoặc trang Thành lập doanh nghiệp." },
 ];
 
 export default function SoSanhTnhhCoPhanPage() {
   return (
     <ToolPageTemplate
       heroTitle="So sánh Công ty TNHH và Công ty Cổ phần"
-      heroDescription="Bảng so sánh chi tiết vốn điều lệ, cơ cấu quản lý và chi phí thành lập theo đúng bảng giá MAX OFFICE hiện hành."
+      heroDescription="Bảng so sánh chi tiết vốn điều lệ, cơ cấu quản lý và khả năng huy động vốn để bạn chọn đúng loại hình doanh nghiệp."
       breadcrumbLabel="So sánh TNHH & Cổ phần"
       benefitsTitle="Vì sao nên tham khảo bảng so sánh này"
       benefits={BENEFITS}
@@ -94,7 +76,7 @@ export default function SoSanhTnhhCoPhanPage() {
           <SectionHead
             eyebrow="Bảng so sánh"
             title="Công ty TNHH và Công ty Cổ phần khác nhau thế nào?"
-            description="Đối chiếu trực tiếp từng tiêu chí để bạn dễ dàng chọn đúng loại hình doanh nghiệp."
+            description="Đối chiếu trực tiếp từng tiêu chí để bạn dễ dàng chọn đúng loại hình doanh nghiệp. Chi phí thành lập không phân biệt loại hình — xem bảng giá theo gói dịch vụ tại trang Thành lập doanh nghiệp."
           />
           <ComparisonTable leftLabel="Công ty TNHH" rightLabel="Công ty Cổ phần" rows={ROWS} />
         </div>
@@ -118,7 +100,7 @@ export default function SoSanhTnhhCoPhanPage() {
                   <li>• Bạn mới khởi nghiệp, số lượng thành viên góp vốn ít</li>
                   <li>• Bạn muốn cơ cấu quản lý đơn giản, dễ vận hành</li>
                   <li>• Chưa có kế hoạch huy động vốn từ nhiều nhà đầu tư</li>
-                  <li>• Bạn ưu tiên chi phí thành lập thấp hơn</li>
+                  <li>• Bạn ưu tiên quy trình thành lập gọn nhẹ</li>
                 </ul>
               </div>
             </RevealItem>

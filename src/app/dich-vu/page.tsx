@@ -58,9 +58,9 @@ const SERVICES: ServiceItem[] = [
     slug: "thanh-lap-doanh-nghiep",
     image: "/images/thanh-lap-doanh-nghiep.png",
     title: "Thành lập doanh nghiệp",
-    price: "Từ 800.000đ*",
-    desc: "Tư vấn loại hình phù hợp — Hộ kinh doanh, Công ty TNHH hay Công ty Cổ phần — soạn hồ sơ và hoàn tất thủ tục đúng luật.",
-    note: "*Áp dụng khi đăng ký kèm Văn phòng ảo tại MAX OFFICE.",
+    price: "Từ 1.299.000đ*",
+    desc: "2 gói dịch vụ minh bạch, áp dụng chung cho Hộ kinh doanh, Công ty TNHH hay Công ty Cổ phần — soạn hồ sơ và hoàn tất thủ tục đúng luật.",
+    note: "*Giá Gói 1 khi đăng ký kèm Văn phòng ảo tại MAX OFFICE.",
   },
   {
     slug: "ke-toan-thue",

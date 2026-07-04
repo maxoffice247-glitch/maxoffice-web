@@ -4,15 +4,18 @@ import { useMemo, useState } from "react";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import Button from "../Button";
-import CurrencyInput from "../CurrencyInput";
 import { CheckCircleIcon, DocumentCheckIcon } from "../icons";
-import { SETUP_FEES, type EntityType } from "@/lib/setupFees";
+import {
+  SETUP_PACKAGES,
+  AMENDMENT_SERVICES,
+  COMBO_DISCOUNT_RULE,
+  calculateAmendmentCombo,
+  type SetupPackageKey,
+} from "@/lib/setupFees";
 
-const ENTITY_OPTIONS: { value: EntityType; label: string }[] = [
-  { value: "ho-kinh-doanh", label: "Hộ kinh doanh" },
-  { value: "tnhh-1tv", label: "Công ty TNHH 1 thành viên" },
-  { value: "tnhh-2tv", label: "Công ty TNHH 2 thành viên trở lên" },
-  { value: "co-phan", label: "Công ty Cổ phần" },
+const PACKAGE_OPTIONS: { value: SetupPackageKey; label: string }[] = [
+  { value: "goi-1", label: "Gói 1 — Cơ bản" },
+  { value: "goi-2", label: "Gói 2 — Đầy đủ" },
 ];
 
 const KE_TOAN_STARTUP = 800000;
@@ -23,26 +26,39 @@ function formatVND(n: number) {
 }
 
 export default function SetupCostTool() {
-  const [entityType, setEntityType] = useState<EntityType | "">("");
+  const [packageKey, setPackageKey] = useState<SetupPackageKey | "">("");
   const [withVirtualOffice, setWithVirtualOffice] = useState<"yes" | "no" | "">("");
-  const [capital, setCapital] = useState("");
-  const [industry, setIndustry] = useState("");
+  const [selectedAmendments, setSelectedAmendments] = useState<string[]>([]);
   const [needAccounting, setNeedAccounting] = useState<"yes" | "no" | "">("");
   const [submitted, setSubmitted] = useState(false);
 
+  const toggleAmendment = (slug: string) => {
+    setSelectedAmendments((prev) =>
+      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
+    );
+  };
+
   const allAnswered =
-    entityType !== "" && withVirtualOffice !== "" && capital !== "" && needAccounting !== "";
+    packageKey !== "" &&
+    (packageKey !== "goi-1" || withVirtualOffice !== "") &&
+    needAccounting !== "";
 
   const result = useMemo(() => {
-    if (!submitted || entityType === "" || withVirtualOffice === "") return null;
-    const fee = SETUP_FEES[entityType];
-    const setupCost = withVirtualOffice === "yes" ? fee.included : fee.standalone;
+    if (!submitted || packageKey === "") return null;
+    const pkg = SETUP_PACKAGES[packageKey];
+    const packagePrice =
+      packageKey === "goi-1" && withVirtualOffice === "yes" && pkg.priceWithVirtualOffice
+        ? pkg.priceWithVirtualOffice
+        : pkg.priceStandalone;
+    const combo = calculateAmendmentCombo(selectedAmendments);
     return {
-      entityLabel: fee.label,
-      setupCost,
+      pkg,
+      packagePrice,
+      combo,
+      total: packagePrice + combo.total,
       needAccounting: needAccounting === "yes",
     };
-  }, [submitted, entityType, withVirtualOffice, needAccounting]);
+  }, [submitted, packageKey, withVirtualOffice, selectedAmendments, needAccounting]);
 
   const handleSubmit = () => {
     if (!allAnswered) return;
@@ -50,16 +66,19 @@ export default function SetupCostTool() {
   };
 
   const handleReset = () => {
-    setEntityType("");
+    setPackageKey("");
     setWithVirtualOffice("");
-    setCapital("");
-    setIndustry("");
+    setSelectedAmendments([]);
     setNeedAccounting("");
     setSubmitted(false);
   };
 
-  const inputClass =
-    "w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none";
+  const pillClass = (active: boolean) =>
+    `rounded-full border-[1.5px] px-4 py-2.5 text-[13.5px] font-bold transition-all duration-200 ${
+      active
+        ? "border-primary bg-primary text-white shadow-[0_6px_16px_rgba(21,101,192,0.28)]"
+        : "border-line bg-white text-body-text hover:border-primary/40 hover:text-primary"
+    }`;
 
   return (
     <section className="py-9">
@@ -67,7 +86,7 @@ export default function SetupCostTool() {
         <SectionHead
           eyebrow="Công cụ miễn phí"
           title="Tính chi phí thành lập công ty"
-          description="Chọn loại hình doanh nghiệp và điền thông tin để nhận ước tính chi phí thành lập theo bảng giá mới nhất của MAX OFFICE."
+          description="Chọn gói dịch vụ và các dịch vụ pháp lý sửa đổi (nếu có) để nhận ước tính chi phí theo bảng giá mới nhất của MAX OFFICE."
         />
 
         {!result ? (
@@ -75,77 +94,89 @@ export default function SetupCostTool() {
             <div className="space-y-6">
               <div>
                 <label className="mb-3 block text-[15px] font-bold text-navy">
-                  Loại hình doanh nghiệp
+                  Bạn muốn dùng gói dịch vụ nào?
                 </label>
                 <div className="flex flex-wrap gap-2.5">
-                  {ENTITY_OPTIONS.map((opt) => (
+                  {PACKAGE_OPTIONS.map((opt) => (
                     <button
                       key={opt.value}
                       type="button"
-                      onClick={() => setEntityType(opt.value)}
-                      className={`rounded-full border-[1.5px] px-4 py-2.5 text-[13.5px] font-bold transition-all duration-200 ${
-                        entityType === opt.value
-                          ? "border-primary bg-primary text-white shadow-[0_6px_16px_rgba(21,101,192,0.28)]"
-                          : "border-line bg-white text-body-text hover:border-primary/40 hover:text-primary"
-                      }`}
+                      onClick={() => setPackageKey(opt.value)}
+                      className={pillClass(packageKey === opt.value)}
                     >
                       {opt.label}
                     </button>
                   ))}
                 </div>
+                {packageKey !== "" && (
+                  <ul className="mt-3 space-y-1.5 rounded-xl bg-bg-tint p-4">
+                    {SETUP_PACKAGES[packageKey].includes.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-[13px] text-body-text">
+                        <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
+
+              {packageKey === "goi-1" && (
+                <div>
+                  <label className="mb-3 block text-[15px] font-bold text-navy">
+                    Bạn có muốn đăng ký kèm Văn phòng ảo không?
+                  </label>
+                  <div className="flex flex-wrap gap-2.5">
+                    {[
+                      { value: "yes" as const, label: "Có, đăng ký kèm Văn phòng ảo" },
+                      { value: "no" as const, label: "Không, chỉ thành lập doanh nghiệp" },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setWithVirtualOffice(opt.value)}
+                        className={pillClass(withVirtualOffice === opt.value)}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-[12.5px] text-body-text">
+                    Đăng ký kèm Văn phòng ảo giúp giảm phí Gói 1 còn 1.299.000đ thay vì
+                    1.500.000đ.
+                  </p>
+                </div>
+              )}
 
               <div>
-                <label className="mb-3 block text-[15px] font-bold text-navy">
-                  Bạn có muốn đăng ký kèm Văn phòng ảo không?
+                <label className="mb-1.5 block text-[15px] font-bold text-navy">
+                  Cần thêm dịch vụ pháp lý sửa đổi? (không bắt buộc)
                 </label>
-                <div className="flex flex-wrap gap-2.5">
-                  {[
-                    { value: "yes" as const, label: "Có, đăng ký kèm Văn phòng ảo" },
-                    { value: "no" as const, label: "Không, chỉ thành lập doanh nghiệp" },
-                  ].map((opt) => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => setWithVirtualOffice(opt.value)}
-                      className={`rounded-full border-[1.5px] px-4 py-2.5 text-[13.5px] font-bold transition-all duration-200 ${
-                        withVirtualOffice === opt.value
-                          ? "border-primary bg-primary text-white shadow-[0_6px_16px_rgba(21,101,192,0.28)]"
-                          : "border-line bg-white text-body-text hover:border-primary/40 hover:text-primary"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-                <p className="mt-2 text-[12.5px] text-body-text">
-                  Đăng ký kèm Văn phòng ảo giúp giảm đáng kể phí dịch vụ thành lập.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1.5 block text-[13px] font-bold text-navy">
-                    Vốn điều lệ dự kiến (VNĐ)
-                  </label>
-                  <CurrencyInput
-                    placeholder="Ví dụ: 1.000.000.000"
-                    value={capital}
-                    onChange={setCapital}
-                    className={inputClass}
-                  />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-[13px] font-bold text-navy">
-                    Ngành nghề kinh doanh
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Ví dụ: Thương mại, dịch vụ..."
-                    value={industry}
-                    onChange={(e) => setIndustry(e.target.value)}
-                    className={inputClass}
-                  />
+                <p className="mb-3 text-[12.5px] text-body-text">{COMBO_DISCOUNT_RULE}</p>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {AMENDMENT_SERVICES.map((svc) => {
+                    const checked = selectedAmendments.includes(svc.slug);
+                    return (
+                      <label
+                        key={svc.slug}
+                        className={`flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 transition-colors duration-200 ${
+                          checked ? "border-primary bg-primary-tint" : "border-line bg-white hover:border-primary/30"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleAmendment(svc.slug)}
+                          className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+                        />
+                        <span className="text-[13px] leading-snug text-ink">
+                          {svc.name}
+                          <span className="ml-1 font-mono text-[12px] font-bold text-primary">
+                            {formatVND(svc.price)}
+                          </span>
+                        </span>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -162,11 +193,7 @@ export default function SetupCostTool() {
                       key={opt.value}
                       type="button"
                       onClick={() => setNeedAccounting(opt.value)}
-                      className={`rounded-full border-[1.5px] px-4 py-2.5 text-[13.5px] font-bold transition-all duration-200 ${
-                        needAccounting === opt.value
-                          ? "border-primary bg-primary text-white shadow-[0_6px_16px_rgba(21,101,192,0.28)]"
-                          : "border-line bg-white text-body-text hover:border-primary/40 hover:text-primary"
-                      }`}
+                      className={pillClass(needAccounting === opt.value)}
                     >
                       {opt.label}
                     </button>
@@ -185,7 +212,7 @@ export default function SetupCostTool() {
             </button>
             {!allAnswered && (
               <p className="mt-3 text-center text-[12.5px] text-body-text">
-                Vui lòng điền đầy đủ thông tin để xem kết quả (vốn điều lệ nhập 0 nếu chưa xác định).
+                Vui lòng chọn gói dịch vụ{packageKey === "goi-1" ? " và điều kiện Văn phòng ảo" : ""} để xem kết quả.
               </p>
             )}
           </Reveal>
@@ -200,19 +227,45 @@ export default function SetupCostTool() {
                   Ước tính chi phí
                 </span>
                 <h3 className="font-display text-[20px] font-extrabold text-white">
-                  {result.entityLabel}
+                  {result.pkg.name}
                 </h3>
               </div>
             </div>
             <div className="p-7 sm:p-8">
               <ul className="mb-5 space-y-3.5">
+                <li className="flex items-center justify-between border-b border-line pb-3.5">
+                  <span className="text-[14.5px] text-body-text">{result.pkg.name}</span>
+                  <span className="font-mono text-[16px] font-bold text-navy">
+                    {formatVND(result.packagePrice)}
+                  </span>
+                </li>
+                {result.combo.items.map((item) => (
+                  <li key={item.slug} className="flex items-center justify-between border-b border-line pb-3.5">
+                    <span className="text-[13.5px] text-body-text">{item.name}</span>
+                    <span className="font-mono text-[15px] font-bold text-navy">
+                      {item.discounted && (
+                        <span className="mr-1.5 text-[12.5px] font-medium text-body-text/60 line-through">
+                          {formatVND(item.price)}
+                        </span>
+                      )}
+                      {formatVND(item.finalPrice)}
+                    </span>
+                  </li>
+                ))}
                 <li className="flex items-center justify-between">
-                  <span className="text-[15px] font-bold text-navy">Tổng chi phí ban đầu</span>
+                  <span className="text-[15px] font-bold text-navy">Tổng chi phí</span>
                   <span className="font-mono text-[22px] font-bold text-primary">
-                    {formatVND(result.setupCost)}
+                    {formatVND(result.total)}
                   </span>
                 </li>
               </ul>
+
+              {result.combo.items.length >= 2 && (
+                <p className="mb-6 text-[12px] leading-relaxed text-body-text">
+                  {COMBO_DISCOUNT_RULE}
+                </p>
+              )}
+
               <p className="mb-6 flex items-start gap-2 rounded-xl bg-primary-tint p-3.5 text-[12.5px] leading-relaxed text-navy">
                 <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 Từ 01/01/2026, lệ phí môn bài đã được bãi bỏ theo Nghị quyết 198/2025/QH15 nên
@@ -257,8 +310,8 @@ export default function SetupCostTool() {
         <Reveal delay={0.1} className="mx-auto mt-8 flex max-w-[720px] items-start gap-3 rounded-xl bg-primary-tint p-4">
           <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-[12.5px] leading-relaxed text-navy">
-            Đây là chi phí ước tính. Để nhận báo giá chính xác theo ngành nghề và loại hình cụ
-            thể, hãy để lại thông tin bên dưới để được tư vấn miễn phí.
+            Đây là chi phí ước tính. Để nhận báo giá chính xác theo nhu cầu cụ thể, hãy để lại
+            thông tin bên dưới để được tư vấn miễn phí.
           </p>
         </Reveal>
       </div>
