@@ -12,6 +12,8 @@ type Plan = {
   features: string[];
   featured?: boolean;
   note?: boolean;
+  href?: string;
+  ctaLabel?: string;
 };
 
 const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; promoNotes?: string[]; promoEffectiveDate?: string }[] = [
@@ -130,21 +132,20 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
   },
   {
     title: "Kế toán & Thuế",
-    cols: "sm:grid-cols-2 lg:grid-cols-2 max-w-[820px] mx-auto",
+    cols: "max-w-[400px] mx-auto",
+    footnote:
+      "*Từ 500.000đ/tháng là mức thấp nhất, áp dụng khi chưa phát sinh hoá đơn. Chi phí cụ thể tính theo số hoá đơn/quý và loại hình kinh doanh — xem bảng giá chi tiết đầy đủ.",
     plans: [
       {
-        name: "Kế toán thuế Startup",
-        price: "800.000đ",
+        name: "Kế toán & Thuế trọn gói",
+        price: "500.000đ",
         unit: "/ tháng",
-        desc: "Dành cho doanh nghiệp mới thành lập, phát sinh giao dịch chưa nhiều.",
-        features: ["Kê khai thuế định kỳ", "Sổ sách kế toán cơ bản", "Tư vấn nghĩa vụ thuế"],
-      },
-      {
-        name: "Kế toán thuế Business",
-        price: "1.500.000đ",
-        unit: "/ tháng",
-        desc: "Dành cho doanh nghiệp đang tăng trưởng, khối lượng giao dịch lớn hơn.",
-        features: ["Kê khai thuế đầy đủ", "Báo cáo tài chính định kỳ", "Tư vấn thuế chuyên sâu"],
+        desc: "Tính theo số hoá đơn/quý và loại hình kinh doanh — xem bảng giá chi tiết đầy đủ 3 nhóm loại hình.",
+        features: ["Kê khai thuế định kỳ", "Sổ sách kế toán minh bạch", "Báo cáo tài chính, hỗ trợ giải trình"],
+        featured: true,
+        note: true,
+        href: "/services/ke-toan-thue#bang-gia",
+        ctaLabel: "Xem bảng giá chi tiết",
       },
     ],
   },
@@ -190,8 +191,8 @@ function PricingCard({ plan }: { plan: Plan }) {
           </li>
         ))}
       </ul>
-      <Button href="#lead" variant={plan.featured ? "primary" : "ghost"} className="w-full">
-        Chọn gói này
+      <Button href={plan.href ?? "#lead"} variant={plan.featured ? "primary" : "ghost"} className="w-full">
+        {plan.ctaLabel ?? "Chọn gói này"}
       </Button>
     </div>
   );

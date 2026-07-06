@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import Button from "../Button";
@@ -18,8 +19,7 @@ const PACKAGE_OPTIONS: { value: SetupPackageKey; label: string }[] = [
   { value: "goi-2", label: "Gói 2 — Đầy đủ" },
 ];
 
-const KE_TOAN_STARTUP = 800000;
-const KE_TOAN_BUSINESS = 1500000;
+const KE_TOAN_TU = 500000;
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
@@ -276,8 +276,12 @@ export default function SetupCostTool() {
                 <div className="mb-6 rounded-xl bg-primary-tint p-4">
                   <p className="text-[13.5px] leading-relaxed text-navy">
                     <strong>Kế toán thuế trọn gói (hàng tháng, riêng):</strong> Từ{" "}
-                    {formatVND(KE_TOAN_STARTUP)}/tháng cho gói Startup (doanh thu dưới 1 tỷ/năm),
-                    hoặc {formatVND(KE_TOAN_BUSINESS)}/tháng cho gói Business (doanh thu 1-10 tỷ/năm).
+                    {formatVND(KE_TOAN_TU)}/tháng, tính theo số hoá đơn/quý và loại hình kinh
+                    doanh —{" "}
+                    <Link href="/services/ke-toan-thue#bang-gia" className="font-bold underline">
+                      xem bảng giá chi tiết
+                    </Link>
+                    .
                   </p>
                 </div>
               )}

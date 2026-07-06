@@ -5,6 +5,7 @@ import Button from "./Button";
 import LocationCountBadge from "./LocationCountBadge";
 import ScrollFadeContainer from "./ScrollFadeContainer";
 import HeaderOffsetProvider from "./HeaderOffsetProvider";
+import AccountingPricingTable from "./AccountingPricingTable";
 import {
   CheckCircleIcon,
   CloseIcon,
@@ -97,7 +98,31 @@ type MatrixPricing = {
   promoEffectiveDate?: string;
 };
 
-export type ServicePricing = SinglePricing | DualPricing | TiersPricing | MatrixPricing;
+export type AccountingGroupKey = "A" | "B" | "C";
+export type AccountingGroup = { key: AccountingGroupKey; label: string; desc: string };
+export type AccountingTierRow = {
+  range: string;
+  prices: Record<AccountingGroupKey, string>;
+};
+export type AccountingSurcharge = {
+  title: string;
+  note?: string;
+  rows: { label: string; value: string }[];
+};
+export type AccountingPricing = {
+  mode: "accounting";
+  tableUnit: string;
+  groups: AccountingGroup[];
+  tiers: AccountingTierRow[];
+  surcharges: AccountingSurcharge[];
+};
+
+export type ServicePricing =
+  | SinglePricing
+  | DualPricing
+  | TiersPricing
+  | MatrixPricing
+  | AccountingPricing;
 
 export default function ServicePricingTable({
   title,
@@ -344,6 +369,8 @@ export default function ServicePricingTable({
             </div>
           </div>
         )}
+
+        {pricing.mode === "accounting" && <AccountingPricingTable pricing={pricing} />}
       </div>
     </section>
   );

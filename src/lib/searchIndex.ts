@@ -40,7 +40,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Kế toán & thuế",
     category: "Dịch vụ",
     href: "/services/ke-toan-thue",
-    desc: "Từ 800.000đ/tháng — kê khai thuế, sổ sách minh bạch",
+    desc: "Từ 500.000đ/tháng — kê khai thuế, sổ sách minh bạch",
   },
   {
     title: "Dịch vụ pháp lý sửa đổi doanh nghiệp",
@@ -136,7 +136,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Bảng giá Kế toán & Thuế",
     category: "Bảng giá",
     href: "/bang-gia",
-    desc: "Gói Startup, gói Business",
+    desc: "Từ 500.000đ/tháng, theo số hoá đơn/quý và loại hình kinh doanh",
   },
   {
     title: "Nên chọn Hộ kinh doanh hay Công ty TNHH?",

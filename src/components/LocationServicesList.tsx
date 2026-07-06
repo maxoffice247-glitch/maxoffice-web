@@ -45,7 +45,7 @@ const OTHER_SERVICES = [
     slug: "ke-toan-thue",
     icon: CalculatorIcon,
     title: "Kế toán & thuế",
-    price: "Từ 800.000đ/tháng",
+    price: "Từ 500.000đ/tháng",
   },
 ];
 

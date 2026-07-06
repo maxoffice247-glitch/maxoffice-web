@@ -66,7 +66,7 @@ const SERVICES: ServiceItem[] = [
     slug: "ke-toan-thue",
     image: "/images/ke-toan-thue.png",
     title: "Kế toán & thuế",
-    price: "Từ 800.000đ/tháng",
+    price: "Từ 500.000đ/tháng",
     desc: "Kê khai thuế đúng hạn, sổ sách minh bạch, báo cáo rõ ràng mỗi tháng — an tâm vận hành, tập trung phát triển kinh doanh.",
   },
 ];
