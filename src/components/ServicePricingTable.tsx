@@ -26,7 +26,7 @@ function highlightPromoNumber(text: string) {
   const parts = text.split(/(\d+-\d+ tháng|\d+%)/g);
   return parts.map((part, i) =>
     /^(\d+-\d+ tháng|\d+%)$/.test(part) ? (
-      <span key={i} className="font-bold text-primary">
+      <span key={i} className="font-bold text-accent">
         {part}
       </span>
     ) : (
@@ -304,9 +304,9 @@ export default function ServicePricingTable({
               <p className="mt-4 text-center text-[12.5px] text-body-text">{pricing.addonNote}</p>
             )}
             {pricing.promoNotes && pricing.promoNotes.length > 0 && (
-              <div className="mt-6 w-full rounded-2xl border-2 border-primary/20 bg-primary-tint p-6 sm:p-7">
+              <div className="mt-6 w-full rounded-2xl border-2 border-accent/40 bg-accent/10 p-6 sm:p-7">
                 <div className="mb-5 flex items-center gap-2.5">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-white">
                     <BadgePercentIcon className="h-4 w-4" />
                   </span>
                   <p className="text-[15.5px] font-bold text-navy">Khuyến mãi chung (áp dụng mọi gói)</p>
@@ -319,7 +319,7 @@ export default function ServicePricingTable({
                         key={note}
                         className="flex items-start gap-3 rounded-xl bg-white p-4 shadow-[0_2px_8px_rgba(15,27,45,0.05)]"
                       >
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-tint text-primary">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
                           <Icon className="h-4 w-4" />
                         </span>
                         <p className="text-[15px] leading-relaxed text-navy">
