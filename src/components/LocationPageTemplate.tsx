@@ -57,6 +57,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       <LocationIntro
         name={data.name}
         image={`/images/dia-diem-${data.slug}.jpg`}
+        interiorImages={data.interiorImages}
         paragraphs={data.intro}
       />
       <ServiceBenefits title={data.benefitsTitle} items={data.benefits} />
