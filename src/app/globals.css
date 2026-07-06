@@ -134,3 +134,55 @@ body {
     animation-iteration-count: infinite !important;
   }
 }
+
+/* Rotating conic-gradient border for the mega menu's featured item — a soft
+   red comet sweeping over a faint red base ring. Rotating the masked ::before
+   itself (rather than animating the gradient's angle) keeps this on the
+   universally-supported `transform` property instead of @property Houdini. */
+@keyframes mega-glow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mega-glow-border {
+  position: relative;
+  isolation: isolate;
+}
+
+.mega-glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(229, 57, 53, 0.18) 0%,
+    rgba(229, 57, 53, 0.18) 75%,
+    rgba(229, 57, 53, 0.95) 88%,
+    rgba(229, 57, 53, 0.18) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: mega-glow-spin 3.5s linear infinite;
+  pointer-events: none;
+}
+
+.mega-glow-border:hover::before {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mega-glow-border::before {
+    display: none;
+  }
+
+  .mega-glow-border {
+    border-color: var(--color-accent);
+  }
+}

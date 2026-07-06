@@ -14,6 +14,8 @@ import {
   ChevronDownIcon,
   PhoneIcon,
   ArrowRightSmallIcon,
+  MapPinIcon,
+  CalendarIcon,
 } from "./icons";
 
 const MEGA_SERVICES = [
@@ -22,12 +24,14 @@ const MEGA_SERVICES = [
     icon: BuildingIcon,
     title: "Văn phòng ảo",
     desc: "Địa chỉ đăng ký kinh doanh hợp lệ",
+    price: "Từ 299.000đ/tháng",
   },
   {
     slug: "van-phong-tron-goi",
     icon: KeyIcon,
     title: "Văn phòng trọn gói",
     desc: "Không gian riêng, sẵn sàng làm việc",
+    price: "Từ 4.500.000đ/tháng",
     featured: true,
   },
   {
@@ -35,25 +39,35 @@ const MEGA_SERVICES = [
     icon: ScreenIcon,
     title: "Phòng họp theo giờ",
     desc: "Thiết bị trình chiếu, âm thanh hiện đại",
+    price: "Từ 150.000đ/giờ",
   },
   {
     slug: "cho-ngoi-linh-dong",
     icon: UsersIcon,
     title: "Chỗ ngồi linh động",
     desc: "Coworking cho freelancer & nhóm nhỏ",
+    price: "Từ 2.000.000đ/tháng",
   },
   {
     slug: "thanh-lap-doanh-nghiep",
     icon: DocumentCheckIcon,
     title: "Thành lập doanh nghiệp",
-    desc: "Tư vấn hồ sơ, thủ tục nhanh gọn — Từ 1.299.000đ*",
+    desc: "Tư vấn hồ sơ, thủ tục nhanh gọn",
+    price: "Từ 1.299.000đ*",
   },
   {
     slug: "ke-toan-thue",
     icon: CalculatorIcon,
     title: "Kế toán & thuế",
     desc: "Kê khai đúng hạn, sổ sách minh bạch",
+    price: "Từ 500.000đ/tháng",
   },
+];
+
+const TRUST_STATS = [
+  { icon: MapPinIcon, label: "12 địa điểm tại TP.HCM" },
+  { icon: UsersIcon, label: "500+ doanh nghiệp tin dùng" },
+  { icon: CalendarIcon, label: "Từ 2022" },
 ];
 
 export default function MegaMenu({ solid }: { solid: boolean }) {
@@ -113,15 +127,17 @@ export default function MegaMenu({ solid }: { solid: boolean }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.22, ease: [0.22, 0.9, 0.32, 1] }}
-              className="absolute top-[calc(100%+18px)] left-1/2 z-50 w-[720px] max-w-[88vw] -translate-x-1/2"
+              className="absolute top-[calc(100%+18px)] left-1/2 z-50 w-[860px] max-w-[90vw] -translate-x-1/2"
             >
-              <div className="grid grid-cols-[1.6fr_1fr] overflow-hidden rounded-2xl border border-line bg-white shadow-[0_30px_70px_rgba(11,31,58,0.22)]">
+              <div className="grid grid-cols-[1.7fr_1fr] overflow-hidden rounded-2xl border border-line bg-white shadow-[0_30px_70px_rgba(11,31,58,0.22)]">
                 <div className="grid grid-cols-2 gap-1 p-5">
                   {MEGA_SERVICES.map((svc) => (
                     <Link
                       key={svc.title}
                       href={`/services/${svc.slug}`}
-                      className="group flex items-start gap-3 rounded-xl p-3 transition-colors duration-200 hover:bg-bg-tint"
+                      className={`group relative flex items-start gap-3 rounded-xl border-2 border-transparent px-3 py-2.5 transition-colors duration-200 hover:bg-bg-tint ${
+                        svc.featured ? "mega-glow-border" : ""
+                      }`}
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
                         <svc.icon className="h-5 w-5" />
@@ -130,13 +146,11 @@ export default function MegaMenu({ solid }: { solid: boolean }) {
                         <span className="block text-[14px] font-bold text-navy">
                           {svc.title}
                         </span>
-                        {svc.featured && (
-                          <span className="mt-1 inline-block rounded-full bg-accent px-1.5 py-[3px] text-[9px] font-bold tracking-wide whitespace-nowrap text-white">
-                            Phổ biến nhất
-                          </span>
-                        )}
                         <span className="mt-1 block text-[12.5px] text-body-text">
                           {svc.desc}
+                        </span>
+                        <span className="mt-0.5 block text-[12.5px] text-body-text">
+                          {svc.price}
                         </span>
                       </span>
                     </Link>
@@ -151,6 +165,19 @@ export default function MegaMenu({ solid }: { solid: boolean }) {
                       Đội ngũ MAX OFFICE sẵn sàng hỗ trợ bạn chọn đúng dịch vụ
                       trong 15 phút.
                     </p>
+                    <ul className="mt-5 space-y-2.5">
+                      {TRUST_STATS.map((stat) => (
+                        <li
+                          key={stat.label}
+                          className="flex items-center gap-2.5 text-[12.5px] text-white/80"
+                        >
+                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#8FC1F5]">
+                            <stat.icon className="h-3.5 w-3.5" />
+                          </span>
+                          {stat.label}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                   <div className="mt-5 space-y-3">
                     <a
@@ -160,6 +187,12 @@ export default function MegaMenu({ solid }: { solid: boolean }) {
                       <PhoneIcon />
                       089 8082 188
                     </a>
+                    <Link
+                      href="/#lead"
+                      className="flex items-center justify-center gap-2 rounded-full border-[1.5px] border-white/30 bg-white/10 py-2.5 text-[13px] font-bold text-white transition-colors duration-200 hover:bg-white/20"
+                    >
+                      Đặt lịch tham quan
+                    </Link>
                     <Link
                       href="/dich-vu"
                       className="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-accent hover:gap-2.5"
