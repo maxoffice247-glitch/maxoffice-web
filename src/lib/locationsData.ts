@@ -440,7 +440,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       "Văn phòng ảo tại Nguyễn Oanh, Gò Vấp — toà nhà hạng A, một trong số ít lựa chọn chất lượng cao tại khu vực. Từ 595.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), kèm tư vấn AI, ưu tiên hỗ trợ 24/7, phòng họp.",
     image: IMAGE,
     interiorImages: [
-      { src: "/images/dia-diem-nguyen-oanh-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Nguyễn Oanh" },
+      { src: "/images/dia-diem-nguyen-oanh-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Nguyễn Oanh", caption: "Quầy lễ tân" },
     ],
     intro: [
       "Văn phòng Nguyễn Oanh nằm tại 238-240-242 Nguyễn Oanh, Phường Gò Vấp, toạ lạc trong một toà nhà hạng A — chất lượng xây dựng và tiện ích vượt trội so với mặt bằng chung khu vực. Đây là lựa chọn phù hợp cho doanh nghiệp đang tăng trưởng, cần địa chỉ uy tín cùng các tiện ích hỗ trợ vận hành thực chất như tư vấn tự động hoá AI, ưu tiên hỗ trợ 24/7 và phòng họp đi kèm.",
@@ -516,8 +516,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Yên Thế, Phường Tân Sơn Hòa, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
     interiorImages: [
-      { src: "/images/dia-diem-yen-the-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Yên Thế" },
-      { src: "/images/dia-diem-yen-the-phong-hop.jpg", alt: "Phòng họp văn phòng Yên Thế" },
+      { src: "/images/dia-diem-yen-the-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Yên Thế", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-yen-the-phong-hop.jpg", alt: "Phòng họp văn phòng Yên Thế", caption: "Phòng họp" },
       {
         src: "/images/dia-diem-yen-the-phong-opp.jpg",
         alt: "Phòng đào tạo & sự kiện văn phòng Yên Thế",
@@ -537,7 +537,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Cộng Hoà, Phường Bảy Hiền, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
     interiorImages: [
-      { src: "/images/dia-diem-cong-hoa-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cộng Hoà" },
+      { src: "/images/dia-diem-cong-hoa-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cộng Hoà", caption: "Quầy lễ tân" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Cộng Hoà",
     ...tanBinhBlock("Cộng Hoà, Tân Bình", "123 Cộng Hoà, Phường Bảy Hiền, Quận Tân Bình, TP.HCM"),
@@ -552,9 +552,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Tân Thắng, Phường Tân Sơn Nhì, Tân Phú — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
     interiorImages: [
-      { src: "/images/dia-diem-tan-thang-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Tân Thắng" },
-      { src: "/images/dia-diem-tan-thang-phong-hop.jpg", alt: "Phòng họp văn phòng Tân Thắng" },
-      { src: "/images/dia-diem-tan-thang-cho-ngoi.jpg", alt: "Khu vực chỗ ngồi văn phòng Tân Thắng" },
+      { src: "/images/dia-diem-tan-thang-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Tân Thắng", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-tan-thang-phong-hop.jpg", alt: "Phòng họp văn phòng Tân Thắng", caption: "Phòng họp" },
+      { src: "/images/dia-diem-tan-thang-cho-ngoi.jpg", alt: "Khu vực chỗ ngồi văn phòng Tân Thắng", caption: "Không gian làm việc chung" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Tân Thắng",
     ...tanPhuBlock("Tân Thắng, Tân Phú", "121A-123-125 Tân Thắng, Phường Tân Sơn Nhì, Quận Tân Phú, TP.HCM"),
@@ -569,7 +569,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Cửu Long, Phường Tân Sơn Hòa, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE), đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
     interiorImages: [
-      { src: "/images/dia-diem-cuu-long-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cửu Long" },
+      { src: "/images/dia-diem-cuu-long-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cửu Long", caption: "Quầy lễ tân" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Cửu Long",
     ...tanBinhBlock("Cửu Long, Tân Bình", "06-08-10 Cửu Long, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM"),

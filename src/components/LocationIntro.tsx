@@ -3,6 +3,21 @@ import Reveal from "./Reveal";
 
 type InteriorImage = { src: string; alt: string; caption?: string };
 
+function galleryClass(count: number) {
+  if (count <= 1) return "grid grid-cols-1";
+  if (count === 2) return "grid grid-cols-2";
+  if (count === 3) {
+    return "flex overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0";
+  }
+  return "flex overflow-x-auto pb-1 sm:grid sm:grid-cols-4 sm:overflow-visible sm:pb-0";
+}
+
+function itemClass(count: number) {
+  if (count === 1) return "mx-auto w-full max-w-[420px]";
+  if (count >= 3) return "w-[68%] shrink-0 sm:w-auto";
+  return "";
+}
+
 export default function LocationIntro({
   name,
   image,
@@ -14,72 +29,54 @@ export default function LocationIntro({
   interiorImages?: InteriorImage[];
   paragraphs: string[];
 }) {
+  const galleryImages: InteriorImage[] = [
+    { src: image, alt: `Mặt tiền văn phòng ${name}`, caption: `Mặt tiền toà nhà ${name}` },
+    ...(interiorImages ?? []),
+  ];
+  const count = galleryImages.length;
+
   return (
-    <section className="py-9">
+    <section className="pt-9 pb-3">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
-          <Reveal>
-            <div className="mx-auto w-full max-w-[380px] lg:mx-0">
-              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl shadow-card">
+        <Reveal className="mx-auto max-w-[820px] space-y-5">
+          {paragraphs.map((p, i) => (
+            <p
+              key={i}
+              className={
+                i === 0
+                  ? "text-justify-vn text-[17px] leading-relaxed font-medium text-ink"
+                  : "text-justify-vn text-[15.5px] leading-relaxed text-body-text"
+              }
+            >
+              {p}
+            </p>
+          ))}
+        </Reveal>
+
+        <Reveal delay={0.1} className={`mt-8 gap-3 sm:gap-4 ${galleryClass(count)}`}>
+          {galleryImages.map((img) => (
+            <div key={img.src} className={itemClass(count)}>
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-card">
                 <Image
-                  src={image}
-                  alt={`Mặt tiền văn phòng ${name}`}
+                  src={img.src}
+                  alt={img.alt}
                   fill
-                  sizes="(max-width: 1024px) 60vw, 380px"
+                  sizes={
+                    count === 1
+                      ? "(max-width: 1024px) 90vw, 420px"
+                      : "(max-width: 640px) 68vw, 25vw"
+                  }
                   className="object-cover"
                 />
               </div>
-              {interiorImages && interiorImages.length > 0 && (
-                <div
-                  className={`mt-3 grid gap-2.5 ${
-                    interiorImages.length === 1 ? "grid-cols-1" : "grid-cols-3"
-                  }`}
-                >
-                  {interiorImages.map((img) => (
-                    <div key={img.src}>
-                      <div
-                        className={`relative overflow-hidden rounded-xl shadow-soft ${
-                          interiorImages.length === 1 ? "aspect-[16/10]" : "aspect-square"
-                        }`}
-                      >
-                        <Image
-                          src={img.src}
-                          alt={img.alt}
-                          fill
-                          sizes={
-                            interiorImages.length === 1
-                              ? "(max-width: 1024px) 60vw, 380px"
-                              : "(max-width: 1024px) 20vw, 125px"
-                          }
-                          className="object-cover"
-                        />
-                      </div>
-                      {img.caption && (
-                        <p className="mt-1.5 text-[11px] leading-snug text-body-text">
-                          {img.caption}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
+              {img.caption && (
+                <p className="mt-1.5 text-center text-[11px] leading-snug text-body-text">
+                  {img.caption}
+                </p>
               )}
             </div>
-          </Reveal>
-          <Reveal delay={0.1} className="space-y-5">
-            {paragraphs.map((p, i) => (
-              <p
-                key={i}
-                className={
-                  i === 0
-                    ? "text-justify-vn text-[17px] leading-relaxed font-medium text-ink"
-                    : "text-justify-vn text-[15.5px] leading-relaxed text-body-text"
-                }
-              >
-                {p}
-              </p>
-            ))}
-          </Reveal>
-        </div>
+          ))}
+        </Reveal>
       </div>
     </section>
   );
