@@ -1,71 +1,68 @@
-"use client";
-
-import { useState } from "react";
 import Reveal from "./Reveal";
 import Button from "./Button";
+import ScrollFadeContainer from "./ScrollFadeContainer";
 import { DocumentCheckIcon, WalletIcon, ScaleIcon } from "./icons";
-import type { AccountingPricing, AccountingGroupKey } from "./ServicePricingTable";
+import type { AccountingPricing } from "./ServicePricingTable";
 
 const SURCHARGE_ICONS = [ScaleIcon, DocumentCheckIcon, WalletIcon];
 
 export default function AccountingPricingTable({ pricing }: { pricing: AccountingPricing }) {
-  const [activeKey, setActiveKey] = useState<AccountingGroupKey>(pricing.groups[0].key);
-  const activeGroup = pricing.groups.find((g) => g.key === activeKey) ?? pricing.groups[0];
-
   return (
     <div>
       <Reveal>
-        <div className="mb-6 flex flex-wrap justify-center gap-2.5">
-          {pricing.groups.map((group) => (
-            <button
-              key={group.key}
-              type="button"
-              onClick={() => setActiveKey(group.key)}
-              aria-pressed={activeKey === group.key}
-              className={`rounded-full border-[1.5px] px-5 py-2.5 text-[13.5px] font-bold transition-all duration-200 ${
-                activeKey === group.key
-                  ? "border-primary bg-primary text-white shadow-[0_6px_16px_rgba(21,101,192,0.28)]"
-                  : "border-line bg-white text-body-text hover:border-primary/40 hover:text-primary"
-              }`}
-            >
-              {group.label}
-            </button>
+        <p className="mx-auto mb-6 max-w-[860px] text-center text-[13.5px] leading-relaxed text-body-text">
+          {pricing.groups.map((group, i) => (
+            <span key={group.key}>
+              <strong className="text-navy">Nhóm {group.key}:</strong> {group.desc}
+              {i < pricing.groups.length - 1 && " "}
+            </span>
           ))}
-        </div>
-      </Reveal>
-
-      <Reveal>
-        <p className="mx-auto mb-6 max-w-[640px] text-center text-[13.5px] leading-relaxed text-body-text">
-          {activeGroup.desc}
         </p>
       </Reveal>
 
-      <Reveal className="mx-auto max-w-[640px] overflow-hidden rounded-2xl border border-line bg-white shadow-soft">
-        <table className="w-full border-collapse text-left text-[14px]">
-          <thead>
-            <tr className="border-b border-line bg-bg-tint">
-              <th className="px-6 py-3.5 text-[12.5px] font-bold text-navy">
-                Số hoá đơn ra/vào, chứng từ mỗi quý
-              </th>
-              <th className="px-6 py-3.5 text-right text-[12.5px] font-bold text-navy">
-                {pricing.tableUnit}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {pricing.tiers.map((tier, i) => (
-              <tr
-                key={tier.range}
-                className={`border-b border-line last:border-b-0 ${i % 2 === 1 ? "bg-bg-tint/50" : ""}`}
-              >
-                <td className="px-6 py-3 font-medium text-navy">{tier.range}</td>
-                <td className="px-6 py-3 text-right font-mono text-[15px] font-bold text-primary">
-                  {tier.prices[activeKey]}
-                </td>
+      <Reveal className="mx-auto max-w-[900px] overflow-hidden rounded-2xl border border-line bg-white shadow-soft">
+        <ScrollFadeContainer className="overflow-x-auto">
+          <table className="w-full min-w-[680px] border-collapse text-left">
+            <thead>
+              <tr className="border-b border-line">
+                <th className="sticky left-0 z-10 w-[190px] border-r border-line bg-bg-tint px-5 py-3.5 text-[12px] leading-snug font-bold text-navy shadow-[2px_0_6px_rgba(15,27,45,0.08)] sm:w-[220px]">
+                  Số hoá đơn ra/vào, chứng từ mỗi quý
+                </th>
+                {pricing.groups.map((group) => (
+                  <th
+                    key={group.key}
+                    className="bg-bg-tint px-5 py-3.5 text-right text-[12px] leading-snug font-bold whitespace-nowrap text-navy"
+                  >
+                    {group.label}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {pricing.tiers.map((tier, i) => (
+                <tr key={tier.range}>
+                  <td
+                    className={`sticky left-0 z-10 w-[190px] border-r border-b border-line px-5 py-3 text-[13px] font-medium text-navy shadow-[2px_0_6px_rgba(15,27,45,0.08)] sm:w-[220px] ${
+                      i % 2 === 1 ? "bg-[#f9fbfe]" : "bg-white"
+                    }`}
+                  >
+                    {tier.range}
+                  </td>
+                  {pricing.groups.map((group) => (
+                    <td
+                      key={group.key}
+                      className={`border-b border-line px-5 py-3 text-right font-mono text-[14.5px] font-bold whitespace-nowrap text-primary ${
+                        i % 2 === 1 ? "bg-bg-tint/50" : ""
+                      }`}
+                    >
+                      {tier.prices[group.key]}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </ScrollFadeContainer>
       </Reveal>
 
       <Reveal>
