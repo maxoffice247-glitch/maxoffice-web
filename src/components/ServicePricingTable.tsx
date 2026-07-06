@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import Image from "next/image";
 import SectionHead from "./SectionHead";
 import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import Button from "./Button";
@@ -124,44 +125,69 @@ export type ServicePricing =
   | MatrixPricing
   | AccountingPricing;
 
+type PricingImage = { src: string; alt: string; fit?: "cover" | "contain" };
+
 export default function ServicePricingTable({
   title,
   description,
   pricing,
+  image,
 }: {
   title: string;
   description?: string;
   pricing: ServicePricing;
+  image?: PricingImage;
 }) {
+  const singleCard = pricing.mode === "single" && (
+    <div
+      className={`mx-auto w-full max-w-[420px] rounded-2xl border-2 border-primary bg-white p-8 text-center shadow-card ${
+        image ? "lg:mx-0" : ""
+      }`}
+    >
+      <div className="mb-1 font-mono text-[38px] font-bold text-primary">{pricing.price}</div>
+      <div className="mb-6 text-[13.5px] font-medium text-body-text">{pricing.unit}</div>
+      <ul className="mb-7 space-y-2.5 text-left">
+        {pricing.features.map((f) => (
+          <li key={f} className="flex items-start gap-2 text-[14px] text-body-text">
+            <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+            {f}
+          </li>
+        ))}
+      </ul>
+      <Button href="#lead-form" variant="primary" className="w-full">
+        Nhận tư vấn miễn phí
+      </Button>
+      {pricing.note && <p className="mt-4 text-[12px] text-body-text">{pricing.note}</p>}
+    </div>
+  );
+
   return (
     <section id="bang-gia" className="bg-bg-tint py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <SectionHead eyebrow="Bảng giá" title={title} description={description} />
 
-        {pricing.mode === "single" && (
-          <Reveal className="mx-auto max-w-[420px] rounded-2xl border-2 border-primary bg-white p-8 text-center shadow-card">
-            <div className="mb-1 font-mono text-[38px] font-bold text-primary">
-              {pricing.price}
-            </div>
-            <div className="mb-6 text-[13.5px] font-medium text-body-text">
-              {pricing.unit}
-            </div>
-            <ul className="mb-7 space-y-2.5 text-left">
-              {pricing.features.map((f) => (
-                <li key={f} className="flex items-start gap-2 text-[14px] text-body-text">
-                  <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Button href="#lead-form" variant="primary" className="w-full">
-              Nhận tư vấn miễn phí
-            </Button>
-            {pricing.note && (
-              <p className="mt-4 text-[12px] text-body-text">{pricing.note}</p>
-            )}
-          </Reveal>
+        {pricing.mode === "single" && image && (
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14">
+            <Reveal>
+              <div
+                className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-card ${
+                  image.fit === "contain" ? "bg-bg-tint" : ""
+                }`}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className={image.fit === "contain" ? "object-contain" : "object-cover"}
+                />
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>{singleCard}</Reveal>
+          </div>
         )}
+
+        {pricing.mode === "single" && !image && <Reveal>{singleCard}</Reveal>}
 
         {pricing.mode === "dual" && (
           <div>

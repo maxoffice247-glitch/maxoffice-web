@@ -1,7 +1,6 @@
 import PageHero from "./PageHero";
 import Breadcrumb from "./Breadcrumb";
 import ServiceIntro from "./ServiceIntro";
-import ServiceInlineImage from "./ServiceInlineImage";
 import ServiceBenefits from "./ServiceBenefits";
 import ServiceFeatures from "./ServiceFeatures";
 import ServicePricingTable from "./ServicePricingTable";
@@ -62,14 +61,8 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
         ]}
       />
 
-      <ServiceIntro paragraphs={data.intro} />
-      {data.benefitsImage && (
-        <ServiceInlineImage src={data.benefitsImage.src} alt={data.benefitsImage.alt} />
-      )}
+      <ServiceIntro paragraphs={data.intro} image={data.introImage} />
       <ServiceBenefits title={data.benefitsTitle} items={data.benefits} />
-      {data.featuresImage && (
-        <ServiceInlineImage src={data.featuresImage.src} alt={data.featuresImage.alt} />
-      )}
       <ServiceFeatures
         title={data.featuresTitle}
         description={data.featuresDescription}
@@ -81,10 +74,8 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
         title={data.pricingTitle}
         description={data.pricingDescription}
         pricing={data.pricing}
+        image={data.pricingImage}
       />
-      {data.processImage && (
-        <ServiceInlineImage src={data.processImage.src} alt={data.processImage.alt} />
-      )}
       <ServiceProcess
         title={`Quy trình sử dụng dịch vụ ${data.name}`}
         description="Chỉ 4 bước đơn giản để bắt đầu sử dụng dịch vụ."

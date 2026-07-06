@@ -116,7 +116,7 @@ export const SERVICES_LIST: ServiceListItem[] = [
 
 export type ProcessStep = { num: string; title: string; desc: string };
 
-export type InlineImage = { src: string; alt: string };
+export type InlineImage = { src: string; alt: string; fit?: "cover" | "contain" };
 
 export type ServiceData = {
   slug: string;
@@ -127,21 +127,19 @@ export type ServiceData = {
   metaTitle: string;
   metaDescription: string;
   intro: string[];
+  /** Ảnh 2 cột cạnh đoạn giới thiệu đầu trang — dùng fit "contain" cho ảnh infographic có chữ ở mọi góc. */
+  introImage?: InlineImage;
   benefitsTitle: string;
   benefits: BenefitItem[];
-  /** Ảnh chèn ngay trước phần Benefits để giãn luồng đọc — chỉ một số dịch vụ có sẵn. */
-  benefitsImage?: InlineImage;
   featuresTitle: string;
   featuresDescription: string;
   features: FeatureItem[];
-  /** Ảnh chèn ngay trước phần Features. */
-  featuresImage?: InlineImage;
   pricingTitle: string;
   pricingDescription: string;
   pricing: ServicePricing;
+  /** Ảnh 2 cột cạnh bảng giá — chỉ áp dụng khi pricing.mode === "single". */
+  pricingImage?: InlineImage;
   process: ProcessStep[];
-  /** Ảnh chèn ngay trước phần Process. */
-  processImage?: InlineImage;
   faqs: FaqItem[];
   testimonials: Testimonial[];
   comparisonTitle: string;
@@ -165,7 +163,11 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       "Tại MAX OFFICE, dịch vụ văn phòng ảo được chia thành 6 gói — Gói 299k, START, BASE, ORIGIN, ORIGIN+ và RISE — mỗi gói bổ sung thêm quyền lợi từ lễ tân, wifi, tư vấn pháp lý & thuế đến phòng họp và chỗ ngồi linh hoạt. Không phải chi nhánh nào cũng cung cấp đủ cả 6 gói, vì vậy gói và mức giá cụ thể sẽ tuỳ theo chi nhánh bạn chọn. Với mức giá từ 299.000đ/tháng, đây là một trong những giải pháp tiết kiệm chi phí nhất để bắt đầu kinh doanh đúng pháp lý ngay từ ngày đầu.",
       "Khác với việc tự thuê văn phòng truyền thống — vốn đòi hỏi đặt cọc nhiều tháng, ký hợp đồng dài hạn và chi phí vận hành cố định — văn phòng ảo tại MAX OFFICE cho phép bạn linh hoạt mở rộng hoặc thu hẹp quy mô mà không bị ràng buộc, đồng thời vẫn đảm bảo đầy đủ tính pháp lý để đăng ký kinh doanh, đăng ký thuế và giao dịch với đối tác.",
     ],
-    benefitsImage: { src: "/images/dich-vu-van-phong-ao-anh-1.jpg", alt: "Không gian văn phòng ảo MAX OFFICE" },
+    introImage: {
+      src: "/images/dich-vu-van-phong-ao-anh-1.jpg",
+      alt: "Infographic dịch vụ văn phòng ảo MAX OFFICE",
+      fit: "contain",
+    },
     benefitsTitle: "Vì sao nên chọn văn phòng ảo MAX OFFICE",
     benefits: [
       { icon: ShieldCheckIcon, title: "Địa chỉ pháp lý hợp lệ", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế tại 12 địa điểm trung tâm TP.HCM." },
@@ -241,6 +243,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       "So với việc tự thuê và trang bị văn phòng riêng — vốn đòi hỏi chi phí đầu tư nội thất, ký quỹ nhiều tháng và hợp đồng dài hạn — văn phòng trọn gói giúp doanh nghiệp tiết kiệm đáng kể thời gian và ngân sách trong khi vẫn đảm bảo hình ảnh chuyên nghiệp trước đối tác và khách hàng.",
       "Dịch vụ này đặc biệt phù hợp với các công ty đã có đội ngũ nhân sự ổn định, doanh nghiệp vừa gọi vốn thành công cần văn phòng xứng tầm để tiếp đối tác, hoặc chi nhánh mới mở tại TP.HCM muốn có mặt bằng hoạt động ngay mà không mất thời gian tìm kiếm, sửa chữa. Với 12 vị trí trải đều tại các quận trung tâm, MAX OFFICE giúp doanh nghiệp dễ dàng chọn địa điểm gần khách hàng, đối tác hoặc thuận tiện di chuyển cho nhân viên, đồng thời có thể đổi hoặc mở rộng sang chi nhánh khác khi quy mô đội ngũ thay đổi.",
     ],
+    introImage: { src: "/images/dich-vu-van-phong-tron-goi-anh-1.jpg", alt: "Không gian văn phòng trọn gói MAX OFFICE" },
     benefitsTitle: "Vì sao nên chọn văn phòng trọn gói MAX OFFICE",
     benefits: [
       { icon: ClockIcon, title: "Sẵn sàng sử dụng ngay", desc: "Dọn vào làm việc trong ngày, không cần chờ thi công hay mua sắm nội thất." },
@@ -250,7 +253,6 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { icon: BuildingIcon, title: "Vị trí trung tâm", desc: "Lựa chọn từ 12 địa điểm tại các quận trung tâm TP.HCM." },
       { icon: UsersIcon, title: "Linh hoạt mở rộng", desc: "Dễ dàng nâng cấp diện tích khi đội ngũ phát triển." },
     ],
-    featuresImage: { src: "/images/dich-vu-van-phong-tron-goi-anh-1.jpg", alt: "Không gian văn phòng trọn gói MAX OFFICE" },
     featuresTitle: "Văn phòng trọn gói bao gồm những gì?",
     featuresDescription:
       "Mọi tiện ích cần thiết để đội ngũ của bạn làm việc hiệu quả ngay từ ngày đầu tiên.",
@@ -277,7 +279,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       ],
       note: "Giá tham khảo cho văn phòng diện tích tiêu chuẩn. Liên hệ để nhận báo giá theo diện tích và số lượng nhân sự thực tế.",
     },
-    processImage: { src: "/images/dich-vu-van-phong-tron-goi-anh-2.jpg", alt: "Quy trình sử dụng văn phòng trọn gói MAX OFFICE" },
+    pricingImage: { src: "/images/dich-vu-van-phong-tron-goi-anh-2.jpg", alt: "Không gian văn phòng trọn gói MAX OFFICE" },
     process: [
       { num: "01", title: "Liên hệ tư vấn", desc: "Chia sẻ số lượng nhân sự và nhu cầu diện tích." },
       { num: "02", title: "Tham quan văn phòng", desc: "Chọn chi nhánh và không gian phù hợp trong 12 địa điểm." },
@@ -329,6 +331,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       "Việc đặt phòng họp theo giờ tại MAX OFFICE giúp doanh nghiệp tạo ấn tượng chuyên nghiệp với đối tác mà không phải đầu tư vào một văn phòng riêng chỉ để phục vụ các buổi họp không thường xuyên — một lựa chọn tối ưu về chi phí và hiệu quả sử dụng.",
       "Dịch vụ phù hợp với nhiều tình huống thực tế: công ty startup cần nơi gặp nhà đầu tư, bộ phận nhân sự cần không gian phỏng vấn ứng viên kín đáo, đội kinh doanh cần phòng thuyết trình dự án cho khách hàng, hoặc đơn giản là một nhóm làm việc từ xa cần họp trực tiếp định kỳ. Với 12 chi nhánh tại các quận trung tâm TP.HCM, bạn luôn có thể tìm được phòng họp gần vị trí thuận tiện nhất, đặt lịch nhanh chóng chỉ với một cuộc gọi hoặc tin nhắn mà không cần khảo sát địa điểm trước. Đội ngũ lễ tân tại mỗi chi nhánh cũng hỗ trợ chuẩn bị phòng sẵn sàng trước giờ hẹn, kiểm tra thiết bị hoạt động ổn định và đón tiếp khách mời chu đáo, giúp buổi họp của bạn diễn ra suôn sẻ từ đầu đến cuối mà không phải lo lắng về khâu hậu cần.",
     ],
+    introImage: { src: "/images/dich-vu-phong-hop-anh-1.jpg", alt: "Phòng họp MAX OFFICE" },
     benefitsTitle: "Vì sao nên chọn phòng họp MAX OFFICE",
     benefits: [
       { icon: ClockIcon, title: "Đặt lịch linh hoạt", desc: "Chỉ trả tiền theo giờ sử dụng thực tế, không ràng buộc hợp đồng dài hạn." },
@@ -338,7 +341,6 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { icon: BadgePercentIcon, title: "Đặt lịch nhanh chóng", desc: "Xác nhận đặt phòng trong thời gian ngắn, kể cả gấp." },
       { icon: UsersIcon, title: "Phù hợp nhiều mục đích", desc: "Họp đối tác, phỏng vấn, đào tạo, hội thảo nhỏ." },
     ],
-    featuresImage: { src: "/images/dich-vu-phong-hop-anh-1.jpg", alt: "Phòng họp MAX OFFICE" },
     featuresTitle: "Phòng họp MAX OFFICE được trang bị gì?",
     featuresDescription: "Đầy đủ thiết bị để buổi họp của bạn diễn ra chuyên nghiệp và suôn sẻ.",
     features: [
@@ -364,7 +366,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       ],
       note: "Giá áp dụng cho phòng họp tiêu chuẩn. Liên hệ để nhận báo giá phòng họp sức chứa lớn hoặc thuê theo gói nhiều giờ.",
     },
-    processImage: { src: "/images/dich-vu-phong-hop-anh-2.jpg", alt: "Quy trình đặt phòng họp MAX OFFICE" },
+    pricingImage: { src: "/images/dich-vu-phong-hop-anh-2.jpg", alt: "Phòng họp MAX OFFICE" },
     process: [
       { num: "01", title: "Chọn chi nhánh & khung giờ", desc: "Xác định địa điểm và thời gian phù hợp." },
       { num: "02", title: "Đặt lịch", desc: "Liên hệ hoặc gọi hotline để giữ chỗ." },
@@ -417,6 +419,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       "Mô hình này phù hợp với nhiều đối tượng khác nhau: lập trình viên làm việc từ xa cho công ty nước ngoài, chủ shop kinh doanh online cần nơi xử lý đơn hàng và gọi điện cho khách, đội nhóm 2-3 người mới thành lập chưa cần văn phòng riêng, hoặc freelancer trong lĩnh vực thiết kế, marketing, tư vấn cần một không gian chuyên nghiệp để làm việc tập trung mỗi ngày. Khi đội nhóm phát triển và cần không gian riêng tư hơn, bạn có thể dễ dàng nâng cấp lên văn phòng trọn gói mà không phải thay đổi địa điểm, giúp việc mở rộng quy mô diễn ra liền mạch, không gián đoạn hoạt động kinh doanh.",
       "Một điểm cộng khác của mô hình coworking là tính linh hoạt về thời gian sử dụng — bạn có thể đến làm việc bất kỳ ngày nào trong tháng mà không bị ràng buộc bởi ca giờ cố định, phù hợp với nhịp làm việc thay đổi liên tục của freelancer hay những người vừa làm công việc chính vừa phát triển dự án riêng. Không gian mở cũng tạo điều kiện để bạn quan sát, học hỏi cách vận hành của các doanh nghiệp khác đang cùng làm việc, một lợi thế mà làm việc một mình tại nhà khó có được.",
     ],
+    introImage: { src: "/images/dich-vu-cho-ngoi-linh-dong-1.jpg", alt: "Không gian chỗ ngồi linh động MAX OFFICE" },
     benefitsTitle: "Vì sao nên chọn coworking MAX OFFICE",
     benefits: [
       { icon: TagIcon, title: "Chi phí hợp lý", desc: "Chỉ từ 2.000.000đ/tháng, phù hợp freelancer và nhóm nhỏ." },
@@ -426,7 +429,6 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { icon: CoffeeIcon, title: "Trà, cà phê miễn phí", desc: "Tiện ích phục vụ suốt giờ làm việc." },
       { icon: KeyIcon, title: "Linh hoạt chỗ ngồi", desc: "Không cố định bàn, tự do chọn vị trí làm việc mỗi ngày." },
     ],
-    featuresImage: { src: "/images/dich-vu-cho-ngoi-linh-dong-1.jpg", alt: "Không gian chỗ ngồi linh động MAX OFFICE" },
     featuresTitle: "Không gian coworking bao gồm những gì?",
     featuresDescription: "Mọi tiện ích cần thiết cho một ngày làm việc năng suất.",
     features: [
@@ -452,7 +454,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       ],
       note: "Giá áp dụng cho 1 người. Liên hệ để nhận báo giá theo nhóm 2-3 người.",
     },
-    processImage: { src: "/images/dich-vu-cho-ngoi-linh-dong-2.jpg", alt: "Quy trình sử dụng chỗ ngồi linh động MAX OFFICE" },
+    pricingImage: { src: "/images/dich-vu-cho-ngoi-linh-dong-2.jpg", alt: "Không gian chỗ ngồi linh động MAX OFFICE" },
     process: [
       { num: "01", title: "Liên hệ tư vấn", desc: "Chia sẻ nhu cầu sử dụng và thời gian mong muốn." },
       { num: "02", title: "Tham quan không gian", desc: "Trải nghiệm thực tế không gian coworking." },
@@ -504,6 +506,11 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       "Với kinh nghiệm hỗ trợ hơn 500 doanh nghiệp tại TP.HCM, MAX OFFICE cam kết quy trình minh bạch, thời gian xử lý nhanh chóng và tư vấn tận tâm để doanh nghiệp của bạn có thể bắt đầu hoạt động đúng luật ngay từ ngày đầu tiên.",
       "Sau khi thành lập, nếu doanh nghiệp cần thay đổi tên, địa chỉ, ngành nghề, vốn điều lệ hay đại diện pháp luật, MAX OFFICE cũng có nhóm dịch vụ pháp lý sửa đổi riêng với mức giá rõ ràng cho từng nội dung thay đổi.",
     ],
+    introImage: {
+      src: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
+      alt: "Infographic dịch vụ thành lập doanh nghiệp MAX OFFICE",
+      fit: "contain",
+    },
     benefitsTitle: "Vì sao nên thành lập doanh nghiệp cùng MAX OFFICE",
     benefits: [
       { icon: UsersIcon, title: "Tư vấn loại hình phù hợp", desc: "Phân tích ưu, nhược điểm để chọn đúng mô hình ngay từ đầu." },
@@ -557,7 +564,6 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
         },
       ],
     },
-    processImage: { src: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg", alt: "Quy trình thành lập doanh nghiệp MAX OFFICE" },
     process: [
       { num: "01", title: "Tư vấn loại hình & chọn gói", desc: "Xác định mô hình phù hợp và chọn Gói 1 hoặc Gói 2 theo nhu cầu." },
       { num: "02", title: "Soạn hồ sơ", desc: "Chuẩn bị đầy đủ giấy tờ, điều lệ công ty (nếu có)." },
@@ -609,7 +615,11 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       "Chi phí được tính minh bạch theo số lượng hoá đơn/chứng từ phát sinh mỗi quý và loại hình kinh doanh — từ 500.000đ/tháng cho doanh nghiệp chưa phát sinh hoá đơn, đến các mức cao hơn tuỳ khối lượng giao dịch thực tế. Doanh nghiệp thương mại thuần tuý, doanh nghiệp thương mại kết hợp dịch vụ, và doanh nghiệp sản xuất/xây dựng/xây lắp/khai thác được áp mức phí riêng phù hợp với độ phức tạp nghiệp vụ của từng nhóm.",
       "Nhiều doanh nghiệp mới thành lập thường chủ quan trong giai đoạn đầu vì nghĩ chưa có doanh thu thì chưa cần quan tâm đến sổ sách, nhưng thực tế nghĩa vụ kê khai vẫn phát sinh ngay từ khi có mã số thuế. MAX OFFICE giúp doanh nghiệp xây dựng thói quen kế toán đúng chuẩn ngay từ ngày đầu, tránh tích tụ sai sót về sau và luôn sẵn sàng hồ sơ minh bạch khi cần vay vốn, gọi vốn đầu tư hoặc mở rộng hoạt động kinh doanh.",
     ],
-    benefitsImage: { src: "/images/dich-vu-ke-toan-thue.jpg", alt: "Dịch vụ kế toán thuế MAX OFFICE" },
+    introImage: {
+      src: "/images/dich-vu-ke-toan-thue.jpg",
+      alt: "Infographic dịch vụ kế toán thuế MAX OFFICE",
+      fit: "contain",
+    },
     benefitsTitle: "Vì sao nên chọn kế toán thuế MAX OFFICE",
     benefits: [
       { icon: ClockIcon, title: "Kê khai đúng hạn", desc: "Không còn lo trễ hạn nộp báo cáo thuế, tránh bị phạt." },
