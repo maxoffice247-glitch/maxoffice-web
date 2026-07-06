@@ -29,6 +29,7 @@ export default function ContactPage() {
             <BookingFormLayout
               title="Đặt lịch tham quan / Nhận tư vấn"
               description="Điền thông tin bên dưới, chuyên viên MAX OFFICE sẽ liên hệ tư vấn miễn phí trong thời gian sớm nhất."
+              formType="Liên hệ"
             />
           </Reveal>
         </div>

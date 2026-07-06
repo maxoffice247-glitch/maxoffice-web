@@ -58,6 +58,7 @@ export default function PricingPage() {
       <BookingFormSection
         sectionTitle="Nhận báo giá chi tiết cho nhu cầu của bạn"
         sectionDescription="Để lại thông tin, đội ngũ MAX OFFICE sẽ tư vấn gói dịch vụ phù hợp và sắp xếp lịch tham quan miễn phí."
+        formType="Bảng giá"
       />
     </main>
   );

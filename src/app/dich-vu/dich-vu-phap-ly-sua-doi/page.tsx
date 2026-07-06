@@ -218,6 +218,7 @@ export default function DichVuPhapLySuaDoiPage() {
             defaultService="Thành lập doanh nghiệp"
             title="Nhận tư vấn chi tiết miễn phí"
             description="Điền thông tin bên dưới, chuyên viên MAX OFFICE sẽ liên hệ tư vấn miễn phí trong thời gian sớm nhất."
+            formType="Dịch vụ pháp lý sửa đổi"
           />
         </div>
       </section>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { CheckCircleIcon } from "./icons";
+import { useLeadSubmit } from "@/lib/useLeadSubmit";
 
 const SERVICES = [
   "Văn phòng ảo",
@@ -16,23 +17,56 @@ const SERVICES = [
 const inputClass =
   "w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none";
 
+type FormState = {
+  name: string;
+  phone: string;
+  email: string;
+  service: string;
+  note: string;
+};
+
 export default function ContactForm({
   defaultService = "",
   title = "Gửi thông tin cho chúng tôi",
   description = "Điền thông tin bên dưới, chuyên viên MAX OFFICE sẽ liên hệ tư vấn miễn phí trong thời gian sớm nhất.",
+  formType = "Liên hệ",
 }: {
   defaultService?: string;
   title?: string;
   description?: string;
+  formType?: string;
 }) {
-  const [submitted, setSubmitted] = useState(false);
+  const { status, submit } = useLeadSubmit();
+  const [form, setForm] = useState<FormState>({
+    name: "",
+    phone: "",
+    email: "",
+    service: defaultService,
+    note: "",
+  });
+
+  const update =
+    (field: keyof FormState) =>
+    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+      setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const doSubmit = async () => {
+    await submit({
+      formType,
+      name: form.name,
+      phone: form.phone,
+      email: form.email || undefined,
+      service: form.service || undefined,
+      note: form.note || undefined,
+    });
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    doSubmit();
   };
 
-  if (submitted) {
+  if (status === "success") {
     return (
       <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-line bg-white p-10 text-center">
         <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-primary-tint text-primary">
@@ -66,13 +100,27 @@ export default function ContactForm({
           <label className="mb-1.5 block text-[13px] font-bold text-navy">
             Họ tên <span className="text-accent">*</span>
           </label>
-          <input required type="text" placeholder="Nguyễn Văn A" className={inputClass} />
+          <input
+            required
+            type="text"
+            placeholder="Nguyễn Văn A"
+            value={form.name}
+            onChange={update("name")}
+            className={inputClass}
+          />
         </div>
         <div>
           <label className="mb-1.5 block text-[13px] font-bold text-navy">
             Số điện thoại <span className="text-accent">*</span>
           </label>
-          <input required type="tel" placeholder="09xx xxx xxx" className={inputClass} />
+          <input
+            required
+            type="tel"
+            placeholder="09xx xxx xxx"
+            value={form.phone}
+            onChange={update("phone")}
+            className={inputClass}
+          />
         </div>
       </div>
 
@@ -80,14 +128,24 @@ export default function ContactForm({
         <label className="mb-1.5 block text-[13px] font-bold text-navy">
           Email
         </label>
-        <input type="email" placeholder="ban@congty.com" className={inputClass} />
+        <input
+          type="email"
+          placeholder="ban@congty.com"
+          value={form.email}
+          onChange={update("email")}
+          className={inputClass}
+        />
       </div>
 
       <div className="mt-4">
         <label className="mb-1.5 block text-[13px] font-bold text-navy">
           Dịch vụ quan tâm
         </label>
-        <select defaultValue={defaultService} className={`${inputClass} appearance-none`}>
+        <select
+          value={form.service}
+          onChange={update("service")}
+          className={`${inputClass} appearance-none`}
+        >
           <option value="" disabled>
             Chọn dịch vụ bạn quan tâm
           </option>
@@ -106,15 +164,35 @@ export default function ContactForm({
         <textarea
           rows={4}
           placeholder="Cho chúng tôi biết thêm về nhu cầu của bạn..."
+          value={form.note}
+          onChange={update("note")}
           className={`${inputClass} resize-none`}
         />
       </div>
 
+      {status === "error" && (
+        <div className="mt-4 rounded-xl border border-accent/30 bg-accent/10 p-4 text-[13.5px] leading-relaxed text-navy">
+          Có lỗi xảy ra, vui lòng gọi trực tiếp hotline{" "}
+          <a href="tel:0898082188" className="font-bold text-accent underline">
+            089 8082 188
+          </a>{" "}
+          hoặc thử lại.{" "}
+          <button
+            type="button"
+            onClick={doSubmit}
+            className="font-bold text-primary underline"
+          >
+            Thử lại
+          </button>
+        </div>
+      )}
+
       <button
         type="submit"
-        className="mt-6 flex w-full items-center justify-center rounded-full bg-accent px-6 py-3.5 text-[15px] font-bold text-white shadow-[0_8px_20px_rgba(229,57,53,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[0_14px_28px_rgba(229,57,53,0.35)]"
+        disabled={status === "loading"}
+        className="mt-6 flex w-full items-center justify-center rounded-full bg-accent px-6 py-3.5 text-[15px] font-bold text-white shadow-[0_8px_20px_rgba(229,57,53,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[0_14px_28px_rgba(229,57,53,0.35)] disabled:pointer-events-none disabled:opacity-60"
       >
-        Gửi thông tin
+        {status === "loading" ? "Đang gửi..." : "Gửi thông tin"}
       </button>
       <p className="mt-3 text-center text-[12px] text-body-text">
         Bằng việc gửi thông tin, bạn đồng ý để MAX OFFICE liên hệ tư vấn.

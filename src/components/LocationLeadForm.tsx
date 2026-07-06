@@ -22,6 +22,7 @@ export default function LocationLeadForm({
             title={`Đặt lịch tham quan tại ${name}`}
             description="Điền thông tin bên dưới, chuyên viên MAX OFFICE sẽ liên hệ xác nhận lịch tham quan miễn phí trong thời gian sớm nhất."
             defaultLocationSlug={slug}
+            formType={`Địa điểm - ${name}`}
           />
         </Reveal>
       </div>

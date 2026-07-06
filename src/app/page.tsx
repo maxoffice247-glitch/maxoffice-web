@@ -32,7 +32,7 @@ export default function Home() {
       <Pricing />
       <KnowledgeCenter />
       <Faq />
-      <BookingFormSection />
+      <BookingFormSection formType="Trang chủ" />
     </main>
   );
 }

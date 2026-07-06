@@ -103,6 +103,7 @@ export default function ToolPageTemplate({
             defaultService={defaultService}
             title="Nhận tư vấn chi tiết miễn phí"
             description="Điền thông tin bên dưới, chuyên viên MAX OFFICE sẽ liên hệ tư vấn miễn phí trong thời gian sớm nhất."
+            formType={`Công cụ - ${breadcrumbLabel}`}
           />
         </div>
       </section>

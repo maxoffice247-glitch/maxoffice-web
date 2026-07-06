@@ -17,6 +17,7 @@ export default function ServiceLeadForm({ serviceName }: { serviceName: string }
             defaultService={serviceName}
             title={`Đăng ký tư vấn ${serviceName}`}
             description="Điền thông tin bên dưới, chuyên viên MAX OFFICE sẽ liên hệ tư vấn miễn phí trong thời gian sớm nhất."
+            formType={`Dịch vụ - ${serviceName}`}
           />
           <ContactInfo />
         </Reveal>
