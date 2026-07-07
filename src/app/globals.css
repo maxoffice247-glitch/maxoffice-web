@@ -136,27 +136,38 @@ body {
 }
 
 /* Rotating conic-gradient border for the mega menu's featured item — a soft
-   red comet sweeping over a faint red base ring. Rotating the masked ::before
-   itself (rather than animating the gradient's angle) keeps this on the
-   universally-supported `transform` property instead of @property Houdini. */
+   red comet sweeping over a faint red base ring.
+
+   The gradient layer (::before) is rotated directly, but it is oversized
+   (200% in both dimensions) and rotates around its own center, which is
+   pinned to the card's center — so as it spins, its far corners sweep
+   outside the card on every axis equally. That overflow is contained by
+   `overflow: hidden` on the card itself, which clips descendants to the
+   card's own rounded rect. Only ::before rotates; the ring shape itself
+   never moves, because it isn't drawn by masking a rotated element — it's
+   drawn by a SEPARATE, non-rotating ::after that opaquely covers everything
+   except a 2px margin, letting the spinning gradient underneath show through
+   only there. */
 @keyframes mega-glow-spin {
   to {
-    transform: rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
 .mega-glow-border {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
 }
 
 .mega-glow-border::before {
   content: "";
   position: absolute;
-  inset: -2px;
-  z-index: -1;
-  border-radius: inherit;
-  padding: 2px;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  z-index: -2;
   background: conic-gradient(
     from 0deg,
     rgba(229, 57, 53, 0.18) 0%,
@@ -164,13 +175,24 @@ body {
     rgba(229, 57, 53, 0.95) 88%,
     rgba(229, 57, 53, 0.18) 100%
   );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  transform: translate(-50%, -50%) rotate(0deg);
   animation: mega-glow-spin 3.5s linear infinite;
   pointer-events: none;
+}
+
+.mega-glow-border::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border-radius: calc(0.75rem - 2px);
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+  pointer-events: none;
+}
+
+.mega-glow-border:hover::after {
+  background-color: var(--color-bg-tint);
 }
 
 .mega-glow-border:hover::before {
@@ -178,7 +200,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mega-glow-border::before {
+  .mega-glow-border::before,
+  .mega-glow-border::after {
     display: none;
   }
 

@@ -125,7 +125,12 @@ export type ServicePricing =
   | MatrixPricing
   | AccountingPricing;
 
-type PricingImage = { src: string; alt: string; fit?: "cover" | "contain" };
+type PricingImage = {
+  src: string;
+  alt: string;
+  fit?: "cover" | "contain";
+  objectPosition?: string;
+};
 
 export default function ServicePricingTable({
   title,
@@ -170,7 +175,7 @@ export default function ServicePricingTable({
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14">
             <Reveal>
               <div
-                className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-card ${
+                className={`relative aspect-[16/10] w-full overflow-hidden rounded-2xl shadow-card ${
                   image.fit === "contain" ? "bg-bg-tint" : ""
                 }`}
               >
@@ -180,6 +185,11 @@ export default function ServicePricingTable({
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className={image.fit === "contain" ? "object-contain" : "object-cover"}
+                  style={
+                    image.fit === "contain"
+                      ? undefined
+                      : { objectPosition: image.objectPosition ?? "center" }
+                  }
                 />
               </div>
             </Reveal>

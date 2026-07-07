@@ -9,9 +9,9 @@ import { ArrowRightSmallIcon } from "@/components/icons";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
 
 export const metadata: Metadata = {
-  title: "12 Địa Điểm Văn Phòng MAX OFFICE Tại TP.HCM",
+  title: "12 Chi Nhánh Văn Phòng MAX OFFICE Tại TP.HCM",
   description:
-    "Danh sách đầy đủ 12 địa điểm văn phòng ảo, văn phòng trọn gói và coworking của MAX OFFICE tại Tân Bình, Gò Vấp, Tân Phú, Quận 10 và Quận 1, TP.HCM.",
+    "Danh sách đầy đủ 12 chi nhánh văn phòng ảo, văn phòng trọn gói và coworking của MAX OFFICE tại Tân Bình, Gò Vấp, Tân Phú, Quận 10 và Quận 1, TP.HCM.",
 };
 
 export default function DiaDiemPage() {
@@ -19,17 +19,17 @@ export default function DiaDiemPage() {
     <main>
       <PageHero
         image="/images/hero-dia-diem.png"
-        eyebrow="Địa điểm"
-        title="12 địa điểm văn phòng tại TP.HCM"
+        eyebrow="Chi nhánh"
+        title="12 chi nhánh văn phòng tại TP.HCM"
         description="Từ Tân Bình, Gò Vấp, Tân Phú, Quận 10 đến trung tâm Quận 1 — chọn địa chỉ gần đối tác, khách hàng hoặc thuận tiện nhất cho đội ngũ của bạn."
       />
-      <Breadcrumb items={[{ label: "Địa điểm" }]} />
+      <Breadcrumb items={[{ label: "Chi nhánh" }]} />
 
       <section className="py-9">
         <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
           <SectionHead
             eyebrow="Hệ thống chi nhánh"
-            title="Toàn bộ 12 địa điểm MAX OFFICE"
+            title="Toàn bộ 12 chi nhánh MAX OFFICE"
             description="Mỗi địa điểm đều đủ điều kiện đăng ký kinh doanh, đăng ký thuế và sẵn sàng phục vụ văn phòng ảo, văn phòng trọn gói, phòng họp và chỗ ngồi linh động."
           />
           <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

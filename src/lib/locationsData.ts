@@ -99,8 +99,10 @@ export type LocationData = {
   metaTitle: string;
   metaDescription: string;
   image: string;
+  /** CSS object-position cho ảnh mặt tiền trong gallery — chỉ cần khi crop mặc định "center" cắt mất chi tiết quan trọng (bảng hiệu, lối vào...). */
+  facadeObjectPosition?: string;
   /** Ảnh nội thất (lễ tân, phòng họp, chỗ ngồi...) hiển thị dạng gallery cạnh ảnh mặt tiền — chỉ một số chi nhánh có sẵn. */
-  interiorImages?: { src: string; alt: string; caption?: string }[];
+  interiorImages?: { src: string; alt: string; caption?: string; objectPosition?: string }[];
   intro: string[];
   benefitsTitle: string;
   benefits: BenefitItem[];
@@ -583,6 +585,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Hoàng Việt Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Hoàng Việt, Phường Tân Sơn Nhất, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    // Facade photo is a tall portrait shot cropped into a 4:3 gallery cell — the
+    // distinctive orange entrance frame sits low in frame and gets cut off by a
+    // plain center crop, so bias the crop downward to keep it in view.
+    facadeObjectPosition: "center 68%",
     benefitsTitle: "Vì sao nên chọn văn phòng Hoàng Việt",
     ...tanBinhBlock("Hoàng Việt, Tân Bình", "1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình, TP.HCM"),
   },

@@ -1,7 +1,16 @@
 import Image from "next/image";
 import Reveal from "./Reveal";
 
-type IntroImage = { src: string; alt: string; fit?: "cover" | "contain" };
+type IntroImage = {
+  src: string;
+  alt: string;
+  fit?: "cover" | "contain";
+  objectPosition?: string;
+  /** Overrides the default 16:10 box for images whose real proportions differ a lot (e.g. a portrait infographic), so the frame hugs the image instead of leaving letterbox gaps. */
+  aspectRatio?: string;
+  /** Caps the box width when using a tall custom aspect ratio, so the row doesn't grow too tall. */
+  maxWidth?: string;
+};
 
 function paragraphClass(i: number) {
   return i === 0
@@ -41,9 +50,13 @@ export default function ServiceIntro({
         <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 lg:gap-14">
           <Reveal>
             <div
-              className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-card ${
+              className={`relative w-full overflow-hidden rounded-2xl shadow-card ${
                 isContain ? "bg-bg-tint" : ""
-              }`}
+              } ${image.maxWidth ? "mx-auto lg:mx-0" : ""}`}
+              style={{
+                aspectRatio: image.aspectRatio ?? "16 / 10",
+                maxWidth: image.maxWidth,
+              }}
             >
               <Image
                 src={image.src}
@@ -51,6 +64,7 @@ export default function ServiceIntro({
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className={isContain ? "object-contain" : "object-cover"}
+                style={isContain ? undefined : { objectPosition: image.objectPosition ?? "center" }}
               />
             </div>
           </Reveal>
@@ -59,7 +73,10 @@ export default function ServiceIntro({
           </Reveal>
         </div>
         {rest.length > 0 && (
-          <Reveal delay={0.15} className="mx-auto mt-5 max-w-[820px] space-y-5">
+          <Reveal
+            delay={0.15}
+            className={`mx-auto max-w-[820px] space-y-5 ${image.maxWidth ? "mt-2" : "mt-5"}`}
+          >
             {rest.map((p, i) => (
               <p key={i} className={paragraphClass(i + 1)}>
                 {p}

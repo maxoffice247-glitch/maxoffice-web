@@ -43,13 +43,13 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
 
       <PageHero
         image={data.image}
-        eyebrow="Địa điểm"
+        eyebrow="Chi nhánh"
         title={data.heroTitle}
         description={data.heroDescription}
       />
       <Breadcrumb
         items={[
-          { label: "Địa điểm", href: "/dia-diem" },
+          { label: "Chi nhánh", href: "/dia-diem" },
           { label: data.name },
         ]}
       />
@@ -57,6 +57,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       <LocationIntro
         name={data.name}
         image={`/images/dia-diem-${data.slug}.jpg`}
+        facadeObjectPosition={data.facadeObjectPosition}
         interiorImages={data.interiorImages}
         paragraphs={data.intro}
       />

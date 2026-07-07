@@ -50,10 +50,10 @@ export default function Locations() {
         <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-[520px] text-left">
             <span className="mb-4 inline-flex items-center gap-2 text-[12.5px] font-bold tracking-[0.14em] text-primary uppercase before:h-[2px] before:w-[22px] before:rounded-full before:bg-accent">
-              Địa điểm
+              Chi nhánh
             </span>
             <h2 className="mb-3.5 font-display text-[28px] leading-[1.2] font-extrabold text-navy sm:text-[34px] lg:text-[40px]">
-              12 địa điểm tại TP.HCM
+              12 chi nhánh tại TP.HCM
             </h2>
             <p className="text-[16.5px] text-body-text">
               Từ Tân Bình, Gò Vấp, Tân Phú, Quận 10 đến trung tâm Quận 1 —
@@ -62,7 +62,7 @@ export default function Locations() {
             </p>
           </div>
           <Button href="/dia-diem" variant="ghost">
-            Xem tất cả 12 địa điểm
+            Xem tất cả 12 chi nhánh
           </Button>
         </Reveal>
         <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

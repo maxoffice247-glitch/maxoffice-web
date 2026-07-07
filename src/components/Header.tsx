@@ -7,14 +7,13 @@ import { PhoneIcon, MenuIcon, CloseIcon, SearchIcon } from "./icons";
 import Button from "./Button";
 import MegaMenu from "./MegaMenu";
 import ToolsMegaMenu from "./ToolsMegaMenu";
+import LocationsMegaMenu from "./LocationsMegaMenu";
 import { useSearch } from "./SearchContext";
 
 const NAV_LINKS_BEFORE = [
   { label: "Trang chủ", href: "/" },
   { label: "Về chúng tôi", href: "/ve-chung-toi" },
 ];
-
-const NAV_LINKS_MIDDLE = [{ label: "Địa điểm", href: "/dia-diem" }];
 
 const NAV_LINKS_AFTER = [
   { label: "Kiến thức", href: "/knowledge-center" },
@@ -26,7 +25,7 @@ const NAV_LINKS_MOBILE = [
   { label: "Trang chủ", href: "/" },
   { label: "Về chúng tôi", href: "/ve-chung-toi" },
   { label: "Dịch vụ", href: "/dich-vu" },
-  { label: "Địa điểm", href: "/dia-diem" },
+  { label: "Chi nhánh", href: "/dia-diem" },
   { label: "Tiện ích", href: "/tien-ich" },
   { label: "Kiến thức", href: "/knowledge-center" },
   { label: "Bảng giá", href: "/bang-gia" },
@@ -94,17 +93,7 @@ export default function Header() {
               </Link>
             ))}
             <MegaMenu solid={solid} />
-            {NAV_LINKS_MIDDLE.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-300 hover:text-accent ${
-                  solid ? "text-ink" : "text-white/90"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            <LocationsMegaMenu solid={solid} />
             <ToolsMegaMenu solid={solid} />
             {NAV_LINKS_AFTER.map((link) => (
               <Link

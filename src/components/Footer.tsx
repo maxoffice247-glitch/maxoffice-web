@@ -13,7 +13,7 @@ const SERVICE_LINKS = [
 
 const COMPANY_LINKS = [
   { label: "Về chúng tôi", href: "/ve-chung-toi" },
-  { label: "Địa điểm", href: "/dia-diem" },
+  { label: "Chi nhánh", href: "/dia-diem" },
   { label: "Tiện ích", href: "/tien-ich" },
   { label: "Bảng giá", href: "/bang-gia" },
   { label: "Liên hệ", href: "/lien-he" },

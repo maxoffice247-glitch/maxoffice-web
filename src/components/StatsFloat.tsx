@@ -5,7 +5,7 @@ const STATS = [
   {
     icon: BuildingIcon,
     value: "12",
-    label: "Địa điểm tại TP.HCM",
+    label: "Chi nhánh tại TP.HCM",
     border: "border-r border-b border-line sm:border-b-0 sm:border-r sm:border-line",
   },
   {

@@ -116,7 +116,17 @@ export const SERVICES_LIST: ServiceListItem[] = [
 
 export type ProcessStep = { num: string; title: string; desc: string };
 
-export type InlineImage = { src: string; alt: string; fit?: "cover" | "contain" };
+export type InlineImage = {
+  src: string;
+  alt: string;
+  fit?: "cover" | "contain";
+  /** CSS object-position — only needed when the default "center" crop cuts off something important. */
+  objectPosition?: string;
+  /** Overrides the shared 16:10 intro box for images whose real proportions differ a lot. */
+  aspectRatio?: string;
+  /** Caps the box width when using a custom aspectRatio, so the row doesn't grow too tall. */
+  maxWidth?: string;
+};
 
 export type ServiceData = {
   slug: string;
@@ -167,6 +177,10 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       src: "/images/dich-vu-van-phong-ao-anh-1.jpg",
       alt: "Infographic dịch vụ văn phòng ảo MAX OFFICE",
       fit: "contain",
+      // Real image is 1024x1536 (2:3 portrait) — hug that ratio instead of the
+      // shared 16:10 box, which left large empty gray bars on both sides.
+      aspectRatio: "2 / 3",
+      maxWidth: "520px",
     },
     benefitsTitle: "Vì sao nên chọn văn phòng ảo MAX OFFICE",
     benefits: [
