@@ -9,7 +9,12 @@ function galleryClass(count: number) {
   if (count === 3) {
     return "flex overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0";
   }
-  return "flex overflow-x-auto pb-1 sm:grid sm:grid-cols-4 sm:overflow-visible sm:pb-0";
+  if (count === 4) {
+    return "flex overflow-x-auto pb-1 sm:grid sm:grid-cols-4 sm:overflow-visible sm:pb-0";
+  }
+  // 5+ images: a flat 4-col grid would strand a lone item on its own row —
+  // step through mobile scroll → 2-col tablet → 3-col desktop instead.
+  return "flex overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-3";
 }
 
 function itemClass(count: number) {

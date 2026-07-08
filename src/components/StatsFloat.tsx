@@ -1,4 +1,5 @@
 import Reveal from "./Reveal";
+import StatNumber from "./StatNumber";
 import { BuildingIcon, UsersIcon, CalendarIcon, TagIcon } from "./icons";
 
 const STATS = [
@@ -43,8 +44,7 @@ export default function StatsFloat() {
             </span>
             <div>
               <div className="mb-1 flex items-baseline gap-0.5 font-mono text-[28px] font-bold text-primary sm:text-[34px]">
-                {stat.value}
-                {stat.suffix && <span className="text-lg sm:text-xl">{stat.suffix}</span>}
+                <StatNumber value={stat.value} suffix={stat.suffix} />
               </div>
               <div className="text-[13.5px] font-medium text-body-text">{stat.label}</div>
             </div>

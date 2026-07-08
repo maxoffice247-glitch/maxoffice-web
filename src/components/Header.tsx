@@ -122,7 +122,12 @@ export default function Header() {
             <Button
               href="tel:0898082188"
               variant="primary"
-              icon={<PhoneIcon />}
+              icon={
+                <span className="relative flex h-4 w-4 items-center justify-center">
+                  <span aria-hidden className="animate-header-phone-ring absolute inset-0 rounded-full" />
+                  <PhoneIcon className="animate-header-phone-icon relative h-4 w-4" />
+                </span>
+              }
               className="max-sm:hidden !py-3"
             >
               089 8082 188

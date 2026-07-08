@@ -308,6 +308,11 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Thuê văn phòng ảo, văn phòng trọn gói tại Sông Thao, Tân Bình — trụ sở chính MAX OFFICE, đầy đủ dịch vụ, văn phòng ảo từ 350.000đ/tháng (gói START, BASE), gần sân bay Tân Sơn Nhất.",
     image: IMAGE,
+    interiorImages: [
+      { src: "/images/dia-diem-song-thao-khong-gian-cowrorking.jpg", alt: "Khu vực làm việc chung văn phòng Sông Thao", caption: "Không gian làm việc chung" },
+      { src: "/images/dia-diem-song-thao-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Sông Thao", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-song-thao-phong-hop.jpg", alt: "Phòng họp văn phòng Sông Thao", caption: "Phòng họp" },
+    ],
     intro: [
       "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 12 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
@@ -375,6 +380,20 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Văn phòng ảo, văn phòng trọn gói tại Điện Biên Phủ, Phường Tân Định, Quận 1 — địa chỉ đăng ký kinh doanh uy tín, đẳng cấp cho doanh nghiệp tại trung tâm TP.HCM.",
     image: IMAGE,
+    interiorImages: [
+      {
+        src: "/images/dia-diem-dien-bien-phu-coworking.jpg",
+        alt: "Khu vực làm việc chung văn phòng Điện Biên Phủ",
+        caption: "Không gian làm việc chung",
+        // Tall portrait shot — a plain center crop leans on the wall art
+        // above the desks; bias down slightly to keep the desks and chairs
+        // (the actual coworking setup) fully in frame.
+        objectPosition: "center 62%",
+      },
+      { src: "/images/dia-diem-dien-bien-phu-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Điện Biên Phủ", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-dien-bien-phu-phong-hop.jpg", alt: "Phòng họp văn phòng Điện Biên Phủ", caption: "Phòng họp" },
+      { src: "/images/dia-diem-dien-bien-phu-phong-rieng.jpg", alt: "Phòng riêng văn phòng Điện Biên Phủ", caption: "Phòng riêng" },
+    ],
     intro: [
       "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 12 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
@@ -525,6 +544,15 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
         alt: "Phòng đào tạo & sự kiện văn phòng Yên Thế",
         caption: "Phòng đào tạo & sự kiện — sức chứa 30-50 người",
       },
+      {
+        src: "/images/dia-diem-yen-the-bang-ten.jpg",
+        alt: "Bảng tên công ty tại toà nhà văn phòng Yên Thế",
+        caption: "Bảng tên công ty tại toà nhà",
+        // Tall board photo — the MAX OFFICE header and top rows of company
+        // plates are what identify it; the lower third is blank panel, so
+        // anchor the crop to the top instead of centering.
+        objectPosition: "center top",
+      },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
     ...tanBinhBlock("Yên Thế, Tân Bình", "92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM"),
@@ -557,6 +585,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-tan-thang-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Tân Thắng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-tan-thang-phong-hop.jpg", alt: "Phòng họp văn phòng Tân Thắng", caption: "Phòng họp" },
       { src: "/images/dia-diem-tan-thang-cho-ngoi.jpg", alt: "Khu vực chỗ ngồi văn phòng Tân Thắng", caption: "Không gian làm việc chung" },
+      { src: "/images/dia-diem-tan-thang-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Tân Thắng", caption: "Bảng tên công ty tại toà nhà" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Tân Thắng",
     ...tanPhuBlock("Tân Thắng, Tân Phú", "121A-123-125 Tân Thắng, Phường Tân Sơn Nhì, Quận Tân Phú, TP.HCM"),
@@ -589,6 +618,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     // distinctive orange entrance frame sits low in frame and gets cut off by a
     // plain center crop, so bias the crop downward to keep it in view.
     facadeObjectPosition: "center 68%",
+    interiorImages: [
+      { src: "/images/dia-diem-hoang-viet-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Hoàng Việt", caption: "Quầy lễ tân" },
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Hoàng Việt",
     ...tanBinhBlock("Hoàng Việt, Tân Bình", "1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình, TP.HCM"),
   },
@@ -601,6 +633,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Bàu Cát 2 Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Bàu Cát 2, Phường Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    interiorImages: [
+      { src: "/images/dia-diem-bau-cat-coworking.jpg", alt: "Khu vực làm việc chung văn phòng Bàu Cát 2", caption: "Không gian làm việc chung" },
+      { src: "/images/dia-diem-bau-cat-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Bàu Cát 2", caption: "Quầy lễ tân" },
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Bàu Cát 2",
     ...tanBinhBlock("Bàu Cát 2, Tân Bình", "24A Bàu Cát 2, Phường Tân Bình, TP.HCM"),
   },
@@ -613,6 +649,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Lam Sơn Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Lam Sơn, Phường Tân Sơn Hòa, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    interiorImages: [
+      { src: "/images/dia-diem-lam-son-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Lam Sơn", caption: "Quầy lễ tân" },
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Lam Sơn",
     ...tanBinhBlock("Lam Sơn, Tân Bình", "2-2B Lam Sơn, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM"),
   },
@@ -637,6 +676,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng CMT8 Quận 10 | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10 — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    interiorImages: [
+      { src: "/images/dia-diem-cmt8-le-tan.jpg", alt: "Khu vực lễ tân văn phòng CMT8", caption: "Quầy lễ tân" },
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng CMT8",
     ...quan10Block("CMT8, Quận 10", "283/26-28 Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10, TP.HCM"),
   },

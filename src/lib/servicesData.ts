@@ -140,11 +140,15 @@ export type ServiceData = {
   intro: string[];
   /** Ảnh 2 cột cạnh đoạn giới thiệu đầu trang — dùng fit "contain" cho ảnh infographic có chữ ở mọi góc. */
   introImage?: InlineImage;
+  /** Ảnh full-width phía trên, toàn bộ đoạn intro chảy bên dưới (thay vì bố cục 2 cột ảnh-trái/text-phải) — dùng cho introImage ngang (vd. 16:9) mà đặt cạnh cột text sẽ mất cân đối. */
+  introStackedLayout?: boolean;
   benefitsTitle: string;
   benefits: BenefitItem[];
   featuresTitle: string;
   featuresDescription: string;
   features: FeatureItem[];
+  /** Overrides the generic hero photo ServiceFeatures falls back to, when a more specific illustrative shot exists. */
+  featuresImage?: { src: string; alt: string };
   pricingTitle: string;
   pricingDescription: string;
   pricing: ServicePricing;
@@ -178,11 +182,11 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       src: "/images/dich-vu-van-phong-ao-anh-1.jpg",
       alt: "Infographic dịch vụ văn phòng ảo MAX OFFICE",
       fit: "contain",
-      // Real image is 1024x1536 (2:3 portrait) — hug that ratio instead of the
-      // shared 16:10 box, which left large empty gray bars on both sides.
-      aspectRatio: "2 / 3",
-      maxWidth: "520px",
+      // Real image is 1536x864 (16:9 landscape) — hug that ratio instead of the
+      // shared 16:10 box; contain still guards against a slightly-off crop.
+      aspectRatio: "16 / 9",
     },
+    introStackedLayout: true,
     benefitsTitle: "Vì sao nên chọn văn phòng ảo MAX OFFICE",
     benefits: [
       { icon: ShieldCheckIcon, title: "Địa chỉ pháp lý hợp lệ", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế tại 12 địa điểm trung tâm TP.HCM." },
@@ -203,6 +207,10 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { title: "Ưu đãi combo", desc: "Giảm giá khi đăng ký kèm dịch vụ thành lập doanh nghiệp." },
       { title: "Hỗ trợ xác minh địa chỉ", desc: "Cung cấp hồ sơ chứng minh địa chỉ khi cơ quan thuế yêu cầu." },
     ],
+    featuresImage: {
+      src: "/images/dich-vu-van-phong-ao-bang-ten.jpg",
+      alt: "Bảng tên các công ty khách hàng đăng ký địa chỉ văn phòng ảo tại MAX OFFICE",
+    },
     pricingTitle: "Bảng giá văn phòng ảo",
     pricingDescription: "6 gói dịch vụ, từ 299.000đ/tháng — gói và mức giá cụ thể tuỳ theo chi nhánh.",
     pricing: VO_MATRIX_PRICING,

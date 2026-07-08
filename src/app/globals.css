@@ -73,6 +73,40 @@ body {
   animation: pulse-call 2.4s infinite;
 }
 
+/* Header hotline icon — a slow breathing scale on the phone icon itself plus a
+   soft ring pulsing outward from behind it, echoing the floating call
+   button's pulse-call ripple but scoped to just the icon so it doesn't
+   distract from the rest of the nav bar. */
+@keyframes header-phone-icon-scale {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+@keyframes header-phone-icon-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+.animate-header-phone-icon {
+  animation: header-phone-icon-scale 2.4s ease-in-out infinite;
+}
+
+.animate-header-phone-ring {
+  animation: header-phone-icon-ring 2.4s ease-in-out infinite;
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
