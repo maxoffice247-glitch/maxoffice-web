@@ -1,5 +1,6 @@
 import Reveal from "./Reveal";
 import Button from "./Button";
+import LeadFormButton from "./LeadFormButton";
 import { PhoneIcon } from "./icons";
 
 type CtaBannerProps = {
@@ -7,7 +8,8 @@ type CtaBannerProps = {
   title?: string;
   description?: string;
   secondaryLabel?: string;
-  secondaryHref?: string;
+  /** Exact label in the lead form's "Dịch vụ quan tâm" dropdown to pre-select when the secondary CTA is clicked. */
+  service?: string;
 };
 
 export default function CtaBanner({
@@ -15,10 +17,10 @@ export default function CtaBanner({
   title = "Sẵn sàng bắt đầu cùng MAX OFFICE?",
   description = "Nhận tư vấn miễn phí trong 15 phút — đội ngũ chuyên viên sẽ liên hệ và đề xuất giải pháp phù hợp với bạn.",
   secondaryLabel = "Đặt lịch tư vấn",
-  secondaryHref = "/#lead",
+  service,
 }: CtaBannerProps) {
   return (
-    <section id="lead" className="py-9">
+    <section id="cta-banner" className="py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <Reveal
           className="relative grid grid-cols-1 items-center gap-8 overflow-hidden rounded-[24px] bg-gradient-to-tr from-navy to-primary-dark p-8 shadow-[0_30px_70px_rgba(11,31,58,0.28)] sm:p-12 lg:grid-cols-[1.8fr_1fr] lg:p-16"
@@ -62,13 +64,13 @@ export default function CtaBanner({
             >
               Gọi ngay 0932 357 357
             </Button>
-            <Button
-              href={secondaryHref}
+            <LeadFormButton
+              service={service}
               variant="outline"
               className="w-full !px-5 !py-3 !text-[13.5px]"
             >
               {secondaryLabel}
-            </Button>
+            </LeadFormButton>
           </div>
         </Reveal>
       </div>

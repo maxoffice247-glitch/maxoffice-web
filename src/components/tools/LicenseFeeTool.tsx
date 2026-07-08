@@ -1,6 +1,7 @@
 import Reveal from "../Reveal";
 import SectionHead from "../SectionHead";
 import Button from "../Button";
+import LeadFormButton from "../LeadFormButton";
 import { CheckCircleIcon, BadgePercentIcon } from "../icons";
 
 export default function LicenseFeeTool() {
@@ -44,9 +45,9 @@ export default function LicenseFeeTool() {
               <Button href="/services/ke-toan-thue" variant="ghost">
                 Xem dịch vụ kế toán & thuế
               </Button>
-              <Button href="#lead-form" variant="primary">
+              <LeadFormButton service="Kế toán & thuế" variant="primary">
                 Cần tư vấn thuế khác? Liên hệ MAX OFFICE
-              </Button>
+              </LeadFormButton>
             </div>
           </div>
         </Reveal>

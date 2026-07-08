@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDownIcon } from "./icons";
+import { ChevronDownIcon, MapPinIcon, PhoneIcon } from "./icons";
+import Button from "./Button";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
 
 export default function LocationsMegaMenu({ solid }: { solid: boolean }) {
@@ -45,23 +46,58 @@ export default function LocationsMegaMenu({ solid }: { solid: boolean }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.22, ease: [0.22, 0.9, 0.32, 1] }}
-            className="absolute top-[calc(100%+18px)] left-1/2 z-50 w-[300px] -translate-x-1/2"
+            className="absolute top-[calc(100%+18px)] left-1/2 z-50 w-[860px] max-w-[92vw] -translate-x-1/2"
           >
-            <div className="max-h-[420px] overflow-y-auto rounded-2xl border border-line bg-white p-2.5 shadow-[0_30px_70px_rgba(11,31,58,0.22)]">
-              {LOCATIONS_LIST.map((loc) => (
-                <Link
-                  key={loc.slug}
-                  href={`/locations/${loc.slug}`}
-                  className="flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-[13.5px] font-semibold text-navy transition-colors duration-200 hover:bg-bg-tint hover:text-primary"
-                >
-                  {loc.name}
-                  {loc.tag && (
-                    <span className="shrink-0 rounded-full bg-accent/8 px-2 py-0.5 text-[10.5px] font-bold text-accent">
-                      {loc.tag}
+            <div className="overflow-hidden rounded-2xl border border-line bg-white shadow-[0_30px_70px_rgba(11,31,58,0.22)]">
+              <div className="grid grid-cols-2 gap-1 p-5 sm:grid-cols-3">
+                {LOCATIONS_LIST.map((loc) => (
+                  <Link
+                    key={loc.slug}
+                    href={`/locations/${loc.slug}`}
+                    className="group flex items-start gap-2.5 rounded-xl px-3 py-2.5 transition-colors duration-200 hover:bg-bg-tint"
+                  >
+                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
+                      <MapPinIcon className="h-4 w-4" />
                     </span>
-                  )}
-                </Link>
-              ))}
+                    <span className="min-w-0">
+                      <span className="block text-[13px] leading-snug font-bold text-navy">
+                        {loc.name}
+                      </span>
+                      <span className="block truncate text-[11.5px] text-body-text">
+                        {loc.shortAddress}
+                      </span>
+                      {loc.tag && (
+                        <span className="mt-1 inline-block rounded-full bg-accent/8 px-2 py-0.5 text-[10px] font-bold text-accent">
+                          {loc.tag}
+                        </span>
+                      )}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              <div className="flex flex-col items-start gap-3 border-t border-line bg-bg-tint px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="flex items-center gap-2 text-[12.5px] text-body-text">
+                  <MapPinIcon className="h-4 w-4 shrink-0 text-primary" />
+                  12 chi nhánh trung tâm TP.HCM — luôn có vị trí phù hợp nhu cầu của bạn
+                </p>
+                <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
+                  <Button
+                    href="tel:0898082188"
+                    variant="ghost"
+                    icon={<PhoneIcon className="h-3.5 w-3.5" />}
+                    className="flex-1 !px-4 !py-2 !text-[12.5px] sm:flex-none"
+                  >
+                    Gọi ngay
+                  </Button>
+                  <Button
+                    href="/#lead"
+                    variant="primary"
+                    className="flex-1 !px-4 !py-2 !text-[12.5px] sm:flex-none"
+                  >
+                    Đặt lịch tham quan
+                  </Button>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { PhoneIcon, MapPinIcon } from "./icons";
 import Button from "./Button";
+import LeadFormButton from "./LeadFormButton";
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
 
@@ -95,13 +96,12 @@ export default function Hero() {
             variants={item}
             className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center"
           >
-            <Button
-              href="#lead"
+            <LeadFormButton
               variant="primary"
               className="w-full !px-5 text-center whitespace-normal sm:w-auto sm:whitespace-nowrap"
             >
               Nhận tư vấn miễn phí
-            </Button>
+            </LeadFormButton>
             <Button
               href="#pricing"
               variant="outline"

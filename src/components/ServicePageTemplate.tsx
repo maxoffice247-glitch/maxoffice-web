@@ -4,6 +4,7 @@ import ServiceIntro from "./ServiceIntro";
 import ServiceBenefits from "./ServiceBenefits";
 import ServiceFeatures from "./ServiceFeatures";
 import ServicePricingTable from "./ServicePricingTable";
+import AmendmentPricingTable from "./AmendmentPricingTable";
 import ServiceProcess from "./ServiceProcess";
 import ServiceComparison from "./ServiceComparison";
 import ServiceCrossLinks from "./ServiceCrossLinks";
@@ -13,8 +14,10 @@ import Faq from "./Faq";
 import CtaBanner from "./CtaBanner";
 import type { ServiceData } from "@/lib/servicesData";
 import { SITE_URL, SITE_NAME, COMPANY_PHONE, COMPANY_EMAIL } from "@/lib/siteConfig";
+import { SERVICE_NAME_BY_SLUG } from "@/lib/serviceSelectEvent";
 
 export default function ServicePageTemplate({ data }: { data: ServiceData }) {
+  const serviceName = SERVICE_NAME_BY_SLUG[data.slug] ?? data.name;
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -75,7 +78,9 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
         description={data.pricingDescription}
         pricing={data.pricing}
         image={data.pricingImage}
+        serviceName={serviceName}
       />
+      {data.slug === "thanh-lap-doanh-nghiep" && <AmendmentPricingTable />}
       <ServiceProcess
         title={`Quy trình sử dụng dịch vụ ${data.name}`}
         description="Chỉ 4 bước đơn giản để bắt đầu sử dụng dịch vụ."
@@ -100,7 +105,7 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
       />
       <ServiceCrossLinks currentSlug={data.slug} />
       <ServiceLeadForm serviceName={data.name} />
-      <CtaBanner secondaryHref="#lead-form" />
+      <CtaBanner service={serviceName} />
     </main>
   );
 }

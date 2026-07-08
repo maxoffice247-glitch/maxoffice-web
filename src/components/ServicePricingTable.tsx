@@ -2,11 +2,11 @@ import type { ComponentType } from "react";
 import Image from "next/image";
 import SectionHead from "./SectionHead";
 import Reveal, { RevealGroup, RevealItem } from "./Reveal";
-import Button from "./Button";
 import LocationCountBadge from "./LocationCountBadge";
 import ScrollFadeContainer from "./ScrollFadeContainer";
 import HeaderOffsetProvider from "./HeaderOffsetProvider";
 import AccountingPricingTable from "./AccountingPricingTable";
+import LeadFormButton from "./LeadFormButton";
 import {
   CheckCircleIcon,
   CloseIcon,
@@ -137,11 +137,14 @@ export default function ServicePricingTable({
   description,
   pricing,
   image,
+  serviceName,
 }: {
   title: string;
   description?: string;
   pricing: ServicePricing;
   image?: PricingImage;
+  /** Exact label in the lead form's "Dịch vụ quan tâm" dropdown to pre-select when a CTA here is clicked. */
+  serviceName?: string;
 }) {
   const singleCard = pricing.mode === "single" && (
     <div
@@ -159,9 +162,9 @@ export default function ServicePricingTable({
           </li>
         ))}
       </ul>
-      <Button href="#lead-form" variant="primary" className="w-full">
+      <LeadFormButton service={serviceName} variant="primary" className="w-full">
         Nhận tư vấn miễn phí
-      </Button>
+      </LeadFormButton>
       {pricing.note && <p className="mt-4 text-[12px] text-body-text">{pricing.note}</p>}
     </div>
   );
@@ -234,9 +237,9 @@ export default function ServicePricingTable({
             </Reveal>
             <p className="mt-5 text-center text-[12.5px] text-body-text">{pricing.footnote}</p>
             <div className="mt-7 text-center">
-              <Button href="#lead-form" variant="primary">
+              <LeadFormButton service={serviceName} variant="primary">
                 Nhận tư vấn miễn phí
-              </Button>
+              </LeadFormButton>
             </div>
           </div>
         )}
@@ -284,9 +287,13 @@ export default function ServicePricingTable({
                       </li>
                     ))}
                   </ul>
-                  <Button href="#lead-form" variant={tier.featured ? "primary" : "ghost"} className="w-full">
+                  <LeadFormButton
+                    service={serviceName}
+                    variant={tier.featured ? "primary" : "ghost"}
+                    className="w-full"
+                  >
                     Chọn gói này
-                  </Button>
+                  </LeadFormButton>
                 </div>
               </RevealItem>
             ))}
@@ -399,14 +406,16 @@ export default function ServicePricingTable({
             )}
             </div>
             <div className="mt-7 text-center">
-              <Button href="#lead-form" variant="primary">
+              <LeadFormButton service={serviceName} variant="primary">
                 Nhận tư vấn miễn phí
-              </Button>
+              </LeadFormButton>
             </div>
           </div>
         )}
 
-        {pricing.mode === "accounting" && <AccountingPricingTable pricing={pricing} />}
+        {pricing.mode === "accounting" && (
+          <AccountingPricingTable pricing={pricing} serviceName={serviceName} />
+        )}
       </div>
     </section>
   );

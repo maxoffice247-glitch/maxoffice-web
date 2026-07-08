@@ -5,9 +5,11 @@ import Link from "next/link";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import Button from "../Button";
+import LeadFormButton from "../LeadFormButton";
 import { CheckCircleIcon, BuildingIcon, UsersIcon, KeyIcon, ScreenIcon } from "../icons";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
 import { getPlansForLocation, getCheapestPlanForLocation } from "@/lib/virtualOfficePlans";
+import { SERVICE_NAME_BY_SLUG, scrollToLeadForm } from "@/lib/serviceSelectEvent";
 
 type SpaceNeed = "khong" | "linh-hoat" | "rieng";
 type Budget = "duoi-2trieu" | "2-4.5trieu" | "4.5-10trieu" | "tren-10trieu";
@@ -61,7 +63,7 @@ const PACKAGES = {
     price: "299.000đ",
     unit: "/ tháng",
     reason:
-      "Bạn chỉ cần địa chỉ đăng ký kinh doanh hợp lệ, chưa cần không gian làm việc cố định — đây là lựa chọn tiết kiệm nhất. Văn phòng ảo có 6 gói (Gói 299k, START, BASE, ORIGIN, ORIGIN+, RISE), gói và mức giá cụ thể tuỳ theo chi nhánh bạn chọn.",
+      "Bạn chỉ cần địa chỉ đăng ký kinh doanh hợp lệ, chưa cần không gian làm việc cố định — đây là lựa chọn tiết kiệm nhất. Văn phòng ảo có 6 gói (LITE, START, BASE, ORIGIN, ORIGIN+, RISE), gói và mức giá cụ thể tuỳ theo chi nhánh bạn chọn.",
   },
   "cho-ngoi-linh-dong": {
     slug: "cho-ngoi-linh-dong",
@@ -365,9 +367,9 @@ export default function OfficePackageTool() {
                   <Button href={`/services/${pkg.slug}`} variant="ghost">
                     Xem chi tiết dịch vụ
                   </Button>
-                  <Button href="#lead-form" variant="primary">
+                  <LeadFormButton service={SERVICE_NAME_BY_SLUG[pkg.slug]} variant="primary">
                     Nhận tư vấn miễn phí
-                  </Button>
+                  </LeadFormButton>
                 </div>
                 <button
                   type="button"
@@ -386,7 +388,13 @@ export default function OfficePackageTool() {
           <p className="text-[12.5px] leading-relaxed text-navy">
             Kết quả chỉ mang tính chất gợi ý dựa trên câu trả lời của bạn. Để
             có phương án chính xác nhất, hãy{" "}
-            <Link href="#lead-form" className="font-bold underline">
+            <Link
+              href="/lien-he"
+              onClick={(e) => {
+                if (scrollToLeadForm()) e.preventDefault();
+              }}
+              className="font-bold underline"
+            >
               để lại thông tin
             </Link>{" "}
             để chuyên viên MAX OFFICE tư vấn miễn phí.

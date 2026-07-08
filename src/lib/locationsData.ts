@@ -112,7 +112,7 @@ export type LocationData = {
   diningItems: DiningItem[];
   faqs: FaqItem[];
   testimonials: Testimonial[];
-  /** Chi nhánh khác có gói văn phòng ảo giá thấp hơn (Gói 299k/START), hiển thị khi chi nhánh này chỉ bán gói cao cấp. */
+  /** Chi nhánh khác có gói văn phòng ảo giá thấp hơn (Gói LITE/START), hiển thị khi chi nhánh này chỉ bán gói cao cấp. */
   lowerTierAlternatives?: { slug: string; name: string }[];
 };
 
@@ -482,9 +482,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { name: "Chợ Gò Vấp", desc: "Thuận tiện mua sắm thực phẩm, ăn uống nhanh." },
     ],
     faqs: [
-      { q: "Văn phòng Nguyễn Oanh có phù hợp cho hộ kinh doanh không?", a: "Phù hợp nếu bạn cần địa chỉ tại một toà nhà hạng A cùng các tiện ích đi kèm như tư vấn AI, ưu tiên hỗ trợ 24/7 và phòng họp. Khu vực Gò Vấp hiện có rất ít lựa chọn văn phòng ảo hạng A, nên chi nhánh này áp dụng các gói từ ORIGIN trở lên (595.000đ/tháng) — mức giá cạnh tranh với mặt bằng chung khu vực chứ không phải mức giá thấp nhất hệ thống. Nếu bạn cần gói giá thấp hơn (Gói 299k hoặc START) để tối ưu chi phí ban đầu, MAX OFFICE có sẵn tại các chi nhánh Hoàng Việt, Bàu Cát 2, Lam Sơn, Hoàng Kế Viêm, CMT8, Sông Thao và Điện Biên Phủ." },
+      { q: "Văn phòng Nguyễn Oanh có phù hợp cho hộ kinh doanh không?", a: "Phù hợp nếu bạn cần địa chỉ tại một toà nhà hạng A cùng các tiện ích đi kèm như tư vấn AI, ưu tiên hỗ trợ 24/7 và phòng họp. Khu vực Gò Vấp hiện có rất ít lựa chọn văn phòng ảo hạng A, nên chi nhánh này áp dụng các gói từ ORIGIN trở lên (595.000đ/tháng) — mức giá cạnh tranh với mặt bằng chung khu vực chứ không phải mức giá thấp nhất hệ thống. Nếu bạn cần gói giá thấp hơn (Gói LITE hoặc START) để tối ưu chi phí ban đầu, MAX OFFICE có sẵn tại các chi nhánh Hoàng Việt, Bàu Cát 2, Lam Sơn, Hoàng Kế Viêm, CMT8, Sông Thao và Điện Biên Phủ." },
       { q: "Địa chỉ tại Nguyễn Oanh có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý để đăng ký kinh doanh, đăng ký thuế." },
-      { q: "Giá văn phòng ảo tại đây có khác gì so với các chi nhánh khác không?", a: "Có. Nguyễn Oanh là toà nhà hạng A — phân khúc hiếm tại Gò Vấp, nên chi nhánh này chỉ áp dụng các gói từ ORIGIN trở lên (595.000đ/tháng), không có Gói 299k/START/BASE. Đổi lại, các gói này đi kèm tư vấn AI, ưu tiên hỗ trợ 24/7 và phòng họp mà các lựa chọn giá thấp hơn không có." },
+      { q: "Giá văn phòng ảo tại đây có khác gì so với các chi nhánh khác không?", a: "Có. Nguyễn Oanh là toà nhà hạng A — phân khúc hiếm tại Gò Vấp, nên chi nhánh này chỉ áp dụng các gói từ ORIGIN trở lên (595.000đ/tháng), không có Gói LITE/START/BASE. Đổi lại, các gói này đi kèm tư vấn AI, ưu tiên hỗ trợ 24/7 và phòng họp mà các lựa chọn giá thấp hơn không có." },
       { q: "Khu vực Gò Vấp có thuận tiện di chuyển đến trung tâm thành phố không?", a: "Có. Trục đường Nguyễn Oanh — Phan Văn Trị kết nối khá nhanh đến Phú Nhuận và trung tâm TP.HCM." },
       { q: "Tôi có thể thuê chỗ ngồi linh động tại chi nhánh này không?", a: "Có. Chi nhánh cung cấp đầy đủ dịch vụ chỗ ngồi linh động, phù hợp freelancer và nhóm nhỏ tại khu vực Gò Vấp." },
       { q: "Chi nhánh có hỗ trợ kế toán thuế cho hộ kinh doanh không?", a: "Có. Dịch vụ kế toán thuế trọn gói từ 500.000đ/tháng được cung cấp đầy đủ tại đây." },

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 
 type Variant = "primary" | "outline" | "ghost" | "link";
 type Size = "md" | "lg";
@@ -13,7 +13,7 @@ type ButtonProps = {
   className?: string;
   target?: string;
   rel?: string;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
 };
 
 const base =

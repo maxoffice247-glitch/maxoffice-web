@@ -1,5 +1,5 @@
 export type VirtualOfficePlanKey =
-  | "goi-299k"
+  | "lite"
   | "start"
   | "base"
   | "origin"
@@ -16,9 +16,9 @@ export type VirtualOfficePlan = {
 };
 
 export const VIRTUAL_OFFICE_PLANS: Record<VirtualOfficePlanKey, VirtualOfficePlan> = {
-  "goi-299k": {
-    key: "goi-299k",
-    name: "Gói 299k",
+  "lite": {
+    key: "lite",
+    name: "LITE",
     price: 299000,
     duration: "/ tháng",
     features: ["Địa chỉ đăng ký kinh doanh (ĐKKD)", "Lễ tân", "Wifi", "Tham gia Workshop"],
@@ -128,7 +128,7 @@ export const VIRTUAL_OFFICE_PLANS: Record<VirtualOfficePlanKey, VirtualOfficePla
 };
 
 export const VIRTUAL_OFFICE_PLAN_ORDER: VirtualOfficePlanKey[] = [
-  "goi-299k",
+  "lite",
   "start",
   "base",
   "origin",
@@ -138,22 +138,22 @@ export const VIRTUAL_OFFICE_PLAN_ORDER: VirtualOfficePlanKey[] = [
 
 /** Canonical feature rows for the 6-plan comparison matrix, in cumulative build-up order. */
 export const VO_FEATURE_MATRIX: { label: string; values: Record<VirtualOfficePlanKey, boolean | "addon"> }[] = [
-  { label: "Địa chỉ đăng ký kinh doanh (ĐKKD)", values: { "goi-299k": true, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "Bảng tên Mica tại toà nhà", values: { "goi-299k": false, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "Lễ tân", values: { "goi-299k": true, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "Wifi", values: { "goi-299k": true, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "Tham gia Workshop", values: { "goi-299k": true, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "Bảng hiệu công ty", values: { "goi-299k": "addon", start: true, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "In-photo 100 tờ/năm", values: { "goi-299k": false, start: false, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "Không gian tiếp khách (Guest Lounge)", values: { "goi-299k": false, start: false, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "Tư vấn Pháp lý & Thuế", values: { "goi-299k": false, start: false, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "Đánh giá sức khỏe DN (AI Biz Health)", values: { "goi-299k": false, start: false, base: true, origin: true, "origin-plus": true, rise: true } },
-  { label: "Miễn phí tư vấn tự động hoá AI", values: { "goi-299k": false, start: false, base: false, origin: true, "origin-plus": true, rise: true } },
-  { label: "Ưu tiên hỗ trợ 24/7", values: { "goi-299k": false, start: false, base: false, origin: true, "origin-plus": true, rise: true } },
-  { label: "Phòng họp nhỏ 24h/năm", values: { "goi-299k": false, start: false, base: false, origin: false, "origin-plus": true, rise: true } },
-  { label: "Phòng họp lớn 4h/năm", values: { "goi-299k": false, start: false, base: false, origin: false, "origin-plus": false, rise: true } },
-  { label: "Chỗ ngồi linh hoạt (Flex Desk) 4h/tháng", values: { "goi-299k": false, start: false, base: false, origin: false, "origin-plus": false, rise: true } },
-  { label: "Giảm 50% phí phòng họp VIP", values: { "goi-299k": false, start: false, base: false, origin: false, "origin-plus": false, rise: true } },
+  { label: "Địa chỉ đăng ký kinh doanh (ĐKKD)", values: { "lite": true, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "Bảng tên Mica tại toà nhà", values: { "lite": false, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "Lễ tân", values: { "lite": true, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "Wifi", values: { "lite": true, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "Tham gia Workshop", values: { "lite": true, start: true, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "Bảng hiệu công ty", values: { "lite": "addon", start: true, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "In-photo 100 tờ/năm", values: { "lite": false, start: false, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "Không gian tiếp khách (Guest Lounge)", values: { "lite": false, start: false, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "Tư vấn Pháp lý & Thuế", values: { "lite": false, start: false, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "Đánh giá sức khỏe DN (AI Biz Health)", values: { "lite": false, start: false, base: true, origin: true, "origin-plus": true, rise: true } },
+  { label: "Miễn phí tư vấn tự động hoá AI", values: { "lite": false, start: false, base: false, origin: true, "origin-plus": true, rise: true } },
+  { label: "Ưu tiên hỗ trợ 24/7", values: { "lite": false, start: false, base: false, origin: true, "origin-plus": true, rise: true } },
+  { label: "Phòng họp nhỏ 24h/năm", values: { "lite": false, start: false, base: false, origin: false, "origin-plus": true, rise: true } },
+  { label: "Phòng họp lớn 4h/năm", values: { "lite": false, start: false, base: false, origin: false, "origin-plus": false, rise: true } },
+  { label: "Chỗ ngồi linh hoạt (Flex Desk) 4h/tháng", values: { "lite": false, start: false, base: false, origin: false, "origin-plus": false, rise: true } },
+  { label: "Giảm 50% phí phòng họp VIP", values: { "lite": false, start: false, base: false, origin: false, "origin-plus": false, rise: true } },
 ];
 
 /** Which Văn phòng ảo plans each of the 12 branches offers, per the official rollout table. */
@@ -165,11 +165,11 @@ export const LOCATION_VO_PLANS: Record<string, VirtualOfficePlanKey[]> = {
   "cong-hoa": ["base", "origin", "origin-plus"],
   "tan-thang": ["base", "origin", "origin-plus"],
   "cuu-long": ["base"],
-  "hoang-viet": ["goi-299k", "start", "base"],
-  "bau-cat": ["goi-299k", "start", "base"],
-  "lam-son": ["goi-299k", "start", "base"],
-  "hoang-ke-viem": ["goi-299k", "start", "base"],
-  cmt8: ["goi-299k", "start", "base"],
+  "hoang-viet": ["lite", "start", "base"],
+  "bau-cat": ["lite", "start", "base"],
+  "lam-son": ["lite", "start", "base"],
+  "hoang-ke-viem": ["lite", "start", "base"],
+  cmt8: ["lite", "start", "base"],
 };
 
 export function getPlansForLocation(slug: string): VirtualOfficePlan[] {

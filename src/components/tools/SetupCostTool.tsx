@@ -5,6 +5,7 @@ import Link from "next/link";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import Button from "../Button";
+import LeadFormButton from "../LeadFormButton";
 import { CheckCircleIcon, DocumentCheckIcon } from "../icons";
 import {
   SETUP_PACKAGES,
@@ -296,9 +297,9 @@ export default function SetupCostTool() {
                 <Button href="/services/thanh-lap-doanh-nghiep" variant="ghost">
                   Xem chi tiết dịch vụ
                 </Button>
-                <Button href="#lead-form" variant="primary">
+                <LeadFormButton service="Thành lập doanh nghiệp" variant="primary">
                   Nhận tư vấn miễn phí
-                </Button>
+                </LeadFormButton>
               </div>
               <button
                 type="button"

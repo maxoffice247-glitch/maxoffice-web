@@ -80,7 +80,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
               </p>
               <p className="mb-4 text-[13.5px] leading-relaxed text-body-text">
                 Chi nhánh {data.name} hiện chỉ áp dụng các gói từ ORIGIN trở lên. Nếu bạn cần gói
-                Gói 299k hoặc START để tối ưu chi phí ban đầu, các chi nhánh sau đang cung cấp:
+                LITE hoặc START để tối ưu chi phí ban đầu, các chi nhánh sau đang cung cấp:
               </p>
               <div className="flex flex-wrap gap-2.5">
                 {data.lowerTierAlternatives.map((loc) => (
@@ -116,7 +116,6 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         title="Đặt lịch tham quan miễn phí ngay hôm nay"
         description={`Ghé thăm trực tiếp văn phòng ${data.name} — đội ngũ MAX OFFICE sẽ đón tiếp và tư vấn giải pháp phù hợp với bạn.`}
         secondaryLabel="Đặt lịch tham quan miễn phí"
-        secondaryHref="#lead-form"
       />
     </main>
   );

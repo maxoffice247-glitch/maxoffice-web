@@ -1,7 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import SectionHead from "./SectionHead";
 import { RevealGroup, RevealItem } from "./Reveal";
-import Button from "./Button";
 import { ArrowRightSmallIcon } from "./icons";
 
 type ServiceItem = {
@@ -73,7 +73,8 @@ export default function Services() {
         <RevealGroup className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((svc) => (
             <RevealItem key={svc.title} className="h-full">
-              <div
+              <Link
+                href={`/services/${svc.slug}`}
                 className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-white transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-card ${
                   svc.featured ? "border-2 border-accent" : "border-line"
                 }`}
@@ -106,16 +107,12 @@ export default function Services() {
                   {svc.note && (
                     <p className="-mt-3 mb-4 text-[11.5px] text-body-text/70">{svc.note}</p>
                   )}
-                  <Button
-                    href={`/services/${svc.slug}`}
-                    variant="link"
-                    icon={<ArrowRightSmallIcon />}
-                    className="group-hover:gap-2.5"
-                  >
+                  <span className="inline-flex items-center gap-1.5 text-[14.5px] font-bold text-accent transition-all duration-300 ease-out group-hover:gap-2.5">
                     Xem thêm
-                  </Button>
+                    <ArrowRightSmallIcon />
+                  </span>
                 </div>
-              </div>
+              </Link>
             </RevealItem>
           ))}
         </RevealGroup>

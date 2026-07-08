@@ -30,7 +30,7 @@ const FAQS = [
   { q: "Nếu nhu cầu của tôi thay đổi sau này thì sao?", a: "Bạn có thể nâng cấp hoặc thay đổi gói dịch vụ bất kỳ lúc nào trong quá trình sử dụng tại MAX OFFICE." },
   { q: "Công cụ này có gợi ý dịch vụ thành lập doanh nghiệp không?", a: "Công cụ này tập trung vào gói không gian làm việc. Nếu bạn cần thành lập doanh nghiệp, hãy dùng công cụ \"Tính chi phí thành lập công ty\" của MAX OFFICE." },
   { q: "Sau khi có kết quả, tôi cần làm gì tiếp theo?", a: "Bạn có thể để lại thông tin trong form bên dưới hoặc gọi hotline để được tư vấn và đặt lịch tham quan miễn phí." },
-  { q: "Vì sao công cụ hỏi tôi muốn đăng ký chi nhánh nào?", a: "Văn phòng ảo có 6 gói (Gói 299k, START, BASE, ORIGIN, ORIGIN+, RISE) nhưng không phải chi nhánh nào cũng có đủ cả 6 gói. Chọn chi nhánh (không bắt buộc) giúp công cụ hiển thị đúng gói và giá khả dụng tại đó." },
+  { q: "Vì sao công cụ hỏi tôi muốn đăng ký chi nhánh nào?", a: "Văn phòng ảo có 6 gói (LITE, START, BASE, ORIGIN, ORIGIN+, RISE) nhưng không phải chi nhánh nào cũng có đủ cả 6 gói. Chọn chi nhánh (không bắt buộc) giúp công cụ hiển thị đúng gói và giá khả dụng tại đó." },
 ];
 
 export default function ChonGoiVanPhongPage() {

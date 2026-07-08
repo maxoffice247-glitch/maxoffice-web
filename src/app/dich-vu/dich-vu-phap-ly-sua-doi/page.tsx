@@ -223,7 +223,7 @@ export default function DichVuPhapLySuaDoiPage() {
         </div>
       </section>
 
-      <CtaBanner secondaryHref="#lead-form" />
+      <CtaBanner service="Thành lập doanh nghiệp" />
     </main>
   );
 }

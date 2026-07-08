@@ -1,12 +1,18 @@
 import Reveal from "./Reveal";
-import Button from "./Button";
+import LeadFormButton from "./LeadFormButton";
 import ScrollFadeContainer from "./ScrollFadeContainer";
 import { DocumentCheckIcon, WalletIcon, ScaleIcon } from "./icons";
 import type { AccountingPricing } from "./ServicePricingTable";
 
 const SURCHARGE_ICONS = [ScaleIcon, DocumentCheckIcon, WalletIcon];
 
-export default function AccountingPricingTable({ pricing }: { pricing: AccountingPricing }) {
+export default function AccountingPricingTable({
+  pricing,
+  serviceName,
+}: {
+  pricing: AccountingPricing;
+  serviceName?: string;
+}) {
   return (
     <div>
       <Reveal>
@@ -106,9 +112,9 @@ export default function AccountingPricingTable({ pricing }: { pricing: Accountin
       </Reveal>
 
       <div className="mt-8 text-center">
-        <Button href="#lead-form" variant="primary">
+        <LeadFormButton service={serviceName} variant="primary">
           Nhận tư vấn miễn phí
-        </Button>
+        </LeadFormButton>
       </div>
     </div>
   );

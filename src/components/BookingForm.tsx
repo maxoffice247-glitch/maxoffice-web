@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { CheckCircleIcon } from "./icons";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
 import { useLeadSubmit } from "@/lib/useLeadSubmit";
+import { SERVICE_SELECT_EVENT } from "@/lib/serviceSelectEvent";
 
 const SERVICES = [
   "Văn phòng ảo",
   "Văn phòng trọn gói",
   "Chỗ ngồi linh động",
-  "Phòng họp",
+  "Phòng họp theo giờ",
   "Thành lập doanh nghiệp",
   "Kế toán & thuế",
   "Tư vấn chung",
@@ -64,6 +65,17 @@ export default function BookingForm({
     (field: keyof FormState) =>
     (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
       setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  useEffect(() => {
+    function handleServiceSelect(e: Event) {
+      const service = (e as CustomEvent<{ service: string }>).detail?.service;
+      if (service && SERVICES.includes(service)) {
+        setForm((f) => ({ ...f, service }));
+      }
+    }
+    window.addEventListener(SERVICE_SELECT_EVENT, handleServiceSelect);
+    return () => window.removeEventListener(SERVICE_SELECT_EVENT, handleServiceSelect);
+  }, []);
 
   const doSubmit = async () => {
     const branchName = LOCATIONS_LIST.find((loc) => loc.slug === form.branch)?.name;

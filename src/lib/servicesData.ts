@@ -13,6 +13,7 @@ import {
   CoffeeIcon,
   HeadsetIcon,
   BadgePercentIcon,
+  ZapIcon,
 } from "@/components/icons";
 import type { BenefitItem } from "@/components/ServiceBenefits";
 import type { FeatureItem } from "@/components/ServiceFeatures";
@@ -56,7 +57,7 @@ const VO_MATRIX_PRICING: ServicePricing = {
     values: VIRTUAL_OFFICE_PLAN_ORDER.map((key) => row.values[key]),
   })),
   addonNote:
-    "Gói 299k chưa bao gồm Bảng hiệu công ty — phụ phí 500.000đ nếu cần, tính riêng 1 lần.",
+    "Gói LITE chưa bao gồm Bảng hiệu công ty — phụ phí 500.000đ nếu cần, tính riêng 1 lần.",
   promoNotes: VO_PROMO_NOTES,
   promoEffectiveDate: VO_PROMO_EFFECTIVE_DATE,
 };
@@ -167,10 +168,10 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     image: "/images/van-phong-ao.png",
     metaTitle: "Văn Phòng Ảo TP.HCM Từ 299.000đ/Tháng | MAX OFFICE",
     metaDescription:
-      "Thuê văn phòng ảo TP.HCM giá từ 299.000đ/tháng. 6 gói dịch vụ: Gói 299k, START, BASE, ORIGIN, ORIGIN+, RISE. Địa chỉ pháp lý hợp lệ, 12 chi nhánh. Tư vấn miễn phí.",
+      "Thuê văn phòng ảo TP.HCM giá từ 299.000đ/tháng. 6 gói dịch vụ: Gói LITE, START, BASE, ORIGIN, ORIGIN+, RISE. Địa chỉ pháp lý hợp lệ, 12 chi nhánh. Tư vấn miễn phí.",
     intro: [
       "Văn phòng ảo là giải pháp giúp doanh nghiệp và cá nhân kinh doanh sở hữu một địa chỉ đăng ký kinh doanh hợp pháp tại các quận trung tâm TP.HCM mà không cần thuê hay sở hữu văn phòng vật lý. Đây là lựa chọn phổ biến của các startup, công ty mới thành lập, freelancer và doanh nghiệp online muốn tối ưu chi phí vận hành trong giai đoạn đầu.",
-      "Tại MAX OFFICE, dịch vụ văn phòng ảo được chia thành 6 gói — Gói 299k, START, BASE, ORIGIN, ORIGIN+ và RISE — mỗi gói bổ sung thêm quyền lợi từ lễ tân, wifi, tư vấn pháp lý & thuế đến phòng họp và chỗ ngồi linh hoạt. Không phải chi nhánh nào cũng cung cấp đủ cả 6 gói, vì vậy gói và mức giá cụ thể sẽ tuỳ theo chi nhánh bạn chọn. Với mức giá từ 299.000đ/tháng, đây là một trong những giải pháp tiết kiệm chi phí nhất để bắt đầu kinh doanh đúng pháp lý ngay từ ngày đầu.",
+      "Tại MAX OFFICE, dịch vụ văn phòng ảo được chia thành 6 gói — Gói LITE, START, BASE, ORIGIN, ORIGIN+ và RISE — mỗi gói bổ sung thêm quyền lợi từ lễ tân, wifi, tư vấn pháp lý & thuế đến phòng họp và chỗ ngồi linh hoạt. Không phải chi nhánh nào cũng cung cấp đủ cả 6 gói, vì vậy gói và mức giá cụ thể sẽ tuỳ theo chi nhánh bạn chọn. Với mức giá từ 299.000đ/tháng, đây là một trong những giải pháp tiết kiệm chi phí nhất để bắt đầu kinh doanh đúng pháp lý ngay từ ngày đầu.",
       "Khác với việc tự thuê văn phòng truyền thống — vốn đòi hỏi đặt cọc nhiều tháng, ký hợp đồng dài hạn và chi phí vận hành cố định — văn phòng ảo tại MAX OFFICE cho phép bạn linh hoạt mở rộng hoặc thu hẹp quy mô mà không bị ràng buộc, đồng thời vẫn đảm bảo đầy đủ tính pháp lý để đăng ký kinh doanh, đăng ký thuế và giao dịch với đối tác.",
     ],
     introImage: {
@@ -198,7 +199,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { title: "Địa chỉ đăng ký kinh doanh", desc: "Tại 12 vị trí trung tâm TP.HCM: Tân Bình, Gò Vấp, Tân Phú, Quận 10, Quận 1." },
       { title: "Nhận thư hộ", desc: "Thông báo thư từ, bưu phẩm qua Zalo/email trong ngày làm việc." },
       { title: "Hỗ trợ tiếp khách", desc: "Đại diện ký nhận hàng, tiếp khách khi cần thiết." },
-      { title: "Bảng hiệu công ty", desc: "Bao gồm từ gói START trở lên; Gói 299k có thể thêm với phụ phí 500.000đ (1 lần)." },
+      { title: "Bảng hiệu công ty", desc: "Bao gồm từ gói START trở lên; Gói LITE có thể thêm với phụ phí 500.000đ (1 lần)." },
       { title: "Ưu đãi combo", desc: "Giảm giá khi đăng ký kèm dịch vụ thành lập doanh nghiệp." },
       { title: "Hỗ trợ xác minh địa chỉ", desc: "Cung cấp hồ sơ chứng minh địa chỉ khi cơ quan thuế yêu cầu." },
     ],
@@ -220,8 +221,8 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { q: "Hợp đồng văn phòng ảo tối thiểu bao lâu?", a: "Hợp đồng linh hoạt theo tháng hoặc theo năm tuỳ nhu cầu, không yêu cầu cam kết dài hạn." },
       { q: "Văn phòng ảo có phù hợp với công ty nước ngoài không?", a: "Phù hợp với văn phòng đại diện hoặc công ty có vốn đầu tư nước ngoài đã hoàn tất thủ tục đầu tư — liên hệ đội ngũ để được tư vấn cụ thể theo loại hình doanh nghiệp của bạn." },
       { q: "Tôi có được sử dụng phòng họp khi cần gặp khách hàng không?", a: "Có. Khách hàng dùng dịch vụ văn phòng ảo được ưu đãi giá khi đặt phòng họp theo giờ tại bất kỳ chi nhánh nào của MAX OFFICE." },
-      { q: "Vì sao có 6 gói văn phòng ảo với giá khác nhau?", a: "Mỗi gói (Gói 299k, START, BASE, ORIGIN, ORIGIN+, RISE) bổ sung thêm quyền lợi — từ bảng hiệu, tư vấn pháp lý & thuế đến phòng họp và chỗ ngồi linh hoạt. Không phải chi nhánh nào cũng có đủ 6 gói, MAX OFFICE sẽ tư vấn gói phù hợp nhất theo chi nhánh bạn chọn." },
-      { q: "Chi phí văn phòng ảo đã bao gồm phí gì?", a: "Tuỳ theo gói: Gói 299k gồm địa chỉ đăng ký kinh doanh, lễ tân, wifi và workshop (chưa gồm bảng hiệu — phụ phí 500.000đ nếu cần); từ gói START trở lên đã bao gồm bảng hiệu và các quyền lợi cao hơn. Giá thuê chưa bao gồm VAT 10%." },
+      { q: "Vì sao có 6 gói văn phòng ảo với giá khác nhau?", a: "Mỗi gói (Gói LITE, START, BASE, ORIGIN, ORIGIN+, RISE) bổ sung thêm quyền lợi — từ bảng hiệu, tư vấn pháp lý & thuế đến phòng họp và chỗ ngồi linh hoạt. Không phải chi nhánh nào cũng có đủ 6 gói, MAX OFFICE sẽ tư vấn gói phù hợp nhất theo chi nhánh bạn chọn." },
+      { q: "Chi phí văn phòng ảo đã bao gồm phí gì?", a: "Tuỳ theo gói: Gói LITE gồm địa chỉ đăng ký kinh doanh, lễ tân, wifi và workshop (chưa gồm bảng hiệu — phụ phí 500.000đ nếu cần); từ gói START trở lên đã bao gồm bảng hiệu và các quyền lợi cao hơn. Giá thuê chưa bao gồm VAT 10%." },
       { q: "Làm sao để bắt đầu sử dụng dịch vụ văn phòng ảo?", a: "Bạn chỉ cần liên hệ đội ngũ tư vấn, chọn chi nhánh phù hợp và ký hợp đồng — địa chỉ sẽ sẵn sàng sử dụng ngay trong ngày." },
       { q: "Nếu tôi ngừng sử dụng dịch vụ, địa chỉ đăng ký kinh doanh có bị ảnh hưởng không?", a: "Bạn cần thực hiện thủ tục thay đổi địa chỉ đăng ký kinh doanh trước khi ngừng hợp đồng để tránh gián đoạn hoạt động — đội ngũ MAX OFFICE sẽ hỗ trợ hướng dẫn quy trình này." },
     ],
@@ -527,6 +528,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     },
     benefitsTitle: "Vì sao nên thành lập doanh nghiệp cùng MAX OFFICE",
     benefits: [
+      { icon: ZapIcon, title: "Hệ thống soạn thảo hồ sơ tự động", desc: "MAX OFFICE sử dụng công nghệ tự động hoá trong soạn thảo hồ sơ thành lập doanh nghiệp, đảm bảo chính xác, nhanh chóng, hạn chế tối đa sai sót so với soạn thảo thủ công truyền thống." },
       { icon: UsersIcon, title: "Tư vấn loại hình phù hợp", desc: "Phân tích ưu, nhược điểm để chọn đúng mô hình ngay từ đầu." },
       { icon: BadgePercentIcon, title: "Giá ưu đãi khi kèm Văn phòng ảo", desc: "Gói 1 chỉ từ 1.299.000đ khi đăng ký kèm Văn phòng ảo." },
       { icon: ShieldCheckIcon, title: "Hồ sơ chính xác, đúng luật", desc: "Giảm thiểu rủi ro bị trả hồ sơ hoặc chậm tiến độ." },
@@ -593,6 +595,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { q: "Công ty Cổ phần khác Công ty TNHH như thế nào?", a: "Công ty Cổ phần phù hợp khi bạn có kế hoạch huy động vốn từ nhiều cổ đông hoặc phát hành cổ phần; Công ty TNHH phù hợp với cơ cấu sở hữu đơn giản hơn. Chi phí thành lập không đổi theo loại hình, chỉ phụ thuộc vào gói dịch vụ bạn chọn." },
       { q: "Vốn điều lệ tối thiểu là bao nhiêu?", a: "Pháp luật hiện hành không quy định mức vốn điều lệ tối thiểu cho hầu hết ngành nghề — đội ngũ sẽ tư vấn mức vốn phù hợp với ngành nghề đăng ký của bạn." },
       { q: "Sau khi thành lập, nếu tôi cần đổi tên, địa chỉ hoặc vốn điều lệ thì sao?", a: "MAX OFFICE có nhóm dịch vụ pháp lý sửa đổi riêng (đổi tên, địa chỉ, đại diện pháp luật, vốn điều lệ, ngành nghề...) với mức giá rõ ràng cho từng nội dung, kèm ưu đãi khi đặt từ 2 dịch vụ trở lên — xem đầy đủ bảng giá tại trang Dịch vụ pháp lý sửa đổi." },
+      { q: "Tôi có thể thay đổi nhiều thông tin cùng lúc không?", a: "Có. Khi bạn đặt từ 2 dịch vụ sửa đổi trở lên cùng lúc (ví dụ vừa đổi tên công ty vừa cập nhật CCCD), dịch vụ có giá trị lớn nhất tính giá đầy đủ theo bảng giá; các dịch vụ còn lại được giảm — nếu giá gốc trên 500.000đ thì giảm còn 500.000đ, nếu giá gốc từ 500.000đ trở xuống thì giảm còn 300.000đ." },
       { q: "Tôi có thể dùng địa chỉ nhà riêng để thành lập công ty không?", a: "Có thể, tuỳ loại hình kinh doanh và quy định địa phương; nếu không có địa chỉ phù hợp, bạn có thể sử dụng dịch vụ Văn phòng ảo của MAX OFFICE." },
       { q: "Tôi có thể chuyển đổi từ Hộ kinh doanh sang Công ty TNHH sau này không?", a: "Có. Đây là một trong các dịch vụ pháp lý sửa đổi MAX OFFICE cung cấp — liên hệ để được tư vấn khi bạn có nhu cầu." },
       { q: "MAX OFFICE có hỗ trợ kế toán thuế sau khi thành lập không?", a: "Có, MAX OFFICE cung cấp dịch vụ kế toán & thuế trọn gói để đồng hành cùng doanh nghiệp ngay sau khi thành lập." },

@@ -1,6 +1,7 @@
 import SectionHead from "./SectionHead";
 import { RevealGroup, RevealItem } from "./Reveal";
 import Button from "./Button";
+import LeadFormButton from "./LeadFormButton";
 import { CheckCircleIcon } from "./icons";
 import { VO_PROMO_NOTES, VO_PROMO_EFFECTIVE_DATE } from "@/lib/virtualOfficePlans";
 
@@ -14,6 +15,8 @@ type Plan = {
   note?: boolean;
   href?: string;
   ctaLabel?: string;
+  /** Exact label in the lead form's "Dịch vụ quan tâm" dropdown to pre-select when this plan's CTA is clicked. */
+  service?: string;
 };
 
 const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; promoNotes?: string[]; promoEffectiveDate?: string }[] = [
@@ -26,7 +29,8 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
     promoEffectiveDate: VO_PROMO_EFFECTIVE_DATE,
     plans: [
       {
-        name: "Gói 299k",
+        name: "LITE",
+        service: "Văn phòng ảo",
         price: "299.000đ",
         unit: "/ tháng",
         desc: "Cạnh tranh nhất — chỉ áp dụng tại 5 chi nhánh. Bảng hiệu tính riêng.",
@@ -35,6 +39,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       },
       {
         name: "START",
+        service: "Văn phòng ảo",
         price: "350.000đ",
         unit: "/ tháng",
         desc: "Đầy đủ nhận diện cơ bản cho doanh nghiệp mới.",
@@ -42,6 +47,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       },
       {
         name: "BASE",
+        service: "Văn phòng ảo",
         price: "500.000đ",
         unit: "/ tháng",
         desc: "Thêm tư vấn pháp lý & thuế cùng không gian tiếp khách.",
@@ -50,6 +56,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       },
       {
         name: "ORIGIN",
+        service: "Văn phòng ảo",
         price: "595.000đ",
         unit: "/ tháng",
         desc: "Thêm tư vấn tự động hoá AI và hỗ trợ ưu tiên.",
@@ -57,6 +64,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       },
       {
         name: "ORIGIN+",
+        service: "Văn phòng ảo",
         price: "699.000đ",
         unit: "/ tháng",
         desc: "Có phòng họp nhỏ đi kèm hàng năm.",
@@ -64,6 +72,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       },
       {
         name: "RISE",
+        service: "Văn phòng ảo",
         price: "1.199.000đ",
         unit: "/ tháng",
         desc: "Cao cấp nhất — phòng họp lớn, chỗ ngồi linh hoạt hàng tháng.",
@@ -77,6 +86,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
     plans: [
       {
         name: "Văn phòng trọn gói",
+        service: "Văn phòng trọn gói",
         price: "4.500.000đ",
         unit: "/ tháng",
         desc: "Không gian riêng, sẵn sàng làm việc ngay với đầy đủ tiện ích.",
@@ -85,6 +95,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       },
       {
         name: "Chỗ ngồi linh động",
+        service: "Chỗ ngồi linh động",
         price: "2.000.000đ",
         unit: "/ tháng",
         desc: "Không gian coworking năng động cho freelancer & nhóm nhỏ.",
@@ -92,6 +103,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       },
       {
         name: "Phòng họp theo giờ",
+        service: "Phòng họp theo giờ",
         price: "150.000đ",
         unit: "/ giờ",
         desc: "Đặt lịch linh hoạt, trang bị đầy đủ thiết bị trình chiếu & âm thanh.",
@@ -99,6 +111,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       },
       {
         name: "Coworking theo ngày",
+        service: "Chỗ ngồi linh động",
         price: "150.000đ",
         unit: "/ ngày",
         desc: "Chỗ ngồi làm việc trọn ngày, không cần cam kết dài hạn.",
@@ -114,6 +127,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
     plans: [
       {
         name: "Gói 1 — Cơ bản",
+        service: "Thành lập doanh nghiệp",
         price: "1.299.000đ",
         unit: "trọn gói · 5-7 ngày",
         desc: "Giấy phép, con dấu, đăng bố cáo và mở tài khoản ngân hàng.",
@@ -122,6 +136,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       },
       {
         name: "Gói 2 — Đầy đủ",
+        service: "Thành lập doanh nghiệp",
         price: "2.800.000đ",
         unit: "trọn gói · 5-7 ngày",
         desc: "Tất cả hạng mục Gói 1, cộng khai thuế ban đầu, chữ ký số và hoá đơn điện tử.",
@@ -191,9 +206,19 @@ function PricingCard({ plan }: { plan: Plan }) {
           </li>
         ))}
       </ul>
-      <Button href={plan.href ?? "#lead"} variant={plan.featured ? "primary" : "ghost"} className="w-full">
-        {plan.ctaLabel ?? "Chọn gói này"}
-      </Button>
+      {plan.href ? (
+        <Button href={plan.href} variant={plan.featured ? "primary" : "ghost"} className="w-full">
+          {plan.ctaLabel ?? "Chọn gói này"}
+        </Button>
+      ) : (
+        <LeadFormButton
+          service={plan.service ?? plan.name}
+          variant={plan.featured ? "primary" : "ghost"}
+          className="w-full"
+        >
+          {plan.ctaLabel ?? "Chọn gói này"}
+        </LeadFormButton>
+      )}
     </div>
   );
 }
