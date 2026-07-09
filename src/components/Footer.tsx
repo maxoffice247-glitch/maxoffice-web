@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MessengerIcon, PhoneIcon } from "./icons";
+import { MessengerIcon, PhoneIcon, FacebookIcon } from "./icons";
 
 const SERVICE_LINKS = [
   "Văn phòng ảo",
@@ -113,6 +113,19 @@ export default function Footer() {
                     <MessengerIcon className="h-4 w-4" />
                   </span>
                   Messenger
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.facebook.com/maxoffice.hcm/"
+                  target="_blank"
+                  rel="noopener"
+                  className="flex items-center gap-2.5 text-[13.5px] transition-all duration-200 hover:translate-x-1 hover:text-white"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10">
+                    <FacebookIcon className="h-4 w-4" />
+                  </span>
+                  Fanpage Facebook
                 </a>
               </li>
               <li>
