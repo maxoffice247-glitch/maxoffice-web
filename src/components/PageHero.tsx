@@ -23,7 +23,8 @@ export default function PageHero({
           src={image}
           alt={title}
           fill
-          priority
+          loading="eager"
+          fetchPriority="high"
           sizes="100vw"
           className="object-cover object-center"
         />

@@ -51,9 +51,9 @@ export default function Footer() {
             </p>
           </div>
           <div>
-            <h4 className="mb-5 text-sm font-bold tracking-wide text-white">
+            <h2 className="mb-5 text-sm font-bold tracking-wide text-white">
               Dịch vụ
-            </h4>
+            </h2>
             <ul className="space-y-3">
               {SERVICE_LINKS.map((label) => (
                 <li key={label} className="text-[13.5px]">
@@ -68,9 +68,9 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="mb-5 text-sm font-bold tracking-wide text-white">
+            <h2 className="mb-5 text-sm font-bold tracking-wide text-white">
               Công ty
-            </h4>
+            </h2>
             <ul className="space-y-3">
               {COMPANY_LINKS.map((link) => (
                 <li key={link.label} className="text-[13.5px]">
@@ -85,9 +85,9 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="mb-5 text-sm font-bold tracking-wide text-white">
+            <h2 className="mb-5 text-sm font-bold tracking-wide text-white">
               Kết nối
-            </h4>
+            </h2>
             <ul className="space-y-3.5">
               <li>
                 <a
@@ -129,7 +129,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/12 pt-6 text-[12.5px] text-white/45">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/12 pt-6 text-[12.5px] text-white/55">
           <span>© 2026 Công Ty TNHH MAX OFFICE. Tất cả các quyền được bảo lưu.</span>
           <span>Thiết kế bởi MAX OFFICE Digital</span>
         </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import StatsFloat from "@/components/StatsFloat";
+import GoogleReviews from "@/components/GoogleReviews";
 import TrustBar from "@/components/TrustBar";
 import WhyChoose from "@/components/WhyChoose";
 import Services from "@/components/Services";
@@ -23,6 +24,7 @@ export default function Home() {
     <main>
       <Hero />
       <StatsFloat />
+      <GoogleReviews />
       <TrustBar />
       <WhyChoose />
       <Services />

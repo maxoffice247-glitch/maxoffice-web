@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useId, useState, type ChangeEvent, type FormEvent } from "react";
 import { CheckCircleIcon } from "./icons";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
 import { useLeadSubmit } from "@/lib/useLeadSubmit";
@@ -50,6 +50,7 @@ export default function BookingForm({
   className = "",
 }: BookingFormProps) {
   const { status, submit } = useLeadSubmit();
+  const uid = useId();
   const [form, setForm] = useState<FormState>({
     name: "",
     phone: "",
@@ -144,10 +145,11 @@ export default function BookingForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className={labelClass}>
+            <label htmlFor={`${uid}-name`} className={labelClass}>
               Họ tên / Tên công ty <span className="text-accent">*</span>
             </label>
             <input
+              id={`${uid}-name`}
               required
               type="text"
               placeholder="Nguyễn Văn A / Công ty ABC"
@@ -157,7 +159,7 @@ export default function BookingForm({
             />
           </div>
           <div>
-            <label className={labelClass}>
+            <label htmlFor={`${uid}-phone`} className={labelClass}>
               Số điện thoại <span className="text-accent">*</span>
             </label>
             <div className="flex overflow-hidden rounded-xl border border-line bg-white transition-colors duration-200 focus-within:border-primary">
@@ -165,6 +167,7 @@ export default function BookingForm({
                 +84
               </span>
               <input
+                id={`${uid}-phone`}
                 required
                 type="tel"
                 placeholder="9xx xxx xxx"
@@ -178,8 +181,9 @@ export default function BookingForm({
 
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className={labelClass}>Email</label>
+            <label htmlFor={`${uid}-email`} className={labelClass}>Email</label>
             <input
+              id={`${uid}-email`}
               type="email"
               placeholder="ban@congty.com"
               value={form.email}
@@ -188,10 +192,11 @@ export default function BookingForm({
             />
           </div>
           <div>
-            <label className={labelClass}>
+            <label htmlFor={`${uid}-service`} className={labelClass}>
               Dịch vụ quan tâm <span className="text-accent">*</span>
             </label>
             <select
+              id={`${uid}-service`}
               required
               value={form.service}
               onChange={update("service")}
@@ -210,8 +215,9 @@ export default function BookingForm({
         </div>
 
         <div className="mt-4">
-          <label className={labelClass}>Chọn chi nhánh muốn tham quan</label>
+          <label htmlFor={`${uid}-branch`} className={labelClass}>Chọn chi nhánh muốn tham quan</label>
           <select
+            id={`${uid}-branch`}
             value={form.branch}
             onChange={update("branch")}
             className={`${inputClass} appearance-none`}
@@ -227,8 +233,9 @@ export default function BookingForm({
 
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className={labelClass}>Ngày mong muốn</label>
+            <label htmlFor={`${uid}-date`} className={labelClass}>Ngày mong muốn</label>
             <input
+              id={`${uid}-date`}
               type="date"
               value={form.date}
               onChange={update("date")}
@@ -236,8 +243,9 @@ export default function BookingForm({
             />
           </div>
           <div>
-            <label className={labelClass}>Giờ mong muốn</label>
+            <label htmlFor={`${uid}-time`} className={labelClass}>Giờ mong muốn</label>
             <input
+              id={`${uid}-time`}
               type="time"
               value={form.time}
               onChange={update("time")}
@@ -247,8 +255,9 @@ export default function BookingForm({
         </div>
 
         <div className="mt-4">
-          <label className={labelClass}>Ghi chú</label>
+          <label htmlFor={`${uid}-note`} className={labelClass}>Ghi chú</label>
           <textarea
+            id={`${uid}-note`}
             rows={3}
             placeholder="Số lượng nhân viên, yêu cầu không gian..."
             value={form.note}

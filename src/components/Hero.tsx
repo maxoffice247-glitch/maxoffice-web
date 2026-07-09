@@ -33,10 +33,11 @@ export default function Hero() {
     <section className="relative flex min-h-[80vh] items-center overflow-hidden pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-28 lg:pb-32">
       <div className="absolute inset-0">
         <Image
-          src="/images/hero.png"
+          src="/images/hero.jpg"
           alt="Không gian văn phòng MAX OFFICE"
           fill
-          priority
+          loading="eager"
+          fetchPriority="high"
           sizes="100vw"
           className="object-cover object-center"
         />

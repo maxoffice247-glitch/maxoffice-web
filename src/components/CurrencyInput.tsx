@@ -47,7 +47,7 @@ export default function CurrencyInput({
         onChange={handleChange}
         className={`${className} !pr-11`}
       />
-      <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-[13px] font-bold text-body-text/70">
+      <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-[13px] font-bold text-body-text">
         {unit}
       </span>
     </div>

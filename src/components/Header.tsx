@@ -2,13 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { PhoneIcon, MenuIcon, CloseIcon, SearchIcon } from "./icons";
 import Button from "./Button";
-import MegaMenu from "./MegaMenu";
-import ToolsMegaMenu from "./ToolsMegaMenu";
-import LocationsMegaMenu from "./LocationsMegaMenu";
 import { useSearch } from "./SearchContext";
+
+// Dropdown panel content only — split out of Header's own chunk (loaded on
+// every page) since the panels stay closed until hover/click. Server-rendered
+// by default (no ssr:false) so their internal links stay crawlable.
+const MegaMenu = dynamic(() => import("./MegaMenu"));
+const ToolsMegaMenu = dynamic(() => import("./ToolsMegaMenu"));
+const LocationsMegaMenu = dynamic(() => import("./LocationsMegaMenu"));
 
 const NAV_LINKS_BEFORE = [
   { label: "Trang chủ", href: "/" },
@@ -66,7 +71,8 @@ export default function Header() {
               src="/images/logo-white.png"
               alt="MAX OFFICE"
               fill
-              priority
+              loading="eager"
+              fetchPriority="high"
               sizes="168px"
               className={`object-contain object-left transition-opacity duration-300 ${solid ? "opacity-0" : "opacity-100"}`}
             />
@@ -74,13 +80,14 @@ export default function Header() {
               src="/images/logo-red.png"
               alt="MAX OFFICE"
               fill
-              priority
+              loading="eager"
+              fetchPriority="high"
               sizes="168px"
               className={`object-contain object-left transition-opacity duration-300 ${solid ? "opacity-100" : "opacity-0"}`}
             />
           </Link>
 
-          <nav className="hidden items-center gap-5 xl:flex">
+          <nav aria-label="Menu chính" className="hidden items-center gap-5 xl:flex">
             {NAV_LINKS_BEFORE.map((link) => (
               <Link
                 key={link.label}
@@ -156,7 +163,7 @@ export default function Header() {
       >
         <div className="flex items-center justify-between px-5 py-4 sm:px-8">
           <div className="relative h-9 w-[150px]">
-            <Image src="/images/logo-white.png" alt="MAX OFFICE" fill sizes="150px" className="object-contain object-left" />
+            <Image src="/images/logo-white.png" alt="MAX OFFICE" fill loading="eager" sizes="150px" className="object-contain object-left" />
           </div>
           <button
             type="button"
@@ -167,7 +174,7 @@ export default function Header() {
             <CloseIcon />
           </button>
         </div>
-        <nav className="flex flex-col gap-1 px-5 py-6 sm:px-8">
+        <nav aria-label="Menu di động" className="flex flex-col gap-1 px-5 py-6 sm:px-8">
           {NAV_LINKS_MOBILE.map((link) => (
             <Link
               key={link.label}

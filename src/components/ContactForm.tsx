@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useId, useState, type ChangeEvent, type FormEvent } from "react";
 import { CheckCircleIcon } from "./icons";
 import { useLeadSubmit } from "@/lib/useLeadSubmit";
 import { SERVICE_SELECT_EVENT } from "@/lib/serviceSelectEvent";
@@ -38,6 +38,7 @@ export default function ContactForm({
   formType?: string;
 }) {
   const { status, submit } = useLeadSubmit();
+  const uid = useId();
   const [form, setForm] = useState<FormState>({
     name: "",
     phone: "",
@@ -109,10 +110,11 @@ export default function ContactForm({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1.5 block text-[13px] font-bold text-navy">
+          <label htmlFor={`${uid}-name`} className="mb-1.5 block text-[13px] font-bold text-navy">
             Họ tên <span className="text-accent">*</span>
           </label>
           <input
+            id={`${uid}-name`}
             required
             type="text"
             placeholder="Nguyễn Văn A"
@@ -122,10 +124,11 @@ export default function ContactForm({
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-[13px] font-bold text-navy">
+          <label htmlFor={`${uid}-phone`} className="mb-1.5 block text-[13px] font-bold text-navy">
             Số điện thoại <span className="text-accent">*</span>
           </label>
           <input
+            id={`${uid}-phone`}
             required
             type="tel"
             placeholder="09xx xxx xxx"
@@ -137,10 +140,11 @@ export default function ContactForm({
       </div>
 
       <div className="mt-4">
-        <label className="mb-1.5 block text-[13px] font-bold text-navy">
+        <label htmlFor={`${uid}-email`} className="mb-1.5 block text-[13px] font-bold text-navy">
           Email
         </label>
         <input
+          id={`${uid}-email`}
           type="email"
           placeholder="ban@congty.com"
           value={form.email}
@@ -150,10 +154,11 @@ export default function ContactForm({
       </div>
 
       <div className="mt-4">
-        <label className="mb-1.5 block text-[13px] font-bold text-navy">
+        <label htmlFor={`${uid}-service`} className="mb-1.5 block text-[13px] font-bold text-navy">
           Dịch vụ quan tâm
         </label>
         <select
+          id={`${uid}-service`}
           value={form.service}
           onChange={update("service")}
           className={`${inputClass} appearance-none`}
@@ -170,10 +175,11 @@ export default function ContactForm({
       </div>
 
       <div className="mt-4">
-        <label className="mb-1.5 block text-[13px] font-bold text-navy">
+        <label htmlFor={`${uid}-note`} className="mb-1.5 block text-[13px] font-bold text-navy">
           Lời nhắn
         </label>
         <textarea
+          id={`${uid}-note`}
           rows={4}
           placeholder="Cho chúng tôi biết thêm về nhu cầu của bạn..."
           value={form.note}

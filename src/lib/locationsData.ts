@@ -130,7 +130,7 @@ export type LocationData = {
   lowerTierAlternatives?: { slug: string; name: string }[];
 };
 
-const IMAGE = "/images/khong-gian-lam-viec.png";
+const IMAGE = "/images/khong-gian-lam-viec.jpg";
 
 /* ---------------------------------------------------------------------- */
 /* Shared generic content reused across the 9 template-only branches       */

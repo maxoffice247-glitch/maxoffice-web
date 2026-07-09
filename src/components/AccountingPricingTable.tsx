@@ -102,7 +102,7 @@ export default function AccountingPricingTable({
                     ))}
                   </ul>
                   {surcharge.note && (
-                    <p className="mt-3 text-[11px] text-body-text/70">{surcharge.note}</p>
+                    <p className="mt-3 text-[11px] text-body-text">{surcharge.note}</p>
                   )}
                 </div>
               );

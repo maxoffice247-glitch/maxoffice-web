@@ -42,6 +42,7 @@ export default function FloatingButtons() {
               target="_blank"
               rel="noopener"
               title="Messenger"
+              aria-label="Nhắn tin qua Messenger"
               initial={{ opacity: 0, y: 16, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.8 }}
@@ -81,6 +82,7 @@ export default function FloatingButtons() {
         <a
           href="tel:0898082188"
           title="Gọi ngay"
+          aria-label="Gọi ngay 089 8082 188"
           className="animate-pulse-call flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[54px] sm:w-[54px]"
         >
           <PhoneIcon className="h-[22px] w-[22px]" />

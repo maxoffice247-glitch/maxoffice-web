@@ -42,7 +42,7 @@ export default function PricingPage() {
   return (
     <main>
       <PageHero
-        image="/images/hero-bang-gia.png"
+        image="/images/hero-bang-gia.jpg"
         eyebrow="Bảng giá"
         title="Mức giá minh bạch cho mọi giai đoạn phát triển"
         description="Không phát sinh chi phí ẩn. Xem đầy đủ bảng giá văn phòng, thành lập doanh nghiệp và kế toán thuế — chọn đúng gói cho nhu cầu hiện tại của bạn."

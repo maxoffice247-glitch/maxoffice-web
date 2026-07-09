@@ -5,7 +5,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import SearchOverlay from "@/components/SearchOverlay";
+import ClientOverlays from "@/components/ClientOverlays";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { SearchProvider } from "@/components/SearchContext";
 import {
   SITE_URL,
@@ -69,22 +70,31 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${beVietnamPro.variable} ${inter.variable}`}>
       <body className="min-h-screen bg-bg font-sans text-ink antialiased">
+        <GoogleAnalytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2.5 focus:text-[14px] focus:font-bold focus:text-white focus:shadow-lg"
+        >
+          Bỏ qua, đến nội dung chính
+        </a>
         <SearchProvider>
           <div className="print:hidden">
             <Header />
           </div>
-          <div className="pb-24 sm:pb-0">{children}</div>
+          <div id="main-content" className="pb-24 sm:pb-0">
+            {children}
+          </div>
           <div className="print:hidden">
             <Footer />
           </div>
           <div className="print:hidden">
             <FloatingButtons />
             <MobileBottomNav />
-            <SearchOverlay />
+            <ClientOverlays />
           </div>
         </SearchProvider>
       </body>

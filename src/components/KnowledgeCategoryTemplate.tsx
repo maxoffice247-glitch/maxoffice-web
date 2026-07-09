@@ -16,7 +16,7 @@ export default function KnowledgeCategoryTemplate({ category }: { category: Know
   return (
     <main>
       <PageHero
-        image="/images/khong-gian-lam-viec.png"
+        image="/images/khong-gian-lam-viec.jpg"
         eyebrow="Kiến thức"
         title={category.name}
         description={category.description}

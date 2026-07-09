@@ -34,7 +34,7 @@ export default function LocationsMegaMenu({ solid }: { solid: boolean }) {
         aria-label="Xem danh sách chi nhánh"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className={`flex items-center py-1 pl-1 transition-colors duration-300 hover:text-accent ${linkColor}`}
+        className={`flex items-center p-1.5 transition-colors duration-300 hover:text-accent ${linkColor}`}
       >
         <ChevronDownIcon className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>

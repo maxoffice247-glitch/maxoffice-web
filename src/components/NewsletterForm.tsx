@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import { CheckCircleIcon, MailIcon } from "./icons";
 
 export default function NewsletterForm({
@@ -13,6 +13,7 @@ export default function NewsletterForm({
   compact?: boolean;
 }) {
   const [submitted, setSubmitted] = useState(false);
+  const uid = useId();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,7 +42,11 @@ export default function NewsletterForm({
       <h3 className="mb-1.5 text-[17px] font-bold text-navy">{title}</h3>
       <p className="mb-5 text-[13.5px] leading-relaxed text-body-text">{description}</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 sm:flex-row">
+        <label htmlFor={`${uid}-email`} className="sr-only">
+          Email
+        </label>
         <input
+          id={`${uid}-email`}
           required
           type="email"
           placeholder="Email của bạn"

@@ -76,9 +76,9 @@ export default function Locations() {
                   {loc.num}
                 </div>
                 <div>
-                  <h4 className="mb-1 text-[15.5px] font-bold text-navy">
+                  <h3 className="mb-1 text-[15.5px] font-bold text-navy">
                     {loc.name}
-                  </h4>
+                  </h3>
                   <p className="text-[13.5px] text-body-text">{loc.address}</p>
                   {loc.tag && (
                     <span className="mt-2.5 inline-block rounded-full bg-accent/8 px-2.5 py-1 text-[11.5px] font-bold text-accent">

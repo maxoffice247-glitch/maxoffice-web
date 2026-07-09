@@ -398,7 +398,7 @@ export default function ServicePricingTable({
                   })}
                 </div>
                 {pricing.promoEffectiveDate && (
-                  <p className="mt-4 text-[11.5px] text-body-text/70">
+                  <p className="mt-4 text-[11.5px] text-body-text">
                     Áp dụng từ {pricing.promoEffectiveDate}.
                   </p>
                 )}

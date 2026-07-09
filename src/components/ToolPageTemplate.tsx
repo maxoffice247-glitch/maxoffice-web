@@ -38,7 +38,7 @@ export default function ToolPageTemplate({
   return (
     <main>
       <PageHero
-        image="/images/khong-gian-lam-viec.png"
+        image="/images/khong-gian-lam-viec.jpg"
         eyebrow="Tiện ích miễn phí"
         title={heroTitle}
         description={heroDescription}

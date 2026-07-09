@@ -258,7 +258,7 @@ export default function Pricing() {
                     ))}
                   </ul>
                   {group.promoEffectiveDate && (
-                    <p className="mt-3 text-[11.5px] text-body-text/70">
+                    <p className="mt-3 text-[11.5px] text-body-text">
                       Áp dụng từ {group.promoEffectiveDate}.
                     </p>
                   )}

@@ -27,14 +27,14 @@ type ServiceItem = {
 const SERVICES: ServiceItem[] = [
   {
     slug: "van-phong-ao",
-    image: "/images/van-phong-ao.png",
+    image: "/images/van-phong-ao.jpg",
     title: "Văn phòng ảo",
     price: "Từ 299.000đ/tháng",
     desc: "Địa chỉ đăng ký kinh doanh hợp lệ, lễ tân chuyên nghiệp, nhận thư hộ — không cần thuê mặt bằng vật lý.",
   },
   {
     slug: "van-phong-tron-goi",
-    image: "/images/van-phong-tron-goi.png",
+    image: "/images/van-phong-tron-goi.jpg",
     title: "Văn phòng trọn gói",
     price: "Từ 4.500.000đ/tháng",
     desc: "Không gian riêng, sẵn sàng làm việc ngay với đầy đủ nội thất, internet và tiện ích văn phòng.",
@@ -42,21 +42,21 @@ const SERVICES: ServiceItem[] = [
   },
   {
     slug: "phong-hop",
-    image: "/images/phong-hop.png",
+    image: "/images/phong-hop.jpg",
     title: "Phòng họp theo giờ",
     price: "Từ 150.000đ/giờ",
     desc: "Phòng họp trang bị màn hình, âm thanh hiện đại — đặt lịch linh hoạt theo nhu cầu sử dụng.",
   },
   {
     slug: "cho-ngoi-linh-dong",
-    image: "/images/coworking.png",
+    image: "/images/coworking.jpg",
     title: "Chỗ ngồi linh động",
     price: "Từ 2.000.000đ/tháng",
     desc: "Không gian coworking năng động, phù hợp cho freelancer và đội nhóm nhỏ 1-3 người.",
   },
   {
     slug: "thanh-lap-doanh-nghiep",
-    image: "/images/thanh-lap-doanh-nghiep.png",
+    image: "/images/thanh-lap-doanh-nghiep.jpg",
     title: "Thành lập doanh nghiệp",
     price: "Từ 1.299.000đ*",
     desc: "2 gói dịch vụ minh bạch, áp dụng chung cho Hộ kinh doanh, Công ty TNHH hay Công ty Cổ phần — soạn hồ sơ và hoàn tất thủ tục đúng luật.",
@@ -64,7 +64,7 @@ const SERVICES: ServiceItem[] = [
   },
   {
     slug: "ke-toan-thue",
-    image: "/images/ke-toan-thue.png",
+    image: "/images/ke-toan-thue.jpg",
     title: "Kế toán & thuế",
     price: "Từ 500.000đ/tháng",
     desc: "Kê khai thuế đúng hạn, sổ sách minh bạch, báo cáo rõ ràng mỗi tháng — an tâm vận hành, tập trung phát triển kinh doanh.",
@@ -75,7 +75,7 @@ export default function DichVuPage() {
   return (
     <main>
       <PageHero
-        image="/images/khong-gian-lam-viec.png"
+        image="/images/khong-gian-lam-viec.jpg"
         eyebrow="Dịch vụ"
         title="Toàn bộ giải pháp vận hành doanh nghiệp"
         description="6 dịch vụ cốt lõi giúp doanh nghiệp bạn khởi động, vận hành và mở rộng tại TP.HCM — chọn đúng giải pháp cho từng giai đoạn phát triển."

@@ -27,7 +27,7 @@ export default function BlogCard({ post }: { post: BlogPost }) {
           {post.title}
         </h3>
         <p className="mb-4 flex-1 text-[13.5px] leading-relaxed text-body-text">{post.excerpt}</p>
-        <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px] text-body-text/80">
+        <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px] text-body-text">
           <span className="flex items-center gap-1.5">
             <UserIcon className="h-3.5 w-3.5" />
             {post.author}

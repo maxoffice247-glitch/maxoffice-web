@@ -127,17 +127,21 @@ function PillGroup<T extends string>({
   options,
   value,
   onChange,
+  groupLabelId,
 }: {
   options: { value: T; label: string }[];
   value: T | "";
   onChange: (v: T) => void;
+  /** id of the heading that names this group, for screen readers. */
+  groupLabelId?: string;
 }) {
   return (
-    <div className="flex flex-wrap gap-2.5">
+    <div role="group" aria-labelledby={groupLabelId} className="flex flex-wrap gap-2.5">
       {options.map((opt) => (
         <button
           key={opt.value}
           type="button"
+          aria-pressed={value === opt.value}
           onClick={() => onChange(opt.value)}
           className={`rounded-full border-[1.5px] px-4 py-2.5 text-[13.5px] font-bold transition-all duration-200 ${
             value === opt.value
@@ -217,11 +221,12 @@ export default function OfficePackageTool() {
           <Reveal className="mx-auto max-w-[760px] rounded-2xl border border-line bg-white p-7 sm:p-9">
             <div className="space-y-7">
               <div>
-                <label className="mb-3 block text-[15px] font-bold text-navy">
+                <label htmlFor="opt-employees" className="mb-3 block text-[15px] font-bold text-navy">
                   Số nhân viên hiện tại của bạn?
                 </label>
                 <div className="flex items-center gap-2.5">
                   <input
+                    id="opt-employees"
                     type="number"
                     min={1}
                     inputMode="numeric"
@@ -237,10 +242,11 @@ export default function OfficePackageTool() {
               </div>
 
               <div>
-                <label className="mb-3 block text-[15px] font-bold text-navy">
+                <label id="opt-budget-label" className="mb-3 block text-[15px] font-bold text-navy">
                   Ngân sách hàng tháng dự kiến?
                 </label>
                 <PillGroup
+                  groupLabelId="opt-budget-label"
                   options={BUDGET_OPTIONS}
                   value={answers.budget}
                   onChange={(v) => setAnswers((a) => ({ ...a, budget: v }))}
@@ -248,10 +254,11 @@ export default function OfficePackageTool() {
               </div>
 
               <div>
-                <label className="mb-3 block text-[15px] font-bold text-navy">
+                <label id="opt-legal-label" className="mb-3 block text-[15px] font-bold text-navy">
                   Bạn có cần địa chỉ đăng ký kinh doanh hợp pháp không?
                 </label>
                 <PillGroup
+                  groupLabelId="opt-legal-label"
                   options={YES_NO_OPTIONS}
                   value={answers.needLegalAddress}
                   onChange={(v) => setAnswers((a) => ({ ...a, needLegalAddress: v }))}
@@ -259,10 +266,11 @@ export default function OfficePackageTool() {
               </div>
 
               <div>
-                <label className="mb-3 block text-[15px] font-bold text-navy">
+                <label id="opt-space-label" className="mb-3 block text-[15px] font-bold text-navy">
                   Nhu cầu không gian làm việc của bạn?
                 </label>
                 <PillGroup
+                  groupLabelId="opt-space-label"
                   options={SPACE_NEED_OPTIONS}
                   value={answers.spaceNeed}
                   onChange={(v) => setAnswers((a) => ({ ...a, spaceNeed: v }))}
@@ -270,10 +278,11 @@ export default function OfficePackageTool() {
               </div>
 
               <div>
-                <label className="mb-3 block text-[15px] font-bold text-navy">
+                <label id="opt-meeting-label" className="mb-3 block text-[15px] font-bold text-navy">
                   Tần suất họp với khách hàng/đối tác mỗi tháng?
                 </label>
                 <PillGroup
+                  groupLabelId="opt-meeting-label"
                   options={MEETING_OPTIONS}
                   value={answers.meetingFreq}
                   onChange={(v) => setAnswers((a) => ({ ...a, meetingFreq: v }))}
@@ -281,10 +290,11 @@ export default function OfficePackageTool() {
               </div>
 
               <div>
-                <label className="mb-3 block text-[15px] font-bold text-navy">
+                <label htmlFor="opt-location" className="mb-3 block text-[15px] font-bold text-navy">
                   Bạn dự định đăng ký tại chi nhánh nào? (không bắt buộc)
                 </label>
                 <select
+                  id="opt-location"
                   value={answers.location}
                   onChange={(e) => setAnswers((a) => ({ ...a, location: e.target.value }))}
                   className={selectClass}

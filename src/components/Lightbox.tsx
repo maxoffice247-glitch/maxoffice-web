@@ -133,7 +133,8 @@ export default function Lightbox({
               height={1200}
               sizes="100vw"
               className="h-full max-h-[85vh] w-auto max-w-full rounded-lg object-contain"
-              priority
+              loading="eager"
+              fetchPriority="high"
             />
           </motion.div>
 

@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import LocationFacade, { type FacadeImage } from "./LocationFacade";
 import LocationGallery, { type InteriorImage } from "./LocationGallery";
-import Lightbox from "./Lightbox";
+
+// Only mounted once a thumbnail is clicked — keep its framer-motion/swipe
+// logic out of the location page's initial JS chunk.
+const Lightbox = dynamic(() => import("./Lightbox"), { ssr: false });
 
 export default function LocationImagesSection({
   name,

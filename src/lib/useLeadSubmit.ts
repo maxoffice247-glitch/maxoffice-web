@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackEvent } from "./gtag";
 
 export type LeadSubmitStatus = "idle" | "loading" | "success" | "error";
 
@@ -29,6 +30,7 @@ export function useLeadSubmit() {
       });
       if (!res.ok) throw new Error(`submit-lead responded ${res.status}`);
       setStatus("success");
+      trackEvent("form_submit", { form_type: payload.formType, service: payload.service });
     } catch (err) {
       console.error("Lead submission failed:", err);
       setStatus("error");

@@ -94,14 +94,15 @@ export default function SetupCostTool() {
           <Reveal className="mx-auto max-w-[720px] rounded-2xl border border-line bg-white p-7 sm:p-9">
             <div className="space-y-6">
               <div>
-                <label className="mb-3 block text-[15px] font-bold text-navy">
+                <label id="sct-package-label" className="mb-3 block text-[15px] font-bold text-navy">
                   Bạn muốn dùng gói dịch vụ nào?
                 </label>
-                <div className="flex flex-wrap gap-2.5">
+                <div role="group" aria-labelledby="sct-package-label" className="flex flex-wrap gap-2.5">
                   {PACKAGE_OPTIONS.map((opt) => (
                     <button
                       key={opt.value}
                       type="button"
+                      aria-pressed={packageKey === opt.value}
                       onClick={() => setPackageKey(opt.value)}
                       className={pillClass(packageKey === opt.value)}
                     >
@@ -123,10 +124,10 @@ export default function SetupCostTool() {
 
               {packageKey === "goi-1" && (
                 <div>
-                  <label className="mb-3 block text-[15px] font-bold text-navy">
+                  <label id="sct-vo-label" className="mb-3 block text-[15px] font-bold text-navy">
                     Bạn có muốn đăng ký kèm Văn phòng ảo không?
                   </label>
-                  <div className="flex flex-wrap gap-2.5">
+                  <div role="group" aria-labelledby="sct-vo-label" className="flex flex-wrap gap-2.5">
                     {[
                       { value: "yes" as const, label: "Có, đăng ký kèm Văn phòng ảo" },
                       { value: "no" as const, label: "Không, chỉ thành lập doanh nghiệp" },
@@ -134,6 +135,7 @@ export default function SetupCostTool() {
                       <button
                         key={opt.value}
                         type="button"
+                        aria-pressed={withVirtualOffice === opt.value}
                         onClick={() => setWithVirtualOffice(opt.value)}
                         className={pillClass(withVirtualOffice === opt.value)}
                       >
@@ -182,10 +184,10 @@ export default function SetupCostTool() {
               </div>
 
               <div>
-                <label className="mb-3 block text-[15px] font-bold text-navy">
+                <label id="sct-accounting-label" className="mb-3 block text-[15px] font-bold text-navy">
                   Bạn có cần dịch vụ kế toán thuế không?
                 </label>
-                <div className="flex flex-wrap gap-2.5">
+                <div role="group" aria-labelledby="sct-accounting-label" className="flex flex-wrap gap-2.5">
                   {[
                     { value: "yes" as const, label: "Có" },
                     { value: "no" as const, label: "Không" },
@@ -193,6 +195,7 @@ export default function SetupCostTool() {
                     <button
                       key={opt.value}
                       type="button"
+                      aria-pressed={needAccounting === opt.value}
                       onClick={() => setNeedAccounting(opt.value)}
                       className={pillClass(needAccounting === opt.value)}
                     >
@@ -245,7 +248,7 @@ export default function SetupCostTool() {
                     <span className="text-[13.5px] text-body-text">{item.name}</span>
                     <span className="font-mono text-[15px] font-bold text-navy">
                       {item.discounted && (
-                        <span className="mr-1.5 text-[12.5px] font-medium text-body-text/60 line-through">
+                        <span className="mr-1.5 text-[12.5px] font-medium text-body-text line-through">
                           {formatVND(item.price)}
                         </span>
                       )}

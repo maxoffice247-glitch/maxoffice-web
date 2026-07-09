@@ -76,42 +76,42 @@ export const SERVICES_LIST: ServiceListItem[] = [
     name: "Văn phòng ảo",
     shortDesc: "Địa chỉ đăng ký kinh doanh hợp lệ",
     icon: BuildingIcon,
-    image: "/images/van-phong-ao.png",
+    image: "/images/van-phong-ao.jpg",
   },
   {
     slug: "van-phong-tron-goi",
     name: "Văn phòng trọn gói",
     shortDesc: "Sẵn sàng làm việc ngay",
     icon: KeyIcon,
-    image: "/images/van-phong-tron-goi.png",
+    image: "/images/van-phong-tron-goi.jpg",
   },
   {
     slug: "phong-hop",
     name: "Phòng họp theo giờ",
     shortDesc: "Thiết bị hiện đại, đặt lịch linh hoạt",
     icon: ScreenIcon,
-    image: "/images/phong-hop.png",
+    image: "/images/phong-hop.jpg",
   },
   {
     slug: "cho-ngoi-linh-dong",
     name: "Chỗ ngồi linh động",
     shortDesc: "Coworking năng động",
     icon: UsersIcon,
-    image: "/images/coworking.png",
+    image: "/images/coworking.jpg",
   },
   {
     slug: "thanh-lap-doanh-nghiep",
     name: "Thành lập doanh nghiệp",
     shortDesc: "Nhanh chóng, đúng pháp lý",
     icon: DocumentCheckIcon,
-    image: "/images/thanh-lap-doanh-nghiep.png",
+    image: "/images/thanh-lap-doanh-nghiep.jpg",
   },
   {
     slug: "ke-toan-thue",
     name: "Kế toán & thuế",
     shortDesc: "Đúng hạn, đúng luật",
     icon: CalculatorIcon,
-    image: "/images/ke-toan-thue.png",
+    image: "/images/ke-toan-thue.jpg",
   },
 ];
 
@@ -167,7 +167,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     heroTitle: "Văn Phòng Ảo TP.HCM",
     heroDescription:
       "Sở hữu địa chỉ đăng ký kinh doanh hợp lệ tại trung tâm TP.HCM chỉ từ 299.000đ/tháng — 6 gói dịch vụ linh hoạt, không cần thuê mặt bằng, không cần đặt cọc lớn.",
-    image: "/images/van-phong-ao.png",
+    image: "/images/van-phong-ao.jpg",
     metaTitle: "Văn Phòng Ảo TP.HCM Từ 299.000đ/Tháng | MAX OFFICE",
     metaDescription:
       "Thuê văn phòng ảo TP.HCM giá từ 299.000đ/tháng. 6 gói dịch vụ: Gói LITE, START, BASE, ORIGIN, ORIGIN+, RISE. Địa chỉ pháp lý hợp lệ, 12 chi nhánh. Tư vấn miễn phí.",
@@ -250,7 +250,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     heroTitle: "Văn Phòng Trọn Gói TP.HCM",
     heroDescription:
       "Không gian làm việc riêng tư, sẵn sàng sử dụng ngay với đầy đủ nội thất và tiện ích — chỉ từ 4.500.000đ/tháng tại 12 vị trí trung tâm TP.HCM.",
-    image: "/images/van-phong-tron-goi.png",
+    image: "/images/van-phong-tron-goi.jpg",
     metaTitle: "Văn Phòng Trọn Gói TP.HCM Từ 4.5 Triệu/Tháng | MAX OFFICE",
     metaDescription:
       "Cho thuê văn phòng trọn gói TP.HCM từ 4.500.000đ/tháng. Sẵn sàng làm việc ngay, đầy đủ tiện ích, 12 vị trí trung tâm.",
@@ -338,7 +338,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     heroTitle: "Cho Thuê Phòng Họp Theo Giờ TP.HCM",
     heroDescription:
       "Phòng họp chuyên nghiệp, trang bị màn hình và âm thanh hiện đại — đặt lịch linh hoạt từ 150.000đ/giờ tại 12 chi nhánh trung tâm TP.HCM.",
-    image: "/images/phong-hop.png",
+    image: "/images/phong-hop.jpg",
     metaTitle: "Cho Thuê Phòng Họp Theo Giờ TP.HCM Từ 150K | MAX OFFICE",
     metaDescription:
       "Phòng họp chuyên nghiệp TP.HCM từ 150.000đ/giờ. Màn hình 4K, âm thanh chuẩn, đặt lịch online 24/7. 12 chi nhánh.",
@@ -425,7 +425,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     heroTitle: "Coworking Space TP.HCM",
     heroDescription:
       "Không gian làm việc chung năng động, wifi tốc độ cao và cộng đồng doanh nghiệp sôi động — chỉ từ 2.000.000đ/tháng.",
-    image: "/images/coworking.png",
+    image: "/images/coworking.jpg",
     metaTitle: "Coworking Space TP.HCM Từ 2 Triệu/Tháng | MAX OFFICE",
     metaDescription:
       "Chỗ ngồi làm việc linh động TP.HCM từ 2.000.000đ/tháng. WiFi nhanh, không gian chuyên nghiệp, cộng đồng doanh nghiệp.",
@@ -513,7 +513,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     heroTitle: "Dịch Vụ Thành Lập Công Ty TP.HCM",
     heroDescription:
       "Thành lập Hộ kinh doanh, Công ty TNHH hoặc Công ty Cổ phần nhanh chóng, đúng pháp lý — 2 gói dịch vụ minh bạch, chỉ từ 1.299.000đ khi đăng ký kèm Văn phòng ảo.",
-    image: "/images/thanh-lap-doanh-nghiep.png",
+    image: "/images/thanh-lap-doanh-nghiep.jpg",
     metaTitle: "Dịch Vụ Thành Lập Công Ty TP.HCM Từ 1.299.000đ | MAX OFFICE",
     metaDescription:
       "Thành lập công ty TNHH, cổ phần, hộ kinh doanh tại TP.HCM theo 2 gói dịch vụ minh bạch, từ 1.299.000đ khi kèm Văn phòng ảo. Nhanh chóng, đúng pháp lý, tư vấn miễn phí.",
@@ -624,7 +624,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     heroTitle: "Dịch Vụ Kế Toán Thuế Trọn Gói TP.HCM",
     heroDescription:
       "Kê khai đúng hạn, đúng luật, tối ưu chi phí thuế hợp pháp — đồng hành cùng hơn 500 doanh nghiệp tại TP.HCM.",
-    image: "/images/ke-toan-thue.png",
+    image: "/images/ke-toan-thue.jpg",
     metaTitle: "Dịch Vụ Kế Toán Thuế Trọn Gói TP.HCM | MAX OFFICE",
     metaDescription:
       "Dịch vụ kế toán thuế trọn gói từ 500.000đ/tháng, tính theo số hoá đơn/quý và loại hình kinh doanh. Đúng hạn, đúng luật, tối ưu thuế hợp pháp. 500+ doanh nghiệp tin dùng.",

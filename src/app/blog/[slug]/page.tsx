@@ -68,7 +68,7 @@ export default async function BlogArticlePage({
       />
 
       <PageHero
-        image="/images/coworking.png"
+        image="/images/coworking.jpg"
         eyebrow={getCategoryName(post.categorySlug)}
         title={post.title}
         description={post.excerpt}

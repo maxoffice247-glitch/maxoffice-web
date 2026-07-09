@@ -60,9 +60,13 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
         transition={{ duration: 0.25, ease: EASE_PREMIUM }}
         className="relative w-full max-w-[600px] overflow-hidden rounded-2xl bg-white shadow-[0_30px_80px_rgba(11,31,58,0.35)]"
       >
-        <div className="flex items-center gap-3 border-b border-line px-5 py-4">
+        <div className="flex items-center gap-3 border-b border-line px-5 py-4 focus-within:border-primary">
           <SearchIcon className="shrink-0 text-body-text" />
+          <label htmlFor="site-search-input" className="sr-only">
+            Tìm kiếm
+          </label>
           <input
+            id="site-search-input"
             ref={inputRef}
             type="text"
             value={query}

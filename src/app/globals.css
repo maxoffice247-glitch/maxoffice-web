@@ -4,7 +4,9 @@
   --color-primary: #1565c0;
   --color-primary-dark: #0d47a1;
   --color-primary-tint: #e9f2fc;
-  --color-accent: #e53935;
+  /* Nudged one shade darker than #e53935 — white text on this at 15px/bold
+     was 4.22:1, just under the 4.5:1 WCAG AA minimum. */
+  --color-accent: #dc3530;
   --color-accent-dark: #c62828;
   --color-navy: #0b1f3a;
   --color-ink: #0f1b2d;

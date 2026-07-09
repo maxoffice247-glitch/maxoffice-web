@@ -17,7 +17,7 @@ export default function AboutPage() {
   return (
     <main>
       <PageHero
-        image="/images/hero-ve-chung-toi.png"
+        image="/images/hero-ve-chung-toi.jpg"
         eyebrow="Về chúng tôi"
         title="Đối tác vận hành doanh nghiệp toàn diện tại TP.HCM"
         description="Từ một địa chỉ tại Tân Bình năm 2022, MAX OFFICE đã trở thành hệ thống 12 địa điểm, đồng hành cùng hơn 500 doanh nghiệp trên hành trình khởi nghiệp và phát triển."

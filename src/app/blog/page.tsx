@@ -37,7 +37,7 @@ export default async function BlogPage({
   return (
     <main>
       <PageHero
-        image="/images/coworking.png"
+        image="/images/coworking.jpg"
         eyebrow="Blog MAX OFFICE"
         title="Kiến thức & câu chuyện vận hành doanh nghiệp"
         description="Bài viết về thành lập doanh nghiệp, kế toán thuế, pháp lý và kinh nghiệm vận hành văn phòng — cập nhật liên tục từ đội ngũ MAX OFFICE."

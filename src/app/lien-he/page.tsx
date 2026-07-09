@@ -22,7 +22,7 @@ export default async function ContactPage({
   return (
     <main>
       <PageHero
-        image="/images/hero-lien-he.png"
+        image="/images/hero-lien-he.jpg"
         eyebrow="Liên hệ"
         title="Sẵn sàng đồng hành cùng bạn"
         description="Chỉ cần một tin nhắn hoặc một cuộc gọi — đội ngũ MAX OFFICE sẽ tư vấn miễn phí và đề xuất giải pháp phù hợp nhất với doanh nghiệp của bạn."

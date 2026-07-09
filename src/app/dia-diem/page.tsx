@@ -18,7 +18,7 @@ export default function DiaDiemPage() {
   return (
     <main>
       <PageHero
-        image="/images/hero-dia-diem.png"
+        image="/images/hero-dia-diem.jpg"
         eyebrow="Chi nhánh"
         title="12 chi nhánh văn phòng tại TP.HCM"
         description="Từ Tân Bình, Gò Vấp, Tân Phú, Quận 10 đến trung tâm Quận 1 — chọn địa chỉ gần đối tác, khách hàng hoặc thuận tiện nhất cho đội ngũ của bạn."

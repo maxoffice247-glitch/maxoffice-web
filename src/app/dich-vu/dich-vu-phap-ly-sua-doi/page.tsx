@@ -107,7 +107,7 @@ export default function DichVuPhapLySuaDoiPage() {
       />
 
       <PageHero
-        image="/images/thanh-lap-doanh-nghiep.png"
+        image="/images/thanh-lap-doanh-nghiep.jpg"
         eyebrow="Dịch vụ"
         title="Dịch vụ pháp lý sửa đổi doanh nghiệp"
         description="Thay đổi tên công ty, địa chỉ, đại diện pháp luật, vốn điều lệ, ngành nghề... Bảng giá minh bạch, ưu đãi combo khi đặt từ 2 dịch vụ trở lên."
