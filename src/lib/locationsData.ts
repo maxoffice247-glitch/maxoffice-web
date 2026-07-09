@@ -99,10 +99,24 @@ export type LocationData = {
   metaTitle: string;
   metaDescription: string;
   image: string;
-  /** CSS object-position cho ảnh mặt tiền trong gallery — chỉ cần khi crop mặc định "center" cắt mất chi tiết quan trọng (bảng hiệu, lối vào...). */
+  /** Tỉ lệ thật (W/H) của ảnh mặt tiền — khung ảnh trong LocationFacade khớp đúng tỉ lệ này để không cắt mất góc/đỉnh toà nhà. */
+  facadeAspectRatio: string;
+  /** Bên đặt ảnh mặt tiền trong section 2 cột đầu trang — so le giữa các chi nhánh để tạo cảm giác đa dạng. */
+  facadeImageSide: "left" | "right";
+  /** "cover" thay vì mặc định "contain" — chỉ dùng khi cố ý giới hạn chiều cao khung và chấp nhận cắt bớt ảnh (vd. Yên Thế). */
+  facadeFit?: "cover";
+  /** CSS object-position cho ảnh mặt tiền — chỉ cần khi dùng facadeFit "cover". */
   facadeObjectPosition?: string;
+  /** Giới hạn chiều rộng khung ảnh mặt tiền — chỉ dùng khi tỉ lệ ảnh quá dọc khiến chiều cao render vượt hẳn cột text bên cạnh. */
+  facadeMaxWidth?: string;
   /** Ảnh nội thất (lễ tân, phòng họp, chỗ ngồi...) hiển thị dạng gallery cạnh ảnh mặt tiền — chỉ một số chi nhánh có sẵn. */
-  interiorImages?: { src: string; alt: string; caption?: string; objectPosition?: string }[];
+  interiorImages?: {
+    src: string;
+    alt: string;
+    caption?: string;
+    objectPosition?: string;
+    aspectRatio?: string;
+  }[];
   intro: string[];
   benefitsTitle: string;
   benefits: BenefitItem[];
@@ -308,10 +322,14 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Thuê văn phòng ảo, văn phòng trọn gói tại Sông Thao, Tân Bình — trụ sở chính MAX OFFICE, đầy đủ dịch vụ, văn phòng ảo từ 350.000đ/tháng (gói START, BASE), gần sân bay Tân Sơn Nhất.",
     image: IMAGE,
+    // Cropped to 905x1407 (see /images/originals for the uncropped source).
+    facadeAspectRatio: "905 / 1407",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-song-thao-khong-gian-cowrorking.jpg", alt: "Khu vực làm việc chung văn phòng Sông Thao", caption: "Không gian làm việc chung" },
       { src: "/images/dia-diem-song-thao-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Sông Thao", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-song-thao-phong-hop.jpg", alt: "Phòng họp văn phòng Sông Thao", caption: "Phòng họp" },
+      { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
       "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 12 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
@@ -380,6 +398,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Văn phòng ảo, văn phòng trọn gói tại Điện Biên Phủ, Phường Tân Định, Quận 1 — địa chỉ đăng ký kinh doanh uy tín, đẳng cấp cho doanh nghiệp tại trung tâm TP.HCM.",
     image: IMAGE,
+    // Cropped to 934x1232 — bottom lands at the motorbike wheel touching the road (see /images/originals for the source).
+    facadeAspectRatio: "934 / 1232",
+    facadeImageSide: "left",
     interiorImages: [
       {
         src: "/images/dia-diem-dien-bien-phu-coworking.jpg",
@@ -393,6 +414,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Điện Biên Phủ", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-dien-bien-phu-phong-hop.jpg", alt: "Phòng họp văn phòng Điện Biên Phủ", caption: "Phòng họp" },
       { src: "/images/dia-diem-dien-bien-phu-phong-rieng.jpg", alt: "Phòng riêng văn phòng Điện Biên Phủ", caption: "Phòng riêng" },
+      { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
       "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 12 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
@@ -460,8 +482,18 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Văn phòng ảo tại Nguyễn Oanh, Gò Vấp — toà nhà hạng A, một trong số ít lựa chọn chất lượng cao tại khu vực. Từ 595.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), kèm tư vấn AI, ưu tiên hỗ trợ 24/7, phòng họp.",
     image: IMAGE,
+    facadeAspectRatio: "1254 / 1254",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-nguyen-oanh-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Nguyễn Oanh", caption: "Quầy lễ tân" },
+      {
+        src: "/images/dia-diem-nguyen-oanh-bang-ten.jpg",
+        alt: "Bảng tên công ty tại toà nhà văn phòng Nguyễn Oanh",
+        caption: "Bảng tên công ty tại toà nhà",
+        // Tall board (852x1227) in a 4:3 cell — a center crop cuts off the
+        // building name at the top, so anchor to the top instead.
+        objectPosition: "top",
+      },
     ],
     intro: [
       "Văn phòng Nguyễn Oanh nằm tại 238-240-242 Nguyễn Oanh, Phường Gò Vấp, toạ lạc trong một toà nhà hạng A — chất lượng xây dựng và tiện ích vượt trội so với mặt bằng chung khu vực. Đây là lựa chọn phù hợp cho doanh nghiệp đang tăng trưởng, cần địa chỉ uy tín cùng các tiện ích hỗ trợ vận hành thực chất như tư vấn tự động hoá AI, ưu tiên hỗ trợ 24/7 và phòng họp đi kèm.",
@@ -536,6 +568,14 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Yên Thế Tân Bình | Từ 500K/Tháng",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Yên Thế, Phường Tân Sơn Hòa, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    // Real facade shot is landscape (1484x1060), but the composition leaves a
+    // lot of foreground street/sidewalk at the bottom — cap the box to a more
+    // compact ratio and anchor to the top so the building itself fills more
+    // of the frame instead of the street.
+    facadeAspectRatio: "4 / 3",
+    facadeImageSide: "right",
+    facadeFit: "cover",
+    facadeObjectPosition: "top",
     interiorImages: [
       { src: "/images/dia-diem-yen-the-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Yên Thế", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-yen-the-phong-hop.jpg", alt: "Phòng họp văn phòng Yên Thế", caption: "Phòng họp" },
@@ -566,8 +606,15 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Cộng Hoà Tân Bình | Từ 500K/Tháng",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Cộng Hoà, Phường Bảy Hiền, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    // Cropped to 934x1074 — widened 40% from the first pass (which was too
+    // narrow/tall) and bottom pulled back to the median hedge, not the road
+    // (see /images/originals for the source). Ratio is balanced enough now
+    // that no maxWidth cap is needed.
+    facadeAspectRatio: "934 / 1074",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-cong-hoa-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cộng Hoà", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-cong-hoa-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cộng Hoà", caption: "Bảng tên công ty tại toà nhà" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Cộng Hoà",
     ...tanBinhBlock("Cộng Hoà, Tân Bình", "123 Cộng Hoà, Phường Bảy Hiền, Quận Tân Bình, TP.HCM"),
@@ -581,6 +628,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Tân Thắng Tân Phú | Từ 500K/Tháng",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Tân Thắng, Phường Tân Sơn Nhì, Tân Phú — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    facadeAspectRatio: "1484 / 1060",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-tan-thang-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Tân Thắng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-tan-thang-phong-hop.jpg", alt: "Phòng họp văn phòng Tân Thắng", caption: "Phòng họp" },
@@ -599,8 +648,12 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Cửu Long Tân Bình | Từ 500K/Tháng",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Cửu Long, Phường Tân Sơn Hòa, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE), đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    // Cropped to 1085x1297 (see /images/originals for the uncropped source).
+    facadeAspectRatio: "1085 / 1297",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-cuu-long-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cửu Long", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-cuu-long-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cửu Long", caption: "Bảng tên công ty tại toà nhà" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Cửu Long",
     ...tanBinhBlock("Cửu Long, Tân Bình", "06-08-10 Cửu Long, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM"),
@@ -614,12 +667,12 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Hoàng Việt Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Hoàng Việt, Phường Tân Sơn Nhất, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
-    // Facade photo is a tall portrait shot cropped into a 4:3 gallery cell — the
-    // distinctive orange entrance frame sits low in frame and gets cut off by a
-    // plain center crop, so bias the crop downward to keep it in view.
-    facadeObjectPosition: "center 68%",
+    // Cropped to 1122x1394 — bottom extended to the road (see /images/originals for the source).
+    facadeAspectRatio: "1122 / 1394",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-hoang-viet-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Hoàng Việt", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Hoàng Việt",
     ...tanBinhBlock("Hoàng Việt, Tân Bình", "1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình, TP.HCM"),
@@ -633,9 +686,12 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Bàu Cát 2 Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Bàu Cát 2, Phường Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    facadeAspectRatio: "1448 / 1086",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-bau-cat-coworking.jpg", alt: "Khu vực làm việc chung văn phòng Bàu Cát 2", caption: "Không gian làm việc chung" },
       { src: "/images/dia-diem-bau-cat-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Bàu Cát 2", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-bau-cat-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Bàu Cát 2", caption: "Bảng tên công ty tại toà nhà" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Bàu Cát 2",
     ...tanBinhBlock("Bàu Cát 2, Tân Bình", "24A Bàu Cát 2, Phường Tân Bình, TP.HCM"),
@@ -649,8 +705,11 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Lam Sơn Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Lam Sơn, Phường Tân Sơn Hòa, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    facadeAspectRatio: "1390 / 1132",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-lam-son-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Lam Sơn", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-lam-son-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Lam Sơn", caption: "Bảng tên công ty tại toà nhà" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Lam Sơn",
     ...tanBinhBlock("Lam Sơn, Tân Bình", "2-2B Lam Sơn, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM"),
@@ -664,6 +723,18 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Hoàng Kế Viêm Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Hoàng Kế Viêm, Phường Bảy Hiền, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    facadeAspectRatio: "1448 / 1086",
+    facadeImageSide: "left",
+    interiorImages: [
+      {
+        src: "/images/dia-diem-hoang-ke-viem-bang-ten.jpg",
+        alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Kế Viêm",
+        caption: "Bảng tên công ty tại toà nhà",
+        // Square (1024x1024) photo — the generic 3:4 solo box left letterbox
+        // gaps above/below; hug the image's real ratio instead.
+        aspectRatio: "1 / 1",
+      },
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Hoàng Kế Viêm",
     ...tanBinhBlock("Hoàng Kế Viêm, Tân Bình", "26 Hoàng Kế Viêm, Phường Bảy Hiền, Quận Tân Bình, TP.HCM"),
   },
@@ -676,8 +747,12 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng CMT8 Quận 10 | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10 — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: IMAGE,
+    // Cropped to 1086x1206 — bottom lands at the sidewalk/road curb line (see /images/originals for the source).
+    facadeAspectRatio: "1086 / 1206",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-cmt8-le-tan.jpg", alt: "Khu vực lễ tân văn phòng CMT8", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-cmt8-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng CMT8", caption: "Bảng tên công ty tại toà nhà" },
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng CMT8",
     ...quan10Block("CMT8, Quận 10", "283/26-28 Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10, TP.HCM"),

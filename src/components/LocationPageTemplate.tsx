@@ -1,7 +1,7 @@
 import Link from "next/link";
 import PageHero from "./PageHero";
 import Breadcrumb from "./Breadcrumb";
-import LocationIntro from "./LocationIntro";
+import LocationImagesSection from "./LocationImagesSection";
 import ServiceBenefits from "./ServiceBenefits";
 import LocationNearby from "./LocationNearby";
 import LocationAccess from "./LocationAccess";
@@ -54,12 +54,19 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         ]}
       />
 
-      <LocationIntro
+      <LocationImagesSection
         name={data.name}
-        image={`/images/dia-diem-${data.slug}.jpg`}
-        facadeObjectPosition={data.facadeObjectPosition}
-        interiorImages={data.interiorImages}
+        facadeImage={{
+          src: `/images/dia-diem-${data.slug}.jpg`,
+          alt: `Mặt tiền văn phòng ${data.name}`,
+          aspectRatio: data.facadeAspectRatio,
+          fit: data.facadeFit,
+          objectPosition: data.facadeObjectPosition,
+          maxWidth: data.facadeMaxWidth,
+        }}
+        imageSide={data.facadeImageSide}
         paragraphs={data.intro}
+        interiorImages={data.interiorImages}
       />
       <ServiceBenefits title={data.benefitsTitle} items={data.benefits} />
       <LocationNearby name={data.name} items={data.nearbyItems} />

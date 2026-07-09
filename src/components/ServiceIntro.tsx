@@ -21,12 +21,9 @@ function paragraphClass(i: number) {
 export default function ServiceIntro({
   paragraphs,
   image,
-  stackedLayout = false,
 }: {
   paragraphs: string[];
   image?: IntroImage;
-  /** Full-width image on top with all paragraphs flowing below, instead of the default side-by-side grid — for wide/landscape images that would otherwise leave a lopsided narrow column next to them. */
-  stackedLayout?: boolean;
 }) {
   if (!image) {
     return (
@@ -44,52 +41,33 @@ export default function ServiceIntro({
     );
   }
 
-  const isContain = image.fit === "contain";
-  const imageBox = (sizes: string) => (
-    <div
-      className={`relative w-full overflow-hidden rounded-2xl shadow-card ${
-        isContain ? "bg-bg-tint" : ""
-      } ${image.maxWidth ? "mx-auto lg:mx-0" : ""}`}
-      style={{
-        aspectRatio: image.aspectRatio ?? "16 / 10",
-        maxWidth: image.maxWidth,
-      }}
-    >
-      <Image
-        src={image.src}
-        alt={image.alt}
-        fill
-        sizes={sizes}
-        className={isContain ? "object-contain" : "object-cover"}
-        style={isContain ? undefined : { objectPosition: image.objectPosition ?? "center" }}
-      />
-    </div>
-  );
-
-  if (stackedLayout) {
-    return (
-      <section className="py-9">
-        <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
-          <Reveal>{imageBox("100vw")}</Reveal>
-          <Reveal delay={0.1} className="mt-8 sm:columns-2 sm:gap-x-12">
-            {paragraphs.map((p, i) => (
-              <p key={i} className={`${paragraphClass(i)} mb-5 break-inside-avoid last:mb-0`}>
-                {p}
-              </p>
-            ))}
-          </Reveal>
-        </div>
-      </section>
-    );
-  }
-
   const [first, ...rest] = paragraphs;
+  const isContain = image.fit === "contain";
 
   return (
     <section className="py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 lg:gap-14">
-          <Reveal>{imageBox("(max-width: 1024px) 100vw, 50vw")}</Reveal>
+          <Reveal>
+            <div
+              className={`relative w-full overflow-hidden rounded-2xl shadow-card ${
+                isContain ? "bg-bg-tint" : ""
+              } ${image.maxWidth ? "mx-auto lg:mx-0" : ""}`}
+              style={{
+                aspectRatio: image.aspectRatio ?? "16 / 10",
+                maxWidth: image.maxWidth,
+              }}
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className={isContain ? "object-contain" : "object-cover"}
+                style={isContain ? undefined : { objectPosition: image.objectPosition ?? "center" }}
+              />
+            </div>
+          </Reveal>
           <Reveal delay={0.1}>
             <p className={paragraphClass(0)}>{first}</p>
           </Reveal>

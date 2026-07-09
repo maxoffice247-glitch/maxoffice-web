@@ -64,11 +64,7 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
         ]}
       />
 
-      <ServiceIntro
-        paragraphs={data.intro}
-        image={data.introImage}
-        stackedLayout={data.introStackedLayout}
-      />
+      <ServiceIntro paragraphs={data.intro} image={data.introImage} />
       <ServiceBenefits title={data.benefitsTitle} items={data.benefits} />
       <ServiceFeatures
         title={data.featuresTitle}

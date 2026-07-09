@@ -140,8 +140,6 @@ export type ServiceData = {
   intro: string[];
   /** Ảnh 2 cột cạnh đoạn giới thiệu đầu trang — dùng fit "contain" cho ảnh infographic có chữ ở mọi góc. */
   introImage?: InlineImage;
-  /** Ảnh full-width phía trên, toàn bộ đoạn intro chảy bên dưới (thay vì bố cục 2 cột ảnh-trái/text-phải) — dùng cho introImage ngang (vd. 16:9) mà đặt cạnh cột text sẽ mất cân đối. */
-  introStackedLayout?: boolean;
   benefitsTitle: string;
   benefits: BenefitItem[];
   featuresTitle: string;
@@ -182,11 +180,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       src: "/images/dich-vu-van-phong-ao-anh-1.jpg",
       alt: "Infographic dịch vụ văn phòng ảo MAX OFFICE",
       fit: "contain",
-      // Real image is 1536x864 (16:9 landscape) — hug that ratio instead of the
-      // shared 16:10 box; contain still guards against a slightly-off crop.
-      aspectRatio: "16 / 9",
     },
-    introStackedLayout: true,
     benefitsTitle: "Vì sao nên chọn văn phòng ảo MAX OFFICE",
     benefits: [
       { icon: ShieldCheckIcon, title: "Địa chỉ pháp lý hợp lệ", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế tại 12 địa điểm trung tâm TP.HCM." },
