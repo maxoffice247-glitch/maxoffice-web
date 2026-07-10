@@ -1642,6 +1642,1409 @@ export const BLOG_POSTS: BlogPost[] = [
       serviceLabel: "Xem bảng giá dịch vụ sửa đổi",
     },
   },
+
+  // ===================== PHÁP LÝ DOANH NGHIỆP =====================
+  {
+    slug: "nguoi-dai-dien-phap-luat-la-ai",
+    title: "Người đại diện pháp luật là ai? Vai trò và trách nhiệm thế nào?",
+    excerpt:
+      "Người đại diện theo pháp luật của doanh nghiệp là ai, có quyền và trách nhiệm gì, và những lưu ý quan trọng khi bổ nhiệm hoặc thay đổi.",
+    categorySlug: "phap-ly-doanh-nghiep",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "Người Đại Diện Pháp Luật Là Ai? Vai Trò Và Trách Nhiệm Thế Nào?",
+    metaDescription:
+      "Giải thích người đại diện theo pháp luật của doanh nghiệp là ai, quyền hạn, trách nhiệm pháp lý và những lưu ý khi bổ nhiệm hoặc thay đổi.",
+    heroImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
+    sections: [
+      {
+        id: "nguoi-dai-dien-phap-luat-la-ai",
+        heading: "Người đại diện theo pháp luật là ai?",
+        paragraphs: [
+          "Người đại diện theo pháp luật là cá nhân đại diện cho doanh nghiệp thực hiện các quyền và nghĩa vụ phát sinh từ giao dịch của doanh nghiệp, đại diện cho doanh nghiệp với tư cách người yêu cầu giải quyết việc dân sự, nguyên đơn, bị đơn, người có quyền lợi và nghĩa vụ liên quan trước Trọng tài, Toà án, cùng các quyền và nghĩa vụ khác theo quy định pháp luật. Đây là chức danh bắt buộc phải có trên Giấy chứng nhận đăng ký doanh nghiệp.",
+          "Người đại diện theo pháp luật không nhất thiết phải là chủ sở hữu hoặc cổ đông của doanh nghiệp — có thể là người được thuê quản lý, miễn đáp ứng điều kiện về năng lực hành vi dân sự và không thuộc trường hợp bị cấm quản lý doanh nghiệp theo quy định.",
+        ],
+      },
+      {
+        id: "cong-ty-co-the-co-bao-nhieu-nguoi",
+        heading: "Doanh nghiệp có thể có bao nhiêu người đại diện theo pháp luật?",
+        paragraphs: [
+          "Công ty trách nhiệm hữu hạn và công ty cổ phần có thể có một hoặc nhiều người đại diện theo pháp luật; Điều lệ công ty quy định cụ thể số lượng, chức danh quản lý và quyền, nghĩa vụ của từng người đại diện. Doanh nghiệp tư nhân chỉ có một người đại diện theo pháp luật, đồng thời là chủ doanh nghiệp.",
+          "Doanh nghiệp phải bảo đảm luôn có ít nhất một người đại diện theo pháp luật cư trú tại Việt Nam. Nếu người đại diện duy nhất tạm thời xuất cảnh, cần thực hiện uỷ quyền bằng văn bản cho người khác theo đúng quy định để tránh gián đoạn trong các giao dịch cần chữ ký của người đại diện.",
+        ],
+      },
+      {
+        id: "quyen-va-trach-nhiem",
+        heading: "Quyền và trách nhiệm của người đại diện theo pháp luật",
+        paragraphs: [
+          "Người đại diện theo pháp luật có quyền ký kết hợp đồng, văn bản giao dịch nhân danh doanh nghiệp trong phạm vi thẩm quyền được Điều lệ công ty hoặc nghị quyết của chủ sở hữu/hội đồng thành viên/đại hội đồng cổ đông quy định. Đi kèm với quyền hạn là trách nhiệm pháp lý tương xứng:",
+        ],
+        bullets: [
+          "Thực hiện quyền và nghĩa vụ được giao một cách trung thực, cẩn trọng, vì lợi ích hợp pháp của doanh nghiệp",
+          "Trung thành với lợi ích của doanh nghiệp, không lạm dụng địa vị, chức vụ để tư lợi hoặc phục vụ lợi ích cá nhân, tổ chức khác",
+          "Thông báo kịp thời, đầy đủ, chính xác cho doanh nghiệp về việc mình và người có liên quan làm chủ hoặc có cổ phần, phần vốn góp chi phối tại các doanh nghiệp khác",
+          "Chịu trách nhiệm cá nhân đối với thiệt hại cho doanh nghiệp do vi phạm các nghĩa vụ nêu trên",
+        ],
+      },
+      {
+        id: "khi-nao-can-thay-doi",
+        heading: "Khi nào cần thay đổi người đại diện theo pháp luật?",
+        paragraphs: [
+          "Doanh nghiệp cần thực hiện thủ tục thay đổi người đại diện theo pháp luật khi có sự kiện như người đại diện hiện tại từ nhiệm, bị miễn nhiệm theo quyết định của chủ sở hữu/hội đồng thành viên/đại hội đồng cổ đông, không còn đáp ứng điều kiện quản lý doanh nghiệp, hoặc doanh nghiệp bổ sung thêm người đại diện mới. Đây là một trong những nội dung thay đổi đăng ký doanh nghiệp phổ biến, cần thực hiện đúng thời hạn quy định để tránh rủi ro pháp lý.",
+        ],
+      },
+      {
+        id: "luu-y-quan-trong",
+        heading: "Những lưu ý quan trọng khi bổ nhiệm người đại diện",
+        paragraphs: ["Trước khi bổ nhiệm hoặc thay đổi người đại diện theo pháp luật, doanh nghiệp nên lưu ý:"],
+        bullets: [
+          "Người được bổ nhiệm không thuộc các trường hợp bị cấm thành lập, quản lý doanh nghiệp theo quy định pháp luật",
+          "Quy định rõ trong Điều lệ công ty về thẩm quyền của từng người đại diện nếu có nhiều hơn một người",
+          "Cập nhật thông tin người đại diện mới trên tài khoản ngân hàng, hoá đơn điện tử, chữ ký số ngay sau khi hoàn tất thủ tục thay đổi",
+          "Vì đây là nội dung ảnh hưởng trực tiếp đến tính hợp lệ của các giao dịch, nên thực hiện thủ tục thay đổi đúng quy trình thay vì chỉ thay đổi trên thực tế mà chưa cập nhật hồ sơ pháp lý",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Người đại diện theo pháp luật có bắt buộc phải góp vốn vào công ty không?",
+        a: "Không. Người đại diện theo pháp luật có thể là người được thuê quản lý, không nhất thiết phải là thành viên góp vốn hay cổ đông của công ty.",
+      },
+      {
+        q: "Người đại diện theo pháp luật có phải chịu trách nhiệm bằng tài sản cá nhân với nợ của công ty không?",
+        a: "Về nguyên tắc, trách nhiệm của công ty TNHH và công ty cổ phần là trách nhiệm hữu hạn trong phạm vi vốn góp/cổ phần. Người đại diện chỉ chịu trách nhiệm cá nhân khi vi phạm nghĩa vụ trung thực, cẩn trọng gây thiệt hại cho doanh nghiệp — trường hợp cụ thể nên được tư vấn kỹ để tránh nhầm lẫn.",
+      },
+      {
+        q: "Thay đổi người đại diện theo pháp luật mất bao lâu và chi phí bao nhiêu?",
+        a: "Tại MAX OFFICE, dịch vụ thay đổi người đại diện theo pháp luật có mức phí 700.000đ, thời gian xử lý 5-7 ngày làm việc — xem chi tiết tại bảng giá Dịch vụ pháp lý sửa đổi.",
+      },
+      {
+        q: "Một người có thể làm người đại diện theo pháp luật cho nhiều công ty không?",
+        a: "Về nguyên tắc có thể, tuỳ thuộc chức danh quản lý cụ thể và Điều lệ từng công ty. Vì có thể phát sinh xung đột lợi ích hoặc hạn chế riêng theo ngành nghề, bạn nên liên hệ MAX OFFICE để được tư vấn cụ thể cho trường hợp của mình.",
+      },
+      {
+        q: "Người đại diện theo pháp luật xuất cảnh dài ngày thì công ty xử lý thế nào?",
+        a: "Người đại diện cần uỷ quyền bằng văn bản cho cá nhân khác tại Việt Nam thực hiện quyền, nghĩa vụ trong thời gian vắng mặt, đảm bảo doanh nghiệp luôn có người đại diện cư trú tại Việt Nam theo quy định.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Khi nào doanh nghiệp cần thay đổi giấy phép kinh doanh", href: "/blog/khi-nao-can-thay-doi-giay-phep-kinh-doanh" },
+      { label: "Bảng giá Dịch vụ pháp lý sửa đổi", href: "/dich-vu/dich-vu-phap-ly-sua-doi" },
+      { label: "Hộ kinh doanh vs TNHH vs Cổ phần", href: "/blog/ho-kinh-doanh-vs-tnhh-vs-co-phan" },
+    ],
+    cta: {
+      title: "Cần thay đổi hoặc bổ nhiệm người đại diện pháp luật?",
+      description: "MAX OFFICE hỗ trợ trọn gói thủ tục thay đổi người đại diện theo pháp luật, xử lý nhanh trong 5-7 ngày làm việc.",
+      service: "Thành lập doanh nghiệp",
+      serviceHref: "/dich-vu/dich-vu-phap-ly-sua-doi",
+      serviceLabel: "Xem bảng giá dịch vụ sửa đổi",
+    },
+  },
+  {
+    slug: "con-dau-doanh-nghiep-quy-dinh-phap-ly-2026",
+    title: "Con dấu doanh nghiệp: Quy định pháp lý cần biết năm 2026",
+    excerpt:
+      "Doanh nghiệp có bắt buộc phải có con dấu không, quy định pháp lý hiện hành về con dấu và những lưu ý khi khắc, quản lý, sử dụng con dấu.",
+    categorySlug: "phap-ly-doanh-nghiep",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "Con Dấu Doanh Nghiệp: Quy Định Pháp Lý Cần Biết Năm 2026",
+    metaDescription:
+      "Quy định pháp lý hiện hành về con dấu doanh nghiệp — có bắt buộc phải có không, ai quyết định hình thức, và lưu ý khi khắc, quản lý, sử dụng.",
+    heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
+    sections: [
+      {
+        id: "con-dau-la-gi",
+        heading: "Con dấu doanh nghiệp là gì?",
+        paragraphs: [
+          "Con dấu doanh nghiệp là dấu hiệu doanh nghiệp sử dụng để xác nhận giá trị pháp lý của các văn bản, hợp đồng, giao dịch nhân danh doanh nghiệp. Theo quy định pháp luật doanh nghiệp hiện hành, dấu bao gồm dấu được làm tại cơ sở khắc dấu (con dấu truyền thống) hoặc dấu dưới hình thức chữ ký số theo quy định của pháp luật về giao dịch điện tử.",
+        ],
+      },
+      {
+        id: "doanh-nghiep-tu-quyet-dinh",
+        heading: "Doanh nghiệp có toàn quyền quyết định về con dấu",
+        paragraphs: [
+          "Khác với quy định trước đây, pháp luật doanh nghiệp hiện hành cho phép doanh nghiệp có quyền tự quyết định loại dấu, số lượng, hình thức và nội dung dấu của doanh nghiệp, chi nhánh, văn phòng đại diện. Việc quản lý và lưu giữ con dấu được thực hiện theo Điều lệ công ty hoặc quy chế do doanh nghiệp ban hành.",
+          "Doanh nghiệp không còn phải thực hiện thủ tục thông báo mẫu con dấu với cơ quan đăng ký kinh doanh trước khi sử dụng như quy định trước năm 2021 — đây là điểm thay đổi quan trọng giúp doanh nghiệp chủ động hơn khi khắc dấu mới hoặc thay đổi mẫu dấu.",
+        ],
+      },
+      {
+        id: "co-bat-buoc-phai-co-con-dau-khong",
+        heading: "Doanh nghiệp có bắt buộc phải có con dấu không?",
+        paragraphs: [
+          "Về nguyên tắc, pháp luật hiện hành trao quyền chủ động cho doanh nghiệp trong việc sử dụng con dấu, và cho phép thay thế bằng chữ ký số trong các giao dịch điện tử. Tuy nhiên trên thực tế, phần lớn doanh nghiệp tại Việt Nam vẫn khắc và sử dụng con dấu truyền thống, vì nhiều đối tác, ngân hàng, cơ quan nhà nước vẫn yêu cầu đóng dấu trên hợp đồng, hồ sơ, chứng từ theo thông lệ giao dịch phổ biến. Vì mức độ chấp nhận của từng đối tác, tổ chức đối với chữ ký số thay cho con dấu có thể khác nhau, doanh nghiệp mới thành lập nên khắc con dấu truyền thống song song với chữ ký số để thuận tiện trong giao dịch.",
+        ],
+      },
+      {
+        id: "quan-ly-va-su-dung-con-dau",
+        heading: "Quản lý và sử dụng con dấu đúng cách",
+        paragraphs: ["Để tránh rủi ro trong quá trình vận hành, doanh nghiệp nên lưu ý các nguyên tắc sau khi quản lý con dấu:"],
+        bullets: [
+          "Quy định rõ trong Điều lệ hoặc quy chế nội bộ ai là người được giữ và đóng dấu",
+          "Chỉ đóng dấu trên văn bản đã có đầy đủ chữ ký hợp lệ của người có thẩm quyền",
+          "Lưu giữ con dấu ở nơi an toàn, hạn chế tối đa rủi ro mất mát hoặc sử dụng trái phép",
+          "Khi mất con dấu hoặc cần khắc dấu mới, doanh nghiệp có thể chủ động thực hiện mà không cần thông báo với cơ quan đăng ký kinh doanh, nhưng nên rà soát các văn bản nội bộ để đảm bảo tính nhất quán",
+        ],
+      },
+      {
+        id: "con-dau-chi-nhanh",
+        heading: "Con dấu của chi nhánh, văn phòng đại diện",
+        paragraphs: [
+          "Chi nhánh và văn phòng đại diện của doanh nghiệp cũng có thể có con dấu riêng theo quyết định của doanh nghiệp, phục vụ cho các giao dịch phát sinh tại đơn vị đó. Việc thiết kế, số lượng và cách quản lý con dấu chi nhánh áp dụng nguyên tắc tương tự như con dấu doanh nghiệp — do doanh nghiệp tự quyết định và chịu trách nhiệm quản lý.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Con dấu công ty có cần đăng ký mẫu dấu với cơ quan nhà nước không?",
+        a: "Không. Theo quy định hiện hành, doanh nghiệp tự quyết định hình thức, nội dung con dấu và không phải thông báo mẫu dấu với cơ quan đăng ký kinh doanh trước khi sử dụng.",
+      },
+      {
+        q: "Mất con dấu công ty phải làm gì?",
+        a: "Doanh nghiệp có thể chủ động khắc con dấu mới mà không cần thủ tục thông báo với cơ quan đăng ký kinh doanh. Tuy nhiên nên có văn bản nội bộ ghi nhận việc thay đổi và thông báo cho ngân hàng, đối tác quan trọng nếu cần thiết — liên hệ MAX OFFICE nếu bạn cần tư vấn quy trình cụ thể.",
+      },
+      {
+        q: "Chữ ký số có thể thay thế hoàn toàn con dấu không?",
+        a: "Về mặt pháp lý, chữ ký số theo quy định về giao dịch điện tử được công nhận giá trị tương đương. Tuy nhiên mức độ chấp nhận trong thực tế còn tuỳ đối tác và cơ quan giao dịch, nên doanh nghiệp mới vẫn nên có con dấu truyền thống để thuận tiện.",
+      },
+      {
+        q: "Công ty có thể có nhiều hơn một con dấu không?",
+        a: "Có. Doanh nghiệp có quyền quyết định số lượng con dấu sử dụng cho công ty, chi nhánh và văn phòng đại diện, miễn có quy chế quản lý rõ ràng để tránh rủi ro sử dụng sai mục đích.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Hồ sơ thành lập công ty TNHH cần chuẩn bị gì", href: "/blog/ho-so-thanh-lap-cong-ty-tnhh" },
+      { label: "Quy trình thành lập doanh nghiệp mới nhất", href: "/tien-ich/quy-trinh-thanh-lap-doanh-nghiep" },
+      { label: "Dịch vụ thành lập doanh nghiệp MAX OFFICE", href: "/services/thanh-lap-doanh-nghiep" },
+    ],
+    cta: {
+      title: "Cần hỗ trợ thủ tục thành lập và khắc dấu doanh nghiệp?",
+      description: "MAX OFFICE hỗ trợ trọn gói thủ tục thành lập doanh nghiệp, bao gồm tư vấn khắc dấu và chữ ký số ngay từ ngày đầu hoạt động.",
+      service: "Thành lập doanh nghiệp",
+      serviceHref: "/services/thanh-lap-doanh-nghiep",
+      serviceLabel: "Xem dịch vụ thành lập doanh nghiệp",
+    },
+  },
+  {
+    slug: "hop-dong-lao-dong-cho-doanh-nghiep-moi-thanh-lap",
+    title: "Hợp đồng lao động cho doanh nghiệp mới thành lập cần lưu ý gì?",
+    excerpt:
+      "Doanh nghiệp mới thành lập cần biết gì về loại hợp đồng lao động, nội dung bắt buộc, thời gian thử việc và nghĩa vụ bảo hiểm xã hội với người lao động.",
+    categorySlug: "phap-ly-doanh-nghiep",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 7,
+    metaTitle: "Hợp Đồng Lao Động Cho Doanh Nghiệp Mới Thành Lập Cần Lưu Ý Gì?",
+    metaDescription:
+      "Hướng dẫn doanh nghiệp mới thành lập về loại hợp đồng lao động, nội dung bắt buộc, thời gian thử việc và nghĩa vụ bảo hiểm xã hội với người lao động.",
+    heroImage: "/images/khong-gian-lam-viec.jpg",
+    sections: [
+      {
+        id: "cac-loai-hop-dong-lao-dong",
+        heading: "Các loại hợp đồng lao động theo quy định hiện hành",
+        paragraphs: [
+          "Bộ luật Lao động hiện hành quy định hai loại hợp đồng lao động: hợp đồng lao động không xác định thời hạn (không có thời điểm chấm dứt hiệu lực) và hợp đồng lao động xác định thời hạn (thời hạn tối đa 36 tháng kể từ thời điểm có hiệu lực). Loại hợp đồng theo mùa vụ hoặc theo một công việc nhất định dưới 12 tháng đã không còn được áp dụng.",
+          "Doanh nghiệp mới thành lập nên xác định rõ loại hợp đồng phù hợp với từng vị trí — hợp đồng xác định thời hạn thường phù hợp với giai đoạn thử nghiệm mô hình kinh doanh, trong khi hợp đồng không xác định thời hạn phù hợp với nhân sự nòng cốt, gắn bó lâu dài.",
+        ],
+      },
+      {
+        id: "noi-dung-bat-buoc",
+        heading: "Nội dung bắt buộc trong hợp đồng lao động",
+        paragraphs: ["Một hợp đồng lao động hợp lệ cần thể hiện đầy đủ các nội dung chủ yếu sau:"],
+        bullets: [
+          "Thông tin doanh nghiệp và người lao động (họ tên, địa chỉ, số CCCD...)",
+          "Công việc và địa điểm làm việc",
+          "Thời hạn của hợp đồng lao động",
+          "Mức lương, hình thức trả lương, thời hạn trả lương, phụ cấp và các khoản bổ sung khác",
+          "Chế độ nâng bậc, nâng lương",
+          "Thời giờ làm việc, thời giờ nghỉ ngơi",
+          "Trang bị bảo hộ lao động (nếu công việc có yêu cầu)",
+          "Bảo hiểm xã hội, bảo hiểm y tế, bảo hiểm thất nghiệp",
+        ],
+      },
+      {
+        id: "thoi-gian-thu-viec",
+        heading: "Thời gian thử việc",
+        paragraphs: [
+          "Thời gian thử việc tối đa theo quy định hiện hành được phân theo tính chất công việc: không quá 180 ngày đối với công việc của người quản lý doanh nghiệp; không quá 60 ngày đối với công việc yêu cầu trình độ chuyên môn, kỹ thuật từ cao đẳng trở lên; không quá 30 ngày đối với công việc yêu cầu trình độ trung cấp, công nhân kỹ thuật, nhân viên nghiệp vụ; và không quá 6 ngày làm việc đối với công việc khác. Tiền lương thử việc do hai bên thoả thuận nhưng ít nhất phải bằng 85% mức lương của công việc đó.",
+        ],
+      },
+      {
+        id: "nghia-vu-bao-hiem-va-khai-trinh",
+        heading: "Nghĩa vụ bảo hiểm xã hội và khai trình lao động",
+        paragraphs: [
+          "Người lao động làm việc theo hợp đồng lao động có thời hạn từ đủ 1 tháng trở lên thuộc đối tượng tham gia bảo hiểm xã hội bắt buộc. Doanh nghiệp có trách nhiệm đăng ký và đóng bảo hiểm xã hội, bảo hiểm y tế, bảo hiểm thất nghiệp cho người lao động đúng quy định, đồng thời thực hiện khai trình việc sử dụng lao động khi bắt đầu hoạt động và báo cáo tình hình sử dụng lao động định kỳ theo quy định.",
+          "Vì các mức đóng, thủ tục khai báo bảo hiểm xã hội có thể được điều chỉnh theo từng thời kỳ, doanh nghiệp mới nên sử dụng dịch vụ kế toán chuyên nghiệp để đảm bảo tuân thủ đúng và đầy đủ ngay từ những tháng đầu hoạt động.",
+        ],
+      },
+      {
+        id: "luu-y-cho-doanh-nghiep-moi",
+        heading: "Lưu ý dành cho doanh nghiệp mới thành lập",
+        paragraphs: [],
+        bullets: [
+          "Chuẩn bị mẫu hợp đồng lao động chuẩn ngay từ khi tuyển dụng nhân sự đầu tiên, tránh thoả thuận miệng",
+          "Với đội ngũ sáng lập, cân nhắc thoả thuận rõ ràng về vai trò, quyền lợi ngay từ đầu để tránh tranh chấp nội bộ về sau",
+          "Xây dựng nội quy lao động cơ bản (thời giờ làm việc, kỷ luật lao động) song song với hợp đồng lao động",
+          "Với các vị trí đặc thù hoặc thoả thuận phức tạp (cổ phần thưởng, cam kết bảo mật, không cạnh tranh...), nên tham khảo tư vấn pháp lý chuyên sâu thay vì dùng mẫu hợp đồng thông thường",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Doanh nghiệp mới thành lập bắt buộc phải ký hợp đồng lao động bằng văn bản không?",
+        a: "Có, hợp đồng lao động phải được giao kết bằng văn bản (hoặc dữ liệu điện tử có giá trị tương đương), trừ một số trường hợp hợp đồng có thời hạn dưới 1 tháng có thể giao kết bằng lời nói theo quy định.",
+      },
+      {
+        q: "Không đóng bảo hiểm xã hội cho người lao động có bị xử phạt không?",
+        a: "Có, đây là nghĩa vụ bắt buộc và việc không thực hiện có thể bị xử phạt vi phạm hành chính. Doanh nghiệp mới nên thiết lập quy trình đóng bảo hiểm ngay từ khi ký hợp đồng lao động đầu tiên.",
+      },
+      {
+        q: "Có thể gia hạn hợp đồng lao động xác định thời hạn nhiều lần không?",
+        a: "Hợp đồng xác định thời hạn có giới hạn về số lần và thời hạn gia hạn theo quy định — để tránh vi phạm, doanh nghiệp nên liên hệ MAX OFFICE hoặc bộ phận nhân sự có chuyên môn để được tư vấn cụ thể cho từng trường hợp.",
+      },
+      {
+        q: "MAX OFFICE có hỗ trợ tư vấn hợp đồng lao động và bảo hiểm xã hội không?",
+        a: "Dịch vụ Kế toán & thuế của MAX OFFICE hỗ trợ doanh nghiệp mới các nghiệp vụ liên quan đến lương, bảo hiểm xã hội — liên hệ để được tư vấn phương án phù hợp với quy mô đội ngũ của bạn.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Kế toán thuê ngoài hay nội bộ — nên chọn phương án nào", href: "/blog/ke-toan-thue-ngoai-hay-noi-bo" },
+      { label: "Dịch vụ Kế toán & thuế MAX OFFICE", href: "/services/ke-toan-thue" },
+      { label: "Checklist thành lập doanh nghiệp (tải PDF)", href: "/tien-ich/checklist-thanh-lap-doanh-nghiep" },
+    ],
+    cta: {
+      title: "Cần hỗ trợ nghiệp vụ lương, bảo hiểm xã hội ngay từ đầu?",
+      description: "MAX OFFICE giúp doanh nghiệp mới thiết lập đúng quy trình hợp đồng lao động, bảo hiểm xã hội ngay từ những tháng đầu hoạt động.",
+      service: "Kế toán & thuế",
+      serviceHref: "/services/ke-toan-thue",
+      serviceLabel: "Xem dịch vụ Kế toán & thuế",
+    },
+  },
+  {
+    slug: "chu-so-huu-huong-loi-la-gi",
+    title: "Chủ sở hữu hưởng lợi là gì? Vì sao doanh nghiệp cần khai báo?",
+    excerpt:
+      "Chủ sở hữu hưởng lợi (beneficial owner) là gì, vì sao khái niệm này ngày càng quan trọng với doanh nghiệp Việt Nam, và doanh nghiệp cần lưu ý gì.",
+    categorySlug: "phap-ly-doanh-nghiep",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "Chủ Sở Hữu Hưởng Lợi Là Gì? Vì Sao Doanh Nghiệp Cần Khai Báo?",
+    metaDescription:
+      "Giải thích khái niệm chủ sở hữu hưởng lợi (beneficial owner), vì sao doanh nghiệp Việt Nam cần quan tâm, và những lưu ý khi khai báo thông tin.",
+    heroImage: "/images/bang-gia-gpkd.jpg",
+    sections: [
+      {
+        id: "chu-so-huu-huong-loi-la-gi",
+        heading: "Chủ sở hữu hưởng lợi là gì?",
+        paragraphs: [
+          "Chủ sở hữu hưởng lợi (tiếng Anh: beneficial owner) là khái niệm chỉ cá nhân thực sự sở hữu, chi phối hoặc kiểm soát một doanh nghiệp hoặc một giao dịch, kể cả trong trường hợp cá nhân đó không đứng tên trực tiếp trên giấy tờ sở hữu hoặc đăng ký kinh doanh. Nói cách khác, đây là người thực sự hưởng lợi ích kinh tế cuối cùng từ doanh nghiệp, có thể thông qua sở hữu gián tiếp qua nhiều lớp công ty trung gian, uỷ quyền, hoặc các thoả thuận kiểm soát khác.",
+          "Khái niệm này khác với người đại diện theo pháp luật hoặc cổ đông/thành viên đứng tên trên Giấy chứng nhận đăng ký doanh nghiệp — một doanh nghiệp có thể có người đứng tên sở hữu khác với người thực sự kiểm soát và hưởng lợi từ doanh nghiệp đó.",
+        ],
+      },
+      {
+        id: "vi-sao-khai-niem-nay-quan-trong",
+        heading: "Vì sao khái niệm chủ sở hữu hưởng lợi ngày càng quan trọng",
+        paragraphs: [
+          "Việc xác định và minh bạch hoá thông tin chủ sở hữu hưởng lợi là một yêu cầu cốt lõi trong các chuẩn mực quốc tế về phòng, chống rửa tiền và tài trợ khủng bố (theo khuyến nghị của Lực lượng đặc nhiệm tài chính quốc tế — FATF). Mục tiêu là ngăn chặn việc lợi dụng cấu trúc doanh nghiệp phức tạp, sở hữu chéo hoặc công ty vỏ bọc để che giấu tài sản bất hợp pháp, trốn thuế hoặc thực hiện các hành vi rửa tiền.",
+          "Việt Nam đã và đang từng bước nội luật hoá các yêu cầu minh bạch về chủ sở hữu hưởng lợi, đặc biệt thể hiện qua Luật Phòng, chống rửa tiền và các quy định liên quan đến hoạt động của tổ chức tài chính, tổ chức tín dụng khi xác minh khách hàng.",
+        ],
+      },
+      {
+        id: "doanh-nghiep-can-luu-y-gi",
+        heading: "Doanh nghiệp cần lưu ý gì về nghĩa vụ khai báo",
+        paragraphs: [
+          "Đây là một lĩnh vực pháp lý đang trong quá trình hoàn thiện và có thể được điều chỉnh, bổ sung theo từng giai đoạn triển khai. Phạm vi, đối tượng và hình thức khai báo thông tin chủ sở hữu hưởng lợi cụ thể — ví dụ khai báo trên hồ sơ đăng ký doanh nghiệp, khai báo với tổ chức tài chính khi mở tài khoản hoặc thực hiện giao dịch — có thể khác nhau tuỳ quy định áp dụng tại từng thời điểm.",
+          "Vì đây là nội dung pháp lý mới và có độ nhạy cảm cao (liên quan trực tiếp đến nghĩa vụ tuân thủ phòng, chống rửa tiền), MAX OFFICE khuyến nghị doanh nghiệp không tự suy diễn hoặc áp dụng theo thông tin chưa được xác thực, mà nên liên hệ trực tiếp để được cập nhật chính xác yêu cầu khai báo đang áp dụng tại thời điểm doanh nghiệp thực hiện đăng ký, thay đổi thông tin, hoặc giao dịch với ngân hàng, tổ chức tài chính.",
+        ],
+      },
+      {
+        id: "phan-biet-cac-khai-niem-lien-quan",
+        heading: "Phân biệt chủ sở hữu hưởng lợi với các khái niệm liên quan",
+        paragraphs: ["Để tránh nhầm lẫn, doanh nghiệp nên hiểu rõ sự khác biệt giữa các khái niệm sau:"],
+        bullets: [
+          "Người đại diện theo pháp luật: cá nhân đại diện doanh nghiệp thực hiện quyền, nghĩa vụ trong giao dịch — có thể không phải chủ sở hữu",
+          "Cổ đông/thành viên góp vốn đứng tên: cá nhân hoặc tổ chức đứng tên sở hữu cổ phần/phần vốn góp trên hồ sơ đăng ký doanh nghiệp",
+          "Chủ sở hữu hưởng lợi: cá nhân thực sự kiểm soát, chi phối hoặc hưởng lợi ích kinh tế cuối cùng, có thể trùng hoặc không trùng với người đứng tên trên hồ sơ",
+        ],
+      },
+      {
+        id: "loi-khuyen-cho-doanh-nghiep",
+        heading: "Lời khuyên cho doanh nghiệp",
+        paragraphs: [
+          "Doanh nghiệp có cấu trúc sở hữu đơn giản (cá nhân trực tiếp đứng tên, không qua công ty trung gian) thường ít bị ảnh hưởng bởi các yêu cầu khai báo phức tạp. Tuy nhiên, với doanh nghiệp có cấu trúc sở hữu qua nhiều lớp công ty, có yếu tố nước ngoài, hoặc chuẩn bị gọi vốn từ quỹ đầu tư, việc chủ động rà soát và minh bạch hoá thông tin chủ sở hữu hưởng lợi càng trở nên cần thiết. Hãy liên hệ MAX OFFICE để được tư vấn cụ thể theo đúng cấu trúc và tình huống thực tế của doanh nghiệp bạn.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Chủ sở hữu hưởng lợi có phải luôn là người đại diện theo pháp luật không?",
+        a: "Không nhất thiết. Người đại diện theo pháp luật thực hiện quyền, nghĩa vụ đại diện cho doanh nghiệp, trong khi chủ sở hữu hưởng lợi là người thực sự kiểm soát hoặc hưởng lợi kinh tế cuối cùng — hai vai trò này có thể do cùng một người hoặc hai người khác nhau đảm nhiệm.",
+      },
+      {
+        q: "Doanh nghiệp nhỏ, chủ sở hữu duy nhất có cần quan tâm đến khái niệm này không?",
+        a: "Doanh nghiệp có cấu trúc sở hữu đơn giản, minh bạch thường ít phức tạp hơn khi xác định chủ sở hữu hưởng lợi. Tuy nhiên nên chủ động tìm hiểu và liên hệ MAX OFFICE nếu có kế hoạch thay đổi cấu trúc sở hữu trong tương lai.",
+      },
+      {
+        q: "Không khai báo thông tin chủ sở hữu hưởng lợi khi được yêu cầu có rủi ro gì không?",
+        a: "Đây là nội dung liên quan đến tuân thủ pháp luật phòng, chống rửa tiền, có thể phát sinh rủi ro pháp lý nếu doanh nghiệp không tuân thủ đúng yêu cầu khai báo khi được cơ quan có thẩm quyền hoặc tổ chức tài chính yêu cầu. MAX OFFICE khuyến nghị liên hệ trực tiếp để được tư vấn chính xác theo quy định hiện hành.",
+      },
+      {
+        q: "MAX OFFICE có hỗ trợ tư vấn về chủ sở hữu hưởng lợi không?",
+        a: "Có, đội ngũ MAX OFFICE cập nhật các quy định pháp lý doanh nghiệp và có thể tư vấn định hướng ban đầu. Với các cấu trúc sở hữu phức tạp hoặc có yếu tố nước ngoài, chúng tôi sẽ giới thiệu bạn đến đơn vị tư vấn pháp lý chuyên sâu phù hợp.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Hộ kinh doanh vs TNHH vs Cổ phần", href: "/blog/ho-kinh-doanh-vs-tnhh-vs-co-phan" },
+      { label: "Chuyển đổi loại hình doanh nghiệp: Quy trình và chi phí", href: "/blog/chuyen-doi-loai-hinh-doanh-nghiep-quy-trinh-chi-phi" },
+      { label: "Liên hệ MAX OFFICE để được tư vấn", href: "/lien-he" },
+    ],
+    cta: {
+      title: "Cần tư vấn về cấu trúc sở hữu doanh nghiệp?",
+      description: "Để lại thông tin, MAX OFFICE tư vấn miễn phí định hướng ban đầu về cấu trúc sở hữu và các nghĩa vụ tuân thủ liên quan.",
+      serviceHref: "/lien-he",
+      serviceLabel: "Nhận tư vấn miễn phí",
+    },
+  },
+
+  // ===================== STARTUP & KHỞI NGHIỆP =====================
+  {
+    slug: "checklist-khoi-nghiep-tu-y-tuong-den-van-hanh",
+    title: "Checklist khởi nghiệp: Từ ý tưởng đến vận hành chính thức",
+    excerpt:
+      "Lộ trình đầy đủ từ ý tưởng kinh doanh đến khi vận hành chính thức — nghiên cứu thị trường, chọn loại hình, đăng ký kinh doanh và các bước sau thành lập.",
+    categorySlug: "startup-khoi-nghiep",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 7,
+    metaTitle: "Checklist Khởi Nghiệp: Từ Ý Tưởng Đến Vận Hành Chính Thức",
+    metaDescription:
+      "Lộ trình khởi nghiệp đầy đủ từ ý tưởng đến vận hành chính thức — nghiên cứu thị trường, chọn loại hình doanh nghiệp, đăng ký kinh doanh và bước tiếp theo.",
+    heroImage: "/images/coworking.jpg",
+    sections: [
+      {
+        id: "giai-doan-y-tuong",
+        heading: "Giai đoạn 1: Xác thực ý tưởng và nghiên cứu thị trường",
+        paragraphs: [
+          "Trước khi nghĩ đến thủ tục pháp lý, startup cần xác thực ý tưởng kinh doanh có giải quyết được nhu cầu thực sự của thị trường hay không. Giai đoạn này bao gồm nghiên cứu đối thủ cạnh tranh, xác định khách hàng mục tiêu, thử nghiệm sản phẩm/dịch vụ ở quy mô nhỏ (MVP) trước khi đầu tư nguồn lực lớn.",
+        ],
+      },
+      {
+        id: "giai-doan-len-ke-hoach",
+        heading: "Giai đoạn 2: Lập kế hoạch kinh doanh và chọn loại hình doanh nghiệp",
+        paragraphs: [
+          "Sau khi có ý tưởng được xác thực bước đầu, startup cần lập kế hoạch kinh doanh cơ bản (mô hình doanh thu, chi phí vận hành dự kiến, nguồn vốn) và quyết định loại hình pháp lý phù hợp — hộ kinh doanh, công ty TNHH hay công ty cổ phần, tuỳ vào quy mô, kế hoạch gọi vốn và số lượng người đồng sáng lập.",
+        ],
+        bullets: [
+          "Xác định vốn điều lệ dự kiến và cơ cấu góp vốn giữa các đồng sáng lập",
+          "Xác định ngành nghề kinh doanh chính và các ngành nghề dự kiến mở rộng sau này",
+          "Chọn địa chỉ đăng ký trụ sở — có thể bắt đầu với văn phòng ảo để tối ưu chi phí giai đoạn đầu",
+        ],
+      },
+      {
+        id: "giai-doan-dang-ky-kinh-doanh",
+        heading: "Giai đoạn 3: Đăng ký kinh doanh và hoàn thiện hồ sơ pháp lý",
+        paragraphs: [
+          "Đây là giai đoạn thực hiện thủ tục thành lập doanh nghiệp chính thức: chuẩn bị hồ sơ, nộp tại cơ quan đăng ký kinh doanh, nhận Giấy chứng nhận đăng ký doanh nghiệp. Ngay sau khi có giấy phép, doanh nghiệp cần hoàn thiện các thủ tục bắt buộc để có thể chính thức hoạt động: khắc con dấu (nếu sử dụng), mở tài khoản ngân hàng doanh nghiệp, đăng ký chữ ký số, thông báo phát hành hoá đơn điện tử, và kê khai thuế ban đầu.",
+        ],
+      },
+      {
+        id: "giai-doan-van-hanh",
+        heading: "Giai đoạn 4: Vận hành chính thức",
+        paragraphs: ["Sau khi hoàn tất thủ tục pháp lý, startup bước vào giai đoạn vận hành thực tế với các đầu việc cần duy trì thường xuyên:"],
+        bullets: [
+          "Kê khai và nộp thuế đúng hạn theo quy định (thuế giá trị gia tăng, thuế thu nhập doanh nghiệp...)",
+          "Xây dựng hệ thống kế toán, lưu trữ chứng từ ngay từ giao dịch đầu tiên",
+          "Ký kết hợp đồng lao động, thiết lập nghĩa vụ bảo hiểm xã hội khi tuyển nhân sự",
+          "Theo dõi các mốc báo cáo định kỳ với cơ quan thuế và cơ quan quản lý lao động",
+        ],
+      },
+      {
+        id: "sai-lam-can-tranh",
+        heading: "Những sai lầm thường gặp cần tránh",
+        paragraphs: [
+          "Nhiều startup mắc sai lầm khi trì hoãn thành lập doanh nghiệp quá lâu dù đã có doanh thu, hoặc ngược lại thành lập quá sớm khi mô hình kinh doanh chưa rõ ràng, dẫn đến chi phí duy trì không cần thiết. Một sai lầm phổ biến khác là bỏ qua các thủ tục sau thành lập (kê khai thuế ban đầu, phát hành hoá đơn điện tử), khiến doanh nghiệp gặp khó khăn khi cần xuất hoá đơn cho khách hàng đầu tiên.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Startup nên tự làm thủ tục thành lập hay dùng dịch vụ hỗ trợ?",
+        a: "Tuỳ vào thời gian và kinh nghiệm của đội ngũ sáng lập. Nếu ưu tiên thời gian để tập trung phát triển sản phẩm, dùng dịch vụ trọn gói như MAX OFFICE giúp tiết kiệm thời gian và tránh sai sót hồ sơ.",
+      },
+      {
+        q: "Có checklist chi tiết dạng file để tải về không?",
+        a: "Có, MAX OFFICE cung cấp Checklist thành lập doanh nghiệp dạng PDF miễn phí, liệt kê đầy đủ các bước và giấy tờ cần chuẩn bị.",
+      },
+      {
+        q: "Từ lúc nộp hồ sơ đến khi vận hành chính thức mất bao lâu?",
+        a: "Thời gian cấp Giấy chứng nhận đăng ký doanh nghiệp thường trong vài ngày làm việc; cộng thêm thời gian hoàn thiện các thủ tục sau thành lập (khắc dấu, mở tài khoản, chữ ký số, hoá đơn điện tử), doanh nghiệp thường có thể vận hành chính thức trong khoảng 1-2 tuần.",
+      },
+      {
+        q: "MAX OFFICE có hỗ trợ trọn gói từ đăng ký đến vận hành không?",
+        a: "Có, MAX OFFICE cung cấp dịch vụ thành lập doanh nghiệp trọn gói và dịch vụ kế toán & thuế đi kèm, giúp startup vận hành đúng quy định ngay từ ngày đầu.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Checklist thành lập doanh nghiệp (tải PDF)", href: "/tien-ich/checklist-thanh-lap-doanh-nghiep" },
+      { label: "Quy trình thành lập doanh nghiệp mới nhất", href: "/tien-ich/quy-trinh-thanh-lap-doanh-nghiep" },
+      { label: "Dịch vụ thành lập doanh nghiệp MAX OFFICE", href: "/services/thanh-lap-doanh-nghiep" },
+    ],
+    cta: {
+      title: "Sẵn sàng biến ý tưởng thành doanh nghiệp chính thức?",
+      description: "MAX OFFICE đồng hành cùng startup từ thủ tục thành lập đến vận hành, giúp bạn tập trung vào việc phát triển sản phẩm.",
+      service: "Thành lập doanh nghiệp",
+      serviceHref: "/services/thanh-lap-doanh-nghiep",
+      serviceLabel: "Xem dịch vụ thành lập doanh nghiệp",
+    },
+  },
+  {
+    slug: "startup-nen-thanh-lap-cong-ty-khi-nao",
+    title: "Startup nên thành lập công ty vào thời điểm nào?",
+    excerpt:
+      "Nên thành lập công ty ngay từ đầu hay chờ có doanh thu ổn định? Những dấu hiệu cho thấy đã đến lúc startup cần chuyển sang mô hình doanh nghiệp chính thức.",
+    categorySlug: "startup-khoi-nghiep",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "Startup Nên Thành Lập Công Ty Vào Thời Điểm Nào?",
+    metaDescription:
+      "Phân tích thời điểm phù hợp để startup thành lập công ty chính thức — dấu hiệu nên thành lập sớm và rủi ro khi thành lập quá sớm hoặc quá muộn.",
+    heroImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
+    sections: [
+      {
+        id: "khong-co-thoi-diem-chuan-cho-tat-ca",
+        heading: "Không có một thời điểm \"chuẩn\" cho mọi startup",
+        paragraphs: [
+          "Nhiều người sáng lập băn khoăn nên thành lập công ty ngay khi có ý tưởng hay chờ đến khi sản phẩm đã được thị trường đón nhận. Thực tế không có câu trả lời đúng cho mọi trường hợp — quyết định phụ thuộc vào tốc độ phát triển, nhu cầu pháp nhân trong giao dịch, và kế hoạch gọi vốn của từng startup.",
+        ],
+      },
+      {
+        id: "dau-hieu-nen-thanh-lap-som",
+        heading: "Những dấu hiệu cho thấy đã đến lúc nên thành lập công ty",
+        paragraphs: [],
+        bullets: [
+          "Đã có khách hàng trả tiền và cần xuất hoá đơn giá trị gia tăng cho giao dịch",
+          "Đối tác, khách hàng doanh nghiệp (B2B) yêu cầu ký hợp đồng với pháp nhân thay vì cá nhân",
+          "Có kế hoạch gọi vốn từ nhà đầu tư — hầu hết nhà đầu tư chỉ rót vốn vào pháp nhân, không đầu tư vào cá nhân hay nhóm chưa có tư cách doanh nghiệp",
+          "Cần tuyển dụng nhân sự chính thức, ký hợp đồng lao động và đóng bảo hiểm xã hội",
+          "Muốn bảo vệ thương hiệu, tên miền, sở hữu trí tuệ dưới danh nghĩa pháp nhân rõ ràng",
+        ],
+      },
+      {
+        id: "rui-ro-khi-thanh-lap-qua-som",
+        heading: "Rủi ro khi thành lập công ty quá sớm",
+        paragraphs: [
+          "Ngược lại, thành lập công ty khi mô hình kinh doanh còn chưa rõ ràng cũng có những rủi ro nhất định: doanh nghiệp phải duy trì nghĩa vụ kê khai thuế định kỳ, sổ sách kế toán, dù chưa phát sinh doanh thu đáng kể. Dù lệ phí môn bài đã được bãi bỏ từ năm 2026, doanh nghiệp vẫn có các chi phí duy trì khác như dịch vụ kế toán, địa chỉ trụ sở, chữ ký số. Nếu ý tưởng kinh doanh còn đang trong giai đoạn thử nghiệm nhiều thay đổi, việc thành lập quá sớm có thể dẫn đến phải thực hiện nhiều thủ tục thay đổi đăng ký doanh nghiệp sau này (đổi tên, đổi ngành nghề, đổi cơ cấu vốn góp...).",
+        ],
+      },
+      {
+        id: "lam-viec-doc-lap-truoc-khi-thanh-lap",
+        heading: "Có thể vận hành thử nghiệm trước khi thành lập không?",
+        paragraphs: [
+          "Trong giai đoạn thử nghiệm ý tưởng ở quy mô nhỏ, một số nhà sáng lập vận hành dưới hình thức hộ kinh doanh hoặc hợp tác không chính thức giữa các cá nhân. Đây có thể là phương án tạm thời phù hợp, nhưng cần lưu ý hộ kinh doanh có những giới hạn nhất định về quy mô, khả năng gọi vốn và trách nhiệm pháp lý so với mô hình công ty. Khi startup đã sẵn sàng mở rộng, việc chuyển đổi từ hộ kinh doanh lên công ty là bước đi phù hợp.",
+        ],
+      },
+      {
+        id: "loi-khuyen",
+        heading: "Lời khuyên khi cân nhắc thời điểm thành lập",
+        paragraphs: [
+          "Nguyên tắc chung là thành lập công ty khi mô hình kinh doanh đã có tín hiệu tích cực rõ ràng (khách hàng trả tiền, nhu cầu ký hợp đồng chính thức, hoặc chuẩn bị gọi vốn), thay vì thành lập ngay khi mới có ý tưởng hoặc trì hoãn quá lâu đến khi rủi ro pháp lý đã phát sinh. Nếu chưa chắc chắn thời điểm phù hợp với tình huống cụ thể của mình, hãy liên hệ MAX OFFICE để được tư vấn miễn phí dựa trên mô hình kinh doanh thực tế của bạn.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Tôi có thể thử nghiệm sản phẩm trước khi thành lập công ty không?",
+        a: "Có thể, đặc biệt ở giai đoạn xác thực ý tưởng ban đầu. Tuy nhiên khi đã có giao dịch phát sinh doanh thu hoặc cần ký hợp đồng chính thức, nên thành lập công ty để đảm bảo tuân thủ pháp luật.",
+      },
+      {
+        q: "Chi phí duy trì công ty mới thành lập mỗi tháng khoảng bao nhiêu?",
+        a: "Chi phí thay đổi tuỳ dịch vụ kế toán, địa chỉ trụ sở và mức độ phát sinh giao dịch — liên hệ MAX OFFICE để được báo giá cụ thể theo nhu cầu của bạn.",
+      },
+      {
+        q: "Hộ kinh doanh có thể gọi vốn từ nhà đầu tư không?",
+        a: "Hộ kinh doanh có nhiều hạn chế trong việc nhận vốn góp từ nhà đầu tư so với mô hình công ty. Nếu có kế hoạch gọi vốn, nên chuyển đổi hoặc thành lập trực tiếp dưới hình thức công ty TNHH hoặc cổ phần.",
+      },
+      {
+        q: "Từ hộ kinh doanh chuyển lên công ty có phức tạp không?",
+        a: "MAX OFFICE hỗ trợ trọn gói thủ tục chuyển đổi loại hình doanh nghiệp, xử lý trong 5-7 ngày làm việc — xem chi tiết tại bài viết Chuyển đổi loại hình doanh nghiệp.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Lệ phí môn bài đã chính thức bãi bỏ từ 2026", href: "/blog/bai-bo-le-phi-mon-bai-2026" },
+      { label: "Hộ kinh doanh vs TNHH vs Cổ phần", href: "/blog/ho-kinh-doanh-vs-tnhh-vs-co-phan" },
+      { label: "Chuyển đổi loại hình doanh nghiệp: Quy trình và chi phí", href: "/blog/chuyen-doi-loai-hinh-doanh-nghiep-quy-trinh-chi-phi" },
+    ],
+    cta: {
+      title: "Chưa chắc thời điểm nào nên thành lập công ty?",
+      description: "Để lại thông tin, MAX OFFICE tư vấn miễn phí dựa trên mô hình kinh doanh và kế hoạch phát triển thực tế của startup bạn.",
+      service: "Thành lập doanh nghiệp",
+      serviceHref: "/services/thanh-lap-doanh-nghiep",
+      serviceLabel: "Xem dịch vụ thành lập doanh nghiệp",
+    },
+  },
+  {
+    slug: "chuan-bi-phap-ly-truoc-khi-goi-von",
+    title: "Chuẩn bị pháp lý gì trước khi gọi vốn đầu tư?",
+    excerpt:
+      "Startup cần chuẩn bị những gì về mặt pháp lý trước khi gọi vốn — cấu trúc doanh nghiệp, hồ sơ minh bạch và những điểm nhà đầu tư thường rà soát kỹ.",
+    categorySlug: "startup-khoi-nghiep",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 7,
+    metaTitle: "Chuẩn Bị Pháp Lý Gì Trước Khi Gọi Vốn Đầu Tư?",
+    metaDescription:
+      "Những việc startup cần chuẩn bị về mặt pháp lý trước khi gọi vốn đầu tư — cấu trúc doanh nghiệp, hồ sơ minh bạch và các điểm nhà đầu tư thường rà soát.",
+    heroImage: "/images/ke-toan-thue.jpg",
+    sections: [
+      {
+        id: "vi-sao-can-chuan-bi-phap-ly",
+        heading: "Vì sao cần chuẩn bị pháp lý trước khi gọi vốn",
+        paragraphs: [
+          "Trước khi rót vốn, nhà đầu tư (đặc biệt là quỹ đầu tư chuyên nghiệp) thường thực hiện quy trình thẩm định pháp lý (legal due diligence) để đánh giá rủi ro của doanh nghiệp. Một startup có hồ sơ pháp lý rõ ràng, minh bạch không chỉ giúp quá trình gọi vốn diễn ra nhanh hơn, mà còn tránh được tình huống bị định giá thấp hoặc mất cơ hội đầu tư do phát hiện vấn đề pháp lý trong quá trình thẩm định.",
+        ],
+      },
+      {
+        id: "cau-truc-phap-nhan-phu-hop",
+        heading: "Đảm bảo cấu trúc pháp nhân phù hợp để gọi vốn",
+        paragraphs: [
+          "Công ty cổ phần thường thuận lợi hơn công ty TNHH khi gọi vốn từ nhiều nhà đầu tư, vì cổ phần dễ chuyển nhượng và phù hợp với cơ chế phát hành thêm cổ phần cho vòng gọi vốn mới. Nếu startup của bạn đang là công ty TNHH và có kế hoạch gọi vốn từ nhiều nhà đầu tư trong tương lai, nên cân nhắc chuyển đổi sang công ty cổ phần trước khi bắt đầu quá trình gọi vốn, thay vì thực hiện đồng thời với vòng gọi vốn khiến quy trình phức tạp hơn.",
+        ],
+      },
+      {
+        id: "ho-so-phap-ly-can-minh-bach",
+        heading: "Hồ sơ pháp lý cần rà soát và chuẩn bị đầy đủ",
+        paragraphs: ["Trước khi bước vào quá trình gọi vốn, startup nên rà soát và chuẩn bị sẵn các nhóm hồ sơ sau:"],
+        bullets: [
+          "Giấy chứng nhận đăng ký doanh nghiệp và các lần thay đổi đăng ký (nếu có) — đảm bảo mọi thay đổi thực tế đã được cập nhật đầy đủ",
+          "Điều lệ công ty, biên bản họp, nghị quyết của các kỳ họp quan trọng",
+          "Sổ đăng ký cổ đông/thành viên, thể hiện rõ cơ cấu sở hữu hiện tại",
+          "Các hợp đồng quan trọng đã ký với khách hàng, đối tác, nhà cung cấp",
+          "Hồ sơ tuân thủ nghĩa vụ thuế, báo cáo tài chính các kỳ gần nhất",
+          "Tình trạng sở hữu trí tuệ (nếu có): nhãn hiệu, sáng chế, bản quyền liên quan đến sản phẩm cốt lõi",
+        ],
+      },
+      {
+        id: "nhung-diem-nha-dau-tu-thuong-ra-soat",
+        heading: "Những điểm nhà đầu tư thường rà soát kỹ",
+        paragraphs: [
+          "Ngoài hồ sơ pháp lý cơ bản, nhà đầu tư thường đặc biệt quan tâm đến tính minh bạch của cơ cấu sở hữu (ai thực sự sở hữu và kiểm soát công ty), các nghĩa vụ tài chính, thuế còn tồn đọng, tranh chấp pháp lý (nếu có), và các thoả thuận nội bộ giữa các đồng sáng lập về quyền biểu quyết, vesting cổ phần. Một cấu trúc sở hữu rõ ràng, không có tranh chấp tiềm ẩn giữa các đồng sáng lập sẽ giúp quá trình thẩm định diễn ra thuận lợi hơn nhiều.",
+        ],
+      },
+      {
+        id: "loi-khuyen",
+        heading: "Lời khuyên cho startup chuẩn bị gọi vốn",
+        paragraphs: [
+          "Nên bắt đầu chuẩn bị hồ sơ pháp lý từ sớm, không đợi đến khi có nhà đầu tư quan tâm mới rà soát — điều này giúp startup chủ động phát hiện và xử lý các vấn đề tồn đọng trước khi bước vào đàm phán. Vì mỗi vòng gọi vốn có yêu cầu pháp lý khác nhau tuỳ vào loại hình nhà đầu tư (thiên thần, quỹ đầu tư trong nước hay quốc tế), doanh nghiệp nên tham khảo tư vấn pháp lý chuyên sâu song song với việc chuẩn bị các thủ tục cơ bản mà MAX OFFICE có thể hỗ trợ.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Startup nhỏ, mới gọi vốn vòng đầu có cần chuẩn bị phức tạp như vậy không?",
+        a: "Mức độ thẩm định thường tương ứng với quy mô vòng gọi vốn, nhưng việc có hồ sơ pháp lý gọn gàng ngay từ đầu luôn là lợi thế, kể cả với vòng gọi vốn nhỏ từ nhà đầu tư thiên thần.",
+      },
+      {
+        q: "Công ty TNHH có bắt buộc phải chuyển thành cổ phần mới gọi vốn được không?",
+        a: "Không bắt buộc trong mọi trường hợp, nhưng công ty cổ phần thường thuận lợi hơn khi có nhiều nhà đầu tư tham gia các vòng gọi vốn liên tiếp. Quyết định nên dựa trên kế hoạch gọi vốn cụ thể của bạn.",
+      },
+      {
+        q: "MAX OFFICE có hỗ trợ chuyển đổi loại hình doanh nghiệp trước khi gọi vốn không?",
+        a: "Có, MAX OFFICE cung cấp dịch vụ chuyển đổi loại hình doanh nghiệp với mức phí 1.500.000đ, xử lý trong 5-7 ngày làm việc.",
+      },
+      {
+        q: "Thoả thuận giữa các đồng sáng lập có cần công chứng hoặc đăng ký với cơ quan nhà nước không?",
+        a: "Thoả thuận nội bộ giữa các đồng sáng lập (như thoả thuận cổ đông) thường không bắt buộc đăng ký với cơ quan nhà nước, nhưng nên được lập thành văn bản rõ ràng và tham khảo tư vấn pháp lý để đảm bảo giá trị ràng buộc khi cần thiết.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Công cụ so sánh TNHH và Cổ phần", href: "/tien-ich/so-sanh-tnhh-va-co-phan" },
+      { label: "Chuyển đổi loại hình doanh nghiệp: Quy trình và chi phí", href: "/blog/chuyen-doi-loai-hinh-doanh-nghiep-quy-trinh-chi-phi" },
+      { label: "Bảng giá Dịch vụ pháp lý sửa đổi", href: "/dich-vu/dich-vu-phap-ly-sua-doi" },
+    ],
+    cta: {
+      title: "Chuẩn bị gọi vốn và cần rà soát hồ sơ pháp lý?",
+      description: "MAX OFFICE hỗ trợ các thủ tục pháp lý nền tảng — chuyển đổi loại hình, cập nhật hồ sơ đăng ký doanh nghiệp — giúp startup sẵn sàng trước vòng gọi vốn.",
+      service: "Thành lập doanh nghiệp",
+      serviceHref: "/dich-vu/dich-vu-phap-ly-sua-doi",
+      serviceLabel: "Xem bảng giá dịch vụ sửa đổi",
+    },
+  },
+  {
+    slug: "5-sai-lam-phap-ly-startup-moi-thanh-lap",
+    title: "5 sai lầm pháp lý phổ biến của startup mới thành lập",
+    excerpt:
+      "Những sai lầm pháp lý phổ biến khiến startup mới thành lập gặp rắc rối — từ chọn sai loại hình, chậm kê khai thuế đến thiếu hợp đồng rõ ràng với đồng sáng lập.",
+    categorySlug: "startup-khoi-nghiep",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "5 Sai Lầm Pháp Lý Phổ Biến Của Startup Mới Thành Lập",
+    metaDescription:
+      "5 sai lầm pháp lý phổ biến nhất mà startup mới thành lập thường mắc phải, và cách phòng tránh ngay từ giai đoạn đầu hoạt động.",
+    heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
+    sections: [
+      {
+        id: "sai-lam-1",
+        heading: "Sai lầm 1: Chọn sai loại hình doanh nghiệp ngay từ đầu",
+        paragraphs: [
+          "Nhiều startup chọn loại hình doanh nghiệp theo cảm tính hoặc vì đơn giản, mà không cân nhắc kế hoạch phát triển dài hạn — ví dụ chọn công ty TNHH một thành viên dù biết trước sẽ cần gọi vốn từ nhiều nhà đầu tư trong tương lai gần. Hậu quả là phải thực hiện thêm thủ tục chuyển đổi loại hình sau này, tốn thời gian và chi phí không cần thiết. Nên cân nhắc kỹ mô hình phù hợp ngay từ đầu dựa trên số lượng người đồng sáng lập và kế hoạch gọi vốn.",
+        ],
+      },
+      {
+        id: "sai-lam-2",
+        heading: "Sai lầm 2: Chậm trễ hoặc bỏ sót nghĩa vụ kê khai thuế ban đầu",
+        paragraphs: [
+          "Sau khi nhận Giấy chứng nhận đăng ký doanh nghiệp, nhiều startup tập trung vào phát triển sản phẩm mà quên hoặc chậm trễ thực hiện các thủ tục thuế ban đầu như đăng ký phương pháp tính thuế, thông báo phát hành hoá đơn điện tử, kê khai thuế môn bài (với các nghĩa vụ thuế còn áp dụng). Việc chậm trễ này có thể dẫn đến bị xử phạt vi phạm hành chính dù doanh nghiệp chưa phát sinh doanh thu đáng kể.",
+        ],
+      },
+      {
+        id: "sai-lam-3",
+        heading: "Sai lầm 3: Không có thoả thuận rõ ràng với đồng sáng lập",
+        paragraphs: [
+          "Đây là một trong những sai lầm gây hậu quả nghiêm trọng nhất về lâu dài. Nhiều nhóm sáng lập bắt đầu làm việc dựa trên thoả thuận miệng về tỷ lệ sở hữu, vai trò, đóng góp — dẫn đến tranh chấp khi công ty bắt đầu có giá trị hoặc khi có thành viên muốn rời đi. Nên lập thoả thuận bằng văn bản ngay từ đầu về cơ cấu góp vốn, vai trò từng người và cơ chế xử lý khi có thành viên rút lui.",
+        ],
+      },
+      {
+        id: "sai-lam-4",
+        heading: "Sai lầm 4: Bỏ qua nghĩa vụ cập nhật thay đổi đăng ký doanh nghiệp",
+        paragraphs: [
+          "Khi có thay đổi thực tế (đổi địa chỉ văn phòng, thay đổi người đại diện, bổ sung ngành nghề kinh doanh mới), nhiều startup chỉ thay đổi trên thực tế mà quên cập nhật hồ sơ đăng ký doanh nghiệp. Điều này khiến thông tin pháp lý không khớp với thực tế hoạt động, gây rủi ro khi ký hợp đồng, vay vốn hoặc bị kiểm tra.",
+        ],
+      },
+      {
+        id: "sai-lam-5",
+        heading: "Sai lầm 5: Không lưu trữ hồ sơ, hợp đồng đầy đủ ngay từ đầu",
+        paragraphs: [
+          "Giai đoạn đầu khởi nghiệp thường bận rộn, khiến nhiều startup không lưu trữ hợp đồng, biên bản họp, chứng từ kế toán một cách có hệ thống. Đến khi cần rà soát cho việc gọi vốn, kiểm toán, hoặc xử lý tranh chấp, việc thiếu hồ sơ gây khó khăn lớn và có thể ảnh hưởng đến uy tín của doanh nghiệp trước nhà đầu tư.",
+        ],
+      },
+      {
+        id: "cach-phong-tranh",
+        heading: "Cách phòng tránh các sai lầm trên",
+        paragraphs: [
+          "Nguyên tắc chung là xây dựng thói quen tuân thủ pháp lý và lưu trữ hồ sơ ngay từ ngày đầu thành lập, thay vì để dồn lại xử lý khi đã phát sinh vấn đề. Sử dụng dịch vụ kế toán, pháp lý chuyên nghiệp ngay từ đầu — dù chi phí nhỏ hàng tháng — thường tiết kiệm hơn nhiều so với chi phí khắc phục hậu quả pháp lý về sau.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Startup mới nên ưu tiên khắc phục sai lầm nào trước?",
+        a: "Ưu tiên cao nhất là đảm bảo tuân thủ nghĩa vụ thuế đúng hạn (tránh bị xử phạt) và có thoả thuận rõ ràng bằng văn bản với đồng sáng lập (tránh tranh chấp nội bộ) — đây là hai rủi ro có thể ảnh hưởng trực tiếp đến sự tồn tại của công ty.",
+      },
+      {
+        q: "Đã lỡ thành lập sai loại hình doanh nghiệp thì có sửa được không?",
+        a: "Có, doanh nghiệp có thể thực hiện thủ tục chuyển đổi loại hình doanh nghiệp — MAX OFFICE hỗ trợ trọn gói thủ tục này với chi phí 1.500.000đ.",
+      },
+      {
+        q: "Chậm kê khai thuế ban đầu có bị phạt nặng không?",
+        a: "Mức phạt tuỳ thuộc vào loại nghĩa vụ và thời gian chậm trễ. Để tránh rủi ro, nên sử dụng dịch vụ kế toán & thuế ngay từ ngày đầu hoạt động thay vì tự thực hiện khi chưa có kinh nghiệm.",
+      },
+      {
+        q: "MAX OFFICE có gói dịch vụ nào giúp startup tránh các sai lầm này không?",
+        a: "Có, gói thành lập doanh nghiệp trọn gói của MAX OFFICE bao gồm hỗ trợ thủ tục ban đầu và có thể kết hợp với dịch vụ kế toán & thuế để đảm bảo doanh nghiệp tuân thủ đúng quy định ngay từ đầu.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Hộ kinh doanh vs TNHH vs Cổ phần", href: "/blog/ho-kinh-doanh-vs-tnhh-vs-co-phan" },
+      { label: "Khi nào doanh nghiệp cần thay đổi giấy phép kinh doanh", href: "/blog/khi-nao-can-thay-doi-giay-phep-kinh-doanh" },
+      { label: "Hợp đồng lao động cho doanh nghiệp mới thành lập cần lưu ý gì", href: "/blog/hop-dong-lao-dong-cho-doanh-nghiep-moi-thanh-lap" },
+    ],
+    cta: {
+      title: "Muốn tránh các sai lầm pháp lý ngay từ đầu?",
+      description: "MAX OFFICE đồng hành cùng startup từ thành lập đến vận hành, giúp bạn tuân thủ đúng quy định pháp lý và tập trung phát triển sản phẩm.",
+      service: "Thành lập doanh nghiệp",
+      serviceHref: "/services/thanh-lap-doanh-nghiep",
+      serviceLabel: "Xem dịch vụ thành lập doanh nghiệp",
+    },
+  },
+
+  // ===================== QUẢN LÝ TÀI CHÍNH =====================
+  {
+    slug: "quan-ly-dong-tien-hieu-qua-cho-doanh-nghiep-nho",
+    title: "Quản lý dòng tiền hiệu quả cho doanh nghiệp nhỏ",
+    excerpt:
+      "Vì sao dòng tiền quan trọng hơn lợi nhuận trên giấy, nguyên tắc quản lý dòng tiền cơ bản và cách cải thiện dòng tiền cho doanh nghiệp nhỏ.",
+    categorySlug: "quan-ly-tai-chinh",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "Quản Lý Dòng Tiền Hiệu Quả Cho Doanh Nghiệp Nhỏ",
+    metaDescription:
+      "Nguyên tắc quản lý dòng tiền cơ bản, công cụ theo dõi phù hợp và cách cải thiện dòng tiền cho doanh nghiệp nhỏ, tránh rủi ro thiếu hụt tiền mặt.",
+    heroImage: "/images/ke-toan-thue.jpg",
+    sections: [
+      {
+        id: "dong-tien-la-gi",
+        heading: "Dòng tiền là gì và vì sao quan trọng hơn lợi nhuận trên giấy",
+        paragraphs: [
+          "Dòng tiền (cash flow) là sự luân chuyển tiền mặt thực tế ra vào doanh nghiệp trong một khoảng thời gian, khác với lợi nhuận kế toán được ghi nhận trên sổ sách. Một doanh nghiệp có thể báo cáo lợi nhuận dương nhưng vẫn thiếu tiền mặt để trả lương, thanh toán nhà cung cấp nếu dòng tiền không được quản lý tốt — đây là nguyên nhân phổ biến khiến nhiều doanh nghiệp nhỏ gặp khó khăn dù kinh doanh có lãi trên giấy tờ.",
+          "Với doanh nghiệp mới thành lập, dòng tiền càng quan trọng hơn vì nguồn vốn ban đầu thường hạn chế, trong khi các khoản chi cố định (văn phòng, nhân sự, dịch vụ) vẫn phát sinh đều đặn bất kể doanh thu có ổn định hay chưa.",
+        ],
+      },
+      {
+        id: "nguyen-tac-co-ban",
+        heading: "Nguyên tắc cơ bản trong quản lý dòng tiền",
+        paragraphs: [],
+        bullets: [
+          "Theo dõi dòng tiền vào (thu từ khách hàng, các nguồn vốn) và dòng tiền ra (chi phí vận hành, thanh toán nhà cung cấp) tách biệt rõ ràng",
+          "Duy trì khoản dự phòng tiền mặt đủ để trang trải chi phí vận hành tối thiểu vài tháng",
+          "Rút ngắn thời gian thu tiền từ khách hàng — đề nghị thanh toán trước hoặc theo tiến độ thay vì công nợ dài hạn",
+          "Đàm phán thời hạn thanh toán hợp lý với nhà cung cấp, tránh dồn nhiều khoản chi vào cùng một thời điểm",
+        ],
+      },
+      {
+        id: "cong-cu-theo-doi",
+        heading: "Công cụ theo dõi dòng tiền phù hợp với doanh nghiệp nhỏ",
+        paragraphs: [
+          "Doanh nghiệp nhỏ không nhất thiết cần phần mềm phức tạp ngay từ đầu — một bảng tính đơn giản ghi nhận dòng tiền vào/ra theo tuần hoặc theo tháng đã đủ để nắm được tình hình. Khi quy mô giao dịch tăng lên, doanh nghiệp nên chuyển sang phần mềm kế toán chuyên dụng để tự động hoá việc theo dõi và đối chiếu số liệu, giảm sai sót thủ công.",
+          "Việc sử dụng dịch vụ kế toán chuyên nghiệp ngay từ giai đoạn đầu cũng giúp doanh nghiệp có báo cáo dòng tiền định kỳ, chính xác, thay vì tự tổng hợp thủ công dễ bỏ sót.",
+        ],
+      },
+      {
+        id: "cach-cai-thien-dong-tien",
+        heading: "Cách cải thiện dòng tiền cho doanh nghiệp nhỏ",
+        paragraphs: [],
+        bullets: [
+          "Xuất hoá đơn và nhắc thanh toán ngay khi hoàn thành công việc, tránh trì hoãn",
+          "Cân nhắc chính sách chiết khấu nhỏ cho khách hàng thanh toán sớm",
+          "Cắt giảm hoặc đàm phán lại các chi phí cố định không thực sự cần thiết — ví dụ chuyển từ văn phòng truyền thống sang văn phòng ảo hoặc trọn gói linh hoạt hơn",
+          "Lập kế hoạch dòng tiền theo tháng để dự báo trước các giai đoạn có thể thiếu hụt",
+        ],
+      },
+      {
+        id: "sai-lam-thuong-gap",
+        heading: "Những sai lầm thường gặp khi quản lý dòng tiền",
+        paragraphs: [
+          "Sai lầm phổ biến nhất là nhầm lẫn giữa lợi nhuận và tiền mặt sẵn có, dẫn đến chi tiêu vượt quá khả năng thực tế. Một sai lầm khác là không tách bạch tài chính cá nhân và tài chính doanh nghiệp ngay từ đầu, khiến việc theo dõi dòng tiền thực tế của công ty trở nên khó khăn. Doanh nghiệp mới nên mở tài khoản ngân hàng riêng cho công ty và duy trì kỷ luật ghi chép ngay từ giao dịch đầu tiên.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Doanh nghiệp mới thành lập nên dự trù quỹ tiền mặt bao nhiêu?",
+        a: "Mức dự trù phù hợp tuỳ vào đặc thù ngành và chi phí vận hành thực tế của từng doanh nghiệp — nguyên tắc chung là đủ trang trải các chi phí cố định tối thiểu trong vài tháng. Liên hệ MAX OFFICE để được tư vấn cụ thể hơn theo mô hình kinh doanh của bạn.",
+      },
+      {
+        q: "Công ty có lãi nhưng vẫn thiếu tiền mặt là do đâu?",
+        a: "Thường do khách hàng chưa thanh toán (công nợ), hoặc doanh nghiệp đã chi trả trước cho các khoản đầu tư, hàng tồn kho trong khi doanh thu tương ứng chưa được ghi nhận là tiền mặt thực thu.",
+      },
+      {
+        q: "Có nên vay vốn để bù đắp thiếu hụt dòng tiền ngắn hạn không?",
+        a: "Tuỳ vào nguyên nhân và mức độ thiếu hụt — nếu chỉ là chênh lệch thời điểm thu chi tạm thời, có thể cân nhắc; nếu thiếu hụt kéo dài, nên rà soát lại mô hình kinh doanh trước. Nên tham khảo tư vấn tài chính hoặc MAX OFFICE trước khi quyết định.",
+      },
+      {
+        q: "MAX OFFICE có hỗ trợ theo dõi dòng tiền cho doanh nghiệp không?",
+        a: "Có, dịch vụ Kế toán & thuế của MAX OFFICE cung cấp báo cáo tài chính định kỳ, giúp doanh nghiệp nắm rõ tình hình dòng tiền để ra quyết định kịp thời.",
+      },
+      {
+        q: "Bao lâu nên rà soát dòng tiền một lần?",
+        a: "Doanh nghiệp nhỏ, giao dịch chưa nhiều có thể rà soát hàng tuần hoặc hàng tháng; khi quy mô lớn hơn, nên có báo cáo dòng tiền định kỳ hàng tuần để phản ứng kịp thời với biến động.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Cách lập ngân sách cho công ty mới thành lập", href: "/blog/cach-lap-ngan-sach-cho-cong-ty-moi-thanh-lap" },
+      { label: "Kế toán thuê ngoài hay nội bộ — nên chọn phương án nào", href: "/blog/ke-toan-thue-ngoai-hay-noi-bo" },
+      { label: "Dịch vụ Kế toán & thuế MAX OFFICE", href: "/services/ke-toan-thue" },
+    ],
+    cta: {
+      title: "Cần hỗ trợ theo dõi dòng tiền chuyên nghiệp?",
+      description: "Dịch vụ Kế toán & thuế của MAX OFFICE giúp doanh nghiệp nhỏ có báo cáo tài chính rõ ràng, cập nhật để chủ động quản lý dòng tiền.",
+      service: "Kế toán & thuế",
+      serviceHref: "/services/ke-toan-thue",
+      serviceLabel: "Xem dịch vụ Kế toán & thuế",
+    },
+  },
+  {
+    slug: "phan-biet-chi-phi-co-dinh-va-chi-phi-bien-doi",
+    title: "Phân biệt chi phí cố định và chi phí biến đổi khi khởi nghiệp",
+    excerpt:
+      "Chi phí cố định và chi phí biến đổi khác nhau thế nào, vì sao startup cần phân biệt rõ ngay từ đầu, và cách tối ưu từng loại chi phí.",
+    categorySlug: "quan-ly-tai-chinh",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "Phân Biệt Chi Phí Cố Định Và Chi Phí Biến Đổi Khi Khởi Nghiệp",
+    metaDescription:
+      "Chi phí cố định và chi phí biến đổi là gì, cách phân biệt và ví dụ thực tế cho doanh nghiệp mới khởi nghiệp, giúp kiểm soát tài chính hiệu quả hơn.",
+    heroImage: "/images/dich-vu-ke-toan-thue.jpg",
+    sections: [
+      {
+        id: "chi-phi-co-dinh-la-gi",
+        heading: "Chi phí cố định là gì?",
+        paragraphs: [
+          "Chi phí cố định là khoản chi phát sinh đều đặn, không thay đổi theo mức độ hoạt động hoặc doanh thu trong một khoảng thời gian nhất định. Doanh nghiệp vẫn phải chi trả các khoản này dù có bán được hàng hay không. Ví dụ điển hình: chi phí thuê văn phòng, lương nhân viên cố định, chi phí dịch vụ kế toán, phí duy trì chữ ký số, hoá đơn điện tử.",
+        ],
+      },
+      {
+        id: "chi-phi-bien-doi-la-gi",
+        heading: "Chi phí biến đổi là gì?",
+        paragraphs: [
+          "Ngược lại, chi phí biến đổi thay đổi tỷ lệ thuận với mức độ hoạt động kinh doanh — sản xuất, bán hàng càng nhiều thì chi phí này càng tăng. Ví dụ: chi phí nguyên vật liệu, chi phí vận chuyển, hoa hồng bán hàng, chi phí quảng cáo theo hiệu quả (nếu tính theo số lượng chuyển đổi thực tế).",
+        ],
+      },
+      {
+        id: "vi-sao-can-phan-biet",
+        heading: "Vì sao startup cần phân biệt rõ hai loại chi phí này",
+        paragraphs: [
+          "Việc phân biệt rõ chi phí cố định và biến đổi giúp doanh nghiệp xác định điểm hoà vốn — mức doanh thu cần đạt để bù đắp đủ cả hai loại chi phí. Đây là căn cứ quan trọng để định giá sản phẩm/dịch vụ, lập kế hoạch tài chính và đánh giá mức độ rủi ro khi doanh thu biến động. Doanh nghiệp có tỷ trọng chi phí cố định cao sẽ chịu áp lực tài chính lớn hơn trong giai đoạn doanh thu thấp, trong khi doanh nghiệp có chi phí chủ yếu là biến đổi sẽ linh hoạt hơn khi thị trường biến động.",
+        ],
+      },
+      {
+        id: "vi-du-thuc-te",
+        heading: "Ví dụ thực tế cho doanh nghiệp mới thành lập",
+        paragraphs: ["Với một startup dịch vụ điển hình, cơ cấu chi phí thường bao gồm:"],
+        bullets: [
+          "Chi phí cố định: thuê văn phòng (ảo hoặc trọn gói), lương nhân sự cơ hữu, phí dịch vụ kế toán, phí phần mềm quản lý",
+          "Chi phí biến đổi: chi phí quảng cáo theo chiến dịch, hoa hồng cộng tác viên, chi phí nguyên vật liệu/hàng hoá theo đơn hàng",
+        ],
+      },
+      {
+        id: "cach-toi-uu",
+        heading: "Cách tối ưu từng loại chi phí",
+        paragraphs: [
+          "Với chi phí cố định, doanh nghiệp nên ưu tiên các giải pháp linh hoạt trong giai đoạn đầu — ví dụ chọn văn phòng ảo hoặc gói văn phòng trọn gói thay vì ký hợp đồng thuê mặt bằng dài hạn, giúp giảm áp lực chi phí cố định khi doanh thu chưa ổn định. Với chi phí biến đổi, nên theo dõi sát hiệu quả từng khoản chi (đặc biệt là chi phí marketing) để loại bỏ những khoản không mang lại tỷ lệ chuyển đổi tương xứng.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Chi phí thuê văn phòng ảo là chi phí cố định hay biến đổi?",
+        a: "Đây là chi phí cố định, vì mức phí hàng tháng không đổi theo doanh thu hay mức độ hoạt động của doanh nghiệp.",
+      },
+      {
+        q: "Làm sao tính điểm hoà vốn cho doanh nghiệp mới?",
+        a: "Điểm hoà vốn được tính dựa trên tổng chi phí cố định chia cho biên lợi nhuận trên mỗi đơn vị sản phẩm/dịch vụ. Vì cách tính cụ thể phụ thuộc vào mô hình kinh doanh, bạn nên tham khảo dịch vụ kế toán để được tính toán chính xác.",
+      },
+      {
+        q: "Có nên chuyển chi phí cố định thành chi phí biến đổi khi mới khởi nghiệp không?",
+        a: "Đây là chiến lược phổ biến giúp giảm rủi ro giai đoạn đầu — ví dụ dùng dịch vụ văn phòng linh hoạt thay vì thuê mặt bằng dài hạn, thuê ngoài kế toán thay vì tuyển nhân sự cố định.",
+      },
+      {
+        q: "MAX OFFICE có giải pháp nào giúp giảm chi phí cố định cho doanh nghiệp mới không?",
+        a: "Có, các gói Văn phòng ảo và Văn phòng trọn gói của MAX OFFICE giúp doanh nghiệp mới tối ưu chi phí cố định so với thuê mặt bằng truyền thống, đồng thời có thể điều chỉnh gói dịch vụ khi quy mô thay đổi.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Quản lý dòng tiền hiệu quả cho doanh nghiệp nhỏ", href: "/blog/quan-ly-dong-tien-hieu-qua-cho-doanh-nghiep-nho" },
+      { label: "Công cụ tính chi phí thành lập công ty", href: "/tien-ich/tinh-chi-phi-thanh-lap" },
+      { label: "Dịch vụ Văn phòng ảo MAX OFFICE", href: "/services/van-phong-ao" },
+    ],
+    cta: {
+      title: "Muốn tối ưu chi phí cố định ngay từ đầu?",
+      description: "Văn phòng ảo và văn phòng trọn gói MAX OFFICE giúp doanh nghiệp mới kiểm soát chi phí cố định linh hoạt theo từng giai đoạn phát triển.",
+      service: "Văn phòng ảo",
+      serviceHref: "/services/van-phong-ao",
+      serviceLabel: "Xem dịch vụ Văn phòng ảo",
+    },
+  },
+  {
+    slug: "cach-lap-ngan-sach-cho-cong-ty-moi-thanh-lap",
+    title: "Cách lập ngân sách cho công ty mới thành lập",
+    excerpt:
+      "Hướng dẫn lập ngân sách cho công ty mới thành lập — các khoản mục cần có, cách phân bổ theo tháng/quý và cách theo dõi, điều chỉnh ngân sách.",
+    categorySlug: "quan-ly-tai-chinh",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 7,
+    metaTitle: "Cách Lập Ngân Sách Cho Công Ty Mới Thành Lập",
+    metaDescription:
+      "Hướng dẫn từng bước lập ngân sách cho công ty mới thành lập — các khoản mục cần có, cách phân bổ và theo dõi ngân sách hiệu quả.",
+    heroImage: "/images/khong-gian-lam-viec.jpg",
+    sections: [
+      {
+        id: "vi-sao-can-ngan-sach",
+        heading: "Vì sao công ty mới thành lập cần lập ngân sách ngay từ đầu",
+        paragraphs: [
+          "Ngân sách là bản kế hoạch tài chính giúp doanh nghiệp dự trù trước các khoản thu, chi trong một giai đoạn nhất định, từ đó chủ động phân bổ nguồn lực thay vì chi tiêu theo cảm tính. Với công ty mới thành lập, nguồn vốn ban đầu thường có giới hạn, nên việc lập ngân sách rõ ràng giúp tránh tình trạng cạn vốn giữa chừng do chi tiêu không có kế hoạch.",
+        ],
+      },
+      {
+        id: "cac-khoan-muc-ngan-sach",
+        heading: "Các khoản mục cần có trong ngân sách công ty mới",
+        paragraphs: ["Một bản ngân sách cơ bản cho công ty mới thành lập nên bao gồm các nhóm chi phí sau:"],
+        bullets: [
+          "Chi phí thành lập ban đầu: lệ phí đăng ký, dịch vụ hỗ trợ thành lập, khắc dấu, chữ ký số, hoá đơn điện tử",
+          "Chi phí vận hành cố định hàng tháng: văn phòng, dịch vụ kế toán, phần mềm quản lý",
+          "Chi phí nhân sự: lương, bảo hiểm xã hội cho đội ngũ ban đầu",
+          "Chi phí marketing, bán hàng: quảng cáo, xây dựng thương hiệu, chi phí tiếp cận khách hàng",
+          "Quỹ dự phòng: khoản dự trù cho các tình huống phát sinh ngoài kế hoạch",
+        ],
+      },
+      {
+        id: "cach-phan-bo-theo-thang-quy",
+        heading: "Cách phân bổ ngân sách theo tháng và theo quý",
+        paragraphs: [
+          "Với công ty mới, nên lập ngân sách chi tiết theo tháng cho 6-12 tháng đầu hoạt động, vì đây là giai đoạn dòng tiền còn nhiều biến động và khó dự báo dài hạn chính xác. Sau khi có dữ liệu vận hành thực tế, doanh nghiệp có thể chuyển sang lập ngân sách theo quý hoặc theo năm với độ chính xác cao hơn. Nên phân bổ ngân sách marketing và mở rộng linh hoạt theo kết quả kinh doanh thực tế, thay vì cố định cứng nhắc ngay từ đầu.",
+        ],
+      },
+      {
+        id: "theo-doi-va-dieu-chinh",
+        heading: "Theo dõi và điều chỉnh ngân sách",
+        paragraphs: [
+          "Ngân sách không phải là con số cố định một lần lập ra rồi để đó — doanh nghiệp cần đối chiếu chi tiêu thực tế với ngân sách đã lập hàng tháng, xác định các khoản chênh lệch và nguyên nhân, từ đó điều chỉnh cho các tháng tiếp theo. Việc này đòi hỏi hệ thống ghi chép kế toán chính xác, cập nhật kịp thời — đây cũng là lý do nhiều công ty mới lựa chọn dịch vụ kế toán chuyên nghiệp thay vì tự quản lý sổ sách trong giai đoạn đầu.",
+        ],
+      },
+      {
+        id: "loi-khuyen",
+        heading: "Lời khuyên khi lập ngân sách lần đầu",
+        paragraphs: [
+          "Nên lập ngân sách với thái độ thận trọng — dự trù doanh thu ở mức khiêm tốn và chi phí ở mức đầy đủ, tránh lạc quan quá mức dẫn đến thiếu hụt vốn khi thực tế không như kỳ vọng. Đồng thời, hãy dành riêng một khoản dự phòng cho các chi phí phát sinh ngoài kế hoạch — kinh nghiệm cho thấy hầu hết công ty mới đều phát sinh chi phí không lường trước trong năm đầu hoạt động.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Công ty mới thành lập nên dành bao nhiêu phần trăm ngân sách cho marketing?",
+        a: "Tỷ lệ phù hợp phụ thuộc vào ngành nghề và chiến lược tăng trưởng cụ thể — không có con số chuẩn cho mọi doanh nghiệp. Nên bắt đầu ở mức thận trọng và điều chỉnh theo hiệu quả thực tế.",
+      },
+      {
+        q: "Có công cụ nào hỗ trợ ước tính chi phí thành lập ban đầu không?",
+        a: "Có, MAX OFFICE cung cấp Công cụ tính chi phí thành lập công ty miễn phí, giúp bạn ước tính nhanh các khoản chi phí ban đầu theo loại hình doanh nghiệp.",
+      },
+      {
+        q: "Nên lập ngân sách trước hay sau khi thành lập công ty?",
+        a: "Nên lập ngân sách sơ bộ trước khi thành lập để xác định nguồn vốn cần chuẩn bị, sau đó hoàn thiện chi tiết hơn khi đã có Giấy chứng nhận đăng ký doanh nghiệp và các chi phí thực tế rõ ràng.",
+      },
+      {
+        q: "MAX OFFICE có hỗ trợ lập và theo dõi ngân sách không?",
+        a: "Dịch vụ Kế toán & thuế của MAX OFFICE cung cấp báo cáo tài chính định kỳ, là dữ liệu nền tảng để doanh nghiệp đối chiếu và điều chỉnh ngân sách theo thực tế vận hành.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Công cụ tính chi phí thành lập công ty", href: "/tien-ich/tinh-chi-phi-thanh-lap" },
+      { label: "Phân biệt chi phí cố định và chi phí biến đổi khi khởi nghiệp", href: "/blog/phan-biet-chi-phi-co-dinh-va-chi-phi-bien-doi" },
+      { label: "Dịch vụ Kế toán & thuế MAX OFFICE", href: "/services/ke-toan-thue" },
+    ],
+    cta: {
+      title: "Cần hỗ trợ lập kế hoạch tài chính cho công ty mới?",
+      description: "MAX OFFICE cung cấp dịch vụ kế toán & thuế trọn gói, giúp công ty mới có số liệu tài chính chính xác để lập và theo dõi ngân sách hiệu quả.",
+      service: "Kế toán & thuế",
+      serviceHref: "/services/ke-toan-thue",
+      serviceLabel: "Xem dịch vụ Kế toán & thuế",
+    },
+  },
+  {
+    slug: "kiem-soat-chi-phi-van-hanh-van-phong",
+    title: "Kiểm soát chi phí vận hành văn phòng hiệu quả",
+    excerpt:
+      "Các khoản chi phí vận hành văn phòng phổ biến, cách kiểm soát và tối ưu, và khi nào doanh nghiệp nên xem xét đổi mô hình văn phòng để tiết kiệm chi phí.",
+    categorySlug: "quan-ly-tai-chinh",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "Kiểm Soát Chi Phí Vận Hành Văn Phòng Hiệu Quả",
+    metaDescription:
+      "Các khoản chi phí vận hành văn phòng phổ biến, cách kiểm soát hiệu quả và khi nào doanh nghiệp nên xem xét đổi mô hình văn phòng để tiết kiệm chi phí.",
+    heroImage: "/images/van-phong-tron-goi.jpg",
+    sections: [
+      {
+        id: "cac-khoan-chi-phi-van-phong-pho-bien",
+        heading: "Các khoản chi phí vận hành văn phòng phổ biến",
+        paragraphs: ["Chi phí vận hành văn phòng của một doanh nghiệp thường bao gồm nhiều khoản mục nhỏ dễ bị bỏ sót khi tính toán tổng thể:"],
+        bullets: [
+          "Tiền thuê mặt bằng và phí quản lý toà nhà",
+          "Điện, nước, internet, điện thoại",
+          "Nội thất, thiết bị văn phòng và chi phí bảo trì, sửa chữa",
+          "Lễ tân, vệ sinh, bảo vệ (nếu văn phòng tự vận hành)",
+          "Văn phòng phẩm và các chi phí phát sinh hàng ngày",
+        ],
+      },
+      {
+        id: "van-phong-truyen-thong-tron-goi-anh-huong-chi-phi",
+        heading: "Mô hình văn phòng ảnh hưởng thế nào đến khả năng kiểm soát chi phí",
+        paragraphs: [
+          "Với văn phòng truyền thống (thuê mặt bằng trống), doanh nghiệp phải tự quản lý và chi trả riêng lẻ từng khoản mục ở trên, khiến chi phí thực tế khó dự đoán chính xác và dễ phát sinh ngoài kế hoạch (sửa chữa đột xuất, tăng phí dịch vụ...). Với văn phòng trọn gói, phần lớn các khoản chi phí vận hành đã được gộp vào một mức phí cố định hàng tháng, giúp doanh nghiệp dự trù ngân sách chính xác hơn và không phải lo quản lý từng nhà cung cấp dịch vụ riêng lẻ.",
+        ],
+      },
+      {
+        id: "meo-toi-uu-chi-phi",
+        heading: "Mẹo tối ưu chi phí vận hành văn phòng",
+        paragraphs: [],
+        bullets: [
+          "Rà soát định kỳ các khoản chi phí cố định để loại bỏ dịch vụ không còn sử dụng (phần mềm, gói dịch vụ dư thừa)",
+          "Chọn diện tích văn phòng phù hợp với quy mô nhân sự thực tế, tránh thuê dư thừa diện tích",
+          "Cân nhắc mô hình chỗ ngồi linh động cho nhân sự làm việc không cố định hàng ngày, thay vì duy trì chỗ ngồi cố định cho tất cả",
+          "So sánh chi phí giữa các mô hình văn phòng (truyền thống, trọn gói, ảo kết hợp coworking) để chọn phương án phù hợp nhất với giai đoạn hiện tại",
+        ],
+      },
+      {
+        id: "khi-nao-nen-xem-xet-doi-mo-hinh",
+        heading: "Khi nào nên xem xét đổi mô hình hoặc địa điểm văn phòng",
+        paragraphs: [
+          "Doanh nghiệp nên rà soát lại mô hình văn phòng khi nhận thấy chi phí vận hành chiếm tỷ trọng ngày càng lớn trong tổng chi phí mà không tương xứng với hiệu quả sử dụng thực tế — ví dụ diện tích thuê dư thừa so với số nhân sự làm việc tại văn phòng, hoặc chi phí quản lý phát sinh liên tục ngoài dự kiến. Đây cũng là thời điểm phù hợp để cân nhắc chuyển sang mô hình trọn gói hoặc linh động hơn.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Văn phòng trọn gói có thực sự tiết kiệm hơn văn phòng truyền thống không?",
+        a: "Về tổng chi phí thực tế (bao gồm cả các khoản phát sinh), văn phòng trọn gói thường giúp doanh nghiệp dự trù ngân sách chính xác hơn và tránh được các khoản chi phí ẩn khi tự vận hành văn phòng truyền thống.",
+      },
+      {
+        q: "Làm sao biết doanh nghiệp đang thuê diện tích văn phòng dư thừa?",
+        a: "Có thể ước tính dựa trên số nhân sự làm việc tại văn phòng thường xuyên so với diện tích đang sử dụng — nếu tỷ lệ sử dụng thấp trong thời gian dài, nên cân nhắc thu hẹp hoặc chuyển sang mô hình linh hoạt hơn.",
+      },
+      {
+        q: "MAX OFFICE có công cụ nào giúp so sánh chi phí các mô hình văn phòng không?",
+        a: "Có, Công cụ chọn gói văn phòng phù hợp của MAX OFFICE giúp bạn so sánh nhanh chi phí và tính năng giữa các gói dịch vụ theo quy mô đội ngũ.",
+      },
+      {
+        q: "Chuyển từ văn phòng truyền thống sang trọn gói có phức tạp không?",
+        a: "Không, MAX OFFICE hỗ trợ tư vấn và làm thủ tục chuyển đổi địa chỉ trụ sở nếu cần, giúp doanh nghiệp chuyển đổi mô hình văn phòng thuận tiện.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Nên chọn văn phòng ảo hay văn phòng truyền thống", href: "/blog/nen-chon-van-phong-ao-hay-truyen-thong" },
+      { label: "Công cụ chọn gói văn phòng phù hợp", href: "/tien-ich/chon-goi-van-phong" },
+      { label: "Dịch vụ Văn phòng trọn gói MAX OFFICE", href: "/services/van-phong-tron-goi" },
+    ],
+    cta: {
+      title: "Muốn tối ưu chi phí vận hành văn phòng?",
+      description: "Dùng công cụ chọn gói văn phòng miễn phí, hoặc để chuyên viên MAX OFFICE tư vấn phương án tiết kiệm chi phí phù hợp với quy mô doanh nghiệp bạn.",
+      service: "Văn phòng trọn gói",
+      serviceHref: "/tien-ich/chon-goi-van-phong",
+      serviceLabel: "Dùng công cụ chọn gói văn phòng",
+    },
+  },
+
+  // ===================== MỞ RỘNG KINH DOANH =====================
+  {
+    slug: "khi-nao-nen-mo-chi-nhanh-moi",
+    title: "Khi nào doanh nghiệp nên mở chi nhánh mới?",
+    excerpt:
+      "Những dấu hiệu cho thấy doanh nghiệp đã sẵn sàng mở chi nhánh mới, thủ tục cơ bản cần thực hiện và ví dụ thực tế từ mạng lưới 12 chi nhánh MAX OFFICE.",
+    categorySlug: "mo-rong-kinh-doanh",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "Khi Nào Doanh Nghiệp Nên Mở Chi Nhánh Mới?",
+    metaDescription:
+      "Dấu hiệu cho thấy doanh nghiệp nên mở chi nhánh mới, thủ tục cơ bản cần thực hiện và ví dụ thực tế từ mạng lưới chi nhánh MAX OFFICE tại TP.HCM.",
+    heroImage: "/images/hero-dia-diem.jpg",
+    sections: [
+      {
+        id: "chi-nhanh-la-gi",
+        heading: "Chi nhánh là gì?",
+        paragraphs: [
+          "Chi nhánh là đơn vị phụ thuộc của doanh nghiệp, có nhiệm vụ thực hiện toàn bộ hoặc một phần chức năng của doanh nghiệp, kể cả chức năng đại diện theo uỷ quyền. Ngành, nghề kinh doanh của chi nhánh phải đúng với ngành, nghề kinh doanh của doanh nghiệp. Khác với việc thành lập một công ty mới hoàn toàn độc lập, chi nhánh vẫn thuộc quyền quản lý và chịu trách nhiệm của doanh nghiệp mẹ.",
+        ],
+      },
+      {
+        id: "dau-hieu-nen-mo-chi-nhanh",
+        heading: "Những dấu hiệu cho thấy nên mở chi nhánh mới",
+        paragraphs: [],
+        bullets: [
+          "Lượng khách hàng tại một khu vực địa lý mới đã đủ lớn và ổn định để duy trì hoạt động lâu dài",
+          "Nhu cầu có hiện diện thực tế (văn phòng, kho bãi, điểm giao dịch) gần khách hàng hoặc đối tác tại khu vực đó",
+          "Muốn mở rộng thị trường sang khu vực, quận/huyện hoặc tỉnh/thành khác",
+          "Đội ngũ nhân sự đã đủ để vận hành một đơn vị hoạt động độc lập tương đối",
+        ],
+      },
+      {
+        id: "thu-tuc-co-ban",
+        heading: "Thủ tục cơ bản khi mở chi nhánh",
+        paragraphs: [
+          "Doanh nghiệp cần chuẩn bị hồ sơ thông báo lập chi nhánh gửi đến cơ quan đăng ký kinh doanh nơi đặt chi nhánh, xác định rõ tên chi nhánh, địa chỉ, ngành nghề hoạt động và người đứng đầu chi nhánh. Sau khi được cấp Giấy chứng nhận đăng ký hoạt động chi nhánh, doanh nghiệp cần thực hiện thêm các thủ tục liên quan như đăng ký thuế cho chi nhánh, khắc dấu chi nhánh (nếu cần), và xác định hình thức hạch toán (độc lập hoặc phụ thuộc doanh nghiệp mẹ) — hình thức hạch toán ảnh hưởng đến cách kê khai thuế nên cần được tư vấn kỹ trước khi lựa chọn.",
+        ],
+      },
+      {
+        id: "chi-phi-duy-tri",
+        heading: "Chi phí duy trì chi nhánh cần cân nhắc",
+        paragraphs: [
+          "Ngoài chi phí thuê địa điểm và vận hành, doanh nghiệp cần tính đến chi phí nhân sự, kế toán riêng (hoặc hợp nhất với công ty mẹ tuỳ hình thức hạch toán), và các nghĩa vụ báo cáo định kỳ với cơ quan quản lý tại địa phương đặt chi nhánh. Với doanh nghiệp muốn thử nghiệm thị trường mới mà chưa chắc chắn về quy mô đầu tư dài hạn, có thể cân nhắc bắt đầu bằng văn phòng ảo hoặc trọn gói tại khu vực đó thay vì đầu tư mặt bằng riêng ngay từ đầu.",
+        ],
+      },
+      {
+        id: "vi-du-thuc-te",
+        heading: "Ví dụ thực tế: Mạng lưới chi nhánh MAX OFFICE",
+        paragraphs: [
+          "MAX OFFICE hiện có 12 chi nhánh trải rộng tại các khu vực Tân Bình, Gò Vấp, Tân Phú, Quận 10 và Quận 1 của TP.HCM — mỗi chi nhánh phục vụ nhu cầu văn phòng, địa chỉ đăng ký kinh doanh của khách hàng tại khu vực lân cận. Đây là ví dụ thực tế cho thấy việc mở rộng theo từng khu vực nhỏ, gần khách hàng mục tiêu, thường hiệu quả hơn so với đầu tư một địa điểm lớn duy nhất — doanh nghiệp có thể tham khảo cách tiếp cận này khi lên kế hoạch mở chi nhánh của riêng mình.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Mở chi nhánh khác quận trong cùng thành phố có phức tạp hơn cùng quận không?",
+        a: "Về cơ bản thủ tục tương tự, nhưng có thể ảnh hưởng đến cơ quan thuế quản lý tuỳ từng trường hợp cụ thể — nên liên hệ MAX OFFICE để được tư vấn chính xác trước khi thực hiện.",
+      },
+      {
+        q: "Chi nhánh có cần vốn điều lệ riêng không?",
+        a: "Không, chi nhánh không có vốn điều lệ riêng vì đây là đơn vị phụ thuộc, không phải pháp nhân độc lập — mọi nghĩa vụ tài chính vẫn thuộc về doanh nghiệp mẹ.",
+      },
+      {
+        q: "Có thể dùng địa chỉ văn phòng ảo để đăng ký chi nhánh không?",
+        a: "Có, tương tự như đăng ký trụ sở chính, chi nhánh có thể sử dụng địa chỉ văn phòng ảo hợp lệ để đăng ký, miễn đáp ứng điều kiện về địa chỉ hợp pháp.",
+      },
+      {
+        q: "MAX OFFICE có checklist hỗ trợ mở chi nhánh không?",
+        a: "Có, MAX OFFICE cung cấp Checklist mở chi nhánh dạng PDF miễn phí, giúp bạn chuẩn bị đầy đủ hồ sơ và các bước cần thực hiện.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Xem 12 chi nhánh MAX OFFICE tại TP.HCM", href: "/dia-diem" },
+      { label: "Checklist mở chi nhánh (tải PDF)", href: "/tien-ich/checklist-mo-chi-nhanh" },
+      { label: "Chi nhánh và Văn phòng đại diện khác nhau như thế nào", href: "/blog/chi-nhanh-va-van-phong-dai-dien-khac-nhau-the-nao" },
+    ],
+    cta: {
+      title: "Sẵn sàng mở chi nhánh mới?",
+      description: "MAX OFFICE hỗ trợ địa chỉ văn phòng và thủ tục pháp lý mở chi nhánh tại các khu vực trung tâm TP.HCM.",
+      service: "Văn phòng ảo",
+      serviceHref: "/dia-diem",
+      serviceLabel: "Xem các chi nhánh MAX OFFICE",
+    },
+  },
+  {
+    slug: "mo-rong-kinh-doanh-sang-tinh-thanh-khac",
+    title: "Mở rộng kinh doanh sang tỉnh/thành khác cần lưu ý gì?",
+    excerpt:
+      "Những khác biệt giữa mở rộng cùng tỉnh/thành và khác tỉnh/thành, thủ tục cần thực hiện và lưu ý về nghĩa vụ thuế khi có đơn vị phụ thuộc ở tỉnh khác.",
+    categorySlug: "mo-rong-kinh-doanh",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 7,
+    metaTitle: "Mở Rộng Kinh Doanh Sang Tỉnh/Thành Khác Cần Lưu Ý Gì?",
+    metaDescription:
+      "Những lưu ý quan trọng khi doanh nghiệp mở rộng kinh doanh sang tỉnh/thành khác — thủ tục đăng ký, nghĩa vụ thuế và cách chọn địa điểm phù hợp.",
+    heroImage: "/images/dia-diem-song-thao.jpg",
+    sections: [
+      {
+        id: "khac-biet-mo-rong-cung-tinh-khac-tinh",
+        heading: "Khác biệt giữa mở rộng cùng tỉnh/thành và khác tỉnh/thành",
+        paragraphs: [
+          "Khi mở chi nhánh, văn phòng đại diện hoặc địa điểm kinh doanh trong cùng tỉnh/thành nơi đặt trụ sở chính, thủ tục thường đơn giản hơn vì cùng một cơ quan đăng ký kinh doanh và cơ quan thuế quản lý. Khi mở rộng sang tỉnh/thành khác, doanh nghiệp cần làm việc với cơ quan đăng ký kinh doanh và cơ quan thuế tại địa phương mới, đồng thời cân nhắc kỹ hình thức hạch toán (độc lập hay phụ thuộc công ty mẹ) vì điều này ảnh hưởng trực tiếp đến cách kê khai và nộp thuế.",
+        ],
+      },
+      {
+        id: "thu-tuc-can-thuc-hien",
+        heading: "Thủ tục cần thực hiện khi mở rộng khác tỉnh/thành",
+        paragraphs: [],
+        bullets: [
+          "Xác định mô hình mở rộng phù hợp: chi nhánh, văn phòng đại diện hoặc địa điểm kinh doanh",
+          "Chuẩn bị hồ sơ thông báo thành lập đơn vị phụ thuộc, nộp tại cơ quan đăng ký kinh doanh nơi đặt đơn vị mới",
+          "Đăng ký thuế cho đơn vị phụ thuộc tại cơ quan thuế quản lý địa phương",
+          "Xác định địa chỉ hợp lệ tại địa phương mới — có thể sử dụng dịch vụ văn phòng ảo hoặc trọn gói nếu chưa cần đầu tư mặt bằng lớn ngay từ đầu",
+        ],
+      },
+      {
+        id: "nghia-vu-thue-don-vi-phu-thuoc",
+        heading: "Lưu ý về nghĩa vụ thuế khi có đơn vị phụ thuộc khác tỉnh",
+        paragraphs: [
+          "Việc kê khai và nộp thuế cho đơn vị phụ thuộc đặt tại tỉnh/thành khác phụ thuộc vào hình thức hạch toán và loại hình hoạt động cụ thể — có những khoản thuế kê khai tập trung tại trụ sở chính, có những khoản cần kê khai riêng tại địa phương đặt đơn vị phụ thuộc. Vì quy định này khá kỹ thuật và có thể khác nhau tuỳ tình huống, doanh nghiệp nên tham khảo dịch vụ kế toán chuyên nghiệp hoặc liên hệ MAX OFFICE để được tư vấn chính xác trước khi mở rộng, tránh kê khai sai dẫn đến rủi ro về sau.",
+        ],
+      },
+      {
+        id: "chon-dia-diem-phu-hop",
+        heading: "Lưu ý khi chọn địa điểm tại tỉnh/thành mới",
+        paragraphs: [
+          "Nên ưu tiên khu vực có mật độ khách hàng mục tiêu cao, thuận tiện giao thông và có hạ tầng dịch vụ hỗ trợ doanh nghiệp (ngân hàng, đối tác logistics...). Trong giai đoạn đầu thử nghiệm thị trường mới, sử dụng dịch vụ văn phòng ảo hoặc trọn gói tại khu vực đó giúp doanh nghiệp có địa chỉ hợp pháp và hiện diện tại thị trường mới mà không phải cam kết đầu tư lớn ngay từ đầu — mô hình 12 chi nhánh của MAX OFFICE tại nhiều khu vực TP.HCM là một ví dụ về cách tiếp cận từng khu vực nhỏ trước khi mở rộng quy mô lớn hơn.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Mở chi nhánh khác tỉnh có bắt buộc phải hạch toán độc lập không?",
+        a: "Không bắt buộc, doanh nghiệp có thể lựa chọn hạch toán độc lập hoặc phụ thuộc tuỳ theo mô hình quản lý mong muốn — mỗi hình thức có ảnh hưởng khác nhau đến cách kê khai thuế, nên cần được tư vấn kỹ trước khi quyết định.",
+      },
+      {
+        q: "Có thể chỉ mở văn phòng ảo ở tỉnh khác mà không cần mở chi nhánh chính thức không?",
+        a: "Nếu chỉ cần có mặt tượng trưng hoặc phục vụ giao dịch không thường xuyên, doanh nghiệp có thể cân nhắc các hình thức phù hợp khác — liên hệ MAX OFFICE để được tư vấn mô hình đúng với nhu cầu thực tế của bạn.",
+      },
+      {
+        q: "MAX OFFICE có hỗ trợ mở rộng ra ngoài TP.HCM không?",
+        a: "Hiện tại 12 chi nhánh của MAX OFFICE tập trung tại TP.HCM. Với nhu cầu mở rộng sang tỉnh/thành khác, chúng tôi có thể tư vấn định hướng thủ tục pháp lý ban đầu — liên hệ để được hỗ trợ cụ thể.",
+      },
+      {
+        q: "Chi phí mở rộng sang tỉnh/thành khác có cao hơn nhiều so với cùng thành phố không?",
+        a: "Chi phí thủ tục pháp lý cơ bản tương đương, nhưng chi phí vận hành thực tế (mặt bằng, nhân sự, logistics) phụ thuộc vào đặc thù từng địa phương — nên khảo sát kỹ trước khi quyết định quy mô đầu tư.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Xem 12 chi nhánh MAX OFFICE tại TP.HCM", href: "/dia-diem" },
+      { label: "Khi nào doanh nghiệp nên mở chi nhánh mới", href: "/blog/khi-nao-nen-mo-chi-nhanh-moi" },
+      { label: "Dịch vụ Văn phòng ảo MAX OFFICE", href: "/services/van-phong-ao" },
+    ],
+    cta: {
+      title: "Đang cân nhắc mở rộng kinh doanh sang khu vực mới?",
+      description: "Để lại thông tin, MAX OFFICE tư vấn miễn phí phương án mở rộng phù hợp với mô hình và ngân sách của doanh nghiệp bạn.",
+      service: "Văn phòng ảo",
+      serviceHref: "/dia-diem",
+      serviceLabel: "Xem các chi nhánh MAX OFFICE",
+    },
+  },
+  {
+    slug: "chi-nhanh-va-van-phong-dai-dien-khac-nhau-the-nao",
+    title: "Chi nhánh và Văn phòng đại diện khác nhau như thế nào?",
+    excerpt:
+      "Phân biệt chi nhánh và văn phòng đại diện về chức năng, khả năng kinh doanh và nghĩa vụ thuế — giúp doanh nghiệp chọn đúng mô hình khi mở rộng.",
+    categorySlug: "mo-rong-kinh-doanh",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 6,
+    metaTitle: "Chi Nhánh Và Văn Phòng Đại Diện Khác Nhau Như Thế Nào?",
+    metaDescription:
+      "So sánh chi nhánh và văn phòng đại diện về chức năng kinh doanh, khả năng xuất hoá đơn và nghĩa vụ thuế — giúp doanh nghiệp chọn đúng mô hình mở rộng.",
+    heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
+    sections: [
+      {
+        id: "chi-nhanh-la-gi",
+        heading: "Chi nhánh là gì?",
+        paragraphs: [
+          "Chi nhánh là đơn vị phụ thuộc của doanh nghiệp, có nhiệm vụ thực hiện toàn bộ hoặc một phần chức năng của doanh nghiệp, bao gồm cả chức năng kinh doanh và chức năng đại diện theo uỷ quyền. Chi nhánh có thể ký hợp đồng, xuất hoá đơn và thực hiện các hoạt động kinh doanh trong phạm vi ngành, nghề đã đăng ký — vốn phải trùng với ngành, nghề kinh doanh của doanh nghiệp.",
+        ],
+      },
+      {
+        id: "van-phong-dai-dien-la-gi",
+        heading: "Văn phòng đại diện là gì?",
+        paragraphs: [
+          "Văn phòng đại diện cũng là đơn vị phụ thuộc của doanh nghiệp, nhưng chỉ có nhiệm vụ đại diện theo uỷ quyền cho lợi ích của doanh nghiệp và bảo vệ các lợi ích đó — ví dụ như nghiên cứu thị trường, xúc tiến cơ hội đầu tư, làm đầu mối liên hệ, chăm sóc khách hàng. Văn phòng đại diện không thực hiện chức năng kinh doanh của doanh nghiệp, tức là không được trực tiếp ký kết hợp đồng kinh doanh sinh lời hay xuất hoá đơn bán hàng, dịch vụ.",
+        ],
+      },
+      {
+        id: "so-sanh-chi-tiet",
+        heading: "So sánh chi tiết chi nhánh và văn phòng đại diện",
+        paragraphs: ["Điểm khác biệt cốt lõi nằm ở chức năng kinh doanh:"],
+        bullets: [
+          "Chức năng kinh doanh: Chi nhánh được thực hiện hoạt động kinh doanh sinh lời; Văn phòng đại diện không được kinh doanh sinh lời",
+          "Xuất hoá đơn: Chi nhánh có thể xuất hoá đơn cho hoạt động kinh doanh của mình; Văn phòng đại diện không xuất hoá đơn bán hàng, dịch vụ",
+          "Nghĩa vụ thuế: Chi nhánh phát sinh nghĩa vụ kê khai thuế liên quan đến hoạt động kinh doanh; Văn phòng đại diện thường có nghĩa vụ thuế đơn giản hơn do không phát sinh doanh thu trực tiếp",
+          "Mục đích sử dụng: Chi nhánh phù hợp khi muốn mở rộng hoạt động kinh doanh thực tế tại khu vực mới; Văn phòng đại diện phù hợp khi chỉ cần văn phòng liên lạc, xúc tiến thương mại mà chưa trực tiếp bán hàng tại đó",
+        ],
+      },
+      {
+        id: "khi-nao-chon-loai-nao",
+        heading: "Khi nào nên chọn chi nhánh, khi nào nên chọn văn phòng đại diện",
+        paragraphs: [
+          "Nếu doanh nghiệp muốn trực tiếp bán hàng, cung cấp dịch vụ và xuất hoá đơn tại khu vực mới, chi nhánh là lựa chọn phù hợp. Nếu mục tiêu chỉ là có mặt để xúc tiến thương mại, nghiên cứu thị trường, xây dựng quan hệ đối tác trước khi quyết định đầu tư kinh doanh chính thức, văn phòng đại diện là phương án gọn nhẹ và ít nghĩa vụ tuân thủ hơn. Ngoài ra còn có mô hình địa điểm kinh doanh — đơn giản hơn chi nhánh, phù hợp khi chỉ cần một điểm bán hàng, giao dịch cụ thể mà không cần đầy đủ chức năng như chi nhánh.",
+        ],
+      },
+      {
+        id: "vi-du-thuc-te",
+        heading: "Ví dụ thực tế tại MAX OFFICE",
+        paragraphs: [
+          "Với mạng lưới 12 chi nhánh tại TP.HCM, MAX OFFICE hỗ trợ doanh nghiệp cả về địa chỉ đăng ký lẫn tư vấn lựa chọn mô hình mở rộng phù hợp — từ văn phòng ảo cho đến các gói dịch vụ pháp lý liên quan đến thành lập chi nhánh hoặc văn phòng đại diện tại khu vực mong muốn.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Văn phòng đại diện có phải đóng thuế thu nhập doanh nghiệp không?",
+        a: "Vì văn phòng đại diện không phát sinh doanh thu từ hoạt động kinh doanh trực tiếp, nghĩa vụ thuế thường đơn giản hơn chi nhánh. Tuy nhiên các nghĩa vụ khai báo vẫn cần tuân thủ đầy đủ — nên liên hệ MAX OFFICE để được tư vấn chính xác cho từng trường hợp.",
+      },
+      {
+        q: "Có thể chuyển đổi từ văn phòng đại diện sang chi nhánh sau này không?",
+        a: "Có thể, khi doanh nghiệp có nhu cầu mở rộng hoạt động kinh doanh thực tế tại khu vực đó, có thể thực hiện thủ tục thành lập chi nhánh mới hoặc điều chỉnh mô hình phù hợp — nên tham khảo tư vấn cụ thể trước khi thực hiện.",
+      },
+      {
+        q: "Địa điểm kinh doanh khác gì so với chi nhánh và văn phòng đại diện?",
+        a: "Địa điểm kinh doanh là nơi doanh nghiệp tiến hành hoạt động kinh doanh cụ thể, thủ tục đăng ký đơn giản hơn chi nhánh và văn phòng đại diện, phù hợp khi chỉ cần một điểm bán hàng hoặc giao dịch nhỏ tại khu vực mới.",
+      },
+      {
+        q: "MAX OFFICE có hỗ trợ tư vấn chọn mô hình phù hợp không?",
+        a: "Có, đội ngũ MAX OFFICE tư vấn miễn phí giúp doanh nghiệp chọn đúng mô hình mở rộng — chi nhánh, văn phòng đại diện hay địa điểm kinh doanh — dựa trên mục tiêu và kế hoạch hoạt động thực tế.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Xem 12 chi nhánh MAX OFFICE tại TP.HCM", href: "/dia-diem" },
+      { label: "Khi nào doanh nghiệp nên mở chi nhánh mới", href: "/blog/khi-nao-nen-mo-chi-nhanh-moi" },
+      { label: "Checklist mở chi nhánh (tải PDF)", href: "/tien-ich/checklist-mo-chi-nhanh" },
+    ],
+    cta: {
+      title: "Chưa chắc nên chọn chi nhánh hay văn phòng đại diện?",
+      description: "Để lại thông tin, MAX OFFICE tư vấn miễn phí mô hình mở rộng phù hợp nhất với mục tiêu kinh doanh của bạn.",
+      service: "Văn phòng ảo",
+      serviceHref: "/dia-diem",
+      serviceLabel: "Xem các chi nhánh MAX OFFICE",
+    },
+  },
+  {
+    slug: "chien-luoc-mo-rong-kinh-doanh-cho-sme-tai-tphcm",
+    title: "Chiến lược mở rộng kinh doanh cho SME tại TP.HCM",
+    excerpt:
+      "Chiến lược mở rộng kinh doanh phù hợp cho doanh nghiệp vừa và nhỏ tại TP.HCM — đánh giá thời điểm, chọn khu vực và mô hình mở rộng hiệu quả.",
+    categorySlug: "mo-rong-kinh-doanh",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-07-10",
+    readingTime: 7,
+    metaTitle: "Chiến Lược Mở Rộng Kinh Doanh Cho SME Tại TP.HCM",
+    metaDescription:
+      "Chiến lược mở rộng kinh doanh cho doanh nghiệp vừa và nhỏ tại TP.HCM — đánh giá thời điểm, chọn khu vực và mô hình mở rộng phù hợp với nguồn lực SME.",
+    heroImage: "/images/dia-diem-cong-hoa.jpg",
+    sections: [
+      {
+        id: "danh-gia-thoi-diem-mo-rong",
+        heading: "Đánh giá thời điểm phù hợp để mở rộng",
+        paragraphs: [
+          "Trước khi mở rộng, SME cần đánh giá khách quan các chỉ số cho thấy mô hình kinh doanh hiện tại đã ổn định: doanh thu tăng trưởng đều trong nhiều quý liên tiếp, dòng tiền dương và có dự phòng, đội ngũ vận hành hiện tại đã tối ưu và có thể nhân rộng quy trình sang địa điểm mới. Mở rộng khi mô hình gốc chưa thực sự ổn định thường khiến doanh nghiệp phân tán nguồn lực và khó kiểm soát chất lượng đồng đều giữa các địa điểm.",
+        ],
+      },
+      {
+        id: "chon-khu-vuc-mo-rong-tai-tphcm",
+        heading: "Chọn khu vực mở rộng phù hợp tại TP.HCM",
+        paragraphs: [
+          "TP.HCM có nhiều khu vực với đặc điểm khách hàng và chi phí mặt bằng khác nhau. Các khu vực như Tân Bình, Gò Vấp, Tân Phú, Quận 10 thường có chi phí văn phòng hợp lý hơn khu vực lõi trung tâm nhưng vẫn thuận tiện di chuyển, phù hợp với SME muốn mở rộng mà không phát sinh chi phí mặt bằng quá lớn. Nên khảo sát mật độ khách hàng mục tiêu, mức độ cạnh tranh và khả năng tiếp cận giao thông trước khi chọn địa điểm cụ thể — mạng lưới 12 chi nhánh MAX OFFICE trải rộng tại các khu vực này là một tham khảo thực tế cho việc phân bổ điểm hiện diện theo khu vực.",
+        ],
+      },
+      {
+        id: "chon-mo-hinh-mo-rong",
+        heading: "Chọn mô hình mở rộng phù hợp với nguồn lực SME",
+        paragraphs: ["SME thường có nguồn lực hạn chế hơn doanh nghiệp lớn, nên việc chọn mô hình mở rộng linh hoạt, ít rủi ro là yếu tố then chốt:"],
+        bullets: [
+          "Bắt đầu với văn phòng ảo hoặc chỗ ngồi linh động tại khu vực mới để thử nghiệm thị trường với chi phí thấp",
+          "Khi nhu cầu ổn định, nâng cấp lên văn phòng trọn gói hoặc mở chi nhánh chính thức",
+          "Cân nhắc mô hình địa điểm kinh doanh đơn giản nếu chỉ cần một điểm giao dịch nhỏ, chưa cần đầy đủ chức năng chi nhánh",
+          "Tránh đầu tư mặt bằng lớn, dài hạn ngay từ giai đoạn thử nghiệm thị trường mới",
+        ],
+      },
+      {
+        id: "quan-ly-van-hanh-da-dia-diem",
+        heading: "Quản lý vận hành khi có nhiều địa điểm",
+        paragraphs: [
+          "Khi mở rộng sang nhiều địa điểm, SME cần chuẩn hoá quy trình vận hành, kế toán và báo cáo để đảm bảo tính nhất quán giữa các điểm. Việc sử dụng dịch vụ kế toán tập trung, thay vì mỗi chi nhánh tự quản lý sổ sách riêng lẻ, giúp doanh nghiệp kiểm soát tài chính tổng thể chính xác hơn và giảm rủi ro sai sót khi mở rộng quy mô nhanh.",
+        ],
+      },
+      {
+        id: "loi-khuyen",
+        heading: "Lời khuyên cho SME khi lập chiến lược mở rộng",
+        paragraphs: [
+          "Nguyên tắc chung là mở rộng từng bước, đánh giá hiệu quả từng địa điểm mới trước khi tiếp tục nhân rộng, thay vì mở rộng ồ ạt cùng lúc nhiều khu vực. Nên xây dựng bộ tiêu chí đánh giá hiệu quả rõ ràng (doanh thu, chi phí, thời gian hoàn vốn) cho mỗi địa điểm mới để có cơ sở quyết định tiếp tục mở rộng hay điều chỉnh chiến lược.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "SME nên mở rộng bao nhiêu địa điểm cùng lúc?",
+        a: "Nên mở rộng từng địa điểm một, đánh giá hiệu quả thực tế trước khi tiếp tục, thay vì mở nhiều điểm cùng lúc khi chưa có kinh nghiệm vận hành đa địa điểm.",
+      },
+      {
+        q: "Chi phí mở rộng ban đầu nên chiếm bao nhiêu phần trăm ngân sách công ty?",
+        a: "Không có tỷ lệ chuẩn chung cho mọi doanh nghiệp — nên dựa trên dòng tiền dự phòng thực tế và khả năng chịu đựng rủi ro của công ty. Liên hệ MAX OFFICE để được tư vấn phương án phù hợp.",
+      },
+      {
+        q: "MAX OFFICE có thể hỗ trợ SME mở rộng tại nhiều khu vực TP.HCM không?",
+        a: "Có, với 12 chi nhánh trải rộng tại các khu vực trung tâm TP.HCM, MAX OFFICE có thể hỗ trợ doanh nghiệp mở rộng hiện diện tại nhiều khu vực với chi phí tối ưu hơn so với tự đầu tư mặt bằng riêng.",
+      },
+      {
+        q: "Có nên thuê ngoài dịch vụ kế toán khi mở rộng nhiều địa điểm không?",
+        a: "Nên cân nhắc, vì dịch vụ kế toán chuyên nghiệp giúp chuẩn hoá và tổng hợp số liệu tài chính từ nhiều địa điểm chính xác hơn so với để mỗi điểm tự quản lý riêng lẻ.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Xem 12 chi nhánh MAX OFFICE tại TP.HCM", href: "/dia-diem" },
+      { label: "Khi nào doanh nghiệp nên mở chi nhánh mới", href: "/blog/khi-nao-nen-mo-chi-nhanh-moi" },
+      { label: "Dịch vụ Văn phòng trọn gói MAX OFFICE", href: "/services/van-phong-tron-goi" },
+    ],
+    cta: {
+      title: "Sẵn sàng lập chiến lược mở rộng kinh doanh?",
+      description: "MAX OFFICE đồng hành cùng SME mở rộng hiện diện tại TP.HCM với các gói văn phòng linh hoạt, tối ưu chi phí theo từng giai đoạn phát triển.",
+      service: "Văn phòng trọn gói",
+      serviceHref: "/dia-diem",
+      serviceLabel: "Xem các chi nhánh MAX OFFICE",
+    },
+  },
 ];
 
 export const BLOG_PAGE_SIZE = 9;

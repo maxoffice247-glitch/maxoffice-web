@@ -80,29 +80,9 @@ export function getKnowledgeCategory(slug: string) {
   return KNOWLEDGE_CATEGORIES.find((c) => c.slug === slug);
 }
 
-export type FeaturedArticle = {
-  title: string;
-  excerpt: string;
-  categorySlug: string;
-};
-
-export const FEATURED_ARTICLES: FeaturedArticle[] = [
-  {
-    title: "Bài viết đang được biên soạn",
-    excerpt:
-      "Nội dung chi tiết về thành lập doanh nghiệp sẽ sớm được cập nhật tại đây.",
-    categorySlug: "thanh-lap-doanh-nghiep",
-  },
-  {
-    title: "Bài viết đang được biên soạn",
-    excerpt:
-      "Nội dung chi tiết về kế toán & thuế sẽ sớm được cập nhật tại đây.",
-    categorySlug: "ke-toan-thue",
-  },
-  {
-    title: "Bài viết đang được biên soạn",
-    excerpt:
-      "Nội dung chi tiết về văn phòng & địa điểm sẽ sớm được cập nhật tại đây.",
-    categorySlug: "van-phong-dia-diem",
-  },
+/** Slugs of BlogPost entries (see blogData.ts) to feature on the /knowledge-center hub. */
+export const FEATURED_ARTICLE_SLUGS: string[] = [
+  "ho-kinh-doanh-vs-tnhh-vs-co-phan",
+  "khi-nao-can-thay-doi-giay-phep-kinh-doanh",
+  "checklist-khoi-nghiep-tu-y-tuong-den-van-hanh",
 ];

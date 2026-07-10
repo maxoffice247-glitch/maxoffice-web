@@ -8,7 +8,8 @@ import NewsletterForm from "@/components/NewsletterForm";
 import Button from "@/components/Button";
 import { RevealGroup, RevealItem } from "@/components/Reveal";
 import { SearchIcon, ArrowRightSmallIcon } from "@/components/icons";
-import { KNOWLEDGE_CATEGORIES, FEATURED_ARTICLES, getKnowledgeCategory } from "@/lib/knowledgeCenterData";
+import { KNOWLEDGE_CATEGORIES, FEATURED_ARTICLE_SLUGS, getKnowledgeCategory } from "@/lib/knowledgeCenterData";
+import { getBlogPost } from "@/lib/blogData";
 
 export const metadata: Metadata = {
   title: "Kiến Thức Doanh Nghiệp — Cẩm Nang MAX OFFICE",
@@ -17,6 +18,13 @@ export const metadata: Metadata = {
 };
 
 export default function KnowledgeCenterPage() {
+  const featuredArticles = FEATURED_ARTICLE_SLUGS.map((slug) => {
+    const post = getBlogPost(slug);
+    if (!post) return null;
+    const cat = getKnowledgeCategory(post.categorySlug);
+    return { post, cat };
+  }).filter((item): item is NonNullable<typeof item> => item !== null);
+
   return (
     <main>
       <PageHero
@@ -84,32 +92,29 @@ export default function KnowledgeCenterPage() {
           <SectionHead
             eyebrow="Nổi bật"
             title="Bài viết nổi bật"
-            description="Những nội dung đang được đội ngũ MAX OFFICE ưu tiên biên soạn."
+            description="Những bài viết được nhiều doanh nghiệp quan tâm và tra cứu nhiều nhất."
           />
           <RevealGroup className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {FEATURED_ARTICLES.map((article, i) => {
-              const cat = getKnowledgeCategory(article.categorySlug);
-              return (
-                <RevealItem key={i}>
-                  <Link
-                    href={`/knowledge-center/${article.categorySlug}`}
-                    className="group flex h-full flex-col rounded-2xl border border-line bg-white p-6 transition-all duration-400 ease-out hover:-translate-y-2 hover:border-transparent hover:shadow-card"
-                  >
-                    {cat && (
-                      <span className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary-tint px-3 py-1 text-[11px] font-bold tracking-wide text-primary uppercase">
-                        {cat.name}
-                      </span>
-                    )}
-                    <h3 className="mb-2 text-[15.5px] leading-snug font-bold text-navy">
-                      {article.title}
-                    </h3>
-                    <p className="text-[13.5px] leading-relaxed text-body-text">
-                      {article.excerpt}
-                    </p>
-                  </Link>
-                </RevealItem>
-              );
-            })}
+            {featuredArticles.map(({ post, cat }) => (
+              <RevealItem key={post.slug}>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group flex h-full flex-col rounded-2xl border border-line bg-white p-6 transition-all duration-400 ease-out hover:-translate-y-2 hover:border-transparent hover:shadow-card"
+                >
+                  {cat && (
+                    <span className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary-tint px-3 py-1 text-[11px] font-bold tracking-wide text-primary uppercase">
+                      {cat.name}
+                    </span>
+                  )}
+                  <h3 className="mb-2 text-[15.5px] leading-snug font-bold text-navy">
+                    {post.title}
+                  </h3>
+                  <p className="text-[13.5px] leading-relaxed text-body-text">
+                    {post.excerpt}
+                  </p>
+                </Link>
+              </RevealItem>
+            ))}
           </RevealGroup>
           <div className="mt-10 text-center">
             <Button href="/blog" variant="ghost">
