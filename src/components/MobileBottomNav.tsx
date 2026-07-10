@@ -1,7 +1,8 @@
 "use client";
 
 import { useSearch } from "./SearchContext";
-import { SearchIcon, PhoneIcon, MessengerIcon } from "./icons";
+import { SearchIcon, PhoneIcon } from "./icons";
+import BrandIcon from "./BrandIcon";
 
 export default function MobileBottomNav() {
   const { setOpen } = useSearch();
@@ -33,9 +34,7 @@ export default function MobileBottomNav() {
         rel="noopener"
         className="flex flex-col items-center justify-center gap-1 py-2.5 text-body-text transition-colors duration-200 active:text-primary"
       >
-        <span className="flex h-5 w-5 items-center justify-center font-mono text-[13px] font-extrabold">
-          Z
-        </span>
+        <BrandIcon type="zalo" className="h-5 w-5" sizes="20px" />
         <span className="text-[10.5px] font-semibold">Zalo</span>
       </a>
       <a
@@ -44,7 +43,7 @@ export default function MobileBottomNav() {
         rel="noopener"
         className="flex flex-col items-center justify-center gap-1 py-2.5 text-body-text transition-colors duration-200 active:text-primary"
       >
-        <MessengerIcon className="h-5 w-5" />
+        <BrandIcon type="messenger" className="h-5 w-5" sizes="20px" />
         <span className="text-[10.5px] font-semibold">Messenger</span>
       </a>
     </nav>

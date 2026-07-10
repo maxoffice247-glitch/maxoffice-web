@@ -2,40 +2,44 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { MessengerIcon, PhoneIcon, PlusIcon, ZaloIcon } from "./icons";
+import { PhoneIcon, PlusIcon } from "./icons";
+import BrandIcon from "./BrandIcon";
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
 const CYCLE_INTERVAL_MS = 2600;
 
 const CONTACT_OPTIONS = [
   {
-    key: "phone",
+    key: "phone" as const,
     href: "tel:0898082188",
     label: "Gọi ngay",
     ariaLabel: "Gọi ngay 089 8082 188",
     icon: PhoneIcon,
+    image: null,
     external: false,
     bg: "bg-accent",
   },
   {
-    key: "zalo",
+    key: "zalo" as const,
     href: "https://zalo.me/0898082188",
     label: "Zalo",
     ariaLabel: "Nhắn tin qua Zalo",
-    icon: ZaloIcon,
+    icon: null,
+    image: "zalo" as const,
     external: true,
-    bg: "bg-[#0068FF]",
+    bg: "bg-white",
   },
   {
-    key: "messenger",
+    key: "messenger" as const,
     href: "https://www.facebook.com/maxoffice.hcm/",
     label: "Messenger",
     ariaLabel: "Nhắn tin qua Messenger",
-    icon: MessengerIcon,
+    icon: null,
+    image: "messenger" as const,
     external: true,
-    bg: "bg-gradient-to-br from-[#00B2FF] to-[#006AFF]",
+    bg: "bg-white",
   },
-] as const;
+];
 
 export default function FloatingButtons() {
   const [open, setOpen] = useState(false);
@@ -93,9 +97,13 @@ export default function FloatingButtons() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.8 }}
               transition={{ duration: 0.3, ease: EASE_PREMIUM, delay: idx * 0.06 }}
-              className={`flex h-[46px] w-[46px] items-center justify-center rounded-full text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[50px] sm:w-[50px] ${opt.bg}`}
+              className={`relative flex h-[46px] w-[46px] items-center justify-center overflow-hidden rounded-full text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[50px] sm:w-[50px] ${opt.bg}`}
             >
-              <opt.icon className="h-5 w-5" />
+              {opt.image ? (
+                <BrandIcon type={opt.image} className="h-full w-full" sizes="50px" />
+              ) : (
+                opt.icon && <opt.icon className="h-5 w-5" />
+              )}
             </motion.a>
           ))}
       </AnimatePresence>
@@ -126,7 +134,11 @@ export default function FloatingButtons() {
               exit={{ opacity: 0, y: -8, scale: 0.7 }}
               transition={{ duration: 0.3, ease: EASE_PREMIUM }}
             >
-              <current.icon className="h-[22px] w-[22px]" />
+              {current.image ? (
+                <BrandIcon type={current.image} className="h-[22px] w-[22px]" sizes="22px" />
+              ) : (
+                current.icon && <current.icon className="h-[22px] w-[22px]" />
+              )}
             </motion.span>
           )}
         </AnimatePresence>

@@ -28,7 +28,9 @@ export default function BlogCard({ post }: { post: BlogPost }) {
               ? "object-right"
               : post.thumbnailPosition === "left"
                 ? "object-left"
-                : "object-center"
+                : post.thumbnailPosition === "top"
+                  ? "object-top"
+                  : "object-center"
           }`}
         />
         <span className="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold tracking-wide text-primary uppercase shadow-soft">

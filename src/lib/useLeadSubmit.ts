@@ -7,8 +7,8 @@ export type LeadSubmitStatus = "idle" | "loading" | "success" | "error";
 
 export type LeadPayload = {
   formType: string;
-  name: string;
-  phone: string;
+  name?: string;
+  phone?: string;
   email?: string;
   service?: string;
   branch?: string;

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MessengerIcon, PhoneIcon, FacebookIcon } from "./icons";
+import { PhoneIcon, FacebookIcon } from "./icons";
+import BrandIcon from "./BrandIcon";
 
 const SERVICE_LINKS = [
   "Văn phòng ảo",
@@ -96,9 +97,7 @@ export default function Footer() {
                   rel="noopener"
                   className="flex items-center gap-2.5 text-[13.5px] transition-all duration-200 hover:translate-x-1 hover:text-white"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[10.5px] font-extrabold">
-                    Zalo
-                  </span>
+                  <BrandIcon type="zalo" className="h-8 w-8" />
                   089 8082 188
                 </a>
               </li>
@@ -109,9 +108,7 @@ export default function Footer() {
                   rel="noopener"
                   className="flex items-center gap-2.5 text-[13.5px] transition-all duration-200 hover:translate-x-1 hover:text-white"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10">
-                    <MessengerIcon className="h-4 w-4" />
-                  </span>
+                  <BrandIcon type="messenger" className="h-8 w-8" />
                   Messenger
                 </a>
               </li>
@@ -144,7 +141,15 @@ export default function Footer() {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/12 pt-6 text-[12.5px] text-white/55">
           <span>© 2026 Công Ty TNHH MAX OFFICE. Tất cả các quyền được bảo lưu.</span>
-          <span>Thiết kế bởi MAX OFFICE Digital</span>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
+            <Link href="/chinh-sach-bao-mat" className="transition-colors duration-200 hover:text-white">
+              Chính sách bảo mật
+            </Link>
+            <Link href="/dieu-khoan-su-dung" className="transition-colors duration-200 hover:text-white">
+              Điều khoản sử dụng
+            </Link>
+            <span>Thiết kế bởi MAX OFFICE Digital</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -44,7 +44,7 @@ export type BlogPost = {
   /** Card/thumbnail image shown on listing pages. Defaults to heroImage when omitted. */
   thumbnailImage?: string;
   /** object-position for the thumbnail crop when the image's important content isn't centered. Defaults to center. */
-  thumbnailPosition?: "left" | "right" | "center";
+  thumbnailPosition?: "left" | "right" | "top" | "center";
   sections: BlogSection[];
   faqs: BlogFaqItem[];
   relatedLinks: BlogRelatedLink[];
@@ -66,6 +66,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaDescription:
       "So sánh Hộ kinh doanh, Công ty TNHH và Công ty Cổ phần về trách nhiệm pháp lý, thủ tục, chi phí — giúp bạn chọn đúng loại hình khi khởi nghiệp tại Việt Nam.",
     heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
+    thumbnailImage: "/images/ho-kinh-doanh-va-cong-ty-tnhh.jpg",
     sections: [
       {
         id: "tong-quan",
@@ -185,7 +186,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaDescription:
       "Danh sách đầy đủ hồ sơ thành lập Công ty TNHH một thành viên và hai thành viên trở lên — giấy tờ cần chuẩn bị, nơi nộp hồ sơ và lưu ý quan trọng.",
     heroImage: "/images/coworking.jpg",
-thumbnailImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
+thumbnailImage: "/images/ho-so-thanh-lap-cong-ty-tnhh.jpg",
+thumbnailPosition: "center",
     sections: [
       {
         id: "ho-so-can-thiet",
@@ -293,6 +295,8 @@ thumbnailImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
     metaDescription:
       "5 bước thành lập doanh nghiệp từ chuẩn bị hồ sơ đến khai thuế ban đầu — quy trình đầy đủ, cập nhật quy định pháp luật hiện hành tại Việt Nam.",
     heroImage: "/images/van-phong-tron-goi.jpg",
+    thumbnailImage: "/images/quy-trinh-thanh-lap-doanh-nghiep-moi.jpg",
+    thumbnailPosition: "center",
     sections: [
       {
         id: "buoc-1",
@@ -393,6 +397,8 @@ thumbnailImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
     metaDescription:
       "Giải thích vốn điều lệ là gì, có cần chứng minh số dư ngân hàng khi đăng ký không, và thời hạn góp đủ vốn theo quy định pháp luật hiện hành.",
     heroImage: "/images/ke-toan-thue.jpg",
+    thumbnailImage: "/images/von-dieu-le-la-gi.jpg",
+    thumbnailPosition: "center",
     sections: [
       {
         id: "von-dieu-le-la-gi",
@@ -487,6 +493,8 @@ thumbnailImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
     metaDescription:
       "Tổng hợp các loại thuế doanh nghiệp mới thành lập cần nắm rõ: thuế GTGT, thuế TNDN, thuế TNCN và các nghĩa vụ thuế khác theo quy định hiện hành.",
     heroImage: "/images/ke-toan-thue.jpg",
+    thumbnailImage: "/images/cac-loai-thue.jpg",
+    thumbnailPosition: "center",
     sections: [
       {
         id: "tong-quan-nghia-vu-thue",
@@ -586,7 +594,7 @@ thumbnailImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
     metaDescription:
       "Từ 01/01/2026, lệ phí môn bài chính thức bãi bỏ theo Nghị quyết 198/2025/QH15, áp dụng cho mọi loại hình doanh nghiệp và hộ kinh doanh. Cập nhật chi tiết.",
     heroImage: "/images/khong-gian-lam-viec.jpg",
-thumbnailImage: "/images/bo-le-phi-mon-bai.jpg",
+thumbnailImage: "/images/bo-le-phi-mon-bai-1.jpg",
 thumbnailPosition: "right",
     sections: [
       {
@@ -784,7 +792,8 @@ thumbnailImage: "/images/hoa-don-dien-tu.jpg",
     metaDescription:
       "So sánh kế toán thuê ngoài và kế toán nội bộ về chi phí, rủi ro và sự linh hoạt — giúp startup, doanh nghiệp mới thành lập chọn đúng phương án.",
     heroImage: "/images/phong-hop.jpg",
-thumbnailImage: "/images/dich-vu-ke-toan-thue.jpg",
+thumbnailImage: "/images/ke-toan-thue-ngoai.jpg",
+thumbnailPosition: "center",
     sections: [
       {
         id: "hai-phuong-an-pho-bien",
@@ -891,7 +900,8 @@ thumbnailImage: "/images/dich-vu-ke-toan-thue.jpg",
     metaDescription:
       "Giải thích văn phòng ảo là gì, cơ sở pháp lý cho phép sử dụng địa chỉ văn phòng ảo để đăng ký kinh doanh, và những lưu ý quan trọng khi lựa chọn.",
     heroImage: "/images/van-phong-ao.jpg",
-thumbnailImage: "/images/dich-vu-van-phong-ao-anh-1.jpg",
+thumbnailImage: "/images/van-phong-ao-la-gi.jpg",
+thumbnailPosition: "center",
     sections: [
       {
         id: "van-phong-ao-la-gi",
@@ -989,6 +999,8 @@ thumbnailImage: "/images/dich-vu-van-phong-ao-anh-1.jpg",
     metaDescription:
       "So sánh văn phòng ảo và văn phòng truyền thống về chi phí, tính linh hoạt và mức độ phù hợp theo từng giai đoạn — giúp doanh nghiệp mới chọn đúng ngay từ đầu.",
     heroImage: "/images/van-phong-tron-goi.jpg",
+    thumbnailImage: "/images/vpa-hay-van-phong-lon.jpg",
+    thumbnailPosition: "center",
     sections: [
       {
         id: "hai-mo-hinh-khac-biet",
@@ -1191,6 +1203,8 @@ thumbnailPosition: "right",
     metaDescription:
       "Coworking space là gì, khác gì với văn phòng truyền thống, và phù hợp với đối tượng nào — freelancer, startup hay doanh nghiệp nhỏ.",
     heroImage: "/images/anh-hero-moi.jpg",
+    thumbnailImage: "/images/coworking-space-la-gi.jpg",
+    thumbnailPosition: "left",
     sections: [
       {
         id: "coworking-la-gi",
@@ -1289,7 +1303,7 @@ thumbnailPosition: "right",
       "Các trường hợp doanh nghiệp bắt buộc phải thay đổi giấy phép kinh doanh, thủ tục cần thực hiện và chi phí tham khảo theo bảng giá MAX OFFICE.",
     heroImage: "/images/khong-gian-lam-viec.jpg",
 thumbnailImage: "/images/thay-doi-gpkd.jpg",
-thumbnailPosition: "right",
+thumbnailPosition: "left",
     sections: [
       {
         id: "gplkd-the-hien-gi",
@@ -1576,6 +1590,8 @@ thumbnailImage: "/images/thu-tuc-bo-sung-gpkd.jpg",
     metaDescription:
       "Hướng dẫn quy trình chuyển đổi loại hình doanh nghiệp (Hộ kinh doanh lên TNHH, TNHH sang Cổ phần...) và chi phí tham khảo tại MAX OFFICE.",
     heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
+    thumbnailImage: "/images/chuyen-doi-loai-hinh-doanh-nghiep.jpg",
+    thumbnailPosition: "center",
     sections: [
       {
         id: "khi-nao-can-chuyen-doi",
@@ -1672,6 +1688,8 @@ thumbnailImage: "/images/thu-tuc-bo-sung-gpkd.jpg",
     metaDescription:
       "Giải thích người đại diện theo pháp luật của doanh nghiệp là ai, quyền hạn, trách nhiệm pháp lý và những lưu ý khi bổ nhiệm hoặc thay đổi.",
     heroImage: "/images/phong-hop.jpg",
+    thumbnailImage: "/images/dai-dien-phap-luat-la-ai.jpg",
+    thumbnailPosition: "top",
     sections: [
       {
         id: "nguoi-dai-dien-phap-luat-la-ai",
@@ -2041,7 +2059,8 @@ thumbnailImage: "/images/chu-so-huu-doanh-nghiep.jpg",
     metaDescription:
       "Lộ trình khởi nghiệp đầy đủ từ ý tưởng đến vận hành chính thức — nghiên cứu thị trường, chọn loại hình doanh nghiệp, đăng ký kinh doanh và bước tiếp theo.",
     heroImage: "/images/anh-hero-moi.jpg",
-thumbnailImage: "/images/coworking.jpg",
+thumbnailImage: "/images/checklist-khoi-nghiep.jpg",
+thumbnailPosition: "top",
     sections: [
       {
         id: "giai-doan-y-tuong",
@@ -2398,6 +2417,8 @@ thumbnailImage: "/images/5-sai-lam-phap-ly.jpg",
     metaDescription:
       "Nguyên tắc quản lý dòng tiền cơ bản, công cụ theo dõi phù hợp và cách cải thiện dòng tiền cho doanh nghiệp nhỏ, tránh rủi ro thiếu hụt tiền mặt.",
     heroImage: "/images/ke-toan-thue.jpg",
+    thumbnailImage: "/images/quan-ly-dong-tien.jpg",
+    thumbnailPosition: "center",
     sections: [
       {
         id: "dong-tien-la-gi",

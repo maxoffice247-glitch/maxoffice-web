@@ -1,4 +1,5 @@
-import { PhoneIcon, MessengerIcon, BuildingIcon, CalendarIcon } from "./icons";
+import { PhoneIcon, BuildingIcon, CalendarIcon } from "./icons";
+import BrandIcon from "./BrandIcon";
 
 const CHANNELS = [
   {
@@ -80,9 +81,7 @@ export default function ContactInfo() {
             rel="noopener"
             className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 text-[14px] font-bold text-white transition-colors duration-200 hover:bg-white/20"
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0068FF] font-mono text-[11px] font-extrabold">
-              Zalo
-            </span>
+            <BrandIcon type="zalo" className="h-8 w-8" />
             Chat qua Zalo
           </a>
           <a
@@ -91,9 +90,7 @@ export default function ContactInfo() {
             rel="noopener"
             className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 text-[14px] font-bold text-white transition-colors duration-200 hover:bg-white/20"
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#00B2FF] to-[#006AFF]">
-              <MessengerIcon className="h-4 w-4" />
-            </span>
+            <BrandIcon type="messenger" className="h-8 w-8" />
             Chat qua Messenger
           </a>
         </div>

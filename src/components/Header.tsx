@@ -15,10 +15,9 @@ const MegaMenu = dynamic(() => import("./MegaMenu"));
 const ToolsMegaMenu = dynamic(() => import("./ToolsMegaMenu"));
 const LocationsMegaMenu = dynamic(() => import("./LocationsMegaMenu"));
 
-const NAV_LINKS_BEFORE = [
-  { label: "Trang chủ", href: "/" },
-  { label: "Về chúng tôi", href: "/ve-chung-toi" },
-];
+// The logo already links home (see the <Link href="/"> wrapping it below),
+// so "Trang chủ" is intentionally not repeated in either nav list.
+const NAV_LINKS_BEFORE = [{ label: "Về chúng tôi", href: "/ve-chung-toi" }];
 
 const NAV_LINKS_AFTER = [
   { label: "Kiến thức", href: "/knowledge-center" },
@@ -27,7 +26,6 @@ const NAV_LINKS_AFTER = [
 ];
 
 const NAV_LINKS_MOBILE = [
-  { label: "Trang chủ", href: "/" },
   { label: "Về chúng tôi", href: "/ve-chung-toi" },
   { label: "Dịch vụ", href: "/dich-vu" },
   { label: "Chi nhánh", href: "/dia-diem" },
@@ -87,7 +85,7 @@ export default function Header() {
             />
           </Link>
 
-          <nav aria-label="Menu chính" className="hidden items-center gap-5 xl:flex">
+          <nav aria-label="Menu chính" className="hidden items-center gap-7 xl:flex">
             {NAV_LINKS_BEFORE.map((link) => (
               <Link
                 key={link.label}

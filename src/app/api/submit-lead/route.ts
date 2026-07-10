@@ -106,7 +106,15 @@ export async function POST(request: Request) {
 
   const name = (body.name || "").trim();
   const phone = (body.phone || "").trim();
-  if (!name || !phone) {
+  const email = (body.email || "").trim();
+  const formType = (body.formType || "Không xác định").trim();
+  const isNewsletter = formType.toLowerCase() === "newsletter";
+
+  if (isNewsletter) {
+    if (!email) {
+      return NextResponse.json({ error: "Thiếu email" }, { status: 400 });
+    }
+  } else if (!name || !phone) {
     return NextResponse.json(
       { error: "Thiếu họ tên hoặc số điện thoại" },
       { status: 400 }
@@ -114,10 +122,10 @@ export async function POST(request: Request) {
   }
 
   const payload = {
-    formType: (body.formType || "Không xác định").trim(),
+    formType,
     name,
     phone,
-    email: body.email?.trim() || undefined,
+    email: email || undefined,
     service: body.service?.trim() || undefined,
     branch: body.branch?.trim() || undefined,
     date: body.date?.trim() || undefined,

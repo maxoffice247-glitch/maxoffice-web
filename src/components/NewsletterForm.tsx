@@ -1,7 +1,8 @@
 "use client";
 
-import { useId, useState, type FormEvent } from "react";
+import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 import { CheckCircleIcon, MailIcon } from "./icons";
+import { useLeadSubmit } from "@/lib/useLeadSubmit";
 
 export default function NewsletterForm({
   title = "Đăng ký nhận bản tin",
@@ -12,15 +13,25 @@ export default function NewsletterForm({
   description?: string;
   compact?: boolean;
 }) {
-  const [submitted, setSubmitted] = useState(false);
+  const { status, submit, reset } = useLeadSubmit();
+  const [email, setEmail] = useState("");
   const uid = useId();
+
+  const doSubmit = async () => {
+    await submit({ formType: "newsletter", email });
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    doSubmit();
   };
 
-  if (submitted) {
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (status === "error") reset();
+  };
+
+  if (status === "success") {
     return (
       <div className="rounded-2xl border border-line bg-white p-6 text-center">
         <span className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-tint text-primary">
@@ -50,15 +61,23 @@ export default function NewsletterForm({
           required
           type="email"
           placeholder="Email của bạn"
+          value={email}
+          onChange={handleEmailChange}
           className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none"
         />
         <button
           type="submit"
-          className="shrink-0 rounded-xl bg-accent px-5 py-3 text-[14.5px] font-bold whitespace-nowrap text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-dark"
+          disabled={status === "loading"}
+          className="shrink-0 rounded-xl bg-accent px-5 py-3 text-[14.5px] font-bold whitespace-nowrap text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-dark disabled:pointer-events-none disabled:opacity-60"
         >
-          Đăng ký
+          {status === "loading" ? "Đang gửi..." : "Đăng ký"}
         </button>
       </form>
+      {status === "error" && (
+        <p className="mt-3 text-[12.5px] leading-relaxed text-accent">
+          Có lỗi xảy ra, vui lòng thử lại sau.
+        </p>
+      )}
     </div>
   );
 }
