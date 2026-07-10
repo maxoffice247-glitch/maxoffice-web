@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { CalendarIcon, ClockIcon, UserIcon, ImageIcon, ArrowRightSmallIcon } from "./icons";
+import Image from "next/image";
+import { CalendarIcon, ClockIcon, UserIcon, ArrowRightSmallIcon } from "./icons";
 import { getCategoryName, type BlogPost } from "@/lib/blogData";
 
 function formatDate(iso: string) {
@@ -16,8 +17,20 @@ export default function BlogCard({ post }: { post: BlogPost }) {
       href={`/blog/${post.slug}`}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition-all duration-400 ease-out hover:-translate-y-2 hover:border-transparent hover:shadow-card"
     >
-      <div className="relative flex aspect-[16/10] items-center justify-center bg-gradient-to-br from-primary-tint to-bg-tint text-primary/40">
-        <ImageIcon className="h-10 w-10" />
+      <div className="relative aspect-[16/10] overflow-hidden bg-bg-tint">
+        <Image
+          src={post.thumbnailImage ?? post.heroImage}
+          alt={post.title}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          className={`object-cover transition-transform duration-400 ease-out group-hover:scale-105 ${
+            post.thumbnailPosition === "right"
+              ? "object-right"
+              : post.thumbnailPosition === "left"
+                ? "object-left"
+                : "object-center"
+          }`}
+        />
         <span className="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold tracking-wide text-primary uppercase shadow-soft">
           {getCategoryName(post.categorySlug)}
         </span>

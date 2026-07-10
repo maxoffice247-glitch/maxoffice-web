@@ -31,7 +31,7 @@ export default function KnowledgeCategoryTemplate({ category }: { category: Know
             align="left"
             eyebrow={category.name}
             title="Bài viết trong chuyên mục"
-            description={`Nội dung về ${category.name.toLowerCase()} đang được đội ngũ MAX OFFICE biên soạn và sẽ lần lượt được đăng tải tại đây.`}
+            description={`Kiến thức thực tế về ${category.name.toLowerCase()}, cập nhật bởi đội ngũ MAX OFFICE.`}
           />
 
           {posts.length === 0 ? (

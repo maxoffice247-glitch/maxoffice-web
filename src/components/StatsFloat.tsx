@@ -17,13 +17,16 @@ const STATS = [
   { icon: TagIcon, value: "6", label: "Dịch vụ cốt lõi" },
 ];
 
-// Border classes per tile differ depending on whether a 5th (Google) tile follows —
-// mobile is always a 2-col grid, so which tiles need a bottom border changes.
+// Border classes per tile. With the Google tile present, the grid runs
+// 2-col (mobile: rows [0,1] [2,3] [google, full-width]) -> 3-col (tablet,
+// md: rows [0,1,2] [3, google spanning 2 cols]) -> 5-col (desktop, lg: a
+// single row) — each tile's right/bottom divider depends on which row and
+// column it lands in at that breakpoint.
 const BORDERS_WITH_GOOGLE = [
-  "border-r border-b border-line sm:border-b-0 sm:border-r sm:border-line",
-  "border-b border-line sm:border-b-0 sm:border-r sm:border-line",
-  "border-r border-b border-line sm:border-b-0 sm:border-r sm:border-line",
-  "border-b border-line sm:border-b-0 sm:border-r sm:border-line",
+  "border-r border-b border-line lg:border-b-0",
+  "border-b border-line md:border-r lg:border-b-0",
+  "border-r border-b border-line md:border-r-0 lg:border-r lg:border-b-0",
+  "border-b border-line md:border-r md:border-b-0",
 ];
 const BORDERS_WITHOUT_GOOGLE = [
   "border-r border-b border-line sm:border-b-0 sm:border-r sm:border-line",
@@ -77,21 +80,21 @@ export default function StatsFloat() {
   return (
     <div className="relative z-20 mx-auto -mt-20 max-w-[1240px] px-5 sm:-mt-24 sm:px-8 lg:-mt-28">
       <Reveal
-        className={`grid grid-cols-2 rounded-2xl bg-white shadow-float ${hasGoogleRating ? "sm:grid-cols-5" : "sm:grid-cols-4"}`}
+        className={`grid grid-cols-2 rounded-2xl bg-white shadow-float ${hasGoogleRating ? "md:grid-cols-3 lg:grid-cols-5" : "sm:grid-cols-4"}`}
       >
         {STATS.map((stat, i) => (
           <div
             key={stat.label}
-            className={`group flex items-center gap-4 px-5 py-6 text-left transition-colors duration-300 hover:bg-bg-tint sm:px-7 sm:py-8 ${borders[i]}`}
+            className={`group flex items-center gap-3 px-4 py-6 text-left transition-colors duration-300 hover:bg-bg-tint sm:gap-4 sm:px-7 sm:py-8 ${borders[i]}`}
           >
             <span className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-tint text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white sm:flex">
               <stat.icon className="h-5 w-5" />
             </span>
-            <div>
-              <div className="mb-1 flex items-baseline gap-0.5 font-mono text-[28px] font-bold text-primary sm:text-[34px]">
+            <div className="min-w-0">
+              <div className="mb-1 flex items-baseline gap-0.5 font-mono text-[24px] font-bold text-primary sm:text-[28px] lg:text-[34px]">
                 <StatNumber value={stat.value} suffix={stat.suffix} />
               </div>
-              <div className="text-[13.5px] font-medium text-body-text">{stat.label}</div>
+              <div className="text-[12.5px] font-medium text-body-text sm:text-[13.5px]">{stat.label}</div>
             </div>
           </div>
         ))}
@@ -100,16 +103,16 @@ export default function StatsFloat() {
             href={GOOGLE_MAPS_REVIEW_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group col-span-2 flex items-center justify-center gap-4 px-5 py-6 text-left transition-colors duration-300 hover:bg-bg-tint sm:col-span-1 sm:justify-start sm:px-7 sm:py-8"
+            className="group col-span-2 flex items-center justify-center gap-3 px-4 py-6 text-left transition-colors duration-300 hover:bg-bg-tint sm:gap-4 sm:px-7 sm:py-8 lg:col-span-1 lg:justify-start"
           >
-            <span className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-tint sm:flex">
-              <GoogleGIcon className="h-5 w-5" />
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-tint sm:h-11 sm:w-11">
+              <GoogleGIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             </span>
-            <div>
+            <div className="min-w-0">
               <div className="mb-1">
                 <GoogleStarRow rating={GOOGLE_RATING.rating} />
               </div>
-              <div className="text-[13.5px] font-medium text-body-text">
+              <div className="text-[12.5px] leading-snug font-medium text-body-text sm:text-[13.5px]">
                 {GOOGLE_RATING.rating.toFixed(1)}/5 — Google Reviews
               </div>
             </div>

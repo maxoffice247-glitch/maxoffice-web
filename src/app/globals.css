@@ -75,25 +75,42 @@ body {
   animation: pulse-call 2.4s infinite;
 }
 
-/* Header hotline icon — a slow breathing scale on the phone icon itself plus a
-   soft ring pulsing outward from behind it, echoing the floating call
-   button's pulse-call ripple but scoped to just the icon so it doesn't
-   distract from the rest of the nav bar. */
-@keyframes header-phone-icon-scale {
+/* Header hotline icon — a periodic wiggle/shake on the phone icon itself,
+   like it's ringing, plus a soft ring pulsing outward from behind it. Both
+   run on a 5s cycle: the wiggle fires in a quick 0.5s burst then rests for
+   the remaining ~4.5s so it stays inviting without being distracting. */
+@keyframes header-phone-icon-wiggle {
   0%,
+  10%,
   100% {
-    transform: scale(1);
+    transform: rotate(0deg);
   }
-  50% {
-    transform: scale(1.18);
+  1% {
+    transform: rotate(-16deg);
+  }
+  2.5% {
+    transform: rotate(13deg);
+  }
+  4% {
+    transform: rotate(-10deg);
+  }
+  5.5% {
+    transform: rotate(7deg);
+  }
+  7% {
+    transform: rotate(-4deg);
+  }
+  8.5% {
+    transform: rotate(2deg);
   }
 }
 
 @keyframes header-phone-icon-ring {
-  0% {
+  0%,
+  10% {
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55);
   }
-  70% {
+  6% {
     box-shadow: 0 0 0 9px rgba(255, 255, 255, 0);
   }
   100% {
@@ -102,11 +119,12 @@ body {
 }
 
 .animate-header-phone-icon {
-  animation: header-phone-icon-scale 2.4s ease-in-out infinite;
+  animation: header-phone-icon-wiggle 5s ease-in-out infinite;
+  transform-origin: center;
 }
 
 .animate-header-phone-ring {
-  animation: header-phone-icon-ring 2.4s ease-in-out infinite;
+  animation: header-phone-icon-ring 5s ease-in-out infinite;
 }
 
 @keyframes marquee {

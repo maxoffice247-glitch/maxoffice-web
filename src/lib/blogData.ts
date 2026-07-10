@@ -41,6 +41,10 @@ export type BlogPost = {
   metaTitle: string;
   metaDescription: string;
   heroImage: string;
+  /** Card/thumbnail image shown on listing pages. Defaults to heroImage when omitted. */
+  thumbnailImage?: string;
+  /** object-position for the thumbnail crop when the image's important content isn't centered. Defaults to center. */
+  thumbnailPosition?: "left" | "right" | "center";
   sections: BlogSection[];
   faqs: BlogFaqItem[];
   relatedLinks: BlogRelatedLink[];
@@ -180,7 +184,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Hồ Sơ Thành Lập Công Ty TNHH Cần Những Gì? Danh Sách Đầy Đủ 2026",
     metaDescription:
       "Danh sách đầy đủ hồ sơ thành lập Công ty TNHH một thành viên và hai thành viên trở lên — giấy tờ cần chuẩn bị, nơi nộp hồ sơ và lưu ý quan trọng.",
-    heroImage: "/images/bang-gia-gpkd.jpg",
+    heroImage: "/images/coworking.jpg",
+thumbnailImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
     sections: [
       {
         id: "ho-so-can-thiet",
@@ -287,7 +292,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Quy Trình Thành Lập Doanh Nghiệp Mới Nhất Tại Việt Nam (2026)",
     metaDescription:
       "5 bước thành lập doanh nghiệp từ chuẩn bị hồ sơ đến khai thuế ban đầu — quy trình đầy đủ, cập nhật quy định pháp luật hiện hành tại Việt Nam.",
-    heroImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
+    heroImage: "/images/van-phong-tron-goi.jpg",
     sections: [
       {
         id: "buoc-1",
@@ -387,7 +392,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Vốn Điều Lệ Là Gì? Có Cần Chứng Minh Vốn Khi Thành Lập Công Ty?",
     metaDescription:
       "Giải thích vốn điều lệ là gì, có cần chứng minh số dư ngân hàng khi đăng ký không, và thời hạn góp đủ vốn theo quy định pháp luật hiện hành.",
-    heroImage: "/images/coworking.jpg",
+    heroImage: "/images/ke-toan-thue.jpg",
     sections: [
       {
         id: "von-dieu-le-la-gi",
@@ -580,7 +585,9 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Lệ Phí Môn Bài Đã Bãi Bỏ Từ 2026 — Cập Nhật Nghị Quyết 198/2025/QH15",
     metaDescription:
       "Từ 01/01/2026, lệ phí môn bài chính thức bãi bỏ theo Nghị quyết 198/2025/QH15, áp dụng cho mọi loại hình doanh nghiệp và hộ kinh doanh. Cập nhật chi tiết.",
-    heroImage: "/images/dich-vu-ke-toan-thue.jpg",
+    heroImage: "/images/khong-gian-lam-viec.jpg",
+thumbnailImage: "/images/bo-le-phi-mon-bai.jpg",
+thumbnailPosition: "right",
     sections: [
       {
         id: "thong-tin-chinh-thuc",
@@ -677,7 +684,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Hoá Đơn Điện Tử: Doanh Nghiệp Mới Thành Lập Có Bắt Buộc Dùng Ngay?",
     metaDescription:
       "Doanh nghiệp mới thành lập có bắt buộc sử dụng hoá đơn điện tử ngay không, đăng ký ở đâu và cần lưu ý gì — giải đáp theo quy định pháp luật hiện hành.",
-    heroImage: "/images/ke-toan-thue.jpg",
+    heroImage: "/images/hero.jpg",
+thumbnailImage: "/images/hoa-don-dien-tu.jpg",
     sections: [
       {
         id: "hoa-don-dien-tu-la-gi",
@@ -775,7 +783,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Kế Toán Thuê Ngoài Hay Nội Bộ? Startup Nên Chọn Phương Án Nào",
     metaDescription:
       "So sánh kế toán thuê ngoài và kế toán nội bộ về chi phí, rủi ro và sự linh hoạt — giúp startup, doanh nghiệp mới thành lập chọn đúng phương án.",
-    heroImage: "/images/dich-vu-ke-toan-thue.jpg",
+    heroImage: "/images/phong-hop.jpg",
+thumbnailImage: "/images/dich-vu-ke-toan-thue.jpg",
     sections: [
       {
         id: "hai-phuong-an-pho-bien",
@@ -882,6 +891,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaDescription:
       "Giải thích văn phòng ảo là gì, cơ sở pháp lý cho phép sử dụng địa chỉ văn phòng ảo để đăng ký kinh doanh, và những lưu ý quan trọng khi lựa chọn.",
     heroImage: "/images/van-phong-ao.jpg",
+thumbnailImage: "/images/dich-vu-van-phong-ao-anh-1.jpg",
     sections: [
       {
         id: "van-phong-ao-la-gi",
@@ -1078,7 +1088,9 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Kinh Nghiệm Chọn Địa Chỉ Đăng Ký Kinh Doanh Tại TP.HCM (2026)",
     metaDescription:
       "Kinh nghiệm chọn địa chỉ đăng ký kinh doanh phù hợp tại TP.HCM — khu vực nên cân nhắc, điều kiện hợp lệ và lưu ý quan trọng cho doanh nghiệp mới.",
-    heroImage: "/images/dia-diem-song-thao.jpg",
+    heroImage: "/images/dia-diem-song-thao-le-tan.jpg",
+thumbnailImage: "/images/kinh-nghiem-chon-dia-chi-dang-ky-gpkd.jpg",
+thumbnailPosition: "right",
     sections: [
       {
         id: "vi-sao-dia-chi-quan-trong",
@@ -1178,7 +1190,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Coworking Space Là Gì? Phù Hợp Với Đối Tượng Nào?",
     metaDescription:
       "Coworking space là gì, khác gì với văn phòng truyền thống, và phù hợp với đối tượng nào — freelancer, startup hay doanh nghiệp nhỏ.",
-    heroImage: "/images/coworking.jpg",
+    heroImage: "/images/anh-hero-moi.jpg",
     sections: [
       {
         id: "coworking-la-gi",
@@ -1275,7 +1287,9 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Khi Nào Doanh Nghiệp Cần Thay Đổi Giấy Phép Kinh Doanh?",
     metaDescription:
       "Các trường hợp doanh nghiệp bắt buộc phải thay đổi giấy phép kinh doanh, thủ tục cần thực hiện và chi phí tham khảo theo bảng giá MAX OFFICE.",
-    heroImage: "/images/bang-gia-gpkd.jpg",
+    heroImage: "/images/khong-gian-lam-viec.jpg",
+thumbnailImage: "/images/thay-doi-gpkd.jpg",
+thumbnailPosition: "right",
     sections: [
       {
         id: "gplkd-the-hien-gi",
@@ -1376,7 +1390,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Thủ Tục Bổ Sung Ngành Nghề Kinh Doanh Cần Lưu Ý Gì? (2026)",
     metaDescription:
       "Hướng dẫn thủ tục bổ sung ngành nghề kinh doanh, những lưu ý quan trọng về mã ngành và chi phí thực hiện tại MAX OFFICE.",
-    heroImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
+    heroImage: "/images/dia-diem-cong-hoa-le-tan.jpg",
+thumbnailImage: "/images/thu-tuc-bo-sung-gpkd.jpg",
     sections: [
       {
         id: "khi-nao-can-bo-sung",
@@ -1466,7 +1481,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Thay Đổi Địa Chỉ Trụ Sở Công Ty Cần Làm Những Gì? (2026)",
     metaDescription:
       "Hướng dẫn thủ tục thay đổi địa chỉ trụ sở công ty — cùng quận/huyện hay khác tỉnh/thành phố, hồ sơ cần chuẩn bị và chi phí tham khảo.",
-    heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
+    heroImage: "/images/hero-dia-diem.jpg",
     sections: [
       {
         id: "khi-nao-can-doi-dia-chi",
@@ -1560,7 +1575,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Chuyển Đổi Loại Hình Doanh Nghiệp: Quy Trình Và Chi Phí (2026)",
     metaDescription:
       "Hướng dẫn quy trình chuyển đổi loại hình doanh nghiệp (Hộ kinh doanh lên TNHH, TNHH sang Cổ phần...) và chi phí tham khảo tại MAX OFFICE.",
-    heroImage: "/images/bang-gia-gpkd.jpg",
+    heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
     sections: [
       {
         id: "khi-nao-can-chuyen-doi",
@@ -1656,7 +1671,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Người Đại Diện Pháp Luật Là Ai? Vai Trò Và Trách Nhiệm Thế Nào?",
     metaDescription:
       "Giải thích người đại diện theo pháp luật của doanh nghiệp là ai, quyền hạn, trách nhiệm pháp lý và những lưu ý khi bổ nhiệm hoặc thay đổi.",
-    heroImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
+    heroImage: "/images/phong-hop.jpg",
     sections: [
       {
         id: "nguoi-dai-dien-phap-luat-la-ai",
@@ -1753,7 +1768,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Con Dấu Doanh Nghiệp: Quy Định Pháp Lý Cần Biết Năm 2026",
     metaDescription:
       "Quy định pháp lý hiện hành về con dấu doanh nghiệp — có bắt buộc phải có không, ai quyết định hình thức, và lưu ý khi khắc, quản lý, sử dụng.",
-    heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
+    heroImage: "/images/hero-ve-chung-toi.jpg",
+thumbnailImage: "/images/quy-dinh-ve-con-dau.jpg",
     sections: [
       {
         id: "con-dau-la-gi",
@@ -1840,6 +1856,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaDescription:
       "Hướng dẫn doanh nghiệp mới thành lập về loại hợp đồng lao động, nội dung bắt buộc, thời gian thử việc và nghĩa vụ bảo hiểm xã hội với người lao động.",
     heroImage: "/images/khong-gian-lam-viec.jpg",
+thumbnailImage: "/images/hop-dong-lao-dong.jpg",
     sections: [
       {
         id: "cac-loai-hop-dong-lao-dong",
@@ -1934,7 +1951,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Chủ Sở Hữu Hưởng Lợi Là Gì? Vì Sao Doanh Nghiệp Cần Khai Báo?",
     metaDescription:
       "Giải thích khái niệm chủ sở hữu hưởng lợi (beneficial owner), vì sao doanh nghiệp Việt Nam cần quan tâm, và những lưu ý khi khai báo thông tin.",
-    heroImage: "/images/bang-gia-gpkd.jpg",
+    heroImage: "/images/anh-hero-moi.jpg",
+thumbnailImage: "/images/chu-so-huu-doanh-nghiep.jpg",
     sections: [
       {
         id: "chu-so-huu-huong-loi-la-gi",
@@ -2022,7 +2040,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Checklist Khởi Nghiệp: Từ Ý Tưởng Đến Vận Hành Chính Thức",
     metaDescription:
       "Lộ trình khởi nghiệp đầy đủ từ ý tưởng đến vận hành chính thức — nghiên cứu thị trường, chọn loại hình doanh nghiệp, đăng ký kinh doanh và bước tiếp theo.",
-    heroImage: "/images/coworking.jpg",
+    heroImage: "/images/anh-hero-moi.jpg",
+thumbnailImage: "/images/coworking.jpg",
     sections: [
       {
         id: "giai-doan-y-tuong",
@@ -2112,7 +2131,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Startup Nên Thành Lập Công Ty Vào Thời Điểm Nào?",
     metaDescription:
       "Phân tích thời điểm phù hợp để startup thành lập công ty chính thức — dấu hiệu nên thành lập sớm và rủi ro khi thành lập quá sớm hoặc quá muộn.",
-    heroImage: "/images/dich-vu-thanh-lap-doanh-nghiep.jpg",
+    heroImage: "/images/dich-vu-phong-hop-anh-2.jpg",
+thumbnailImage: "/images/startup-la-gi.jpg",
     sections: [
       {
         id: "khong-co-thoi-diem-chuan-cho-tat-ca",
@@ -2198,7 +2218,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Chuẩn Bị Pháp Lý Gì Trước Khi Gọi Vốn Đầu Tư?",
     metaDescription:
       "Những việc startup cần chuẩn bị về mặt pháp lý trước khi gọi vốn đầu tư — cấu trúc doanh nghiệp, hồ sơ minh bạch và các điểm nhà đầu tư thường rà soát.",
-    heroImage: "/images/ke-toan-thue.jpg",
+    heroImage: "/images/dich-vu-van-phong-tron-goi-anh-1.jpg",
+thumbnailImage: "/images/goi-von-dau-tu.jpg",
     sections: [
       {
         id: "vi-sao-can-chuan-bi-phap-ly",
@@ -2286,6 +2307,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaDescription:
       "5 sai lầm pháp lý phổ biến nhất mà startup mới thành lập thường mắc phải, và cách phòng tránh ngay từ giai đoạn đầu hoạt động.",
     heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
+thumbnailImage: "/images/5-sai-lam-phap-ly.jpg",
     sections: [
       {
         id: "sai-lam-1",
@@ -2470,7 +2492,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Phân Biệt Chi Phí Cố Định Và Chi Phí Biến Đổi Khi Khởi Nghiệp",
     metaDescription:
       "Chi phí cố định và chi phí biến đổi là gì, cách phân biệt và ví dụ thực tế cho doanh nghiệp mới khởi nghiệp, giúp kiểm soát tài chính hiệu quả hơn.",
-    heroImage: "/images/dich-vu-ke-toan-thue.jpg",
+    heroImage: "/images/dich-vu-van-phong-tron-goi-anh-2.jpg",
+thumbnailImage: "/images/chi-phi-co-dinh-bien-doi.jpg",
     sections: [
       {
         id: "chi-phi-co-dinh-la-gi",
@@ -2553,7 +2576,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Cách Lập Ngân Sách Cho Công Ty Mới Thành Lập",
     metaDescription:
       "Hướng dẫn từng bước lập ngân sách cho công ty mới thành lập — các khoản mục cần có, cách phân bổ và theo dõi ngân sách hiệu quả.",
-    heroImage: "/images/khong-gian-lam-viec.jpg",
+    heroImage: "/images/anh-hero-moi.jpg",
+thumbnailImage: "/images/cach-lap-ngan-sach.jpg",
     sections: [
       {
         id: "vi-sao-can-ngan-sach",
@@ -2640,6 +2664,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaDescription:
       "Các khoản chi phí vận hành văn phòng phổ biến, cách kiểm soát hiệu quả và khi nào doanh nghiệp nên xem xét đổi mô hình văn phòng để tiết kiệm chi phí.",
     heroImage: "/images/van-phong-tron-goi.jpg",
+thumbnailImage: "/images/kiem-soat-chi-phi.jpg",
     sections: [
       {
         id: "cac-khoan-chi-phi-van-phong-pho-bien",
@@ -2809,7 +2834,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Mở Rộng Kinh Doanh Sang Tỉnh/Thành Khác Cần Lưu Ý Gì?",
     metaDescription:
       "Những lưu ý quan trọng khi doanh nghiệp mở rộng kinh doanh sang tỉnh/thành khác — thủ tục đăng ký, nghĩa vụ thuế và cách chọn địa điểm phù hợp.",
-    heroImage: "/images/dia-diem-song-thao.jpg",
+    heroImage: "/images/hero-dia-diem.jpg",
+thumbnailImage: "/images/mo-rong-kinh-doanh.jpg",
     sections: [
       {
         id: "khac-biet-mo-rong-cung-tinh-khac-tinh",
@@ -2887,7 +2913,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Chi Nhánh Và Văn Phòng Đại Diện Khác Nhau Như Thế Nào?",
     metaDescription:
       "So sánh chi nhánh và văn phòng đại diện về chức năng kinh doanh, khả năng xuất hoá đơn và nghĩa vụ thuế — giúp doanh nghiệp chọn đúng mô hình mở rộng.",
-    heroImage: "/images/thanh-lap-doanh-nghiep.jpg",
+    heroImage: "/images/dia-diem-cmt8-le-tan.jpg",
+thumbnailImage: "/images/chi-nhanh-va-van-phong.jpg",
     sections: [
       {
         id: "chi-nhanh-la-gi",
@@ -2972,7 +2999,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: "Chiến Lược Mở Rộng Kinh Doanh Cho SME Tại TP.HCM",
     metaDescription:
       "Chiến lược mở rộng kinh doanh cho doanh nghiệp vừa và nhỏ tại TP.HCM — đánh giá thời điểm, chọn khu vực và mô hình mở rộng phù hợp với nguồn lực SME.",
-    heroImage: "/images/dia-diem-cong-hoa.jpg",
+    heroImage: "/images/dia-diem-yen-the.jpg",
+thumbnailImage: "/images/mo-rong-kinh-doanh-sme.jpg",
     sections: [
       {
         id: "danh-gia-thoi-diem-mo-rong",

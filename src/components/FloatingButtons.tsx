@@ -1,14 +1,58 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { MessengerIcon, PhoneIcon, PlusIcon } from "./icons";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { MessengerIcon, PhoneIcon, PlusIcon, ZaloIcon } from "./icons";
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
+const CYCLE_INTERVAL_MS = 2600;
+
+const CONTACT_OPTIONS = [
+  {
+    key: "phone",
+    href: "tel:0898082188",
+    label: "Gọi ngay",
+    ariaLabel: "Gọi ngay 089 8082 188",
+    icon: PhoneIcon,
+    external: false,
+    bg: "bg-accent",
+  },
+  {
+    key: "zalo",
+    href: "https://zalo.me/0898082188",
+    label: "Zalo",
+    ariaLabel: "Nhắn tin qua Zalo",
+    icon: ZaloIcon,
+    external: true,
+    bg: "bg-[#0068FF]",
+  },
+  {
+    key: "messenger",
+    href: "https://www.facebook.com/maxoffice.hcm/",
+    label: "Messenger",
+    ariaLabel: "Nhắn tin qua Messenger",
+    icon: MessengerIcon,
+    external: true,
+    bg: "bg-gradient-to-br from-[#00B2FF] to-[#006AFF]",
+  },
+] as const;
 
 export default function FloatingButtons() {
   const [open, setOpen] = useState(false);
+  const [cycleIndex, setCycleIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  // Auto-cycle the closed button's icon through phone/Zalo/Messenger so
+  // customers understand it opens multiple contact channels. Paused while
+  // the speed-dial is open and skipped entirely under reduced motion.
+  useEffect(() => {
+    if (open || reduceMotion) return;
+    const id = setInterval(() => {
+      setCycleIndex((i) => (i + 1) % CONTACT_OPTIONS.length);
+    }, CYCLE_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [open, reduceMotion]);
 
   useEffect(() => {
     if (!open) return;
@@ -28,66 +72,65 @@ export default function FloatingButtons() {
     };
   }, [open]);
 
+  const current = CONTACT_OPTIONS[cycleIndex];
+
   return (
     <div
       ref={rootRef}
       className="fixed right-4 bottom-[80px] z-[97] flex flex-col items-end gap-3 sm:right-[22px] sm:bottom-6"
     >
       <AnimatePresence>
-        {open && (
-          <>
+        {open &&
+          [...CONTACT_OPTIONS].reverse().map((opt, idx) => (
             <motion.a
-              key="messenger"
-              href="https://www.facebook.com/maxoffice.hcm/"
-              target="_blank"
-              rel="noopener"
-              title="Messenger"
-              aria-label="Nhắn tin qua Messenger"
+              key={opt.key}
+              href={opt.href}
+              target={opt.external ? "_blank" : undefined}
+              rel={opt.external ? "noopener" : undefined}
+              title={opt.label}
+              aria-label={opt.ariaLabel}
               initial={{ opacity: 0, y: 16, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.8 }}
-              transition={{ duration: 0.3, ease: EASE_PREMIUM, delay: 0.06 }}
-              className="flex h-[46px] w-[46px] items-center justify-center rounded-full bg-gradient-to-br from-[#00B2FF] to-[#006AFF] text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[50px] sm:w-[50px]"
+              transition={{ duration: 0.3, ease: EASE_PREMIUM, delay: idx * 0.06 }}
+              className={`flex h-[46px] w-[46px] items-center justify-center rounded-full text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[50px] sm:w-[50px] ${opt.bg}`}
             >
-              <MessengerIcon />
+              <opt.icon className="h-5 w-5" />
             </motion.a>
-            <motion.a
-              key="zalo"
-              href="https://zalo.me/0898082188"
-              target="_blank"
-              rel="noopener"
-              title="Zalo"
-              initial={{ opacity: 0, y: 16, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 16, scale: 0.8 }}
-              transition={{ duration: 0.3, ease: EASE_PREMIUM }}
-              className="flex h-[46px] w-[46px] items-center justify-center rounded-full bg-[#0068FF] text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[50px] sm:w-[50px]"
-            >
-              <span className="font-mono text-[12.5px] font-extrabold sm:text-[13px]">Zalo</span>
-            </motion.a>
-          </>
-        )}
+          ))}
       </AnimatePresence>
 
-      <div className="flex items-center gap-2.5">
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ"}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-navy text-white shadow-[0_8px_20px_rgba(11,31,58,0.3)] transition-transform duration-300 hover:scale-110 sm:h-10 sm:w-10"
-        >
-          <PlusIcon className={`transition-transform duration-300 ${open ? "rotate-45" : ""}`} />
-        </button>
-        <a
-          href="tel:0898082188"
-          title="Gọi ngay"
-          aria-label="Gọi ngay 089 8082 188"
-          className="animate-pulse-call flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[54px] sm:w-[54px]"
-        >
-          <PhoneIcon className="h-[22px] w-[22px]" />
-        </a>
-      </div>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ: gọi điện, Zalo, Messenger"}
+        className="animate-pulse-call relative flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[54px] sm:w-[54px]"
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          {open ? (
+            <motion.span
+              key="close"
+              initial={{ opacity: 0, rotate: -45, scale: 0.6 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              exit={{ opacity: 0, rotate: 45, scale: 0.6 }}
+              transition={{ duration: 0.2, ease: EASE_PREMIUM }}
+            >
+              <PlusIcon className="h-[22px] w-[22px] rotate-45" />
+            </motion.span>
+          ) : (
+            <motion.span
+              key={current.key}
+              initial={{ opacity: 0, y: 8, scale: 0.7 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.7 }}
+              transition={{ duration: 0.3, ease: EASE_PREMIUM }}
+            >
+              <current.icon className="h-[22px] w-[22px]" />
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </button>
     </div>
   );
 }
