@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { MouseEvent, ReactNode } from "react";
 
 type Variant = "primary" | "outline" | "ghost" | "link";
-type Size = "md" | "lg";
+type Size = "sm" | "md" | "lg";
 
 type ButtonProps = {
   href: string;
@@ -30,6 +30,7 @@ const variantStyles: Record<Variant, string> = {
 };
 
 const sizeStyles: Record<Size, string> = {
+  sm: "px-4 py-3 text-[13.5px]",
   md: "px-6 py-3.5 text-[15px]",
   lg: "px-7 py-4 text-[16px]",
 };

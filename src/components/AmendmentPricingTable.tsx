@@ -11,7 +11,7 @@ function formatVND(n: number) {
 
 export default function AmendmentPricingTable() {
   return (
-    <section className="py-9">
+    <section id="dich-vu-phap-ly-sua-doi" className="scroll-mt-24 py-9">
       <div className="mx-auto max-w-[1000px] px-5 sm:px-8">
         <SectionHead
           eyebrow="Bảng giá"

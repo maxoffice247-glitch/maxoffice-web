@@ -72,7 +72,7 @@ export default function AccountingPricingTable({
       </Reveal>
 
       <Reveal>
-        <div className="mt-10">
+        <div id="phi-phat-sinh-them" className="mt-10 scroll-mt-24">
           <p className="mb-5 text-center text-[15.5px] font-bold text-navy">
             Phí phát sinh thêm (nếu có, áp dụng chung cả 3 nhóm loại hình)
           </p>

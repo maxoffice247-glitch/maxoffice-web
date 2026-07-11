@@ -13,10 +13,10 @@ type Plan = {
   features: string[];
   featured?: boolean;
   note?: boolean;
-  href?: string;
-  ctaLabel?: string;
-  /** Exact label in the lead form's "Dịch vụ quan tâm" dropdown to pre-select when this plan's CTA is clicked. */
-  service?: string;
+  /** Exact label in the lead form's "Dịch vụ quan tâm" dropdown to pre-select when "Chọn gói này" is clicked. */
+  service: string;
+  /** Link to the full service detail page for "Xem chi tiết". */
+  detailHref: string;
 };
 
 const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; promoNotes?: string[]; promoEffectiveDate?: string }[] = [
@@ -36,6 +36,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         desc: "Cạnh tranh nhất — chỉ áp dụng tại 5 chi nhánh. Bảng hiệu tính riêng.",
         features: ["Địa chỉ đăng ký kinh doanh", "Lễ tân, Wifi", "Tham gia Workshop"],
         note: true,
+        detailHref: "/services/van-phong-ao#bang-gia",
       },
       {
         name: "START",
@@ -44,6 +45,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         unit: "/ tháng",
         desc: "Đầy đủ nhận diện cơ bản cho doanh nghiệp mới.",
         features: ["Bảng tên Mica & bảng hiệu công ty", "Lễ tân, Wifi", "Tham gia Workshop"],
+        detailHref: "/services/van-phong-ao#bang-gia",
       },
       {
         name: "BASE",
@@ -53,6 +55,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         desc: "Thêm tư vấn pháp lý & thuế cùng không gian tiếp khách.",
         features: ["Tất cả mục của START", "Guest Lounge, In-photo 100 tờ/năm", "Tư vấn Pháp lý & Thuế, AI Biz Health"],
         featured: true,
+        detailHref: "/services/van-phong-ao#bang-gia",
       },
       {
         name: "ORIGIN",
@@ -61,6 +64,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         unit: "/ tháng",
         desc: "Thêm tư vấn tự động hoá AI và hỗ trợ ưu tiên.",
         features: ["Tất cả mục của BASE", "Miễn phí tư vấn tự động hoá AI", "Ưu tiên hỗ trợ 24/7"],
+        detailHref: "/services/van-phong-ao#bang-gia",
       },
       {
         name: "ORIGIN+",
@@ -69,6 +73,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         unit: "/ tháng",
         desc: "Có phòng họp nhỏ đi kèm hàng năm.",
         features: ["Tất cả mục của ORIGIN", "Phòng họp nhỏ 24h/năm", "Ưu tiên hỗ trợ 24/7"],
+        detailHref: "/services/van-phong-ao#bang-gia",
       },
       {
         name: "RISE",
@@ -77,6 +82,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         unit: "/ tháng",
         desc: "Cao cấp nhất — phòng họp lớn, chỗ ngồi linh hoạt hàng tháng.",
         features: ["Tất cả mục của ORIGIN+", "Phòng họp lớn 4h/năm, Flex Desk 4h/tháng", "Giảm 50% phí phòng họp VIP"],
+        detailHref: "/services/van-phong-ao#bang-gia",
       },
     ],
   },
@@ -92,6 +98,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         desc: "Không gian riêng, sẵn sàng làm việc ngay với đầy đủ tiện ích.",
         features: ["Nội thất & internet tốc độ cao", "Lễ tân & bảo vệ 24/7", "Phòng họp dùng chung"],
         featured: true,
+        detailHref: "/services/van-phong-tron-goi#bang-gia",
       },
       {
         name: "Chỗ ngồi linh động",
@@ -100,6 +107,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         unit: "/ tháng",
         desc: "Không gian coworking năng động cho freelancer & nhóm nhỏ.",
         features: ["Chỗ ngồi tự do", "Wifi tốc độ cao", "Trà, cà phê miễn phí"],
+        detailHref: "/services/cho-ngoi-linh-dong#bang-gia",
       },
       {
         name: "Phòng họp theo giờ",
@@ -108,6 +116,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         unit: "/ giờ",
         desc: "Đặt lịch linh hoạt, trang bị đầy đủ thiết bị trình chiếu & âm thanh.",
         features: ["Màn hình trình chiếu", "Đặt lịch theo giờ", "Âm thanh hiện đại"],
+        detailHref: "/services/phong-hop#bang-gia",
       },
       {
         name: "Coworking theo ngày",
@@ -116,14 +125,15 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         unit: "/ ngày",
         desc: "Chỗ ngồi làm việc trọn ngày, không cần cam kết dài hạn.",
         features: ["Chỗ ngồi cả ngày", "Không ràng buộc hợp đồng", "Phù hợp khách vãng lai"],
+        detailHref: "/services/cho-ngoi-linh-dong#bang-gia",
       },
     ],
   },
   {
     title: "Thành lập doanh nghiệp",
-    cols: "sm:grid-cols-2 max-w-[700px] mx-auto",
+    cols: "sm:grid-cols-2 lg:grid-cols-4",
     footnote:
-      "*Giá Gói 1 áp dụng khi đăng ký kèm Văn phòng ảo tại MAX OFFICE (giá thường: 1.500.000đ). Áp dụng chung cho mọi loại hình doanh nghiệp — Hộ kinh doanh, Công ty TNHH, Công ty Cổ phần.",
+      "*Giá Gói 1 áp dụng khi đăng ký kèm Văn phòng ảo tại MAX OFFICE (giá thường: 1.500.000đ). Áp dụng chung cho mọi loại hình doanh nghiệp — Hộ kinh doanh, Công ty TNHH, Công ty Cổ phần. Còn nhiều dịch vụ sửa đổi khác (thay đổi đại diện pháp luật, tăng vốn điều lệ, bổ sung ngành nghề...) — xem đầy đủ tại trang Thành lập doanh nghiệp.",
     plans: [
       {
         name: "Gói 1 — Cơ bản",
@@ -133,6 +143,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         desc: "Giấy phép, con dấu, đăng bố cáo và mở tài khoản ngân hàng.",
         features: ["Giấy chứng nhận đăng ký doanh nghiệp", "Con dấu công ty", "Đăng bố cáo & mở tài khoản ngân hàng"],
         note: true,
+        detailHref: "/services/thanh-lap-doanh-nghiep#bang-gia",
       },
       {
         name: "Gói 2 — Đầy đủ",
@@ -142,25 +153,71 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         desc: "Tất cả hạng mục Gói 1, cộng khai thuế ban đầu, chữ ký số và hoá đơn điện tử.",
         features: ["Tất cả hạng mục Gói 1", "Hồ sơ khai thuế ban đầu", "Chữ ký số & hoá đơn điện tử 100 số"],
         featured: true,
+        detailHref: "/services/thanh-lap-doanh-nghiep#bang-gia",
+      },
+      {
+        name: "Thay đổi tên công ty",
+        service: "Thành lập doanh nghiệp",
+        price: "700.000đ",
+        unit: "trọn gói · 5-7 ngày",
+        desc: "Cập nhật tên công ty mới trên Giấy chứng nhận đăng ký doanh nghiệp và hồ sơ liên quan.",
+        features: ["Soạn & nộp hồ sơ thay đổi", "Nhận Giấy chứng nhận cập nhật", "Hỗ trợ khắc lại con dấu nếu cần"],
+        detailHref: "/services/thanh-lap-doanh-nghiep#dich-vu-phap-ly-sua-doi",
+      },
+      {
+        name: "Thay đổi địa chỉ trụ sở",
+        service: "Thành lập doanh nghiệp",
+        price: "Từ 700.000đ",
+        unit: "trọn gói · 5-7 ngày",
+        desc: "Cập nhật địa chỉ trụ sở mới, áp dụng cho cả trường hợp cùng và khác cơ quan thuế quản lý.",
+        features: ["Soạn & nộp hồ sơ thay đổi", "Nhận Giấy chứng nhận cập nhật", "Hỗ trợ thủ tục liên quan cơ quan thuế"],
+        detailHref: "/services/thanh-lap-doanh-nghiep#dich-vu-phap-ly-sua-doi",
       },
     ],
   },
   {
     title: "Kế toán & Thuế",
-    cols: "max-w-[400px] mx-auto",
+    cols: "sm:grid-cols-2 lg:grid-cols-4",
     footnote:
-      "*Từ 500.000đ/tháng là mức thấp nhất, áp dụng khi chưa phát sinh hoá đơn. Chi phí cụ thể tính theo số hoá đơn/quý và loại hình kinh doanh — xem bảng giá chi tiết đầy đủ.",
+      "*Từ 500.000đ/tháng là mức thấp nhất, áp dụng khi chưa phát sinh hoá đơn. Chi phí cụ thể tính theo số hoá đơn/quý và loại hình kinh doanh, áp dụng chung cho cả 3 nhóm loại hình — xem bảng giá chi tiết đầy đủ tại trang Kế toán & Thuế.",
     plans: [
       {
         name: "Kế toán & Thuế trọn gói",
+        service: "Kế toán & thuế",
         price: "500.000đ",
         unit: "/ tháng",
         desc: "Tính theo số hoá đơn/quý và loại hình kinh doanh — xem bảng giá chi tiết đầy đủ 3 nhóm loại hình.",
         features: ["Kê khai thuế định kỳ", "Sổ sách kế toán minh bạch", "Báo cáo tài chính, hỗ trợ giải trình"],
         featured: true,
         note: true,
-        href: "/services/ke-toan-thue#bang-gia",
-        ctaLabel: "Xem bảng giá chi tiết",
+        detailHref: "/services/ke-toan-thue#bang-gia",
+      },
+      {
+        name: "Báo cáo tài chính",
+        service: "Kế toán & thuế",
+        price: "Từ 800.000đ",
+        unit: "/ năm",
+        desc: "Lập báo cáo tài chính cuối năm, mức phí theo doanh thu phát sinh trong năm.",
+        features: ["Không phát sinh: 800.000đ/năm", "Doanh thu dưới 3 tỷ: 1.500.000đ/năm", "Doanh thu trên 3 tỷ: 2.000.000đ/năm"],
+        detailHref: "/services/ke-toan-thue#phi-phat-sinh-them",
+      },
+      {
+        name: "Xuất hoá đơn hộ",
+        service: "Kế toán & thuế",
+        price: "Từ 500.000đ",
+        unit: "/ tháng",
+        desc: "Hỗ trợ xuất hoá đơn điện tử hộ doanh nghiệp, mức phí theo số lượng hoá đơn mỗi tháng.",
+        features: ["1-30 hoá đơn: 500.000đ/tháng", "31-60 hoá đơn: 800.000đ/tháng", "61-100 hoá đơn: 1.000.000đ/tháng"],
+        detailHref: "/services/ke-toan-thue#phi-phat-sinh-them",
+      },
+      {
+        name: "Tờ khai hải quan",
+        service: "Kế toán & thuế",
+        price: "Từ 1.000.000đ",
+        unit: "trọn gói",
+        desc: "Hỗ trợ lập và nộp tờ khai hải quan, mức phí theo nhóm loại hình và số trang chứng từ.",
+        features: ["Nhóm B & C, 1-100 trang: 1.000.000đ", "Nhóm B & C, 100-200 trang: 2.000.000đ", "Nhóm A: 100 trang + 1.000.000đ"],
+        detailHref: "/services/ke-toan-thue#phi-phat-sinh-them",
       },
     ],
   },
@@ -206,19 +263,24 @@ function PricingCard({ plan }: { plan: Plan }) {
           </li>
         ))}
       </ul>
-      {plan.href ? (
-        <Button href={plan.href} variant={plan.featured ? "primary" : "ghost"} className="w-full">
-          {plan.ctaLabel ?? "Chọn gói này"}
-        </Button>
-      ) : (
+      <div className="flex gap-2">
         <LeadFormButton
-          service={plan.service ?? plan.name}
-          variant={plan.featured ? "primary" : "ghost"}
-          className="w-full"
+          service={plan.service}
+          variant="primary"
+          size="sm"
+          className="flex-1"
         >
-          {plan.ctaLabel ?? "Chọn gói này"}
+          Chọn gói này
         </LeadFormButton>
-      )}
+        <Button
+          href={plan.detailHref}
+          variant={plan.featured ? "outline" : "ghost"}
+          size="sm"
+          className="flex-1"
+        >
+          Xem chi tiết
+        </Button>
+      </div>
     </div>
   );
 }

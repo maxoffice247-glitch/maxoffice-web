@@ -170,7 +170,7 @@ export default function ServicePricingTable({
   );
 
   return (
-    <section id="bang-gia" className="bg-bg-tint py-9">
+    <section id="bang-gia" className="scroll-mt-24 bg-bg-tint py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <SectionHead eyebrow="Bảng giá" title={title} description={description} />
 

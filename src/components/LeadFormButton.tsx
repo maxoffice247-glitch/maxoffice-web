@@ -14,16 +14,19 @@ const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
 const NO_PROMO_SERVICE = "Phòng họp theo giờ";
 
 type Variant = "primary" | "outline" | "ghost" | "link";
+type Size = "sm" | "md" | "lg";
 
 export default function LeadFormButton({
   service,
   variant = "primary",
+  size,
   className,
   children,
 }: {
   /** Exact label from BookingForm's "Dịch vụ quan tâm" dropdown to pre-select, if known. */
   service?: string;
   variant?: Variant;
+  size?: Size;
   className?: string;
   children: ReactNode;
 }) {
@@ -68,7 +71,7 @@ export default function LeadFormButton({
 
   return (
     <>
-      <Button href={fallbackHref} variant={variant} className={className} onClick={handleClick}>
+      <Button href={fallbackHref} variant={variant} size={size} className={className} onClick={handleClick}>
         {children}
       </Button>
 
