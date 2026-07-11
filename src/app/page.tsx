@@ -13,9 +13,9 @@ import Faq from "@/components/Faq";
 import BookingFormSection from "@/components/BookingFormSection";
 
 export const metadata: Metadata = {
-  title: "Văn Phòng Ảo & Văn Phòng Trọn Gói TP.HCM | MAX OFFICE",
+  title: "Văn Phòng Ảo Từ 299K, Trọn Gói TP.HCM | MAX OFFICE",
   description:
-    "MAX OFFICE cung cấp văn phòng ảo, văn phòng trọn gói, cho thuê văn phòng và dịch vụ thành lập doanh nghiệp tại TP.HCM — địa chỉ đăng ký kinh doanh hợp lệ, giá từ 299.000đ/tháng, hơn 500 doanh nghiệp tin dùng.",
+    "Văn phòng ảo từ 299.000đ/tháng, văn phòng trọn gói tại TP.HCM. Địa chỉ kinh doanh hợp lệ, hỗ trợ thành lập doanh nghiệp, hơn 500 doanh nghiệp tin dùng.",
 };
 
 export default function Home() {
