@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PhoneIcon, MenuIcon, CloseIcon, SearchIcon } from "./icons";
 import Button from "./Button";
 import { useSearch } from "./SearchContext";
+import { NavIndicatorProvider, NavLink } from "./NavIndicator";
 
 // Dropdown panel content only — split out of Header's own chunk (loaded on
 // every page) since the panels stay closed until hover/click. Server-rendered
@@ -17,28 +19,44 @@ const LocationsMegaMenu = dynamic(() => import("./LocationsMegaMenu"));
 
 // The logo already links home (see the <Link href="/"> wrapping it below),
 // so "Trang chủ" is intentionally not repeated in either nav list.
-const NAV_LINKS_BEFORE = [{ label: "Về chúng tôi", href: "/ve-chung-toi" }];
-
-const NAV_LINKS_AFTER = [
-  { label: "Kiến thức", href: "/knowledge-center" },
-  { label: "Bảng giá", href: "/bang-gia" },
-  { label: "Liên hệ", href: "/lien-he" },
+//
+// Keys for the 3 dropdown items ("dich-vu", "chi-nhanh", "tien-ich") are
+// semantic group ids rather than a single href, since each dropdown's
+// content spans multiple route prefixes (e.g. "Dịch vụ" covers both the
+// /dich-vu hub and every /services/* detail page).
+const NAV_MATCHERS: { key: string; prefixes: string[] }[] = [
+  { key: "/ve-chung-toi", prefixes: ["/ve-chung-toi"] },
+  { key: "dich-vu", prefixes: ["/dich-vu", "/services"] },
+  { key: "chi-nhanh", prefixes: ["/dia-diem", "/locations"] },
+  { key: "tien-ich", prefixes: ["/tien-ich"] },
+  { key: "/knowledge-center", prefixes: ["/knowledge-center", "/blog"] },
+  { key: "/bang-gia", prefixes: ["/bang-gia"] },
+  { key: "/lien-he", prefixes: ["/lien-he"] },
 ];
 
+function matchActiveKey(pathname: string): string | null {
+  const hit = NAV_MATCHERS.find((m) =>
+    m.prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`)),
+  );
+  return hit?.key ?? null;
+}
+
 const NAV_LINKS_MOBILE = [
-  { label: "Về chúng tôi", href: "/ve-chung-toi" },
-  { label: "Dịch vụ", href: "/dich-vu" },
-  { label: "Chi nhánh", href: "/dia-diem" },
-  { label: "Tiện ích", href: "/tien-ich" },
-  { label: "Kiến thức", href: "/knowledge-center" },
-  { label: "Bảng giá", href: "/bang-gia" },
-  { label: "Liên hệ", href: "/lien-he" },
+  { key: "/ve-chung-toi", label: "Về chúng tôi", href: "/ve-chung-toi" },
+  { key: "dich-vu", label: "Dịch vụ", href: "/dich-vu" },
+  { key: "chi-nhanh", label: "Chi nhánh", href: "/dia-diem" },
+  { key: "tien-ich", label: "Tiện ích", href: "/tien-ich" },
+  { key: "/knowledge-center", label: "Kiến thức", href: "/knowledge-center" },
+  { key: "/bang-gia", label: "Bảng giá", href: "/bang-gia" },
+  { key: "/lien-he", label: "Liên hệ", href: "/lien-he" },
 ];
 
 export default function Header() {
   const [solid, setSolid] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { setOpen: setSearchOpen } = useSearch();
+  const pathname = usePathname();
+  const activeKey = matchActiveKey(pathname);
 
   useEffect(() => {
     const onScroll = () => setSolid(window.scrollY > 40);
@@ -85,33 +103,35 @@ export default function Header() {
             />
           </Link>
 
-          <nav aria-label="Menu chính" className="hidden items-center gap-7 xl:flex">
-            {NAV_LINKS_BEFORE.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-300 hover:text-accent ${
-                  solid ? "text-ink" : "text-white/90"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <MegaMenu solid={solid} />
-            <LocationsMegaMenu solid={solid} />
-            <ToolsMegaMenu solid={solid} />
-            {NAV_LINKS_AFTER.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-300 hover:text-accent ${
-                  solid ? "text-ink" : "text-white/90"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <NavIndicatorProvider activeKey={activeKey}>
+            <NavLink
+              href="/ve-chung-toi"
+              label="Về chúng tôi"
+              solid={solid}
+              isActive={activeKey === "/ve-chung-toi"}
+            />
+            <MegaMenu solid={solid} isActive={activeKey === "dich-vu"} />
+            <LocationsMegaMenu solid={solid} isActive={activeKey === "chi-nhanh"} />
+            <ToolsMegaMenu solid={solid} isActive={activeKey === "tien-ich"} />
+            <NavLink
+              href="/knowledge-center"
+              label="Kiến thức"
+              solid={solid}
+              isActive={activeKey === "/knowledge-center"}
+            />
+            <NavLink
+              href="/bang-gia"
+              label="Bảng giá"
+              solid={solid}
+              isActive={activeKey === "/bang-gia"}
+            />
+            <NavLink
+              href="/lien-he"
+              label="Liên hệ"
+              solid={solid}
+              isActive={activeKey === "/lien-he"}
+            />
+          </NavIndicatorProvider>
 
           <div className="flex items-center gap-3 sm:gap-4">
             <button
@@ -173,16 +193,24 @@ export default function Header() {
           </button>
         </div>
         <nav aria-label="Menu di động" className="flex flex-col gap-1 px-5 py-6 sm:px-8">
-          {NAV_LINKS_MOBILE.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="border-b border-white/10 py-4 text-lg font-semibold text-white/90 transition-colors hover:text-accent"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {NAV_LINKS_MOBILE.map((link) => {
+            const isActive = activeKey === link.key;
+            return (
+              <Link
+                key={link.key}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className={`flex items-center gap-2.5 border-b border-white/10 py-4 text-lg transition-colors ${
+                  isActive
+                    ? "-mx-5 bg-accent/15 px-5 font-bold text-accent sm:-mx-8 sm:px-8"
+                    : "font-semibold text-white/90 hover:text-accent"
+                }`}
+              >
+                {isActive && <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-accent" />}
+                {link.label}
+              </Link>
+            );
+          })}
           <a
             href="tel:0898082188"
             onClick={() => setMenuOpen(false)}

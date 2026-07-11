@@ -6,26 +6,37 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDownIcon, MapPinIcon, PhoneIcon } from "./icons";
 import Button from "./Button";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
+import { useNavIndicator } from "./NavIndicator";
 
-export default function LocationsMegaMenu({ solid }: { solid: boolean }) {
+export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean; isActive: boolean }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { registerRef, setHoveredKey } = useNavIndicator();
 
   const handleEnter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setOpen(true);
+    setHoveredKey("chi-nhanh");
   };
   const handleLeave = () => {
     closeTimer.current = setTimeout(() => setOpen(false), 150);
+    setHoveredKey(null);
   };
 
-  const linkColor = solid ? "text-ink" : "text-white/90";
+  const stateClasses = isActive
+    ? "font-bold text-accent"
+    : `font-semibold hover:text-accent ${solid ? "text-ink" : "text-white/90"}`;
 
   return (
-    <div className="relative flex items-center" onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
+    <div
+      ref={(node) => registerRef("chi-nhanh", node)}
+      className="relative flex items-center"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
       <Link
         href="/dia-diem"
-        className={`text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-300 hover:text-accent ${linkColor}`}
+        className={`text-[14.5px] whitespace-nowrap transition-colors duration-300 ${stateClasses}`}
       >
         Chi nhánh
       </Link>
@@ -34,7 +45,7 @@ export default function LocationsMegaMenu({ solid }: { solid: boolean }) {
         aria-label="Xem danh sách chi nhánh"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className={`flex items-center p-1.5 transition-colors duration-300 hover:text-accent ${linkColor}`}
+        className={`flex items-center p-1.5 transition-colors duration-300 ${stateClasses}`}
       >
         <ChevronDownIcon className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>

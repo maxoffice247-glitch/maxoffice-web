@@ -16,6 +16,7 @@ import {
   PhoneIcon,
   ArrowRightSmallIcon,
 } from "./icons";
+import { useNavIndicator } from "./NavIndicator";
 
 const TOOL_CATEGORIES = [
   {
@@ -52,24 +53,34 @@ const TOOL_CATEGORIES = [
   },
 ];
 
-export default function ToolsMegaMenu({ solid }: { solid: boolean }) {
+export default function ToolsMegaMenu({ solid, isActive }: { solid: boolean; isActive: boolean }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { registerRef, setHoveredKey } = useNavIndicator();
 
   const handleEnter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setOpen(true);
+    setHoveredKey("tien-ich");
   };
   const handleLeave = () => {
     closeTimer.current = setTimeout(() => setOpen(false), 150);
+    setHoveredKey(null);
   };
 
   return (
-    <div className="relative" onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
+    <div
+      ref={(node) => registerRef("tien-ich", node)}
+      className="relative"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
       <button
         type="button"
-        className={`flex items-center gap-1.5 text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-300 hover:text-accent ${
-          solid ? "text-ink" : "text-white/90"
+        className={`flex items-center gap-1.5 text-[14.5px] whitespace-nowrap transition-colors duration-300 ${
+          isActive
+            ? "font-bold text-accent"
+            : `font-semibold hover:text-accent ${solid ? "text-ink" : "text-white/90"}`
         }`}
         aria-expanded={open}
       >

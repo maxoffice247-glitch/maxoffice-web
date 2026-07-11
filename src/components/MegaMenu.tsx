@@ -17,6 +17,7 @@ import {
   MapPinIcon,
   CalendarIcon,
 } from "./icons";
+import { useNavIndicator } from "./NavIndicator";
 
 const MEGA_SERVICES = [
   {
@@ -70,16 +71,19 @@ const TRUST_STATS = [
   { icon: CalendarIcon, label: "Từ 2022" },
 ];
 
-export default function MegaMenu({ solid }: { solid: boolean }) {
+export default function MegaMenu({ solid, isActive }: { solid: boolean; isActive: boolean }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { registerRef, setHoveredKey } = useNavIndicator();
 
   const handleEnter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setOpen(true);
+    setHoveredKey("dich-vu");
   };
   const handleLeave = () => {
     closeTimer.current = setTimeout(() => setOpen(false), 150);
+    setHoveredKey(null);
   };
 
   return (
@@ -103,14 +107,17 @@ export default function MegaMenu({ solid }: { solid: boolean }) {
           document.body,
         )}
       <div
+        ref={(node) => registerRef("dich-vu", node)}
         className="relative"
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
       >
         <button
           type="button"
-          className={`flex items-center gap-1.5 text-[14.5px] font-semibold whitespace-nowrap transition-colors duration-300 hover:text-accent ${
-            solid ? "text-ink" : "text-white/90"
+          className={`flex items-center gap-1.5 text-[14.5px] whitespace-nowrap transition-colors duration-300 ${
+            isActive
+              ? "font-bold text-accent"
+              : `font-semibold hover:text-accent ${solid ? "text-ink" : "text-white/90"}`
           }`}
           aria-expanded={open}
         >
