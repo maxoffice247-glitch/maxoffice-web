@@ -44,6 +44,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-[rgba(9,15,28,0.78)] from-0% via-[rgba(9,15,28,0.3)] via-42% to-[rgba(9,15,28,0)] to-64%" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_62%_58%_at_14%_14%,rgba(5,10,20,0.72)_0%,rgba(5,10,20,0.38)_40%,rgba(5,10,20,0)_75%)]" />
         <div className="absolute inset-x-0 top-0 h-[110px] bg-gradient-to-b from-[rgba(6,12,24,0.85)] to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[75%] bg-[linear-gradient(to_bottom,rgba(6,12,24,0.55)_0%,rgba(6,12,24,0.4)_45%,rgba(6,12,24,0.22)_75%,rgba(6,12,24,0.08)_100%)] sm:hidden" />
       </div>
 
       <motion.div
@@ -69,7 +70,7 @@ export default function Hero() {
           </motion.h1>
           <motion.p
             variants={item}
-            className="-mx-3 mb-6 max-w-[700px] rounded-lg bg-black/[12%] px-3 py-2 text-base text-white/86 sm:mx-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-lg"
+            className="mb-6 max-w-[700px] text-base text-white/86 sm:text-lg"
           >
             MAX OFFICE không chỉ cho thuê văn phòng — chúng tôi đồng hành
             cùng bạn từ ngày thành lập, xuyên suốt quá trình vận hành, đến
