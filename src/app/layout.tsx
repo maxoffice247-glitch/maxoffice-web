@@ -35,6 +35,13 @@ export const metadata: Metadata = {
   title: "MAX OFFICE — Giải Pháp Vận Hành Doanh Nghiệp Toàn Diện",
   description:
     "MAX OFFICE đồng hành cùng hơn 500 doanh nghiệp tại 12 địa điểm trung tâm TP.HCM với văn phòng ảo, văn phòng trọn gói, coworking, phòng họp, thành lập doanh nghiệp và kế toán thuế.",
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 const organizationSchema = {
