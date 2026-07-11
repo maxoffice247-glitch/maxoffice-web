@@ -79,70 +79,83 @@ export default function FloatingButtons() {
   const current = CONTACT_OPTIONS[cycleIndex];
 
   return (
-    <div
-      ref={rootRef}
-      className="fixed right-4 bottom-[80px] z-[97] flex flex-col items-end gap-3 sm:right-[22px] sm:bottom-6"
-    >
-      <AnimatePresence>
-        {open &&
-          [...CONTACT_OPTIONS].reverse().map((opt, idx) => (
-            <motion.a
-              key={opt.key}
-              href={opt.href}
-              target={opt.external ? "_blank" : undefined}
-              rel={opt.external ? "noopener" : undefined}
-              title={opt.label}
-              aria-label={opt.ariaLabel}
-              initial={{ opacity: 0, y: 16, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 16, scale: 0.8 }}
-              transition={{ duration: 0.3, ease: EASE_PREMIUM, delay: idx * 0.06 }}
-              className={`relative flex h-[46px] w-[46px] items-center justify-center overflow-hidden rounded-full text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[50px] sm:w-[50px] ${opt.bg}`}
-            >
-              {opt.image ? (
-                <BrandIcon type={opt.image} className="h-full w-full" sizes="50px" />
-              ) : (
-                opt.icon && <opt.icon className="h-5 w-5" />
-              )}
-            </motion.a>
-          ))}
-      </AnimatePresence>
-
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ: gọi điện, Zalo, Messenger"}
-        className="animate-pulse-call relative flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[54px] sm:w-[54px]"
+    <>
+      {/* Mobile: single call button only — Zalo/Messenger already live in MobileBottomNav, so
+          a duplicate speed-dial here would give two Zalo entry points on the same screen. */}
+      <a
+        href="tel:0898082188"
+        aria-label="Gọi ngay 089 8082 188"
+        className="animate-pulse-call fixed right-4 bottom-[80px] z-[97] flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:hidden"
       >
-        <AnimatePresence mode="wait" initial={false}>
-          {open ? (
-            <motion.span
-              key="close"
-              initial={{ opacity: 0, rotate: -45, scale: 0.6 }}
-              animate={{ opacity: 1, rotate: 0, scale: 1 }}
-              exit={{ opacity: 0, rotate: 45, scale: 0.6 }}
-              transition={{ duration: 0.2, ease: EASE_PREMIUM }}
-            >
-              <PlusIcon className="h-[22px] w-[22px] rotate-45" />
-            </motion.span>
-          ) : (
-            <motion.span
-              key={current.key}
-              initial={{ opacity: 0, y: 8, scale: 0.7 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.7 }}
-              transition={{ duration: 0.3, ease: EASE_PREMIUM }}
-            >
-              {current.image ? (
-                <BrandIcon type={current.image} className="h-[22px] w-[22px]" sizes="22px" />
-              ) : (
-                current.icon && <current.icon className="h-[22px] w-[22px]" />
-              )}
-            </motion.span>
-          )}
+        <PhoneIcon className="h-[22px] w-[22px]" />
+      </a>
+
+      {/* Tablet/desktop: no bottom nav present, so the full phone/Zalo/Messenger speed-dial stays. */}
+      <div
+        ref={rootRef}
+        className="fixed right-[22px] bottom-6 z-[97] hidden flex-col items-end gap-3 sm:flex"
+      >
+        <AnimatePresence>
+          {open &&
+            [...CONTACT_OPTIONS].reverse().map((opt, idx) => (
+              <motion.a
+                key={opt.key}
+                href={opt.href}
+                target={opt.external ? "_blank" : undefined}
+                rel={opt.external ? "noopener" : undefined}
+                title={opt.label}
+                aria-label={opt.ariaLabel}
+                initial={{ opacity: 0, y: 16, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 16, scale: 0.8 }}
+                transition={{ duration: 0.3, ease: EASE_PREMIUM, delay: idx * 0.06 }}
+                className={`relative flex h-[46px] w-[46px] items-center justify-center overflow-hidden rounded-full text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[50px] sm:w-[50px] ${opt.bg}`}
+              >
+                {opt.image ? (
+                  <BrandIcon type={opt.image} className="h-full w-full" sizes="50px" />
+                ) : (
+                  opt.icon && <opt.icon className="h-5 w-5" />
+                )}
+              </motion.a>
+            ))}
         </AnimatePresence>
-      </button>
-    </div>
+
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ: gọi điện, Zalo, Messenger"}
+          className="animate-pulse-call relative flex h-[54px] w-[54px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110"
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {open ? (
+              <motion.span
+                key="close"
+                initial={{ opacity: 0, rotate: -45, scale: 0.6 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: 45, scale: 0.6 }}
+                transition={{ duration: 0.2, ease: EASE_PREMIUM }}
+              >
+                <PlusIcon className="h-[22px] w-[22px] rotate-45" />
+              </motion.span>
+            ) : (
+              <motion.span
+                key={current.key}
+                initial={{ opacity: 0, y: 8, scale: 0.7 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.7 }}
+                transition={{ duration: 0.3, ease: EASE_PREMIUM }}
+              >
+                {current.image ? (
+                  <BrandIcon type={current.image} className="h-[22px] w-[22px]" sizes="22px" />
+                ) : (
+                  current.icon && <current.icon className="h-[22px] w-[22px]" />
+                )}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
+      </div>
+    </>
   );
 }

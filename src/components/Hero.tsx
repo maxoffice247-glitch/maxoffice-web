@@ -69,7 +69,7 @@ export default function Hero() {
           </motion.h1>
           <motion.p
             variants={item}
-            className="mb-6 max-w-[700px] text-base text-white/86 sm:text-lg"
+            className="-mx-3 mb-6 max-w-[700px] rounded-lg bg-black/[12%] px-3 py-2 text-base text-white/86 sm:mx-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-lg"
           >
             MAX OFFICE không chỉ cho thuê văn phòng — chúng tôi đồng hành
             cùng bạn từ ngày thành lập, xuyên suốt quá trình vận hành, đến
