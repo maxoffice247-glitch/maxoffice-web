@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const PRICING_FAQS = [
   {
     q: "Bảng giá niêm yết đã bao gồm VAT chưa?",
-    a: "Bảng giá trên là giá dịch vụ. Đội ngũ tư vấn sẽ gửi báo giá chi tiết, đầy đủ các khoản trước khi bạn ký hợp đồng, đảm bảo không có bất ngờ về sau.",
+    a: "Bảng giá trên CHƯA bao gồm thuế VAT 10%. Đội ngũ tư vấn sẽ gửi báo giá chi tiết, đầy đủ các khoản (bao gồm VAT) trước khi bạn ký hợp đồng, đảm bảo không có bất ngờ về sau.",
   },
   {
     q: "Có phát sinh chi phí ẩn nào ngoài bảng giá không?",
@@ -22,11 +22,11 @@ const PRICING_FAQS = [
   },
   {
     q: "Giá ưu đãi thành lập doanh nghiệp kèm Văn phòng ảo áp dụng thế nào?",
-    a: "Khi bạn đăng ký dịch vụ thành lập doanh nghiệp cùng lúc với Văn phòng ảo tại MAX OFFICE, thủ tục thành lập sẽ được áp dụng mức giá ưu đãi thấp hơn so với đăng ký riêng lẻ, theo đúng bảng giá ở trên.",
+    a: "Ưu đãi áp dụng cụ thể theo từng chi nhánh:\n- Tại Sông Thao: khách ký hợp đồng Văn phòng ảo từ gói START (350.000đ/tháng) trở lên, thời hạn 2 năm, được TẶNG 100% phí dịch vụ thành lập doanh nghiệp, hoặc tặng 100% phí đổi địa chỉ trụ sở về Sông Thao (áp dụng 1 trong 2, tuỳ nhu cầu khách hàng).\n- Tại các chi nhánh còn lại: khách ký hợp đồng Văn phòng ảo từ gói BASE (500.000đ/tháng) trở lên, thời hạn 1 năm, được TẶNG 100% phí dịch vụ thành lập doanh nghiệp, hoặc tặng 100% phí đổi địa chỉ trụ sở về đúng chi nhánh đang thuê (áp dụng 1 trong 2, tuỳ nhu cầu khách hàng).\n\nLiên hệ đội ngũ tư vấn để được hướng dẫn cụ thể theo đúng chi nhánh và gói dịch vụ bạn quan tâm.",
   },
   {
     q: "Tôi có thể thanh toán theo tháng hay theo năm?",
-    a: "Bạn có thể chọn thanh toán theo tháng hoặc theo năm tuỳ nhu cầu. Đội ngũ tư vấn sẽ trao đổi cụ thể phương án phù hợp nhất khi bạn liên hệ.",
+    a: "Phương thức thanh toán tuỳ theo từng dịch vụ:\n- Văn phòng ảo: hợp đồng tối thiểu 6 tháng, thanh toán theo chu kỳ 6 tháng/lần. Ký hợp đồng 1 năm hoặc 2 năm sẽ có thêm ưu đãi (xem chi tiết tại mục Khuyến mãi trong trang Văn phòng ảo).\n- Văn phòng trọn gói: linh hoạt thanh toán theo tháng, quý hoặc năm, tuỳ lựa chọn của khách hàng.\n- Thành lập doanh nghiệp: thanh toán theo gói dịch vụ đã chọn (thanh toán 1 lần khi ký).\n- Kế toán & thuế: thanh toán theo quý.",
   },
   {
     q: "Tôi có thể đổi gói dịch vụ trong quá trình sử dụng không?",

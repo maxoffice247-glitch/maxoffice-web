@@ -114,7 +114,7 @@ export default function Faq({
                       transition={{ duration: 0.35, ease: [0.22, 0.9, 0.32, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="max-w-[680px] pb-6 text-[14.5px] leading-relaxed text-body-text">
+                      <p className="max-w-[680px] pb-6 text-[14.5px] leading-relaxed whitespace-pre-line text-body-text">
                         {item.a}
                       </p>
                     </motion.div>
