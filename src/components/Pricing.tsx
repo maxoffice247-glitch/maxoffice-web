@@ -88,7 +88,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
   },
   {
     title: "Văn phòng & Coworking khác",
-    cols: "sm:grid-cols-2 lg:grid-cols-4",
+    cols: "sm:grid-cols-2 lg:grid-cols-3",
     plans: [
       {
         name: "Văn phòng trọn gói",
@@ -118,22 +118,13 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         features: ["Màn hình trình chiếu", "Đặt lịch theo giờ", "Âm thanh hiện đại"],
         detailHref: "/services/phong-hop#bang-gia",
       },
-      {
-        name: "Coworking theo ngày",
-        service: "Chỗ ngồi linh động",
-        price: "150.000đ",
-        unit: "/ ngày",
-        desc: "Chỗ ngồi làm việc trọn ngày, không cần cam kết dài hạn.",
-        features: ["Chỗ ngồi cả ngày", "Không ràng buộc hợp đồng", "Phù hợp khách vãng lai"],
-        detailHref: "/services/cho-ngoi-linh-dong#bang-gia",
-      },
     ],
   },
   {
     title: "Thành lập doanh nghiệp",
-    cols: "sm:grid-cols-2 lg:grid-cols-4",
+    cols: "sm:grid-cols-2 lg:grid-cols-3",
     footnote:
-      "*Giá Gói 1 áp dụng khi đăng ký kèm Văn phòng ảo tại MAX OFFICE (giá thường: 1.500.000đ). Áp dụng chung cho mọi loại hình doanh nghiệp — Hộ kinh doanh, Công ty TNHH, Công ty Cổ phần. Còn nhiều dịch vụ sửa đổi khác (thay đổi đại diện pháp luật, tăng vốn điều lệ, bổ sung ngành nghề...) — xem đầy đủ tại trang Thành lập doanh nghiệp.",
+      "*Giá Gói 1 áp dụng khi đăng ký kèm Văn phòng ảo tại MAX OFFICE (giá thường: 1.500.000đ). Áp dụng chung cho mọi loại hình doanh nghiệp — Hộ kinh doanh, Công ty TNHH, Công ty Cổ phần. Còn nhiều dịch vụ sửa đổi khác (thay đổi tên công ty, đại diện pháp luật, tăng vốn điều lệ, bổ sung ngành nghề...) — xem đầy đủ tại trang Thành lập doanh nghiệp.",
     plans: [
       {
         name: "Gói 1 — Cơ bản",
@@ -156,15 +147,6 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         detailHref: "/services/thanh-lap-doanh-nghiep#bang-gia",
       },
       {
-        name: "Thay đổi tên công ty",
-        service: "Thành lập doanh nghiệp",
-        price: "700.000đ",
-        unit: "trọn gói · 5-7 ngày",
-        desc: "Cập nhật tên công ty mới trên Giấy chứng nhận đăng ký doanh nghiệp và hồ sơ liên quan.",
-        features: ["Soạn & nộp hồ sơ thay đổi", "Nhận Giấy chứng nhận cập nhật", "Hỗ trợ khắc lại con dấu nếu cần"],
-        detailHref: "/services/thanh-lap-doanh-nghiep#dich-vu-phap-ly-sua-doi",
-      },
-      {
         name: "Thay đổi địa chỉ trụ sở",
         service: "Thành lập doanh nghiệp",
         price: "Từ 700.000đ",
@@ -177,7 +159,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
   },
   {
     title: "Kế toán & Thuế",
-    cols: "sm:grid-cols-2 lg:grid-cols-4",
+    cols: "sm:grid-cols-2 lg:grid-cols-3",
     footnote:
       "*Từ 500.000đ/tháng là mức thấp nhất, áp dụng khi chưa phát sinh hoá đơn. Chi phí cụ thể tính theo số hoá đơn/quý và loại hình kinh doanh, áp dụng chung cho cả 3 nhóm loại hình — xem bảng giá chi tiết đầy đủ tại trang Kế toán & Thuế.",
     plans: [
@@ -208,15 +190,6 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         unit: "/ tháng",
         desc: "Hỗ trợ xuất hoá đơn điện tử hộ doanh nghiệp, mức phí theo số lượng hoá đơn mỗi tháng.",
         features: ["1-30 hoá đơn: 500.000đ/tháng", "31-60 hoá đơn: 800.000đ/tháng", "61-100 hoá đơn: 1.000.000đ/tháng"],
-        detailHref: "/services/ke-toan-thue#phi-phat-sinh-them",
-      },
-      {
-        name: "Tờ khai hải quan",
-        service: "Kế toán & thuế",
-        price: "Từ 1.000.000đ",
-        unit: "trọn gói",
-        desc: "Hỗ trợ lập và nộp tờ khai hải quan, mức phí theo nhóm loại hình và số trang chứng từ.",
-        features: ["Nhóm B & C, 1-100 trang: 1.000.000đ", "Nhóm B & C, 100-200 trang: 2.000.000đ", "Nhóm A: 100 trang + 1.000.000đ"],
         detailHref: "/services/ke-toan-thue#phi-phat-sinh-them",
       },
     ],
