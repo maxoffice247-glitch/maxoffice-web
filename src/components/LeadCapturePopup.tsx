@@ -122,7 +122,7 @@ export default function LeadCapturePopup() {
                   <BadgePercentIcon className="h-7 w-7" />
                 </span>
                 <h3 id="lead-capture-title" className="mb-2 text-[20px] font-bold text-navy">
-                  Khoan đã — ưu đãi dành riêng cho bạn!
+                  🎁 Voucher dành riêng cho bạn!
                 </h3>
                 <p className="mb-6 text-[14.5px] leading-relaxed text-body-text">
                   Để lại số điện thoại, MAX OFFICE tư vấn miễn phí và giữ ưu đãi giảm 10% tháng đầu

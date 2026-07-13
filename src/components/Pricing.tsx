@@ -268,7 +268,7 @@ function PricingCard({ plan }: { plan: Plan }) {
           service={plan.service}
           variant="primary"
           size="sm"
-          className="flex-1"
+          className="min-w-0 flex-1 !whitespace-normal !px-3 text-center"
         >
           Chọn gói này
         </LeadFormButton>
@@ -276,7 +276,7 @@ function PricingCard({ plan }: { plan: Plan }) {
           href={plan.detailHref}
           variant={plan.featured ? "outline" : "ghost"}
           size="sm"
-          className="flex-1"
+          className="min-w-0 flex-1 !whitespace-normal !px-3 text-center"
         >
           Xem chi tiết
         </Button>
