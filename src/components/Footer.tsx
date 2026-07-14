@@ -39,11 +39,13 @@ export default function Footer() {
               />
             </div>
             <p className="text-[13.5px] leading-loose text-white/55">
-              Công Ty TNHH MAX Office
+              Công ty TNHH MAX Office
               <br />
-              MST: 0317502009
+              Số 10 Sông Thao, Phường Tân Sơn Hòa, Tp.HCM
               <br />
-              Số 10 Sông Thao, P. Tân Sơn Hoà, TP.HCM
+              GCNDKDN: 0317502009 do Sở Tài Chính - Tp. Hồ Chí Minh
+              <br />
+              Cấp ngày 03/10/2022
               <br />
               <br />
               Hotline: 089 8082 188 – 0932 357 357

@@ -118,9 +118,10 @@ export default function PrivacyPolicyPage() {
                 Nếu có bất kỳ câu hỏi nào về Chính sách bảo mật này, hoặc muốn thực hiện các quyền
                 đối với dữ liệu cá nhân của mình, vui lòng liên hệ:
               </p>
-              <p className="font-semibold text-navy">Công Ty TNHH MAX Office</p>
-              <p>MST: 0317502009</p>
-              <p>Địa chỉ: Số 10 Sông Thao, P. Tân Sơn Hoà, TP.HCM</p>
+              <p className="font-semibold text-navy">Công ty TNHH MAX Office</p>
+              <p>Số 10 Sông Thao, Phường Tân Sơn Hòa, Tp.HCM</p>
+              <p>GCNDKDN: 0317502009 do Sở Tài Chính - Tp. Hồ Chí Minh</p>
+              <p>Cấp ngày 03/10/2022</p>
               <p>Email: cskh@maxoffice.vn</p>
               <p>Hotline: 089 8082 188</p>
             </section>
