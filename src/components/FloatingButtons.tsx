@@ -81,19 +81,23 @@ export default function FloatingButtons() {
   return (
     <>
       {/* Mobile: single call button only — Zalo/Messenger already live in MobileBottomNav, so
-          a duplicate speed-dial here would give two Zalo entry points on the same screen. */}
+          a duplicate speed-dial here would give two Zalo entry points on the same screen.
+          Raised to bottom-[150px] (was 80px) to clear the Elfsight Facebook Chat bubble,
+          which docks itself at the page's bottom-right corner above the bottom nav. */}
       <a
         href="tel:0898082188"
         aria-label="Gọi ngay 089 8082 188"
-        className="animate-pulse-call fixed right-4 bottom-[80px] z-[97] flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:hidden"
+        className="animate-pulse-call fixed right-4 bottom-[150px] z-[97] flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:hidden"
       >
         <PhoneIcon className="h-[22px] w-[22px]" />
       </a>
 
-      {/* Tablet/desktop: no bottom nav present, so the full phone/Zalo/Messenger speed-dial stays. */}
+      {/* Tablet/desktop: no bottom nav present, so the full phone/Zalo/Messenger speed-dial stays.
+          Raised to bottom-[104px] (was bottom-6/24px) to clear the Elfsight Facebook Chat bubble,
+          which docks itself at the page's bottom-right corner. */}
       <div
         ref={rootRef}
-        className="fixed right-[22px] bottom-6 z-[97] hidden flex-col items-end gap-3 sm:flex"
+        className="fixed right-[22px] bottom-[104px] z-[97] hidden flex-col items-end gap-3 sm:flex"
       >
         <AnimatePresence>
           {open &&

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Be_Vietnam_Pro, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -77,6 +78,11 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${beVietnamPro.variable} ${inter.variable}`}>
       <body className="min-h-screen bg-bg font-sans text-ink antialiased">
+        {/* Elfsight Facebook Chat — official embed requires the script + mount
+            div to sit right after the opening <body> tag. lazyOnload defers
+            it to browser idle time so it doesn't compete with page load. */}
+        <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />
+        <div className="elfsight-app-435881b6-3406-43c4-a5a5-f2f3dd5342b7" data-elfsight-app-lazy />
         <GoogleAnalytics />
         <script
           type="application/ld+json"
