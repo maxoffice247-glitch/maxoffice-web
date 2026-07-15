@@ -9,9 +9,6 @@ export const metadata: Metadata = {
   title: "Bảng Giá Dịch Vụ MAX OFFICE - Minh Bạch, Không Phát Sinh",
   description:
     "Bảng giá chi tiết toàn bộ dịch vụ MAX OFFICE: văn phòng ảo, văn phòng trọn gói, coworking, phòng họp, thành lập doanh nghiệp, kế toán & thuế. Giá minh bạch, không phát sinh chi phí ẩn.",
-  openGraph: {
-    images: [{ url: "/images/og/hero-bang-gia.jpg", width: 1200, height: 630 }],
-  },
 };
 
 const PRICING_FAQS = [

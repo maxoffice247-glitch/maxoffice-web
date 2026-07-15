@@ -16,11 +16,6 @@ export const metadata: Metadata = {
   title: "Văn Phòng Ảo Từ 299K, Trọn Gói TP.HCM | MAX OFFICE",
   description:
     "Văn phòng ảo từ 299.000đ/tháng, văn phòng trọn gói tại TP.HCM. Địa chỉ kinh doanh hợp lệ, hỗ trợ thành lập doanh nghiệp, hơn 500 doanh nghiệp tin dùng.",
-  openGraph: {
-    images: [
-      { url: "/images/og/anh-hero-trang-chu.jpg", width: 1200, height: 630 },
-    ],
-  },
 };
 
 export default function Home() {
