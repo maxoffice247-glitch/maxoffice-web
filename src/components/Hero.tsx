@@ -63,6 +63,10 @@ export default function Hero() {
         {/* Separate, independent strip so the header nav always reads clearly
             regardless of how light the photo is right at the top edge. */}
         <div className="absolute inset-x-0 top-0 h-[110px] bg-gradient-to-b from-[rgba(6,12,24,0.85)] to-transparent" />
+        {/* Mobile-only extra wash — narrow viewports show proportionally more
+            of the un-overlaid right side of the photo, so add a flat dark
+            layer here without touching the desktop/tablet gradient above. */}
+        <div className="absolute inset-0 bg-[rgba(9,15,28,0.13)] sm:hidden" />
       </div>
 
       <motion.div
@@ -99,13 +103,13 @@ export default function Hero() {
           <motion.div variants={item} className="mb-6">
             <nav
               aria-label="Dịch vụ nổi bật"
-              className="grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3"
+              className="grid grid-cols-1 gap-y-2 sm:grid-cols-3 sm:gap-x-6"
             >
               {SERVICE_KEYWORDS.map((kw) => (
                 <Link
                   key={kw.href}
                   href={kw.href}
-                  className="text-[12.5px] font-bold text-[#8FC1F5] transition-colors duration-200 hover:text-white hover:underline"
+                  className="text-[12.5px] font-bold text-[#3B9EFF] transition-colors duration-200 hover:text-white hover:underline"
                 >
                   {kw.label}
                 </Link>
