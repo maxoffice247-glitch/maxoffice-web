@@ -32,7 +32,6 @@ const SERVICE_KEYWORDS = [
 const HERO_IMAGES = [
   "/images/anh-hero-trang-chu.jpg",
   "/images/anh-hero-trang-chu-1.jpg",
-  "/images/anh-hero-trang-chu-2.jpg",
 ];
 
 export default function Hero() {
@@ -75,7 +74,7 @@ export default function Hero() {
         <div className="max-w-[760px]">
           <motion.p
             variants={item}
-            className="mb-3 inline-flex items-center gap-2 text-[12.5px] font-bold tracking-[0.14em] text-[#E5F2FF] uppercase before:h-[2px] before:w-[22px] before:rounded-full before:bg-accent"
+            className="mb-3 inline-flex items-center gap-2 text-[12.5px] font-bold tracking-[0.14em] text-[#8FC1F5] uppercase before:h-[2px] before:w-[22px] before:rounded-full before:bg-accent"
           >
             Đối tác vận hành doanh nghiệp toàn diện
           </motion.p>
@@ -84,7 +83,7 @@ export default function Hero() {
             className="mb-4 font-display text-[32px] leading-[1.15] font-extrabold text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.35)] sm:text-[38px] lg:text-[51px] lg:leading-[1.12]"
           >
             Nơi doanh nghiệp của bạn{" "}
-            <span className="text-[#9FCBFF]">bắt đầu vững vàng</span>{" "}
+            <span className="text-[#3B9EFF]">bắt đầu vững vàng</span>{" "}
             &amp; phát triển bền vững
           </motion.h1>
           <motion.p
@@ -106,7 +105,7 @@ export default function Hero() {
                 <Link
                   key={kw.href}
                   href={kw.href}
-                  className="text-[12.5px] font-bold text-[#E5F2FF] transition-colors duration-200 hover:text-white hover:underline"
+                  className="text-[12.5px] font-bold text-[#8FC1F5] transition-colors duration-200 hover:text-white hover:underline"
                 >
                   {kw.label}
                 </Link>

@@ -38,14 +38,12 @@ export default function Footer() {
                 className="object-contain object-left"
               />
             </div>
-            <p className="text-[13.5px] leading-loose text-white/55">
+            <p className="text-[13.5px] leading-loose text-[#F5F7FA]">
               Công ty TNHH MAX Office
               <br />
               Số 10 Sông Thao, Phường Tân Sơn Hòa, Tp.HCM
               <br />
-              GCNDKDN: 0317502009 do Sở Tài Chính - Tp. Hồ Chí Minh
-              <br />
-              Cấp ngày 03/10/2022
+              GCNDKDN: 0317502009 do Sở Tài Chính - Tp. Hồ Chí Minh cấp ngày 03/10/2022
               <br />
               <br />
               Hotline: 089 8082 188 – 0932 357 357

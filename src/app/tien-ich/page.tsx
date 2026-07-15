@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   title: "Tiện Ích Miễn Phí - Công Cụ, Checklist, So Sánh | MAX OFFICE",
   description:
     "9 tiện ích miễn phí: công cụ tính toán, checklist tải PDF, bảng so sánh dịch vụ/loại hình doanh nghiệp và timeline quy trình thành lập — hỗ trợ ra quyết định nhanh chóng.",
+  openGraph: {
+    images: [{ url: "/images/og/khong-gian-lam-viec.jpg", width: 1200, height: 630 }],
+  },
 };
 
 const TOOL_GROUPS = [

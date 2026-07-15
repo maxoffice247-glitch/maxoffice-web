@@ -42,6 +42,22 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
+  // Site-wide fallback so any page without its own openGraph.images (e.g.
+  // knowledge-center categories, tiện ích tools) still gets a real preview
+  // image instead of falling back to a bare logo/blank card when shared.
+  openGraph: {
+    siteName: SITE_NAME,
+    locale: "vi_VN",
+    type: "website",
+    images: [
+      {
+        url: "/images/og/anh-hero-trang-chu.jpg",
+        width: 1200,
+        height: 630,
+        alt: SITE_NAME,
+      },
+    ],
+  },
 };
 
 const organizationSchema = {

@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "12 Chi Nhánh Văn Phòng MAX OFFICE Tại TP.HCM",
   description:
     "Danh sách đầy đủ 12 chi nhánh văn phòng ảo, văn phòng trọn gói và coworking của MAX OFFICE tại Tân Bình, Gò Vấp, Tân Phú, Quận 10 và Quận 1, TP.HCM.",
+  openGraph: {
+    images: [{ url: "/images/og/hero-dia-diem.jpg", width: 1200, height: 630 }],
+  },
 };
 
 export default function DiaDiemPage() {

@@ -31,6 +31,15 @@ export async function generateMetadata({
   return {
     title: post.metaTitle,
     description: post.metaDescription,
+    openGraph: {
+      images: [
+        {
+          url: post.heroImage.replace("/images/", "/images/og/"),
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 

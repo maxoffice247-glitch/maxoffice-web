@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "Liên Hệ MAX OFFICE - Tư Vấn Miễn Phí",
   description:
     "Liên hệ MAX OFFICE để được tư vấn miễn phí về văn phòng ảo, văn phòng trọn gói, thành lập doanh nghiệp và kế toán thuế. Hotline 089 8082 188 - 0932 357 357.",
+  openGraph: {
+    images: [{ url: "/images/og/hero-lien-he.jpg", width: 1200, height: 630 }],
+  },
 };
 
 export default async function ContactPage({
