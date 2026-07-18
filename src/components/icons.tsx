@@ -362,7 +362,18 @@ export function MessengerIcon({ className }: IconProps) {
 export function ZaloIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 3C7.03 3 3 6.28 3 10.5c0 2.42 1.31 4.58 3.36 6.01-.11.99-.5 2.27-1.28 3.35-.15.21.02.5.28.5 1.52 0 3.15-.63 4.36-1.35.71.13 1.45.2 2.28.2 4.97 0 9-3.28 9-7.5S16.97 3 12 3Z" />
+      <text
+        x="12"
+        y="12.5"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontFamily="Arial, Helvetica, sans-serif"
+        fontWeight="800"
+        fontSize="9.5"
+        letterSpacing="-0.3"
+      >
+        Zalo
+      </text>
     </svg>
   );
 }
