@@ -351,6 +351,22 @@ export function FacebookIcon({ className }: IconProps) {
   );
 }
 
+export function MessengerIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0C5.373 0 0 5.052 0 11.283c0 3.596 1.797 6.799 4.605 8.888V24l4.203-2.308c1.122.31 2.305.477 3.192.477 6.627 0 12-5.052 12-11.283C24 5.052 18.627 0 12 0Zm1.191 15.193-3.061-3.263-5.976 3.263L10.599 8.71l3.13 3.263L19.637 8.71l-6.446 6.483Z" />
+    </svg>
+  );
+}
+
+export function ZaloIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3C7.03 3 3 6.28 3 10.5c0 2.42 1.31 4.58 3.36 6.01-.11.99-.5 2.27-1.28 3.35-.15.21.02.5.28.5 1.52 0 3.15-.63 4.36-1.35.71.13 1.45.2 2.28.2 4.97 0 9-3.28 9-7.5S16.97 3 12 3Z" />
+    </svg>
+  );
+}
+
 export function ScaleIcon({ className }: IconProps) {
   return (
     <svg className={className} {...base}>
