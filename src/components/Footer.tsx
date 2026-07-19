@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PhoneIcon, FacebookIcon } from "./icons";
+import { PhoneIcon, FacebookIcon, LockIcon } from "./icons";
 import BrandIcon from "./BrandIcon";
 
 const SERVICE_LINKS = [
@@ -134,6 +134,19 @@ export default function Footer() {
                     <PhoneIcon className="h-4 w-4" />
                   </span>
                   089 8082 188
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://workspace.maxoffice.vn"
+                  target="_blank"
+                  rel="noopener"
+                  className="flex items-center gap-2.5 text-[13.5px] transition-all duration-200 hover:translate-x-1 hover:text-white"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10">
+                    <LockIcon className="h-4 w-4" />
+                  </span>
+                  MAX Workspace
                 </a>
               </li>
             </ul>

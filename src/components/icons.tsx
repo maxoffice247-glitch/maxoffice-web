@@ -164,6 +164,15 @@ export function KeyIcon({ className }: IconProps) {
   );
 }
 
+export function LockIcon({ className }: IconProps) {
+  return (
+    <svg className={className} {...base}>
+      <rect x="5" y="11" width="14" height="9" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </svg>
+  );
+}
+
 export function ScreenIcon({ className }: IconProps) {
   return (
     <svg className={className} {...base}>
@@ -361,16 +370,17 @@ export function MessengerIcon({ className }: IconProps) {
 
 export function ZaloIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <svg className={className} viewBox="0 0 24 24">
       <text
         x="12"
         y="12.5"
         textAnchor="middle"
         dominantBaseline="central"
         fontFamily="Arial, Helvetica, sans-serif"
-        fontWeight="800"
+        fontWeight="700"
         fontSize="9.5"
         letterSpacing="-0.3"
+        fill="#FFFFFF"
       >
         Zalo
       </text>
