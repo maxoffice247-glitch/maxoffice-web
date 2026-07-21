@@ -88,10 +88,15 @@ export default function LocationCountBadge({ locations }: { locations: string[] 
               </div>
             )}
 
-            {/* Mobile bottom sheet — header stays put, only the list scrolls */}
+            {/* Mobile bottom sheet — header stays put, only the list scrolls.
+                z-index must clear MobileBottomNav (z-[95]) and the floating
+                call button (z-[97]); at z-50 those painted on top of it and
+                clipped the last item regardless of list length. Matches the
+                z-[200]+ convention this app already uses for full-screen
+                modals (SearchOverlay, LeadCapturePopup). */}
             <div className="md:hidden">
-              <div className="fixed inset-0 z-40 bg-navy/40" onClick={() => setOpen(false)} />
-              <div className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col rounded-t-2xl border-t border-line bg-white shadow-[0_-10px_40px_rgba(11,31,58,0.2)]">
+              <div className="fixed inset-0 z-[200] bg-navy/40" onClick={() => setOpen(false)} />
+              <div className="fixed inset-x-0 bottom-0 z-[201] flex max-h-[85vh] flex-col rounded-t-2xl border-t border-line bg-white shadow-[0_-10px_40px_rgba(11,31,58,0.2)]">
                 <div className="flex shrink-0 items-center justify-between border-b border-line px-6 py-4">
                   <span className="text-[16px] font-bold text-navy">
                     Áp dụng tại {locations.length} chi nhánh
@@ -100,7 +105,10 @@ export default function LocationCountBadge({ locations }: { locations: string[] 
                     <CloseIcon className="h-5 w-5 text-body-text" />
                   </button>
                 </div>
-                <ul className="min-h-0 flex-1 space-y-2.5 overflow-y-auto p-6">
+                <ul
+                  className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-6 pt-4"
+                  style={{ paddingBottom: "max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem))" }}
+                >
                   {locations.map((loc) => (
                     <li key={loc} className="text-[14px] leading-relaxed text-body-text">
                       {loc}
