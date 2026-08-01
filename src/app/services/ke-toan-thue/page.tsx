@@ -5,6 +5,7 @@ import { SERVICES_DATA } from "@/lib/servicesData";
 const data = SERVICES_DATA["ke-toan-thue"];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/services/ke-toan-thue" },
   title: data.metaTitle,
   description: data.metaDescription,
 };

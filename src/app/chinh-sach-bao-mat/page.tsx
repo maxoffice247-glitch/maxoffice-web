@@ -3,6 +3,7 @@ import PageHero from "@/components/PageHero";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/chinh-sach-bao-mat" },
   title: "Chính Sách Bảo Mật | MAX OFFICE",
   description:
     "Chính sách bảo mật thông tin cá nhân của MAX OFFICE: mục đích thu thập, cách sử dụng, thời gian lưu trữ và quyền của khách hàng theo Nghị định 13/2023/NĐ-CP.",

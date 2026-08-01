@@ -18,6 +18,7 @@ import {
 } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich" },
   title: "Tiện Ích Miễn Phí - Công Cụ, Checklist, So Sánh | MAX OFFICE",
   description:
     "9 tiện ích miễn phí: công cụ tính toán, checklist tải PDF, bảng so sánh dịch vụ/loại hình doanh nghiệp và timeline quy trình thành lập — hỗ trợ ra quyết định nhanh chóng.",

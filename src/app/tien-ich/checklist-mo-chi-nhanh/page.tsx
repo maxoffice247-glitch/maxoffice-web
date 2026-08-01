@@ -6,6 +6,7 @@ import PrintPdfButton from "@/components/PrintPdfButton";
 import { ClockIcon, CheckCircleIcon, DocumentCheckIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich/checklist-mo-chi-nhanh" },
   title: "Checklist Mở Chi Nhánh Công Ty — Tải PDF Miễn Phí | MAX OFFICE",
   description:
     "Checklist đầy đủ các bước và giấy tờ cần chuẩn bị khi mở chi nhánh công ty — tick từng mục, tải PDF miễn phí, hỗ trợ bởi MAX OFFICE.",

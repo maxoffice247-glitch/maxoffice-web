@@ -12,6 +12,7 @@ import {
 } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich/quy-trinh-thanh-lap-doanh-nghiep" },
   title: "Quy Trình Thành Lập Doanh Nghiệp — Timeline Tương Tác | MAX OFFICE",
   description:
     "Timeline tương tác toàn bộ hành trình thành lập doanh nghiệp: từ tư vấn loại hình đến khi chính thức vận hành — thời gian dự kiến và hỗ trợ của MAX OFFICE ở từng bước.",

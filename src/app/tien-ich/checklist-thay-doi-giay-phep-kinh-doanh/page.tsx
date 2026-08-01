@@ -6,6 +6,7 @@ import PrintPdfButton from "@/components/PrintPdfButton";
 import { ClockIcon, CheckCircleIcon, DocumentCheckIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich/checklist-thay-doi-giay-phep-kinh-doanh" },
   title: "Checklist Thay Đổi Giấy Phép Kinh Doanh — Tải PDF | MAX OFFICE",
   description:
     "Checklist các bước khi thay đổi nội dung giấy phép kinh doanh: đổi tên, đổi địa chỉ, đổi ngành nghề, đổi vốn điều lệ — tick từng mục, tải PDF miễn phí.",

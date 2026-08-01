@@ -6,6 +6,7 @@ import Faq from "@/components/Faq";
 import BookingFormSection from "@/components/BookingFormSection";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/bang-gia" },
   title: "Bảng Giá Dịch Vụ MAX OFFICE - Minh Bạch, Không Phát Sinh",
   description:
     "Bảng giá chi tiết toàn bộ dịch vụ MAX OFFICE: văn phòng ảo, văn phòng trọn gói, coworking, phòng họp, thành lập doanh nghiệp, kế toán & thuế. Giá minh bạch, không phát sinh chi phí ẩn.",

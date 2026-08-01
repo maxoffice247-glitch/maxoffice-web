@@ -6,6 +6,7 @@ import PrintPdfButton from "@/components/PrintPdfButton";
 import { ClockIcon, CheckCircleIcon, DocumentCheckIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich/checklist-thanh-lap-doanh-nghiep" },
   title: "Checklist Thành Lập Doanh Nghiệp — Tải PDF Miễn Phí | MAX OFFICE",
   description:
     "Checklist đầy đủ các bước và giấy tờ cần chuẩn bị khi thành lập Hộ kinh doanh, Công ty TNHH hoặc Công ty Cổ phần — tick từng mục, tải PDF miễn phí.",

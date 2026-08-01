@@ -3,6 +3,7 @@ import PageHero from "@/components/PageHero";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dieu-khoan-su-dung" },
   title: "Điều Khoản Sử Dụng | MAX OFFICE",
   description:
     "Điều khoản sử dụng website maxoffice.vn: phạm vi áp dụng, quyền sở hữu trí tuệ, trách nhiệm người dùng, giới hạn trách nhiệm và luật áp dụng.",

@@ -12,6 +12,7 @@ import { KNOWLEDGE_CATEGORIES, FEATURED_ARTICLE_SLUGS, getKnowledgeCategory } fr
 import { getBlogPost } from "@/lib/blogData";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/knowledge-center" },
   title: "Kiến Thức Doanh Nghiệp — Cẩm Nang MAX OFFICE",
   description:
     "Kiến thức pháp lý, thuế, văn phòng và vận hành doanh nghiệp theo từng chủ đề — cập nhật bởi đội ngũ MAX OFFICE.",

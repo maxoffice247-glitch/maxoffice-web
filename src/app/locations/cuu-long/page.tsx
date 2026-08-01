@@ -5,6 +5,7 @@ import { LOCATIONS_DATA } from "@/lib/locationsData";
 const data = LOCATIONS_DATA["cuu-long"];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/locations/cuu-long" },
   title: data.metaTitle,
   description: data.metaDescription,
 };

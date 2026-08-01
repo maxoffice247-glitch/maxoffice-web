@@ -7,6 +7,7 @@ import ContactMap from "@/components/ContactMap";
 import Reveal from "@/components/Reveal";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/lien-he" },
   title: "Liên Hệ MAX OFFICE - Tư Vấn Miễn Phí",
   description:
     "Liên hệ MAX OFFICE để được tư vấn miễn phí về văn phòng ảo, văn phòng trọn gói, thành lập doanh nghiệp và kế toán thuế. Hotline 089 8082 188 - 0932 357 357.",

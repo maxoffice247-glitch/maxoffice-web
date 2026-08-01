@@ -6,6 +6,7 @@ import { RevealGroup, RevealItem } from "@/components/Reveal";
 import { TagIcon, CheckCircleIcon, KeyIcon, TrendingUpIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich/so-sanh-tnhh-va-co-phan" },
   title: "So Sánh Công Ty TNHH & Công Ty Cổ Phần | MAX OFFICE",
   description:
     "So sánh Công ty TNHH và Công ty Cổ phần: số lượng thành viên/cổ đông, vốn điều lệ, cơ cấu quản lý và khả năng huy động vốn — giúp bạn chọn đúng loại hình.",

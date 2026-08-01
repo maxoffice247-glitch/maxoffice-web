@@ -9,6 +9,7 @@ import { SearchIcon } from "@/components/icons";
 import { BLOG_POSTS, BLOG_CATEGORIES, BLOG_PAGE_SIZE } from "@/lib/blogData";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog" },
   title: "Blog MAX OFFICE — Kiến Thức Vận Hành Doanh Nghiệp",
   description:
     "Cập nhật kiến thức về thành lập doanh nghiệp, kế toán thuế, pháp lý và vận hành văn phòng từ đội ngũ MAX OFFICE.",

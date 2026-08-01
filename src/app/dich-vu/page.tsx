@@ -9,6 +9,7 @@ import CtaBanner from "@/components/CtaBanner";
 import { ArrowRightSmallIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dich-vu" },
   title: "Tất Cả Dịch Vụ MAX OFFICE - Văn Phòng, Thành Lập DN, Kế Toán Thuế",
   description:
     "Khám phá đầy đủ 6 dịch vụ của MAX OFFICE: văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động, thành lập doanh nghiệp và kế toán thuế trọn gói tại TP.HCM.",

@@ -12,6 +12,7 @@ import {
 } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich/so-sanh-van-phong-ao-va-tron-goi" },
   title: "So Sánh Văn Phòng Ảo & Văn Phòng Trọn Gói | MAX OFFICE",
   description:
     "So sánh chi tiết Văn phòng ảo (từ 299.000đ/tháng, 6 gói) và Văn phòng trọn gói (từ 4.500.000đ/tháng): tính năng, ưu nhược điểm, phù hợp với ai — giúp bạn chọn đúng gói.",

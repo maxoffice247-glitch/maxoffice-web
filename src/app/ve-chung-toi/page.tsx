@@ -8,6 +8,7 @@ import AboutValues from "@/components/AboutValues";
 import CtaBanner from "@/components/CtaBanner";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/ve-chung-toi" },
   title: "Về MAX OFFICE - Đối Tác Vận Hành Doanh Nghiệp TP.HCM",
   description:
     "MAX OFFICE thành lập từ 2022, đồng hành cùng hơn 500 doanh nghiệp tại 12 địa điểm trung tâm TP.HCM. Tìm hiểu câu chuyện, tầm nhìn, sứ mệnh và giá trị cốt lõi của chúng tôi.",

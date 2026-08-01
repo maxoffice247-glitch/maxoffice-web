@@ -13,6 +13,7 @@ import Faq from "@/components/Faq";
 import BookingFormSection from "@/components/BookingFormSection";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/" },
   title: "Văn Phòng Ảo Từ 299K, Trọn Gói TP.HCM | MAX OFFICE",
   description:
     "Văn phòng ảo từ 299.000đ/tháng, văn phòng trọn gói tại TP.HCM. Địa chỉ kinh doanh hợp lệ, hỗ trợ thành lập doanh nghiệp, hơn 500 doanh nghiệp tin dùng.",

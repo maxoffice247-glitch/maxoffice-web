@@ -19,6 +19,7 @@ import { AMENDMENT_SERVICES, COMBO_DISCOUNT_RULE } from "@/lib/setupFees";
 import { SITE_URL } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dich-vu/dich-vu-phap-ly-sua-doi" },
   title: "Dịch Vụ Pháp Lý Sửa Đổi Doanh Nghiệp - Bảng Giá Chi Tiết | MAX OFFICE",
   description:
     "Thay đổi tên công ty, địa chỉ, đại diện pháp luật, tăng vốn điều lệ, bổ sung ngành nghề... Bảng giá minh bạch, ưu đãi combo khi đặt từ 2 dịch vụ trở lên.",

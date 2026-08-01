@@ -4,6 +4,7 @@ import OfficePackageTool from "@/components/tools/OfficePackageTool";
 import { ClockIcon, BadgePercentIcon, ShieldCheckIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich/chon-goi-van-phong" },
   title: "Công Cụ Chọn Gói Văn Phòng Phù Hợp Miễn Phí | MAX OFFICE",
   description:
     "Trả lời vài câu hỏi để nhận gợi ý gói văn phòng phù hợp nhất — văn phòng ảo, chỗ ngồi linh động, văn phòng trọn gói hoặc phòng họp. Miễn phí, có kết quả ngay.",

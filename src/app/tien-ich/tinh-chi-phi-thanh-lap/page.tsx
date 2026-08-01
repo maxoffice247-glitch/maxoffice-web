@@ -4,6 +4,7 @@ import SetupCostTool from "@/components/tools/SetupCostTool";
 import { ClockIcon, BadgePercentIcon, ShieldCheckIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich/tinh-chi-phi-thanh-lap" },
   title: "Công Cụ Tính Chi Phí Thành Lập Công Ty Miễn Phí | MAX OFFICE",
   description:
     "Tính nhanh chi phí thành lập công ty theo Gói 1, Gói 2 và các dịch vụ pháp lý sửa đổi — từ 1.299.000đ khi đăng ký kèm Văn phòng ảo, áp dụng chung mọi loại hình.",

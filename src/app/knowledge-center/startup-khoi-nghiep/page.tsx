@@ -5,6 +5,7 @@ import { KNOWLEDGE_CATEGORIES } from "@/lib/knowledgeCenterData";
 const category = KNOWLEDGE_CATEGORIES.find((c) => c.slug === "startup-khoi-nghiep")!;
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/knowledge-center/startup-khoi-nghiep" },
   title: `${category.name} — Kiến Thức MAX OFFICE`,
   description: category.description,
 };

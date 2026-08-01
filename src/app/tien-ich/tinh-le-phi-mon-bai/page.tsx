@@ -4,6 +4,7 @@ import LicenseFeeTool from "@/components/tools/LicenseFeeTool";
 import { CheckCircleIcon, BadgePercentIcon, ShieldCheckIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/tien-ich/tinh-le-phi-mon-bai" },
   title: "Lệ Phí Môn Bài Đã Bãi Bỏ Từ 2026 - Cập Nhật Mới Nhất | MAX OFFICE",
   description:
     "Từ 01/01/2026, lệ phí môn bài đã chính thức bãi bỏ theo Nghị quyết 198/2025/QH15, áp dụng cho mọi loại hình doanh nghiệp, hộ kinh doanh. Cập nhật quy định mới nhất từ MAX OFFICE.",
