@@ -133,178 +133,6 @@ export type LocationData = {
 const IMAGE = "/images/khong-gian-lam-viec.jpg";
 
 /* ---------------------------------------------------------------------- */
-/* Shared generic content reused across the 9 template-only branches       */
-/* ---------------------------------------------------------------------- */
-
-const GENERIC_BENEFITS: BenefitItem[] = [
-  { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế." },
-  { icon: ClockIcon, title: "Linh hoạt hợp đồng", desc: "Không ràng buộc dài hạn, dễ điều chỉnh theo nhu cầu." },
-  { icon: UsersIcon, title: "Lễ tân chuyên nghiệp", desc: "Hỗ trợ tiếp khách, nhận thư từ khi cần." },
-  { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ MAX OFFICE luôn sẵn sàng hỗ trợ." },
-  { icon: BadgePercentIcon, title: "Giá minh bạch", desc: "Không phát sinh phí ẩn trong quá trình sử dụng." },
-  { icon: KeyIcon, title: "Nâng cấp dễ dàng", desc: "Chuyển đổi linh hoạt giữa các gói dịch vụ." },
-];
-
-function genericIntro(name: string, address: string): string[] {
-  return [
-    `Văn phòng ${name} là một trong 12 địa điểm của MAX OFFICE tại TP.HCM, toạ lạc tại ${address}. Đây là lựa chọn phù hợp cho doanh nghiệp cần địa chỉ đăng ký kinh doanh hợp lệ hoặc không gian làm việc chuyên nghiệp trong khu vực.`,
-    `Tại chi nhánh này, khách hàng có thể sử dụng đầy đủ các dịch vụ cốt lõi của MAX OFFICE gồm văn phòng ảo, văn phòng trọn gói, chỗ ngồi linh động, phòng họp theo giờ, thành lập doanh nghiệp và kế toán thuế — với cùng tiêu chuẩn chất lượng như tại trụ sở chính.`,
-    `Nội dung chi tiết về khu vực lân cận, phương tiện di chuyển và tiện ích xung quanh của chi nhánh ${name} sẽ tiếp tục được MAX OFFICE cập nhật đầy đủ hơn trong thời gian tới. Quý khách có thể liên hệ hotline để được tư vấn cụ thể trước khi đến tham quan trực tiếp.`,
-  ];
-}
-
-function genericFaqs(name: string): FaqItem[] {
-  return [
-    {
-      q: `Địa chỉ tại ${name} có được dùng để đăng ký kinh doanh không?`,
-      a: "Có. Đây là địa chỉ hợp lệ để đăng ký kinh doanh, đăng ký thuế và các thủ tục pháp lý liên quan.",
-    },
-    {
-      q: "Chi nhánh này cung cấp những dịch vụ gì?",
-      a: "Đầy đủ 6 dịch vụ cốt lõi: văn phòng ảo, văn phòng trọn gói, chỗ ngồi linh động, phòng họp theo giờ, thành lập doanh nghiệp và kế toán thuế.",
-    },
-    {
-      q: "Tôi có thể đến tham quan trực tiếp trước khi đăng ký không?",
-      a: "Có. Bạn có thể đặt lịch tham quan miễn phí qua form hoặc hotline, đội ngũ sẽ sắp xếp lịch phù hợp.",
-    },
-    {
-      q: "Chi nhánh có chỗ đỗ xe không?",
-      a: "Có khu vực gửi xe máy và ô tô, chi tiết được cung cấp khi bạn xác nhận lịch tham quan.",
-    },
-    {
-      q: "Hợp đồng thuê tại chi nhánh này có ràng buộc dài hạn không?",
-      a: "Không. Hợp đồng linh hoạt theo tháng hoặc theo năm tuỳ nhu cầu sử dụng thực tế.",
-    },
-    {
-      q: "Nếu cần đổi sang chi nhánh khác thì có được hỗ trợ không?",
-      a: "Có. MAX OFFICE hỗ trợ chuyển đổi giữa 12 chi nhánh khi bạn cần thay đổi vị trí phù hợp hơn.",
-    },
-  ];
-}
-
-function genericTestimonials(name: string): Testimonial[] {
-  return [
-    {
-      quote: `MAX OFFICE tại ${name} giúp công ty mình có địa chỉ đăng ký kinh doanh nhanh chóng, thủ tục rõ ràng.`,
-      initial: "H",
-      name: "Thanh Hà",
-      role: "Chủ doanh nghiệp",
-    },
-    {
-      quote: `Vị trí chi nhánh ${name} khá thuận tiện cho đội ngũ mình di chuyển, đội ngũ hỗ trợ nhiệt tình.`,
-      initial: "M",
-      name: "Minh Quân",
-      role: "Founder startup",
-    },
-  ];
-}
-
-function tanBinhBlock(name: string, address: string) {
-  const nearbyItems: NearbyItem[] = [
-    { name: "Sân bay Tân Sơn Nhất", desc: "Khu vực Tân Bình nằm gần sân bay quốc tế, thuận tiện đón tiếp đối tác." },
-    { name: "Công viên Hoàng Văn Thụ", desc: "Không gian xanh gần khu vực, phù hợp nghỉ ngơi giữa giờ làm việc." },
-    { name: "Khu dân cư Tân Bình", desc: "Khu vực dân cư sầm uất, nhiều tiện ích sinh hoạt xung quanh." },
-    { name: "Trục đường Cộng Hoà — Trường Sơn", desc: "Kết nối nhanh đến trung tâm thành phố và các quận lân cận." },
-  ];
-  const transportItems: TransportItem[] = [
-    { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua khu vực Tân Bình." },
-    { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, thời gian chờ trung bình ngắn." },
-    { icon: CheckCircleIcon, title: "Trục đường chính", desc: "Gần các trục đường lớn kết nối sân bay và trung tâm thành phố." },
-    { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ lễ tân hỗ trợ hướng dẫn khi bạn đến lần đầu." },
-  ];
-  const parkingInfo = [
-    "Khu vực giữ xe máy ngay tại toà nhà.",
-    "Hỗ trợ chỗ đỗ ô tô theo giờ hoặc theo tháng tuỳ chi nhánh.",
-    "Bảo vệ trực gác, an ninh đảm bảo trong giờ làm việc.",
-  ];
-  const diningItems: DiningItem[] = [
-    { name: "Quán cà phê gần văn phòng", desc: "Nhiều lựa chọn quán cà phê phù hợp tiếp khách hoặc làm việc." },
-    { name: "Nhà hàng khu vực Tân Bình", desc: "Đa dạng quán ăn phục vụ bữa trưa cho nhân viên và đối tác." },
-    { name: "Cửa hàng tiện lợi", desc: "Thuận tiện cho nhu cầu mua sắm nhanh trong giờ làm việc." },
-  ];
-  return {
-    intro: genericIntro(name, address),
-    benefits: GENERIC_BENEFITS,
-    nearbyItems,
-    transportItems,
-    parkingInfo,
-    diningItems,
-    faqs: genericFaqs(name),
-    testimonials: genericTestimonials(name),
-  };
-}
-
-function tanPhuBlock(name: string, address: string) {
-  const nearbyItems: NearbyItem[] = [
-    { name: "Khu dân cư Tân Sơn Nhì", desc: "Khu vực dân cư đông đúc, nhiều tiện ích xung quanh." },
-    { name: "Chợ và trung tâm mua sắm Tân Phú", desc: "Thuận tiện cho sinh hoạt và nghỉ ngơi giữa giờ làm việc." },
-    { name: "Trục đường Tân Thắng", desc: "Kết nối thuận tiện đến khu vực Tân Bình và trung tâm thành phố." },
-    { name: "Các toà văn phòng lân cận", desc: "Khu vực có nhiều doanh nghiệp hoạt động, thuận tiện kết nối kinh doanh." },
-  ];
-  const transportItems: TransportItem[] = [
-    { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Các tuyến xe buýt hoạt động qua khu vực Tân Phú." },
-    { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe di chuyển trong khu vực." },
-    { icon: CheckCircleIcon, title: "Trục đường chính", desc: "Gần các tuyến đường kết nối Tân Bình và Tân Phú." },
-    { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ lễ tân hỗ trợ hướng dẫn khi bạn đến lần đầu." },
-  ];
-  const parkingInfo = [
-    "Khu vực giữ xe máy ngay tại toà nhà.",
-    "Hỗ trợ chỗ đỗ ô tô theo giờ hoặc theo tháng.",
-    "Bảo vệ trực gác trong giờ làm việc.",
-  ];
-  const diningItems: DiningItem[] = [
-    { name: "Quán cà phê khu vực Tân Phú", desc: "Nhiều lựa chọn phù hợp tiếp khách hoặc làm việc." },
-    { name: "Nhà hàng lân cận", desc: "Đa dạng quán ăn phục vụ bữa trưa." },
-    { name: "Cửa hàng tiện lợi", desc: "Thuận tiện cho nhu cầu mua sắm nhanh." },
-  ];
-  return {
-    intro: genericIntro(name, address),
-    benefits: GENERIC_BENEFITS,
-    nearbyItems,
-    transportItems,
-    parkingInfo,
-    diningItems,
-    faqs: genericFaqs(name),
-    testimonials: genericTestimonials(name),
-  };
-}
-
-function quan10Block(name: string, address: string) {
-  const nearbyItems: NearbyItem[] = [
-    { name: "Khu vực Hoà Hưng", desc: "Khu dân cư sầm uất tại Quận 10, gần nhiều tiện ích." },
-    { name: "Bệnh viện & trường học lân cận", desc: "Khu vực tập trung nhiều cơ sở y tế, giáo dục lớn." },
-    { name: "Trục đường Cách Mạng Tháng 8", desc: "Kết nối nhanh đến trung tâm Quận 1, Quận 3." },
-    { name: "Các toà văn phòng lân cận", desc: "Khu vực có nhiều doanh nghiệp hoạt động sôi nổi." },
-  ];
-  const transportItems: TransportItem[] = [
-    { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua trục CMT8." },
-    { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe di chuyển đến trung tâm thành phố." },
-    { icon: CheckCircleIcon, title: "Trục đường chính", desc: "Gần trục Cách Mạng Tháng 8 kết nối Quận 1, Quận 3." },
-    { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ lễ tân hỗ trợ hướng dẫn khi bạn đến lần đầu." },
-  ];
-  const parkingInfo = [
-    "Khu vực giữ xe máy ngay tại toà nhà.",
-    "Hỗ trợ chỗ đỗ ô tô theo giờ hoặc theo tháng.",
-    "Bảo vệ trực gác trong giờ làm việc.",
-  ];
-  const diningItems: DiningItem[] = [
-    { name: "Quán cà phê khu vực Quận 10", desc: "Nhiều lựa chọn phù hợp tiếp khách hoặc làm việc." },
-    { name: "Nhà hàng lân cận", desc: "Đa dạng quán ăn phục vụ bữa trưa." },
-    { name: "Cửa hàng tiện lợi", desc: "Thuận tiện cho nhu cầu mua sắm nhanh." },
-  ];
-  return {
-    intro: genericIntro(name, address),
-    benefits: GENERIC_BENEFITS,
-    nearbyItems,
-    transportItems,
-    parkingInfo,
-    diningItems,
-    faqs: genericFaqs(name),
-    testimonials: genericTestimonials(name),
-  };
-}
-
-/* ---------------------------------------------------------------------- */
 /* Full location data                                                      */
 /* ---------------------------------------------------------------------- */
 
@@ -594,8 +422,55 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
         objectPosition: "center top",
       },
     ],
+    intro: [
+      "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
+      "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 12 địa điểm.",
+      "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
-    ...tanBinhBlock("Yên Thế, Tân Bình", "92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM"),
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ, gần sân bay", desc: "Đủ điều kiện đăng ký kinh doanh, chỉ 5-10 phút đến sân bay Tân Sơn Nhất." },
+      { icon: BuildingIcon, title: "Có phòng đào tạo & sự kiện", desc: "Sức chứa 30-50 người, phù hợp workshop, ra mắt sản phẩm ngay tại chi nhánh." },
+      { icon: BadgePercentIcon, title: "Đa dạng gói văn phòng ảo", desc: "Từ BASE đến RISE — nhiều lựa chọn nhất trong các chi nhánh Tân Bình." },
+      { icon: MapPinIcon, title: "Gần vòng xoay Lăng Cha Cả", desc: "Kết nối nhanh đến Quận 1, Quận 3, Phú Nhuận qua trục Cộng Hoà — Trường Sơn." },
+      { icon: UsersIcon, title: "Phù hợp ngành logistics, du lịch", desc: "Vị trí lý tưởng cho doanh nghiệp thường xuyên đón đối tác từ sân bay." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Chỉ 5-10 phút di chuyển, thuận tiện đón đối tác, khách hàng quốc tế." },
+      { name: "Vòng xoay Lăng Cha Cả", desc: "Nút giao quan trọng cửa ngõ Tân Bình, kết nối nhanh về trung tâm thành phố." },
+      { name: "Khu dân cư Tân Sơn Hòa", desc: "Không gian yên tĩnh, xen kẽ nhiều toà văn phòng và nhà phố kinh doanh." },
+      { name: "Trục Trường Sơn — Cộng Hoà", desc: "Hai tuyến đường huyết mạch bao quanh khu vực, thuận tiện di chuyển mọi hướng." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt sân bay và nội thành hoạt động qua khu vực Lăng Cha Cả." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao do gần sân bay, thời gian chờ trung bình rất ngắn." },
+      { icon: CheckCircleIcon, title: "Trục Trường Sơn — Cộng Hoà", desc: "Kết nối trực tiếp sân bay Tân Sơn Nhất với trung tâm Quận 1, Quận 3." },
+      { icon: HeadsetIcon, title: "Hỗ trợ đón tiếp đối tác", desc: "Lễ tân hỗ trợ hướng dẫn đường đi cho khách từ sân bay đến văn phòng." },
+    ],
+    parkingInfo: [
+      "Khu vực giữ xe máy ngay tại toà nhà, thuận tiện cho nhân viên và khách đến làm việc.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực Lăng Cha Cả khi cần tiếp đối tác bằng xe hơi.",
+      "Có nhân viên bảo vệ hỗ trợ hướng dẫn xe ra vào trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán cà phê khu Lăng Cha Cả", desc: "Nhiều quán cà phê phong cách hiện đại, phù hợp tiếp khách hoặc làm việc nhóm." },
+      { name: "Nhà hàng khu vực Tân Sơn Hòa", desc: "Đa dạng lựa chọn từ cơm văn phòng đến nhà hàng phục vụ khách quốc tế." },
+      { name: "Food court gần sân bay", desc: "Thuận tiện cho bữa ăn nhanh khi đối tác di chuyển từ sân bay đến văn phòng." },
+    ],
+    faqs: [
+      { q: "Văn phòng Yên Thế cách sân bay Tân Sơn Nhất bao xa?", a: "Chỉ khoảng 5-10 phút di chuyển bằng xe máy hoặc ô tô, rất thuận tiện nếu doanh nghiệp bạn thường xuyên đón đối tác, khách hàng từ sân bay." },
+      { q: "Chi nhánh Yên Thế có những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp 4 gói: BASE (500.000đ/tháng), ORIGIN (595.000đ/tháng), ORIGIN+ (699.000đ/tháng) và RISE (1.199.000đ/tháng) — đây là một trong số ít chi nhánh có đủ dải gói từ BASE đến RISE cao cấp nhất." },
+      { q: "Phòng đào tạo & sự kiện tại Yên Thế có sức chứa bao nhiêu người?", a: "Phòng đào tạo & sự kiện tại chi nhánh này sức chứa 30-50 người, phù hợp tổ chức workshop, đào tạo nội bộ hoặc sự kiện ra mắt sản phẩm ngay tại văn phòng." },
+      { q: "Địa chỉ 92 Yên Thế có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý, phù hợp đăng ký kinh doanh, đăng ký thuế cho mọi loại hình doanh nghiệp, kể cả doanh nghiệp có yếu tố nước ngoài." },
+      { q: "Từ văn phòng Yên Thế di chuyển đến trung tâm Quận 1 mất bao lâu?", a: "Khoảng 15-20 phút qua trục Cộng Hoà — Trường Sơn hoặc qua vòng xoay Lăng Cha Cả, tuỳ thời điểm giao thông." },
+      { q: "Tôi có thể nâng cấp từ gói BASE lên RISE sau khi ký hợp đồng không?", a: "Có. Bạn có thể nâng cấp gói bất kỳ lúc nào trong quá trình sử dụng để phù hợp với nhu cầu phát triển của doanh nghiệp." },
+    ],
+    testimonials: [
+      { quote: "Chi nhánh Yên Thế gần sân bay nên mình hay hẹn đối tác nước ngoài ở đây, rất tiện.", initial: "T", name: "Anh Tuấn", role: "Giám đốc, công ty logistics" },
+      { quote: "Phòng đào tạo sức chứa 30-50 người giúp mình tổ chức workshop ngay tại văn phòng mà không cần thuê thêm chỗ khác.", initial: "L", name: "Thu Lan", role: "Trưởng phòng đào tạo" },
+    ],
   },
   "cong-hoa": {
     slug: "cong-hoa",
@@ -616,8 +491,54 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-cong-hoa-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cộng Hoà", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cong-hoa-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cộng Hoà", caption: "Bảng tên công ty tại toà nhà" },
     ],
+    intro: [
+      "Văn phòng Cộng Hoà toạ lạc tại số 123 Cộng Hoà, Phường Bảy Hiền, Quận Tân Bình — ngay trên một trong những trục đường lớn và sầm uất bậc nhất khu vực Tân Bình. Bảy Hiền từ lâu được biết đến là khu vực gắn liền với nghề dệt may truyền thống của người Quảng Nam di cư vào Sài Gòn, nay đã phát triển thành khu dân cư — thương mại sôi động với mật độ doanh nghiệp vừa và nhỏ dày đặc.",
+      "Giao lộ Bảy Hiền — nơi giao nhau giữa các trục Cách Mạng Tháng 8, Trường Chinh và Lý Thường Kiệt — là một trong những điểm trung chuyển giao thông quan trọng của cửa ngõ Tây Bắc thành phố, giúp việc di chuyển từ văn phòng đến Quận 10, Quận 11 hay sân bay Tân Sơn Nhất đều nhanh chóng, không mất nhiều thời gian.",
+      "Với vị trí mặt tiền đường Cộng Hoà, chi nhánh phù hợp cho các doanh nghiệp hoạt động trong lĩnh vực thương mại, may mặc, phân phối hoặc dịch vụ — những ngành vốn có truyền thống lâu đời tại khu vực này. MAX OFFICE cung cấp tại đây các gói văn phòng ảo BASE, ORIGIN và ORIGIN+ (từ 500.000đ/tháng), cùng đầy đủ dịch vụ văn phòng trọn gói, phòng họp theo giờ, thành lập doanh nghiệp và kế toán thuế.",
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Cộng Hoà",
-    ...tanBinhBlock("Cộng Hoà, Tân Bình", "123 Cộng Hoà, Phường Bảy Hiền, Quận Tân Bình, TP.HCM"),
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ mặt tiền Cộng Hoà", desc: "Đủ điều kiện đăng ký kinh doanh, vị trí mặt tiền đường lớn dễ tìm." },
+      { icon: MapPinIcon, title: "Gần giao lộ Bảy Hiền", desc: "Kết nối nhanh đến Quận 10, Quận 11 và sân bay Tân Sơn Nhất." },
+      { icon: UsersIcon, title: "Phù hợp ngành thương mại, may mặc", desc: "Khu vực có truyền thống lâu đời về dệt may, phân phối, thương mại." },
+      { icon: BadgePercentIcon, title: "3 gói văn phòng ảo linh hoạt", desc: "BASE, ORIGIN, ORIGIN+ — từ 500.000đ/tháng, dễ nâng cấp theo nhu cầu." },
+      { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Mặt tiền đường Cộng Hoà, dễ di chuyển vào giờ cao điểm." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Giao lộ Bảy Hiền", desc: "Nút giao thông quan trọng, kết nối Cách Mạng Tháng 8, Trường Chinh, Lý Thường Kiệt." },
+      { name: "Khu vực dệt may Bảy Hiền", desc: "Khu dân cư — thương mại lâu đời, mật độ doanh nghiệp vừa và nhỏ dày đặc." },
+      { name: "Chợ Bảy Hiền", desc: "Chợ truyền thống sầm uất, thuận tiện sinh hoạt hàng ngày." },
+      { name: "Sân bay Tân Sơn Nhất", desc: "Khoảng 10-15 phút di chuyển từ chi nhánh." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt lớn đi qua giao lộ Bảy Hiền." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao tại khu vực mặt tiền đường lớn." },
+      { icon: CheckCircleIcon, title: "Trục Cộng Hoà — Trường Chinh", desc: "Kết nối nhanh đến Quận 10, Quận 11, sân bay Tân Sơn Nhất." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân sẵn sàng hướng dẫn cụ thể nếu bạn chưa quen khu vực Bảy Hiền." },
+    ],
+    parkingInfo: [
+      "Khu vực giữ xe máy ngay tại toà nhà mặt tiền đường Cộng Hoà.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực giao lộ Bảy Hiền.",
+      "Có bảo vệ hỗ trợ trông giữ xe trong suốt giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán ăn khu Bảy Hiền", desc: "Nhiều quán ăn lâu đời, đặc trưng ẩm thực miền Trung của cộng đồng Quảng Nam." },
+      { name: "Nhà hàng trục Cộng Hoà", desc: "Đa dạng lựa chọn từ cơm văn phòng đến nhà hàng phục vụ tiếp khách." },
+      { name: "Chợ Bảy Hiền", desc: "Thuận tiện mua sắm thực phẩm, ăn uống nhanh giữa giờ làm việc." },
+    ],
+    faqs: [
+      { q: "Văn phòng Cộng Hoà có vị trí mặt tiền hay trong hẻm?", a: "Văn phòng nằm mặt tiền đường Cộng Hoà, Phường Bảy Hiền — dễ tìm, thuận tiện cho khách hàng và đối tác đến giao dịch trực tiếp." },
+      { q: "Chi nhánh Cộng Hoà cung cấp những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp 3 gói: BASE (500.000đ/tháng), ORIGIN (595.000đ/tháng) và ORIGIN+ (699.000đ/tháng), phù hợp cho doanh nghiệp cần nâng cấp dần theo quy mô." },
+      { q: "Khu vực Bảy Hiền có phù hợp cho doanh nghiệp ngành may mặc, thương mại không?", a: "Rất phù hợp. Bảy Hiền là khu vực có truyền thống lâu đời về dệt may và thương mại, tập trung nhiều doanh nghiệp vừa và nhỏ hoạt động trong lĩnh vực này." },
+      { q: "Từ văn phòng Cộng Hoà đến sân bay Tân Sơn Nhất mất bao lâu?", a: "Khoảng 10-15 phút di chuyển qua trục Trường Chinh hoặc Cộng Hoà, tuỳ thời điểm giao thông." },
+      { q: "Địa chỉ 123 Cộng Hoà có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý, phù hợp đăng ký kinh doanh, đăng ký thuế cho mọi loại hình doanh nghiệp." },
+      { q: "Tôi có thể thuê phòng họp theo giờ tại chi nhánh này không?", a: "Có. Chi nhánh Cộng Hoà cung cấp phòng họp theo giờ, phù hợp tiếp đối tác hoặc tổ chức họp nhóm nhỏ." },
+    ],
+    testimonials: [
+      { quote: "Vị trí mặt tiền Cộng Hoà rất dễ tìm, đối tác đến lần đầu cũng không bị lạc.", initial: "P", name: "Hoài Phương", role: "Chủ xưởng may gia công" },
+      { quote: "Gần giao lộ Bảy Hiền nên mình di chuyển đi giao hàng khắp thành phố đều thuận tiện.", initial: "D", name: "Anh Duy", role: "Giám đốc, công ty phân phối" },
+    ],
   },
   "tan-thang": {
     slug: "tan-thang",
@@ -636,8 +557,54 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-tan-thang-cho-ngoi.jpg", alt: "Khu vực chỗ ngồi văn phòng Tân Thắng", caption: "Không gian làm việc chung" },
       { src: "/images/dia-diem-tan-thang-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Tân Thắng", caption: "Bảng tên công ty tại toà nhà" },
     ],
+    intro: [
+      "Văn phòng Tân Thắng toạ lạc tại 121A-123-125 Tân Thắng, Phường Tân Sơn Nhì, Quận Tân Phú — khu vực phát triển nhanh trong những năm gần đây nhờ sự xuất hiện của các trung tâm thương mại và khu dân cư mới. Đây là lựa chọn phù hợp cho doanh nghiệp muốn có địa chỉ tại Tân Phú với môi trường xung quanh hiện đại, quy hoạch bài bản.",
+      "Khu vực Tân Sơn Nhì nằm không xa Aeon Mall Tân Phú Celadon — một trong những trung tâm thương mại lớn phía Tây thành phố — cùng nhiều khu dân cư mới, trường học và tiện ích đi kèm. Nhờ vậy, nhân viên và đối tác đến làm việc tại chi nhánh có thể kết hợp mua sắm, ăn uống hoặc giải trí ngay sau giờ làm.",
+      "Đường Tân Thắng kết nối thuận tiện với trục Tân Sơn Nhì và các tuyến đường lớn của Tân Phú, giúp việc di chuyển sang khu vực Tân Bình hoặc trung tâm thành phố không quá xa. Chi nhánh cung cấp các gói văn phòng ảo BASE, ORIGIN, ORIGIN+ (từ 500.000đ/tháng), cùng văn phòng trọn gói, phòng họp theo giờ, không gian làm việc chung, thành lập doanh nghiệp và kế toán thuế.",
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Tân Thắng",
-    ...tanPhuBlock("Tân Thắng, Tân Phú", "121A-123-125 Tân Thắng, Phường Tân Sơn Nhì, Quận Tân Phú, TP.HCM"),
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ tại Tân Phú", desc: "Đủ điều kiện đăng ký kinh doanh, khu vực quy hoạch hiện đại." },
+      { icon: MapPinIcon, title: "Gần Aeon Mall Tân Phú", desc: "Thuận tiện tiếp khách, ăn uống, mua sắm sau giờ làm việc." },
+      { icon: BuildingIcon, title: "Không gian làm việc chung", desc: "Khu vực coworking thoáng đãng, phù hợp làm việc tập trung." },
+      { icon: BadgePercentIcon, title: "3 gói văn phòng ảo linh hoạt", desc: "BASE, ORIGIN, ORIGIN+ — từ 500.000đ/tháng." },
+      { icon: UsersIcon, title: "Khu dân cư mới phát triển", desc: "Môi trường xung quanh hiện đại, an ninh tốt." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Aeon Mall Tân Phú Celadon", desc: "Trung tâm thương mại lớn, thuận tiện tiếp khách và giải trí sau giờ làm." },
+      { name: "Khu dân cư Tân Sơn Nhì", desc: "Khu dân cư mới, quy hoạch hiện đại, nhiều tiện ích xung quanh." },
+      { name: "Trường học lân cận", desc: "Khu vực tập trung nhiều trường học, dân cư ổn định." },
+      { name: "Trục đường Tân Sơn Nhì", desc: "Kết nối thuận tiện sang Tân Bình và trung tâm thành phố." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Các tuyến xe buýt hoạt động qua khu vực Tân Sơn Nhì, Tân Phú." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, khu vực dân cư đông đúc nên mật độ xe ổn định." },
+      { icon: CheckCircleIcon, title: "Trục Tân Sơn Nhì — Tân Thắng", desc: "Kết nối nhanh sang Tân Bình, thuận tiện di chuyển liên quận." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hỗ trợ chỉ dẫn tận nơi nếu đây là lần đầu bạn đến khu Tân Sơn Nhì." },
+    ],
+    parkingInfo: [
+      "Có khu vực gửi xe máy ngay tại toà nhà văn phòng.",
+      "Bãi đỗ ô tô tại Aeon Mall gần đó, thuận tiện khi cần đón đối tác bằng xe hơi.",
+      "An ninh được đảm bảo suốt giờ làm việc nhờ đội bảo vệ toà nhà.",
+    ],
+    diningItems: [
+      { name: "Food court Aeon Mall Tân Phú", desc: "Đa dạng lựa chọn ẩm thực, phù hợp tiếp khách hoặc ăn trưa nhóm." },
+      { name: "Quán cà phê khu Tân Sơn Nhì", desc: "Nhiều quán cà phê phong cách hiện đại gần khu dân cư mới." },
+      { name: "Cửa hàng tiện lợi", desc: "Có sẵn trong khu dân cư gần đó, tiện ghé mua đồ dùng nhanh." },
+    ],
+    faqs: [
+      { q: "Văn phòng Tân Thắng có gần Aeon Mall Tân Phú không?", a: "Có. Chi nhánh nằm khá gần Aeon Mall Tân Phú Celadon, thuận tiện cho việc tiếp khách, ăn uống hoặc mua sắm sau giờ làm việc." },
+      { q: "Chi nhánh Tân Thắng cung cấp những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp 3 gói: BASE (500.000đ/tháng), ORIGIN (595.000đ/tháng) và ORIGIN+ (699.000đ/tháng)." },
+      { q: "Địa chỉ 121A-123-125 Tân Thắng có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Sơn Nhì, Quận Tân Phú, phù hợp đăng ký kinh doanh và đăng ký thuế." },
+      { q: "Từ văn phòng Tân Thắng di chuyển sang Tân Bình có xa không?", a: "Không xa. Trục Tân Sơn Nhì kết nối trực tiếp sang khu vực Tân Bình, thời gian di chuyển khoảng 10-15 phút." },
+      { q: "Chi nhánh có không gian làm việc chung (coworking) không?", a: "Có. Chi nhánh Tân Thắng có khu vực chỗ ngồi làm việc chung, phù hợp cho freelancer hoặc đội nhóm nhỏ." },
+      { q: "Tôi có thể đặt lịch tham quan văn phòng Tân Thắng trước khi ký hợp đồng không?", a: "Có. Đội ngũ MAX OFFICE tại Tân Thắng sẵn sàng sắp xếp lịch tham quan miễn phí theo thời gian thuận tiện của bạn — chỉ cần để lại thông tin qua form hoặc gọi hotline 089 8082 188." },
+    ],
+    testimonials: [
+      { quote: "Văn phòng gần Aeon Mall nên mình hay hẹn khách ăn trưa luôn, rất tiện.", initial: "H", name: "Thanh Hằng", role: "Chủ shop online" },
+      { quote: "Khu vực Tân Sơn Nhì yên tĩnh, phù hợp cho đội ngũ mình tập trung làm việc.", initial: "K", name: "Anh Khoa", role: "Trưởng nhóm phát triển phần mềm" },
+    ],
   },
   "cuu-long": {
     slug: "cuu-long",
@@ -655,8 +622,54 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-cuu-long-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cửu Long", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cuu-long-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cửu Long", caption: "Bảng tên công ty tại toà nhà" },
     ],
+    intro: [
+      "Văn phòng Cửu Long toạ lạc tại 06-08-10 Cửu Long, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ, yên tĩnh nằm gần Công viên Hoàng Văn Thụ, một trong những mảng xanh lớn hiếm hoi của khu vực Tân Bình. Đây là lựa chọn phù hợp cho doanh nghiệp muốn có địa chỉ đăng ký kinh doanh trong khu dân cư ổn định, tránh sự ồn ào của các trục đường lớn.",
+      "Khác với một số chi nhánh khác trong khu vực Tân Sơn Hòa nằm sát các giao lộ lớn, Cửu Long mang không khí trầm lắng hơn, phù hợp cho các công ty tư vấn, thiết kế hoặc dịch vụ chuyên môn cần không gian làm việc tập trung. Từ đây di chuyển ra Công viên Hoàng Văn Thụ chỉ mất vài phút — nhiều khách hàng của MAX OFFICE tại chi nhánh này chọn nơi đây để hẹn gặp đối tác ngoài trời hoặc nghỉ ngơi giữa giờ làm việc.",
+      "Chi nhánh Cửu Long hiện tập trung vào gói văn phòng ảo BASE (500.000đ/tháng) — gói tiêu chuẩn bao gồm đầy đủ địa chỉ đăng ký kinh doanh, lễ tân, wifi, không gian tiếp khách (Guest Lounge), tư vấn pháp lý & thuế. Khách hàng có nhu cầu sử dụng các gói cao hơn (ORIGIN, ORIGIN+, RISE) có thể được tư vấn chuyển sang các chi nhánh lân cận như Yên Thế hoặc Sông Thao trong cùng khu vực Tân Bình.",
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Cửu Long",
-    ...tanBinhBlock("Cửu Long, Tân Bình", "06-08-10 Cửu Long, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM"),
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ, khu dân cư yên tĩnh", desc: "Đủ điều kiện đăng ký kinh doanh, tránh ồn ào trục đường lớn." },
+      { icon: MapPinIcon, title: "Gần Công viên Hoàng Văn Thụ", desc: "Không gian xanh gần kề, phù hợp nghỉ ngơi hoặc gặp gỡ ngoài trời." },
+      { icon: UsersIcon, title: "Phù hợp công ty tư vấn, thiết kế", desc: "Không gian trầm lắng, thích hợp cho công việc cần tập trung cao." },
+      { icon: BadgePercentIcon, title: "Gói BASE trọn vẹn tiện ích", desc: "Bao gồm Guest Lounge, tư vấn pháp lý & thuế, đánh giá sức khoẻ doanh nghiệp AI." },
+      { icon: KeyIcon, title: "Dễ nâng cấp khi cần", desc: "Hỗ trợ chuyển sang chi nhánh khác nếu cần gói cao hơn BASE." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Công viên Hoàng Văn Thụ", desc: "Mảng xanh lớn của khu vực, chỉ vài phút di chuyển từ văn phòng." },
+      { name: "Khu dân cư Tân Sơn Hòa", desc: "Không gian yên tĩnh, ổn định, ít xe cộ qua lại hơn khu vực trục chính." },
+      { name: "Các toà văn phòng lân cận", desc: "Khu vực có một số doanh nghiệp nhỏ hoạt động, không quá đông đúc." },
+      { name: "Sân bay Tân Sơn Nhất", desc: "Khoảng 10 phút di chuyển, thuận tiện khi cần đón đối tác." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Các tuyến xe buýt hoạt động qua khu vực gần Công viên Hoàng Văn Thụ." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ đặt xe dù nằm trong khu vực yên tĩnh, thời gian chờ ngắn." },
+      { icon: CheckCircleIcon, title: "Trục Trường Chinh — Cộng Hoà", desc: "Cách không xa, thuận tiện kết nối trung tâm khi cần." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân tại chi nhánh luôn hỗ trợ chỉ dẫn đường đi khi bạn ghé lần đầu." },
+    ],
+    parkingInfo: [
+      "Toà nhà có khu vực gửi xe máy riêng cho khách đến làm việc.",
+      "Khu dân cư yên tĩnh nên việc tìm chỗ đỗ ô tô gần đó khá dễ dàng.",
+      "Đội bảo vệ trực gác thường xuyên, đảm bảo an toàn cho xe cộ.",
+    ],
+    diningItems: [
+      { name: "Quán cà phê gần Công viên Hoàng Văn Thụ", desc: "Không gian yên tĩnh, phù hợp làm việc hoặc gặp gỡ đối tác nhẹ nhàng." },
+      { name: "Quán ăn khu dân cư Tân Sơn Hòa", desc: "Nhiều quán ăn nhỏ mang phong cách gia đình, giá cả bình dân." },
+      { name: "Cửa hàng tiện lợi", desc: "Nằm ngay trong khu dân cư, tiện ghé mua đồ nhanh giữa giờ." },
+    ],
+    faqs: [
+      { q: "Chi nhánh Cửu Long có những gói văn phòng ảo nào?", a: "Hiện tại chi nhánh Cửu Long chỉ áp dụng gói BASE (500.000đ/tháng) — bao gồm đầy đủ địa chỉ đăng ký kinh doanh, lễ tân, wifi, Guest Lounge và tư vấn pháp lý & thuế. Nếu bạn cần các gói cao hơn (ORIGIN, ORIGIN+, RISE), đội ngũ tư vấn sẽ hỗ trợ chuyển sang chi nhánh Yên Thế hoặc Sông Thao gần đó." },
+      { q: "Vì sao chi nhánh Cửu Long chỉ có một gói duy nhất?", a: "MAX OFFICE bố trí các gói dịch vụ theo quy mô và đặc điểm từng chi nhánh. Cửu Long tập trung phục vụ tốt nhất gói BASE — phù hợp với phần lớn doanh nghiệp vừa và nhỏ cần địa chỉ hợp lệ và tiện ích cơ bản đầy đủ." },
+      { q: "Văn phòng Cửu Long có gần công viên không?", a: "Có. Chi nhánh nằm gần Công viên Hoàng Văn Thụ, thuận tiện cho việc nghỉ ngơi hoặc gặp gỡ đối tác ngoài trời." },
+      { q: "Địa chỉ 06-08-10 Cửu Long có hợp lệ để đăng ký kinh doanh không?", a: "Có. Địa chỉ này đáp ứng đầy đủ điều kiện pháp lý để đăng ký kinh doanh, đăng ký thuế theo quy định hiện hành." },
+      { q: "Khu vực xung quanh văn phòng Cửu Long có ồn ào không?", a: "Không. Đây là khu dân cư tương đối yên tĩnh, tách biệt với các trục đường lớn, phù hợp cho công việc cần sự tập trung." },
+      { q: "Tôi có thể đến tham quan văn phòng Cửu Long trước khi ký hợp đồng không?", a: "Có. Bạn chỉ cần để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ sẽ sắp xếp lịch tham quan phù hợp." },
+    ],
+    testimonials: [
+      { quote: "Khu vực yên tĩnh, gần công viên nên mình thích ra đó ngồi làm việc buổi sáng trước khi vào văn phòng.", initial: "N", name: "Bảo Ngọc", role: "Freelancer thiết kế đồ hoạ" },
+      { quote: "Gói BASE tại đây đủ dùng cho công ty mới thành lập của mình, giá hợp lý mà vẫn đầy đủ tiện ích.", initial: "S", name: "Anh Sơn", role: "Giám đốc công ty tư vấn" },
+    ],
   },
   "hoang-viet": {
     slug: "hoang-viet",
@@ -674,8 +687,54 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Hoàng Việt", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
+    intro: [
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 12 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
+      "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Hoàng Việt",
-    ...tanBinhBlock("Hoàng Việt, Tân Bình", "1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình, TP.HCM"),
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ, gần sân bay", desc: "Đủ điều kiện đăng ký kinh doanh, sát cổng sân bay Tân Sơn Nhất." },
+      { icon: BadgePercentIcon, title: "Giá khởi điểm chỉ 299.000đ/tháng", desc: "Gói LITE, START, BASE — phù hợp doanh nghiệp mới, tối ưu chi phí." },
+      { icon: MapPinIcon, title: "Gần Công viên Gia Định", desc: "Không gian xanh thoáng đãng, chỉ vài phút di chuyển." },
+      { icon: UsersIcon, title: "Phù hợp startup, hộ kinh doanh", desc: "Chi phí hợp lý cho doanh nghiệp giai đoạn đầu." },
+      { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh sang Phú Nhuận và trung tâm thành phố." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Văn phòng nằm sát ranh giới sân bay, thuận tiện đón khách quốc tế." },
+      { name: "Công viên Gia Định", desc: "Công viên lớn, không gian xanh thoáng đãng gần chi nhánh." },
+      { name: "Khu dân cư Tân Sơn Nhất", desc: "Khu vực dân cư lâu năm, gần sân bay nhưng vẫn giữ được nhịp sống yên bình." },
+      { name: "Trục Hoàng Việt — Phan Thúc Duyện", desc: "Kết nối thuận tiện sang Phú Nhuận và trung tâm thành phố." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt sân bay hoạt động qua khu vực." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao do gần sân bay, dễ dàng đặt xe mọi thời điểm." },
+      { icon: CheckCircleIcon, title: "Trục Hoàng Việt — Hồng Hà", desc: "Kết nối nhanh sang Phú Nhuận, Quận 1 qua đường Hồng Hà." },
+      { icon: HeadsetIcon, title: "Hỗ trợ đón khách quốc tế", desc: "Lễ tân hỗ trợ hướng dẫn cho khách vừa đến từ sân bay." },
+    ],
+    parkingInfo: [
+      "Toà nhà bố trí khu vực gửi xe máy thuận tiện ngay lối vào.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực sân bay khi cần đón đối tác.",
+      "Có bảo vệ trực để đảm bảo an ninh cho xe cộ trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán cà phê khu Tân Sơn Nhất", desc: "Nhiều quán cà phê phù hợp tiếp khách vừa đến từ sân bay." },
+      { name: "Nhà hàng gần Công viên Gia Định", desc: "Không gian thoáng đãng, phù hợp tiếp đối tác vào buổi trưa." },
+      { name: "Food court gần sân bay", desc: "Thuận tiện cho bữa ăn nhanh khi lịch trình dày đặc." },
+    ],
+    faqs: [
+      { q: "Văn phòng Hoàng Việt cách sân bay Tân Sơn Nhất bao xa?", a: "Rất gần — đường Hoàng Việt chạy dọc theo ranh giới sân bay, chỉ mất vài phút di chuyển từ cổng sân bay đến văn phòng." },
+      { q: "Chi nhánh Hoàng Việt có những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp 3 gói giá tốt: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng), phù hợp cho doanh nghiệp mới tối ưu chi phí." },
+      { q: "Gói LITE 299.000đ/tháng bao gồm những gì?", a: "Gói LITE bao gồm địa chỉ đăng ký kinh doanh hợp lệ, lễ tân tiếp nhận thư từ, wifi và quyền tham gia các buổi workshop của MAX OFFICE." },
+      { q: "Địa chỉ 1/12 Hoàng Việt có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Sơn Nhất, Quận Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế." },
+      { q: "Chi nhánh có gần công viên để nghỉ ngơi giữa giờ làm không?", a: "Có. Công viên Gia Định nằm rất gần chi nhánh, phù hợp để nghỉ ngơi hoặc đi bộ giữa giờ làm việc." },
+      { q: "Tôi có thể nâng cấp từ gói LITE lên START hoặc BASE sau này không?", a: "Có. Bạn có thể nâng cấp gói bất kỳ lúc nào để phù hợp với nhu cầu phát triển của doanh nghiệp." },
+    ],
+    testimonials: [
+      { quote: "Mình mới mở công ty nên chọn gói LITE ở đây, giá rẻ mà vẫn đủ điều kiện đăng ký kinh doanh.", initial: "V", name: "Anh Vinh", role: "Founder công ty mới thành lập" },
+      { quote: "Văn phòng sát sân bay nên đối tác nước ngoài của mình ghé qua rất tiện, không mất nhiều thời gian di chuyển.", initial: "C", name: "Mỹ Châu", role: "Quản lý xuất nhập khẩu" },
+    ],
   },
   "bau-cat": {
     slug: "bau-cat",
@@ -693,8 +752,54 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-bau-cat-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Bàu Cát 2", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-bau-cat-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Bàu Cát 2", caption: "Bảng tên công ty tại toà nhà" },
     ],
+    intro: [
+      "Văn phòng Bàu Cát 2 toạ lạc tại 24A Bàu Cát 2, Phường Tân Bình — khu vực từ lâu được biết đến như một trong những 'thủ phủ' may mặc, thời trang thiết kế của Sài Gòn, nơi tập trung hàng trăm xưởng may, showroom và cửa hàng thời trang nhỏ lẻ. Đây là lựa chọn phù hợp cho doanh nghiệp hoạt động trong ngành thời trang, may mặc, thương mại điện tử muốn có địa chỉ gần nguồn hàng.",
+      "Khu Bàu Cát có mạng lưới hẻm nhỏ đan xen nhưng khá thuận tiện di chuyển nhờ hệ thống đường nội bộ kết nối trực tiếp ra các trục lớn như Đồng Đen, Trường Chinh. Chợ Bàu Cát ngay gần đó cũng là nơi giao thương sầm uất, phục vụ nhu cầu sinh hoạt hàng ngày cho cả khu vực.",
+      "Chi nhánh Bàu Cát 2 cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) cùng không gian làm việc chung (coworking) thoáng đãng — phù hợp cho các cá nhân kinh doanh online, xưởng may nhỏ hoặc startup thời trang cần địa chỉ đăng ký kinh doanh hợp lệ với chi phí tối ưu.",
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Bàu Cát 2",
-    ...tanBinhBlock("Bàu Cát 2, Tân Bình", "24A Bàu Cát 2, Phường Tân Bình, TP.HCM"),
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ khu Bàu Cát", desc: "Đủ điều kiện đăng ký kinh doanh, gần khu thời trang, may mặc nổi tiếng." },
+      { icon: BadgePercentIcon, title: "Giá khởi điểm chỉ 299.000đ/tháng", desc: "Gói LITE, START, BASE — tối ưu chi phí cho doanh nghiệp nhỏ." },
+      { icon: BuildingIcon, title: "Không gian làm việc chung", desc: "Khu coworking thoáng đãng, phù hợp làm việc tập trung." },
+      { icon: UsersIcon, title: "Phù hợp ngành thời trang, may mặc", desc: "Gần nguồn hàng, xưởng may, showroom thời trang trong khu vực." },
+      { icon: MapPinIcon, title: "Gần chợ Bàu Cát", desc: "Thuận tiện sinh hoạt, giao thương hàng ngày." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Khu thời trang, may mặc Bàu Cát", desc: "Tập trung nhiều xưởng may, showroom thời trang thiết kế nổi tiếng." },
+      { name: "Chợ Bàu Cát", desc: "Chợ truyền thống sầm uất, thuận tiện sinh hoạt và giao thương." },
+      { name: "Khu dân cư Bàu Cát", desc: "Khu dân cư đông đúc, nhiều hẻm nhỏ kết nối ra trục lớn." },
+      { name: "Trục Đồng Đen — Trường Chinh", desc: "Kết nối thuận tiện sang các khu vực khác của Tân Bình." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt chạy ngang khu vực Bàu Cát, kết nối ra trục Trường Chinh." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ đặt xe dù trong hẻm, tài xế khu vực khá quen đường." },
+      { icon: CheckCircleIcon, title: "Trục Đồng Đen — Trường Chinh", desc: "Kết nối nhanh ra các trục lớn của Tân Bình." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ lễ tân hỗ trợ hướng dẫn khi bạn đến lần đầu, đặc biệt qua khu hẻm." },
+    ],
+    parkingInfo: [
+      "Có khu vực gửi xe máy ngay tại toà nhà cho khách đến làm việc.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực do đường trong khu Bàu Cát khá nhỏ.",
+      "Bảo vệ hỗ trợ trông xe trong suốt giờ hoạt động của văn phòng.",
+    ],
+    diningItems: [
+      { name: "Quán ăn khu Bàu Cát", desc: "Nhiều quán ăn bình dân phục vụ công nhân, nhân viên xưởng may trong khu vực." },
+      { name: "Chợ Bàu Cát", desc: "Thuận tiện mua sắm thực phẩm, ăn sáng, ăn trưa nhanh." },
+      { name: "Cửa hàng tiện lợi", desc: "Có vài cửa hàng tiện lợi trong khu vực, phù hợp ghé mua đồ nhanh." },
+    ],
+    faqs: [
+      { q: "Khu vực Bàu Cát 2 có phù hợp cho doanh nghiệp ngành thời trang không?", a: "Rất phù hợp. Bàu Cát là khu vực nổi tiếng với nhiều xưởng may, showroom thời trang thiết kế, thuận tiện cho doanh nghiệp cần gần nguồn hàng, thợ may." },
+      { q: "Chi nhánh Bàu Cát 2 có những gói văn phòng ảo nào?", a: "Chi nhánh hiện có 3 lựa chọn: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng), phù hợp cho cá nhân kinh doanh và doanh nghiệp nhỏ ngành thời trang." },
+      { q: "Địa chỉ 24A Bàu Cát 2 có nằm trong hẻm không, có khó tìm không?", a: "Văn phòng nằm trong khu vực đường Bàu Cát 2, hệ thống đường nội bộ khá rõ ràng và kết nối thuận tiện ra trục Đồng Đen — Trường Chinh, đội ngũ lễ tân sẽ hỗ trợ chỉ đường nếu bạn đến lần đầu." },
+      { q: "Địa chỉ này có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
+      { q: "Chi nhánh có không gian coworking không?", a: "Có. Chi nhánh Bàu Cát 2 có khu vực làm việc chung thoáng đãng, phù hợp cho freelancer hoặc đội nhóm nhỏ." },
+      { q: "Tôi có thể đến tham quan văn phòng Bàu Cát 2 trước khi ký hợp đồng không?", a: "Có. Bạn có thể để lại thông tin qua form hoặc gọi trực tiếp hotline 089 8082 188 để được sắp xếp lịch tham quan miễn phí phù hợp." },
+    ],
+    testimonials: [
+      { quote: "Mình mở xưởng may nhỏ gần đây nên đặt địa chỉ công ty luôn ở Bàu Cát cho tiện quản lý.", initial: "T", name: "Chị Thảo", role: "Chủ xưởng may thời trang" },
+      { quote: "Giá gói LITE rất hợp với ngân sách công ty mới mở của mình, thủ tục lại nhanh gọn.", initial: "Đ", name: "Minh Đức", role: "Founder thương hiệu thời trang online" },
+    ],
   },
   "lam-son": {
     slug: "lam-son",
@@ -711,8 +816,54 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-lam-son-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Lam Sơn", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-lam-son-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Lam Sơn", caption: "Bảng tên công ty tại toà nhà" },
     ],
+    intro: [
+      "Văn phòng Lam Sơn toạ lạc tại 2-2B Lam Sơn, Phường Tân Sơn Hòa, Quận Tân Bình — khu vực nằm gần trục đường Lê Văn Sỹ, một trong những tuyến phố ẩm thực và mua sắm sầm uất nối liền Tân Bình với Quận 3. Đây là lựa chọn thuận tiện cho doanh nghiệp cần địa chỉ vừa gần trung tâm vừa giữ được chi phí hợp lý.",
+      "Khác với các chi nhánh khác trong cùng Phường Tân Sơn Hòa, Lam Sơn có lợi thế lớn về khả năng kết nối trực tiếp vào trục Lê Văn Sỹ — Cách Mạng Tháng 8, giúp việc di chuyển đến trung tâm Quận 3, Quận 1 nhanh hơn nhiều so với việc phải vòng qua các trục lớn khác của Tân Bình. Khu vực xung quanh có nhiều quán ăn, cà phê phục vụ dân văn phòng, phù hợp cho các buổi gặp gỡ đối tác không quá trang trọng.",
+      "Chi nhánh Lam Sơn cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho doanh nghiệp nhỏ, hộ kinh doanh hoặc văn phòng đại diện cần vị trí gần trung tâm với ngân sách tối ưu.",
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Lam Sơn",
-    ...tanBinhBlock("Lam Sơn, Tân Bình", "2-2B Lam Sơn, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM"),
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ gần trung tâm", desc: "Đủ điều kiện đăng ký kinh doanh, gần trục Lê Văn Sỹ nối Quận 3." },
+      { icon: BadgePercentIcon, title: "Giá khởi điểm chỉ 299.000đ/tháng", desc: "Gói LITE, START, BASE — tối ưu chi phí, gần trung tâm." },
+      { icon: MapPinIcon, title: "Gần trục Lê Văn Sỹ", desc: "Kết nối nhanh đến Quận 3, Quận 1 qua tuyến phố ẩm thực sầm uất." },
+      { icon: ClockIcon, title: "Di chuyển thuận tiện", desc: "Không phải vòng qua các trục lớn khác của Tân Bình." },
+      { icon: UsersIcon, title: "Phù hợp văn phòng đại diện", desc: "Vị trí cân bằng giữa chi phí và khả năng tiếp cận trung tâm." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Trục Lê Văn Sỹ", desc: "Tuyến phố ẩm thực, mua sắm sầm uất nối Tân Bình với Quận 3." },
+      { name: "Khu dân cư Tân Sơn Hòa", desc: "Khu dân cư lâu đời, mật độ vừa phải, không quá ồn ào." },
+      { name: "Trục Cách Mạng Tháng 8", desc: "Kết nối nhanh đến trung tâm Quận 3, Quận 1." },
+      { name: "Các quán ăn, cà phê văn phòng", desc: "Khu vực tập trung nhiều quán phục vụ dân văn phòng xung quanh." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua trục Lê Văn Sỹ, Cách Mạng Tháng 8." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, khu vực gần trung tâm nên mật độ xe ổn định." },
+      { icon: CheckCircleIcon, title: "Trục Lê Văn Sỹ — CMT8", desc: "Kết nối trực tiếp đến Quận 3, Quận 1 mà không cần vòng xa." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân nhiệt tình hướng dẫn đường đi cho khách ghé thăm lần đầu." },
+    ],
+    parkingInfo: [
+      "Văn phòng có khu vực gửi xe máy riêng ngay tại toà nhà.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực trục Lê Văn Sỹ.",
+      "Có bảo vệ trực gác thường xuyên, đảm bảo an toàn cho xe của khách.",
+    ],
+    diningItems: [
+      { name: "Phố ẩm thực Lê Văn Sỹ", desc: "Đa dạng quán ăn, cà phê phục vụ dân văn phòng, phù hợp tiếp khách nhẹ nhàng." },
+      { name: "Quán cà phê khu Tân Sơn Hòa", desc: "Nhiều lựa chọn quán cà phê làm việc hoặc gặp gỡ đối tác." },
+      { name: "Cửa hàng tiện lợi", desc: "Vài cửa hàng nhỏ gần đó phục vụ nhu cầu mua sắm nhanh." },
+    ],
+    faqs: [
+      { q: "Văn phòng Lam Sơn có gần trung tâm Quận 3 không?", a: "Có. Chi nhánh kết nối trực tiếp vào trục Lê Văn Sỹ — Cách Mạng Tháng 8, di chuyển đến trung tâm Quận 3 chỉ mất khoảng 10-15 phút." },
+      { q: "Chi nhánh Lam Sơn có những gói văn phòng ảo nào?", a: "Hiện chi nhánh có 3 gói: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho văn phòng đại diện quy mô nhỏ." },
+      { q: "Địa chỉ 2-2B Lam Sơn có hợp lệ để đăng ký kinh doanh không?", a: "Có. Địa chỉ này đủ điều kiện pháp lý để đăng ký kinh doanh và đăng ký thuế theo quy định hiện hành." },
+      { q: "Khu vực xung quanh văn phòng Lam Sơn có quán ăn tiếp khách không?", a: "Có. Khu vực gần trục Lê Văn Sỹ tập trung nhiều quán ăn, cà phê phù hợp cho các buổi gặp gỡ đối tác không quá trang trọng." },
+      { q: "Lam Sơn khác gì so với các chi nhánh khác cùng Phường Tân Sơn Hòa?", a: "Lam Sơn có lợi thế kết nối trực tiếp vào trục Lê Văn Sỹ — Cách Mạng Tháng 8, giúp di chuyển đến Quận 3, Quận 1 nhanh hơn mà không cần vòng qua các trục lớn khác." },
+      { q: "Tôi có thể nâng cấp gói dịch vụ sau khi ký hợp đồng tại Lam Sơn không?", a: "Có. Bạn có thể nâng cấp từ LITE lên START hoặc BASE bất kỳ lúc nào để phù hợp với nhu cầu phát triển của doanh nghiệp." },
+    ],
+    testimonials: [
+      { quote: "Văn phòng gần Lê Văn Sỹ nên mình hay hẹn khách ở mấy quán cà phê gần đó, không khí thoải mái hơn phòng họp.", initial: "A", name: "Gia An", role: "Chủ agency marketing nhỏ" },
+      { quote: "Di chuyển từ đây qua Quận 3 làm việc với đối tác khá nhanh, mình tiết kiệm được nhiều thời gian.", initial: "Q", name: "Bảo Quốc", role: "Đại diện văn phòng khu vực" },
+    ],
   },
   "hoang-ke-viem": {
     slug: "hoang-ke-viem",
@@ -735,8 +886,54 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
         aspectRatio: "1 / 1",
       },
     ],
+    intro: [
+      "Văn phòng Hoàng Kế Viêm toạ lạc tại 26 Hoàng Kế Viêm, Phường Bảy Hiền, Quận Tân Bình — cùng khu vực Bảy Hiền với chi nhánh Cộng Hoà nhưng nằm sâu hơn về phía trục Trường Chinh, cửa ngõ Tây Bắc của thành phố nối liền với Quận 12, Hóc Môn. Đây là lựa chọn phù hợp cho doanh nghiệp có nhu cầu kết nối với khu vực ngoại thành phía Tây Bắc TP.HCM.",
+      "Khu vực quanh đường Hoàng Kế Viêm chủ yếu là dân cư sinh sống lâu năm, xen kẽ một số trường học và cơ sở giáo dục nhỏ, tạo nên không khí ổn định, ít biến động. Từ đây di chuyển ra trục Trường Chinh chỉ mất vài phút, thuận tiện cho các doanh nghiệp thường xuyên di chuyển về hướng Quận 12, sân bay hoặc các khu công nghiệp phía Tây Bắc.",
+      "Chi nhánh Hoàng Kế Viêm cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho doanh nghiệp nhỏ, hộ kinh doanh cần địa chỉ hợp lệ với chi phí tiết kiệm nhất trong hệ thống MAX OFFICE.",
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng Hoàng Kế Viêm",
-    ...tanBinhBlock("Hoàng Kế Viêm, Tân Bình", "26 Hoàng Kế Viêm, Phường Bảy Hiền, Quận Tân Bình, TP.HCM"),
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ khu Bảy Hiền", desc: "Đủ điều kiện đăng ký kinh doanh, gần trục Trường Chinh." },
+      { icon: BadgePercentIcon, title: "Giá khởi điểm chỉ 299.000đ/tháng", desc: "Gói LITE, START, BASE — tiết kiệm chi phí cho doanh nghiệp nhỏ." },
+      { icon: MapPinIcon, title: "Gần trục Trường Chinh", desc: "Kết nối nhanh về hướng Quận 12, Hóc Môn và sân bay." },
+      { icon: UsersIcon, title: "Khu dân cư ổn định", desc: "Môi trường yên tĩnh, xen kẽ trường học, phù hợp làm việc lâu dài." },
+      { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Dễ dàng di chuyển ra các trục lớn khi cần." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Trục đường Trường Chinh", desc: "Cửa ngõ Tây Bắc thành phố, kết nối Quận 12, Hóc Môn." },
+      { name: "Khu dân cư Bảy Hiền", desc: "Khu dân cư sinh sống lâu năm, ổn định, ít biến động." },
+      { name: "Trường học lân cận", desc: "Khu vực có một số trường học, cơ sở giáo dục nhỏ." },
+      { name: "Sân bay Tân Sơn Nhất", desc: "Khoảng 15 phút di chuyển qua trục Trường Chinh." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Một số tuyến xe buýt chạy qua khu vực, kết nối ra trục Trường Chinh gần đó." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, khu dân cư ổn định nên tài xế quen đường." },
+      { icon: CheckCircleIcon, title: "Trục Trường Chinh", desc: "Kết nối nhanh về hướng Quận 12, Hóc Môn và các khu công nghiệp." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân sẵn sàng hướng dẫn đường vào chi nhánh cho khách đến lần đầu." },
+    ],
+    parkingInfo: [
+      "Toà nhà có khu vực gửi xe máy thuận tiện cho khách đến làm việc.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực khi cần.",
+      "Đội bảo vệ trực thường xuyên, đảm bảo an toàn cho xe cộ.",
+    ],
+    diningItems: [
+      { name: "Quán ăn khu dân cư Bảy Hiền", desc: "Vài quán cơm bình dân trong khu dân cư, giá hợp lý cho bữa trưa." },
+      { name: "Quán cà phê gần trục Trường Chinh", desc: "Không gian phù hợp làm việc hoặc gặp gỡ đối tác nhẹ nhàng." },
+      { name: "Cửa hàng tiện lợi", desc: "Có cửa hàng tiện lợi gần đó để ghé mua sắm nhanh khi cần." },
+    ],
+    faqs: [
+      { q: "Văn phòng Hoàng Kế Viêm có gần trục Trường Chinh không?", a: "Có. Chi nhánh nằm gần trục Trường Chinh, cửa ngõ Tây Bắc thành phố, thuận tiện kết nối về hướng Quận 12, Hóc Môn." },
+      { q: "Chi nhánh Hoàng Kế Viêm có những gói văn phòng ảo nào?", a: "Chi nhánh hiện áp dụng 3 gói: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng), phù hợp ngân sách doanh nghiệp nhỏ." },
+      { q: "Địa chỉ 26 Hoàng Kế Viêm có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Bảy Hiền, Quận Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế." },
+      { q: "Hoàng Kế Viêm khác gì so với chi nhánh Cộng Hoà cũng ở khu Bảy Hiền?", a: "Cả hai đều thuộc Phường Bảy Hiền, nhưng Hoàng Kế Viêm nằm sâu hơn về phía trục Trường Chinh, phù hợp cho doanh nghiệp cần kết nối về hướng Quận 12, Hóc Môn, trong khi Cộng Hoà nằm mặt tiền đường lớn, gần giao lộ trung tâm hơn." },
+      { q: "Khu vực xung quanh văn phòng có yên tĩnh không?", a: "Có. Đây là khu dân cư sinh sống lâu năm, khá ổn định và yên tĩnh, phù hợp cho công việc cần sự tập trung." },
+      { q: "Tôi có thể đến tham quan văn phòng Hoàng Kế Viêm trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form hoặc liên hệ hotline 089 8082 188, đội ngũ MAX OFFICE sẽ sắp xếp lịch tham quan miễn phí cho bạn." },
+    ],
+    testimonials: [
+      { quote: "Công ty mình hay giao dịch với đối tác ở Quận 12 nên đặt văn phòng ở đây khá thuận tiện.", initial: "L", name: "Anh Lâm", role: "Giám đốc kinh doanh" },
+      { quote: "Khu vực yên tĩnh, giá thuê hợp lý, phù hợp với ngân sách công ty nhỏ của mình.", initial: "H", name: "Ngọc Hiếu", role: "Chủ hộ kinh doanh cá thể" },
+    ],
   },
   cmt8: {
     slug: "cmt8",
@@ -754,8 +951,54 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-cmt8-le-tan.jpg", alt: "Khu vực lễ tân văn phòng CMT8", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cmt8-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng CMT8", caption: "Bảng tên công ty tại toà nhà" },
     ],
+    intro: [
+      "Văn phòng CMT8 toạ lạc tại 283/26-28 Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10 — một trong những trục đường lớn và huyết mạch bậc nhất khu vực trung tâm TP.HCM, nối liền Quận 1, Quận 3 với Quận 10 và Quận Tân Bình. Đây là chi nhánh duy nhất của MAX OFFICE đặt tại Quận 10, phù hợp cho doanh nghiệp muốn có địa chỉ gần trung tâm với chi phí hợp lý hơn so với Quận 1.",
+      "Khu vực Phường Hoà Hưng nằm gần Ga Sài Gòn — nhà ga đường sắt trung tâm của thành phố — cùng nhiều bệnh viện, trường đại học lớn như Bệnh viện Nhân dân 115, Đại học Bách Khoa lân cận, tạo nên mật độ dân cư và hoạt động kinh doanh sôi động suốt cả ngày. Trục Cách Mạng Tháng 8 cũng là tuyến đường được nhiều doanh nghiệp lựa chọn đặt văn phòng nhờ khả năng di chuyển thuận tiện đến hầu hết các quận trung tâm.",
+      "Chi nhánh CMT8 cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — là lựa chọn kinh tế cho doanh nghiệp cần địa chỉ Quận 10 gần trung tâm mà không phải trả mức phí cao như khu vực Quận 1.",
+    ],
     benefitsTitle: "Vì sao nên chọn văn phòng CMT8",
-    ...quan10Block("CMT8, Quận 10", "283/26-28 Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10, TP.HCM"),
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ mặt tiền CMT8", desc: "Đủ điều kiện đăng ký kinh doanh, mặt tiền trục đường lớn." },
+      { icon: MapPinIcon, title: "Gần Ga Sài Gòn", desc: "Thuận tiện di chuyển bằng đường sắt, gần trung tâm thành phố." },
+      { icon: BadgePercentIcon, title: "Giá khởi điểm chỉ 299.000đ/tháng", desc: "Gói LITE, START, BASE — kinh tế hơn so với khu vực Quận 1." },
+      { icon: UsersIcon, title: "Gần bệnh viện, trường đại học", desc: "Khu vực sôi động, phù hợp nhiều loại hình doanh nghiệp." },
+      { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh đến Quận 1, Quận 3, Tân Bình qua trục CMT8." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Ga Sài Gòn", desc: "Nhà ga đường sắt trung tâm, chỉ cách chi nhánh vài phút di chuyển." },
+      { name: "Bệnh viện Nhân dân 115", desc: "Bệnh viện lớn gần khu vực, góp phần vào mật độ hoạt động sôi động." },
+      { name: "Khu vực Hoà Hưng", desc: "Khu dân cư — thương mại sầm uất tại Quận 10." },
+      { name: "Trục Cách Mạng Tháng 8", desc: "Kết nối trực tiếp đến Quận 1, Quận 3 và Tân Bình." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua trục Cách Mạng Tháng 8." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao tại khu vực mặt tiền đường lớn, dễ dàng đặt xe." },
+      { icon: CheckCircleIcon, title: "Trục Cách Mạng Tháng 8", desc: "Kết nối nhanh đến Quận 1, Quận 3, Quận Tân Bình." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hỗ trợ chỉ dẫn tận tình nếu bạn chưa quen đường đến chi nhánh." },
+    ],
+    parkingInfo: [
+      "Khu vực giữ xe máy ngay tại toà nhà mặt tiền CMT8.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực Ga Sài Gòn.",
+      "Có nhân viên bảo vệ trực để đảm bảo an toàn cho xe trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán ăn khu Hoà Hưng", desc: "Đa dạng lựa chọn ẩm thực phục vụ khu vực dân cư — bệnh viện sôi động." },
+      { name: "Nhà hàng trục CMT8", desc: "Nhiều lựa chọn từ cơm văn phòng đến nhà hàng phục vụ tiếp khách." },
+      { name: "Khu vực gần Ga Sài Gòn", desc: "Thuận tiện cho bữa ăn nhanh trước khi di chuyển bằng tàu." },
+    ],
+    faqs: [
+      { q: "Văn phòng CMT8 có phải chi nhánh duy nhất của MAX OFFICE tại Quận 10 không?", a: "Đúng vậy. Đây là chi nhánh duy nhất của MAX OFFICE đặt tại Quận 10, nằm mặt tiền trục Cách Mạng Tháng 8." },
+      { q: "Chi nhánh CMT8 có những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp 3 mức giá: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — đều đã bao gồm địa chỉ đăng ký kinh doanh hợp lệ." },
+      { q: "Địa chỉ 283/26-28 Cách Mạng Tháng 8 có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Hoà Hưng, Quận 10, phù hợp đăng ký kinh doanh và đăng ký thuế." },
+      { q: "Văn phòng CMT8 có gần Ga Sài Gòn không?", a: "Có. Chi nhánh nằm khá gần Ga Sài Gòn, thuận tiện nếu bạn hoặc đối tác di chuyển bằng đường sắt." },
+      { q: "Từ văn phòng CMT8 đến trung tâm Quận 1 mất bao lâu?", a: "Khoảng 10-15 phút di chuyển qua trục Cách Mạng Tháng 8, tuỳ thời điểm giao thông." },
+      { q: "Chi phí thuê văn phòng ảo tại CMT8 có rẻ hơn khu vực Quận 1 không?", a: "Có. Mức giá tại CMT8 áp dụng theo bảng giá chung của MAX OFFICE, không có phụ phí trung tâm như khu vực Quận 1, phù hợp cho doanh nghiệp muốn tối ưu chi phí mà vẫn gần trung tâm." },
+    ],
+    testimonials: [
+      { quote: "Văn phòng ngay mặt tiền CMT8 nên khách hàng dễ tìm, công ty mình trông chuyên nghiệp hơn hẳn.", initial: "B", name: "Anh Bình", role: "Giám đốc công ty dịch vụ" },
+      { quote: "Gần Ga Sài Gòn nên đối tác ở tỉnh ra công tác ghé văn phòng mình rất tiện.", initial: "X", name: "Thanh Xuân", role: "Trưởng phòng kinh doanh" },
+    ],
   },
 };
 
