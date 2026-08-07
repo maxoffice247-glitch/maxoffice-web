@@ -65,7 +65,7 @@ export default function LocationServicesList({ name, slug }: { name: string; slu
         <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <RevealItem>
             <Link
-              href="/services/van-phong-ao"
+              href="/services/van-phong-ao#bang-gia"
               className="group flex h-full flex-col justify-between rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
             >
               <div>
@@ -87,7 +87,7 @@ export default function LocationServicesList({ name, slug }: { name: string; slu
           {OTHER_SERVICES.map((svc) => (
             <RevealItem key={svc.slug}>
               <Link
-                href={`/services/${svc.slug}`}
+                href={`/services/${svc.slug}#bang-gia`}
                 className="group flex h-full flex-col justify-between rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
               >
                 <div>
