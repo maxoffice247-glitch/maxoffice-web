@@ -156,13 +156,12 @@ export const VO_FEATURE_MATRIX: { label: string; values: Record<VirtualOfficePla
   { label: "Giảm 50% phí phòng họp VIP", values: { "lite": false, start: false, base: false, origin: false, "origin-plus": false, rise: true } },
 ];
 
-/** Which Văn phòng ảo plans each of the 12 branches offers, per the official rollout table. */
+/** Which Văn phòng ảo plans each of the 11 branches offers, per the official rollout table. */
 export const LOCATION_VO_PLANS: Record<string, VirtualOfficePlanKey[]> = {
   "song-thao": ["start", "base"],
   "dien-bien-phu": ["start", "base"],
   "nguyen-oanh": ["origin", "origin-plus", "rise"],
   "yen-the": ["base", "origin", "origin-plus", "rise"],
-  "cong-hoa": ["base", "origin", "origin-plus"],
   "tan-thang": ["base", "origin", "origin-plus"],
   "cuu-long": ["base"],
   "hoang-viet": ["lite", "start", "base"],

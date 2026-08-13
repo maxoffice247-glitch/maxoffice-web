@@ -31,12 +31,6 @@ const LOCATIONS = [
   },
   {
     num: "05",
-    slug: "cong-hoa",
-    name: "Cộng Hoà, Tân Bình",
-    address: "123 Cộng Hoà, P. Bảy Hiền",
-  },
-  {
-    num: "06",
     slug: "cmt8",
     name: "CMT8, Quận 10",
     address: "283/26-28 CMT8, P. Hoà Hưng",
@@ -53,7 +47,7 @@ export default function Locations() {
               Chi nhánh
             </span>
             <h2 className="mb-3.5 font-display text-[28px] leading-[1.2] font-extrabold text-navy sm:text-[34px] lg:text-[40px]">
-              12 chi nhánh tại TP.HCM
+              11 chi nhánh tại TP.HCM
             </h2>
             <p className="text-[16.5px] text-body-text">
               Từ Tân Bình, Gò Vấp, Tân Phú, Quận 10 đến trung tâm Quận 1 —
@@ -62,7 +56,7 @@ export default function Locations() {
             </p>
           </div>
           <Button href="/dia-diem" variant="ghost">
-            Xem tất cả 12 chi nhánh
+            Xem tất cả 11 chi nhánh
           </Button>
         </Reveal>
         <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
