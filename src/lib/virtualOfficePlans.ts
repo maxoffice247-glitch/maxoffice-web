@@ -265,3 +265,68 @@ export const PHAM_VAN_DONG_VO_PROMOS: string[] = [
   "Tặng 3 tháng sử dụng khi thanh toán hợp đồng 12 tháng",
   "Tặng 7 tháng sử dụng khi thanh toán hợp đồng 24 tháng",
 ];
+
+/* ---------------------------------------------------------------------- */
+/* Bùi Văn Ba, Quận 7 — bảng giá riêng, không thuộc hệ thống LITE–RISE hay */
+/* M-START/M-BASE/M-ORIGIN. Chỉ khả dụng tại chi nhánh "quan-7".           */
+/* ---------------------------------------------------------------------- */
+
+export type QuanBaPlan = {
+  key: "w-base" | "w-pro";
+  name: string;
+  price: number;
+  duration: string;
+  vatNote: string;
+  nameplate: string;
+  locationVerification: string;
+  reception: string;
+};
+
+export const QUAN_7_VO_PLANS: QuanBaPlan[] = [
+  {
+    key: "w-base",
+    name: "W-BASE",
+    price: 450000,
+    duration: "/ tháng",
+    vatNote: "Giá chưa bao gồm VAT 10%",
+    nameplate: "Có (LCD tại tầng thuê)",
+    locationVerification: "Có",
+    reception: "Có (đón khách, nhận thư, chuyển tiếp email)",
+  },
+  {
+    key: "w-pro",
+    name: "W-PRO",
+    price: 750000,
+    duration: "/ tháng",
+    vatNote: "Giá chưa bao gồm VAT 10%",
+    nameplate: "Có (LCD tại tầng thuê)",
+    locationVerification: "Có",
+    reception: "Có (đón khách, nhận thư, chuyển tiếp email)",
+  },
+];
+
+export type QuanBaAddonRow = {
+  service: string;
+  wBase: string;
+  wPro: string;
+};
+
+/**
+ * TODO: xác nhận lại phân bổ giờ miễn phí giữa W-BASE/W-PRO.
+ * Bảng gốc (trích xuất từ PDF) ghi số giờ miễn phí ("24 giờ miễn phí/năm", "10 giờ
+ * miễn phí/tháng", "48 giờ/năm") nhưng không rõ áp dụng cho W-BASE, W-PRO hay cả hai.
+ * Tạm hiểu: giờ miễn phí chỉ thuộc gói W-PRO; W-BASE chỉ có giá tính theo giờ trả phí
+ * (3 dòng: Phòng họp lớn, Phòng họp nhỏ, Chỗ ngồi làm việc linh động). Cần đối chiếu
+ * lại với nguồn dữ liệu gốc trước khi coi đây là chính thức.
+ */
+export const QUAN_7_ADDONS: QuanBaAddonRow[] = [
+  { service: "Phòng họp lớn (6-8 người)", wBase: "120.000đ/giờ", wPro: "24 giờ miễn phí/năm" },
+  { service: "Phòng họp nhỏ (4-5 người)", wBase: "90.000đ/giờ", wPro: "10 giờ miễn phí/tháng" },
+  { service: "Chỗ ngồi làm việc linh động", wBase: "—", wPro: "48 giờ/năm" },
+  { service: "In ấn / photocopy", wBase: "1.000đ/bản", wPro: "1.000đ/bản" },
+  { service: "Tổng đài thông tin 24/7", wBase: "100.000đ/tháng", wPro: "Miễn phí" },
+  { service: "Máy fax thông minh", wBase: "100.000đ/tháng", wPro: "Miễn phí" },
+  { service: "Domain (quốc tế)", wBase: "1 domain", wPro: "1 domain" },
+  { service: "Hosting", wBase: "650.000đ/năm", wPro: "2GB" },
+  { service: "Dịch vụ pháp lý trọn gói (GPKD, con dấu, hồ sơ thuế ban đầu)", wBase: "900.000đ", wPro: "900.000đ" },
+];

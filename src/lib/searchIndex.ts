@@ -121,6 +121,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "1148A Phạm Văn Đồng, P. Thủ Đức",
   },
   {
+    title: "Bùi Văn Ba, Quận 7",
+    category: "Chi nhánh",
+    href: "/locations/quan-7",
+    desc: "210 Bùi Văn Ba, P. Tân Thuận",
+  },
+  {
     title: "Bảng giá Văn phòng & Coworking",
     category: "Bảng giá",
     href: "/bang-gia",

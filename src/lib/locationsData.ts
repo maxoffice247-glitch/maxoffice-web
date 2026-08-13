@@ -87,6 +87,11 @@ export const LOCATIONS_LIST: LocationListItem[] = [
     name: "Phạm Văn Đồng, Thủ Đức",
     shortAddress: "1148A Phạm Văn Đồng, P. Thủ Đức",
   },
+  {
+    slug: "quan-7",
+    name: "Bùi Văn Ba, Quận 7",
+    shortAddress: "210 Bùi Văn Ba, P. Tân Thuận",
+  },
 ];
 
 export type LocationData = {
@@ -1000,6 +1005,76 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Toà nhà phong cách biệt thự sang trọng, phù hợp để tiếp đối tác quan trọng.", initial: "H", name: "Anh Huy", role: "Giám đốc công ty xây dựng" },
       { quote: "Gói M-ORIGIN có phòng họp không giới hạn nên đội mình họp thoải mái mà không lo phát sinh phí.", initial: "T", name: "Chị Trang", role: "Trưởng phòng vận hành" },
+    ],
+  },
+
+  /* ===================== BÙI VĂN BA, QUẬN 7 — GÓI GIÁ RIÊNG ===================== */
+  "quan-7": {
+    slug: "quan-7",
+    name: "Bùi Văn Ba, Quận 7",
+    address: "Unit B3.8, Tầng 3, Block B, 210 Bùi Văn Ba, Phường Tân Thuận, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê Bùi Văn Ba Quận 7",
+    heroDescription: "Chi nhánh MAX OFFICE tại Bùi Văn Ba, Quận 7 — văn phòng ảo từ 450.000đ/tháng (gói W-BASE, W-PRO riêng biệt), toà nhà cao tầng hiện đại view sông Sài Gòn.",
+    metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Bùi Văn Ba Quận 7 | Từ 450K/Tháng",
+    metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Bùi Văn Ba, Phường Tân Thuận, Quận 7 — văn phòng ảo từ 450.000đ/tháng (gói W-BASE, W-PRO), đầy đủ dịch vụ MAX OFFICE.",
+    image: IMAGE,
+    // Full-frame square render, no crop needed — 1254x1254 native.
+    facadeAspectRatio: "1254 / 1254",
+    facadeImageSide: "right",
+    interiorImages: [
+      { src: "/images/dia-diem-quan-7-le-tan.jpg", alt: "Quầy lễ tân văn phòng Bùi Văn Ba", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-quan-7-khong-gian-lam-viec.jpg", alt: "Không gian làm việc văn phòng Bùi Văn Ba", caption: "Không gian làm việc" },
+      { src: "/images/dia-diem-quan-7-pantry.jpg", alt: "Khu vực Pantry văn phòng Bùi Văn Ba", caption: "Khu vực Pantry" },
+      { src: "/images/dia-diem-quan-7-phong-hop.jpg", alt: "Phòng họp văn phòng Bùi Văn Ba", caption: "Phòng họp" },
+    ],
+    intro: [
+      "Văn phòng Bùi Văn Ba toạ lạc tại Unit B3.8, Tầng 3, Block B, 210 Bùi Văn Ba, Phường Tân Thuận, Thành phố Hồ Chí Minh — bên trong một khu phức hợp cao tầng hiện đại nhìn ra sông Sài Gòn và cầu Phú Mỹ, một trong những cây cầu dây văng biểu tượng của thành phố. Toà nhà có đầy đủ tiện ích nội khu như hồ bơi, mang lại không gian làm việc thoải mái hơn hẳn văn phòng truyền thống.",
+      "Khu vực Phường Tân Thuận gắn liền với Khu chế xuất Tân Thuận — khu chế xuất đầu tiên của Việt Nam, hiện vẫn là nơi tập trung đông đảo doanh nghiệp sản xuất, xuất nhập khẩu và logistics. Đây là lợi thế lớn cho doanh nghiệp hoạt động trong lĩnh vực thương mại quốc tế muốn có địa chỉ gần đối tác, nhà xưởng tại khu vực này.",
+      "Từ chi nhánh, việc di chuyển qua cầu Tân Thuận hoặc cầu Phú Mỹ để vào trung tâm Quận 1, Quận 4 hay sang khu đô thị Phú Mỹ Hưng đều khá thuận tiện, phù hợp cho doanh nghiệp cần qua lại thường xuyên giữa khu Nam Sài Gòn và trung tâm thành phố.",
+      "Đây cũng là chi nhánh áp dụng bảng giá văn phòng ảo riêng biệt, gồm 2 gói W-BASE (450.000đ/tháng) và W-PRO (750.000đ/tháng, giá chưa bao gồm VAT 10%) — kèm theo nhiều tiện ích bổ sung như phòng họp, chỗ ngồi làm việc linh động và dịch vụ pháp lý trọn gói thiết kế riêng cho toà nhà này.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng Bùi Văn Ba",
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ, toà nhà hiện đại", desc: "Đủ điều kiện đăng ký kinh doanh, không gian làm việc cao tầng hiện đại." },
+      { icon: MapPinIcon, title: "Gần Khu chế xuất Tân Thuận", desc: "Thuận tiện cho doanh nghiệp sản xuất, xuất nhập khẩu, logistics." },
+      { icon: BadgePercentIcon, title: "Gói dịch vụ thiết kế riêng", desc: "W-BASE, W-PRO — giá và tiện ích riêng biệt cho chi nhánh này." },
+      { icon: UsersIcon, title: "View sông Sài Gòn, tiện ích nội khu", desc: "Toà nhà có hồ bơi, không gian xanh, tầm nhìn thoáng đãng." },
+      { icon: ClockIcon, title: "Kết nối Nam Sài Gòn thuận tiện", desc: "Gần cầu Tân Thuận, cầu Phú Mỹ, khu đô thị Phú Mỹ Hưng." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Khu chế xuất Tân Thuận", desc: "Khu chế xuất đầu tiên của Việt Nam, tập trung đông doanh nghiệp sản xuất, xuất nhập khẩu." },
+      { name: "Cầu Phú Mỹ", desc: "Cầu dây văng biểu tượng, kết nối nhanh sang Quận 2 và các khu vực lân cận." },
+      { name: "Sông Sài Gòn", desc: "View sông thoáng đãng ngay tại toà nhà văn phòng." },
+      { name: "Khu đô thị Phú Mỹ Hưng", desc: "Không xa khu đô thị hiện đại, nhiều tiện ích thương mại, dịch vụ." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua khu vực Tân Thuận." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, thuận tiện di chuyển trong khu đô thị." },
+      { icon: CheckCircleIcon, title: "Cầu Tân Thuận — Cầu Phú Mỹ", desc: "Kết nối nhanh về trung tâm Quận 1, Quận 4 và Quận 2." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hỗ trợ hướng dẫn vào toà nhà khi bạn đến lần đầu." },
+    ],
+    parkingInfo: [
+      "Toà nhà có hầm giữ xe máy và ô tô riêng cho khách đến làm việc.",
+      "Bảo vệ toà nhà hỗ trợ hướng dẫn xe ra vào.",
+      "Thang máy riêng kết nối trực tiếp từ hầm xe lên khu văn phòng.",
+    ],
+    diningItems: [
+      { name: "Khu Pantry nội khu", desc: "Không gian pantry view hồ bơi ngay tại văn phòng, tiện nghỉ ngơi giữa giờ." },
+      { name: "Quán ăn khu vực Tân Thuận", desc: "Đa dạng lựa chọn phục vụ khu vực đông người lao động, chuyên gia." },
+      { name: "Nhà hàng gần Phú Mỹ Hưng", desc: "Nhiều lựa chọn ẩm thực cao cấp hơn khi cần tiếp đối tác." },
+    ],
+    faqs: [
+      { q: "Chi nhánh Bùi Văn Ba có những gói văn phòng ảo nào?", a: "Chi nhánh áp dụng bảng giá riêng biệt với 2 gói: W-BASE (450.000đ/tháng) và W-PRO (750.000đ/tháng) — giá chưa bao gồm VAT 10%." },
+      { q: "Địa chỉ 210 Bùi Văn Ba có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Thuận, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
+      { q: "Gói W-PRO khác gì so với W-BASE?", a: "W-PRO có mức phí cao hơn nhưng đi kèm nhiều tiện ích miễn phí hơn — như phòng họp nhỏ, chỗ ngồi làm việc linh động, tổng đài và máy fax thông minh miễn phí — trong khi W-BASE tính phí theo lượt sử dụng cho các tiện ích này." },
+      { q: "Văn phòng Bùi Văn Ba có gần Khu chế xuất Tân Thuận không?", a: "Có. Chi nhánh nằm trong khu vực Phường Tân Thuận, gần Khu chế xuất Tân Thuận — khu chế xuất đầu tiên của Việt Nam." },
+      { q: "Giá văn phòng ảo tại đây đã bao gồm VAT chưa?", a: "Chưa. Mức giá 450.000đ/tháng (W-BASE) và 750.000đ/tháng (W-PRO) là giá chưa bao gồm VAT 10%, sẽ được thể hiện rõ trong báo giá chính thức." },
+      { q: "Tôi có thể đến tham quan văn phòng Bùi Văn Ba trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp lịch tham quan." },
+    ],
+    testimonials: [
+      { quote: "Văn phòng có view sông và hồ bơi nên không gian làm việc rất thư giãn, khác hẳn văn phòng truyền thống.", initial: "L", name: "Chị Linh", role: "Giám đốc công ty xuất nhập khẩu" },
+      { quote: "Gần Khu chế xuất Tân Thuận nên đối tác của mình ghé văn phòng rất thuận tiện.", initial: "K", name: "Anh Khôi", role: "Trưởng phòng logistics" },
     ],
   },
 };

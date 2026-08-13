@@ -9,6 +9,7 @@ import LocationDining from "./LocationDining";
 import LocationMap from "./LocationMap";
 import LocationServicesList from "./LocationServicesList";
 import PhamVanDongServices from "./PhamVanDongServices";
+import QuanBaServices from "./QuanBaServices";
 import LocationCrossLinks from "./LocationCrossLinks";
 import LocationLeadForm from "./LocationLeadForm";
 import Testimonials from "./Testimonials";
@@ -80,6 +81,8 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       <LocationMap name={data.name} address={data.address} />
       {data.slug === "pham-van-dong" ? (
         <PhamVanDongServices />
+      ) : data.slug === "quan-7" ? (
+        <QuanBaServices />
       ) : (
         <LocationServicesList name={data.name} slug={data.slug} />
       )}
