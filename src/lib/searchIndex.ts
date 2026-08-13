@@ -115,6 +115,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "283/26-28 CMT8, P. Hoà Hưng",
   },
   {
+    title: "Phạm Văn Đồng, Thủ Đức",
+    category: "Chi nhánh",
+    href: "/locations/pham-van-dong",
+    desc: "1148A Phạm Văn Đồng, P. Thủ Đức",
+  },
+  {
     title: "Bảng giá Văn phòng & Coworking",
     category: "Bảng giá",
     href: "/bang-gia",

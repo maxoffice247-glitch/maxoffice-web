@@ -82,6 +82,11 @@ export const LOCATIONS_LIST: LocationListItem[] = [
     name: "CMT8, Quận 10",
     shortAddress: "283/26-28 CMT8, P. Hoà Hưng",
   },
+  {
+    slug: "pham-van-dong",
+    name: "Phạm Văn Đồng, Thủ Đức",
+    shortAddress: "1148A Phạm Văn Đồng, P. Thủ Đức",
+  },
 ];
 
 export type LocationData = {
@@ -925,6 +930,76 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Văn phòng ngay mặt tiền CMT8 nên khách hàng dễ tìm, công ty mình trông chuyên nghiệp hơn hẳn.", initial: "B", name: "Anh Bình", role: "Giám đốc công ty dịch vụ" },
       { quote: "Gần Ga Sài Gòn nên đối tác ở tỉnh ra công tác ghé văn phòng mình rất tiện.", initial: "X", name: "Thanh Xuân", role: "Trưởng phòng kinh doanh" },
+    ],
+  },
+
+  /* ===================== PHẠM VĂN ĐỒNG — GÓI GIÁ RIÊNG ===================== */
+  "pham-van-dong": {
+    slug: "pham-van-dong",
+    name: "Phạm Văn Đồng, Thủ Đức",
+    address: "1148A Phạm Văn Đồng, Phường Thủ Đức, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê Phạm Văn Đồng Thủ Đức",
+    heroDescription: "Chi nhánh MAX OFFICE tại Phạm Văn Đồng, Thủ Đức — văn phòng ảo từ 370.000đ/tháng (gói M-START, M-BASE, M-ORIGIN riêng biệt), toà nhà phong cách biệt thự sang trọng.",
+    metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Phạm Văn Đồng Thủ Đức | Từ 370K/Tháng",
+    metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Phạm Văn Đồng, Phường Thủ Đức — văn phòng ảo từ 370.000đ/tháng (gói M-START, M-BASE, M-ORIGIN), đầy đủ dịch vụ MAX OFFICE.",
+    image: IMAGE,
+    // Full-frame villa facade shot, no crop needed — 1086x1448 native.
+    facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-pham-van-dong-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Phạm Văn Đồng", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-pham-van-dong-cho-ngoi-linh-dong.jpg", alt: "Không gian chỗ ngồi linh động văn phòng Phạm Văn Đồng", caption: "Không gian chỗ ngồi linh động" },
+      { src: "/images/dia-diem-pham-van-dong-khong-gian-lam-viec.jpg", alt: "Không gian làm việc văn phòng Phạm Văn Đồng", caption: "Không gian làm việc" },
+      { src: "/images/dia-diem-pham-van-dong-san-trong.jpg", alt: "Văn phòng trọn gói tại Phạm Văn Đồng", caption: "Văn phòng trọn gói" },
+    ],
+    intro: [
+      "Văn phòng Phạm Văn Đồng toạ lạc tại 1148A Phạm Văn Đồng, Phường Thủ Đức, Thành phố Hồ Chí Minh — mặt tiền một trong những đại lộ hiện đại và rộng rãi bậc nhất thành phố, nối liền khu vực Gò Vấp, Bình Thạnh với cửa ngõ Đông Bắc Thủ Đức. Chi nhánh đặt trong một toà nhà phong cách biệt thự tân cổ điển, không gian sang trọng, tạo ấn tượng chuyên nghiệp ngay từ cổng vào.",
+      "Khu vực Phường Thủ Đức quanh trục Phạm Văn Đồng là nơi tập trung nhiều trường đại học lớn của TP.HCM như Đại học Quốc gia TP.HCM, Đại học Nông Lâm, Đại học Sư phạm Kỹ thuật — mang lại nguồn nhân lực trẻ dồi dào cho các doanh nghiệp đặt văn phòng tại đây. Khu vực cũng không xa sông Sài Gòn, giữ được không gian thoáng đãng hơn so với nhiều quận nội thành khác.",
+      "Nhờ vị trí trên trục Phạm Văn Đồng, việc di chuyển từ chi nhánh ra Quốc lộ 1A hoặc ngược về trung tâm Gò Vấp, Bình Thạnh đều rất thuận tiện, phù hợp cho doanh nghiệp có nhu cầu giao dịch ở nhiều khu vực khác nhau của thành phố.",
+      "Đây cũng là chi nhánh duy nhất trong hệ thống MAX OFFICE áp dụng bảng giá văn phòng ảo riêng biệt, gồm 3 gói M-START (370.000đ/tháng), M-BASE (500.000đ/tháng) và M-ORIGIN (800.000đ/tháng) — thiết kế phù hợp với đặc điểm không gian và tiện ích tại toà nhà này, cùng chính sách khuyến mãi riêng khi ký hợp đồng dài hạn.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng Phạm Văn Đồng",
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ, toà nhà biệt thự", desc: "Đủ điều kiện đăng ký kinh doanh, không gian sang trọng, chuyên nghiệp." },
+      { icon: MapPinIcon, title: "Mặt tiền đại lộ Phạm Văn Đồng", desc: "Một trong những trục đường hiện đại, rộng rãi bậc nhất TP.HCM." },
+      { icon: BadgePercentIcon, title: "Gói dịch vụ thiết kế riêng", desc: "M-START, M-BASE, M-ORIGIN — giá và tiện ích riêng biệt cho chi nhánh này." },
+      { icon: UsersIcon, title: "Gần các trường đại học lớn", desc: "Đại học Quốc gia, Nông Lâm, Sư phạm Kỹ thuật trong khu vực Thủ Đức." },
+      { icon: ClockIcon, title: "Kết nối liên vùng thuận tiện", desc: "Nối nhanh Gò Vấp, Bình Thạnh và cửa ngõ Đông Bắc thành phố." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Đại lộ Phạm Văn Đồng", desc: "Trục đường lớn hiện đại, kết nối Gò Vấp, Bình Thạnh với khu vực Thủ Đức." },
+      { name: "Các trường đại học khu vực Thủ Đức", desc: "Gần Đại học Quốc gia TP.HCM, Đại học Nông Lâm, Đại học Sư phạm Kỹ thuật." },
+      { name: "Sông Sài Gòn", desc: "Không gian ven sông thoáng đãng, không xa khu vực chi nhánh." },
+      { name: "Khu dân cư Phường Thủ Đức", desc: "Khu vực phát triển nhanh, nhiều tiện ích dân sinh xung quanh." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động dọc đại lộ Phạm Văn Đồng." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mặt tiền đường lớn, dễ dàng đặt xe mọi thời điểm." },
+      { icon: CheckCircleIcon, title: "Trục Phạm Văn Đồng — Quốc lộ 1A", desc: "Kết nối nhanh về Gò Vấp, Bình Thạnh và các tỉnh lân cận." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hỗ trợ hướng dẫn khi bạn đến tham quan lần đầu." },
+    ],
+    parkingInfo: [
+      "Khu vực sân trước rộng rãi, thuận tiện gửi xe máy và ô tô.",
+      "Cổng vào biệt thự có không gian đậu xe cho khách đến làm việc.",
+      "Có nhân viên hỗ trợ trông giữ xe trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán cà phê dọc Phạm Văn Đồng", desc: "Nhiều quán cà phê không gian rộng rãi, phù hợp ngồi làm việc hoặc tiếp đối tác." },
+      { name: "Nhà hàng khu vực Thủ Đức", desc: "Đa dạng lựa chọn ẩm thực phục vụ khu vực đông dân cư và sinh viên." },
+      { name: "Quán ăn gần các trường đại học", desc: "Giá cả bình dân, thuận tiện cho bữa trưa nhanh." },
+    ],
+    faqs: [
+      { q: "Chi nhánh Phạm Văn Đồng có những gói văn phòng ảo nào?", a: "Chi nhánh áp dụng bảng giá riêng biệt với 3 gói: M-START (370.000đ/tháng), M-BASE (500.000đ/tháng) và M-ORIGIN (800.000đ/tháng) — khác với hệ thống gói chung của các chi nhánh khác." },
+      { q: "Địa chỉ 1148A Phạm Văn Đồng có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Thủ Đức, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
+      { q: "Gói M-BASE và M-ORIGIN có gì khác gói M-START?", a: "M-BASE và M-ORIGIN có thêm phòng họp miễn phí (lần lượt 6 giờ/tháng và không giới hạn), chỗ ngồi linh động miễn phí (3 ngày/tháng và 7 ngày/tháng), bảng tên lớn hơn và dịch vụ in ấn/photocopy/scan — trong khi M-START chỉ gồm các tiện ích cơ bản." },
+      { q: "Văn phòng Phạm Văn Đồng có gần các trường đại học không?", a: "Có. Chi nhánh nằm trong khu vực Thủ Đức, gần các trường đại học lớn như Đại học Quốc gia TP.HCM, Đại học Nông Lâm, Đại học Sư phạm Kỹ thuật." },
+      { q: "Chi nhánh có khuyến mãi gì khi ký hợp đồng dài hạn không?", a: "Có. Khách hàng thanh toán hợp đồng 12 tháng được tặng thêm 3 tháng sử dụng, thanh toán hợp đồng 24 tháng được tặng thêm 7 tháng sử dụng." },
+      { q: "Tôi có thể đến tham quan văn phòng Phạm Văn Đồng trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ sẽ sắp xếp lịch tham quan trực tiếp toà nhà theo giờ thuận tiện cho bạn." },
+    ],
+    testimonials: [
+      { quote: "Toà nhà phong cách biệt thự sang trọng, phù hợp để tiếp đối tác quan trọng.", initial: "H", name: "Anh Huy", role: "Giám đốc công ty xây dựng" },
+      { quote: "Gói M-ORIGIN có phòng họp không giới hạn nên đội mình họp thoải mái mà không lo phát sinh phí.", initial: "T", name: "Chị Trang", role: "Trưởng phòng vận hành" },
     ],
   },
 };

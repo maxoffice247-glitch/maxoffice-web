@@ -8,6 +8,7 @@ import LocationAccess from "./LocationAccess";
 import LocationDining from "./LocationDining";
 import LocationMap from "./LocationMap";
 import LocationServicesList from "./LocationServicesList";
+import PhamVanDongServices from "./PhamVanDongServices";
 import LocationCrossLinks from "./LocationCrossLinks";
 import LocationLeadForm from "./LocationLeadForm";
 import Testimonials from "./Testimonials";
@@ -77,7 +78,11 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       />
       <LocationDining name={data.name} items={data.diningItems} />
       <LocationMap name={data.name} address={data.address} />
-      <LocationServicesList name={data.name} slug={data.slug} />
+      {data.slug === "pham-van-dong" ? (
+        <PhamVanDongServices />
+      ) : (
+        <LocationServicesList name={data.name} slug={data.slug} />
+      )}
       {data.lowerTierAlternatives && data.lowerTierAlternatives.length > 0 && (
         <section className="pb-9">
           <div className="mx-auto max-w-[1240px] px-5 sm:px-8">

@@ -194,3 +194,74 @@ export const VO_PROMO_NOTES: string[] = [
 ];
 
 export const VO_PROMO_EFFECTIVE_DATE = "01/06/2026";
+
+/* ---------------------------------------------------------------------- */
+/* Phạm Văn Đồng — bảng giá riêng, không thuộc hệ thống LITE–RISE chung.   */
+/* Chỉ khả dụng tại chi nhánh "pham-van-dong".                             */
+/* ---------------------------------------------------------------------- */
+
+export type PhamVanDongPlan = {
+  key: "m-start" | "m-base" | "m-origin";
+  name: string;
+  price: number;
+  duration: string;
+  nameplateSize: string;
+  meetingRoom: string;
+  flexSeat: string;
+  features: string[];
+  promoNote: string;
+};
+
+export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
+  {
+    key: "m-start",
+    name: "M-START",
+    price: 370000,
+    duration: "/ tháng",
+    nameplateSize: "Bảng tên 28x8cm",
+    meetingRoom: "Không có",
+    flexSeat: "Không có",
+    features: ["Địa chỉ đăng ký kinh doanh (ĐKKD)", "Lễ tân", "Internet + nước uống", "Khu vực tiếp khách sang trọng"],
+    promoNote: "Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
+  },
+  {
+    key: "m-base",
+    name: "M-BASE",
+    price: 500000,
+    duration: "/ tháng",
+    nameplateSize: "Bảng tên 28x8cm",
+    meetingRoom: "Free 6 giờ/tháng",
+    flexSeat: "Free 3 ngày/tháng",
+    features: [
+      "Địa chỉ đăng ký kinh doanh (ĐKKD)",
+      "Lễ tân",
+      "Internet + nước uống",
+      "Khu vực tiếp khách sang trọng",
+      "In ấn / photocopy / scan",
+    ],
+    promoNote: "Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
+  },
+  {
+    key: "m-origin",
+    name: "M-ORIGIN",
+    price: 800000,
+    duration: "/ tháng",
+    nameplateSize: "Bảng tên 40x15cm",
+    meetingRoom: "Free không giới hạn",
+    flexSeat: "Free 7 ngày/tháng",
+    features: [
+      "Địa chỉ đăng ký kinh doanh (ĐKKD)",
+      "Lễ tân",
+      "Internet + nước uống",
+      "Khu vực tiếp khách sang trọng",
+      "In ấn / photocopy / scan",
+    ],
+    promoNote: "Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 12 tháng",
+  },
+];
+
+/** Khuyến mãi riêng chi nhánh Phạm Văn Đồng — áp dụng cho cả 3 gói M-START/M-BASE/M-ORIGIN. */
+export const PHAM_VAN_DONG_VO_PROMOS: string[] = [
+  "Tặng 3 tháng sử dụng khi thanh toán hợp đồng 12 tháng",
+  "Tặng 7 tháng sử dụng khi thanh toán hợp đồng 24 tháng",
+];
