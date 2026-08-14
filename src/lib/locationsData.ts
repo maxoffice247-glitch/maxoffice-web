@@ -48,6 +48,11 @@ export const LOCATIONS_LIST: LocationListItem[] = [
     shortAddress: "92 Yên Thế, P. Tân Sơn Hòa",
   },
   {
+    slug: "cong-hoa",
+    name: "Cộng Hoà, Tân Bình",
+    shortAddress: "123 Cộng Hoà, P. Bảy Hiền",
+  },
+  {
     slug: "tan-thang",
     name: "Tân Thắng, Tân Phú",
     shortAddress: "121A-123-125 Tân Thắng, P. Tân Sơn Nhì",
@@ -165,7 +170,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 13 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
+      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 14 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
       "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
@@ -250,7 +255,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 13 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
+      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 14 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
@@ -430,7 +435,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
-      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 13 địa điểm.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 14 địa điểm.",
       "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
@@ -475,6 +480,74 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Chi nhánh Yên Thế gần sân bay nên mình hay hẹn đối tác nước ngoài ở đây, rất tiện.", initial: "T", name: "Anh Tuấn", role: "Giám đốc, công ty logistics" },
       { quote: "Phòng đào tạo sức chứa 30-50 người giúp mình tổ chức workshop ngay tại văn phòng mà không cần thuê thêm chỗ khác.", initial: "L", name: "Thu Lan", role: "Trưởng phòng đào tạo" },
+    ],
+  },
+  "cong-hoa": {
+    slug: "cong-hoa",
+    name: "Cộng Hoà, Tân Bình",
+    address: "123 Cộng Hoà, Phường Bảy Hiền, Quận Tân Bình, TP.HCM",
+    heroTitle: "Văn Phòng Cho Thuê Cộng Hoà Tân Bình",
+    heroDescription: "Chi nhánh MAX OFFICE tại Cộng Hoà, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ cốt lõi.",
+    metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Cộng Hoà Tân Bình | Từ 500K/Tháng",
+    metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Cộng Hoà, Phường Bảy Hiền, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
+    image: IMAGE,
+    // Cropped to 934x1074 — widened 40% from the first pass (which was too
+    // narrow/tall) and bottom pulled back to the median hedge, not the road
+    // (see /images/originals for the source). Ratio is balanced enough now
+    // that no maxWidth cap is needed.
+    facadeAspectRatio: "934 / 1074",
+    facadeImageSide: "right",
+    interiorImages: [
+      { src: "/images/dia-diem-cong-hoa-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cộng Hoà", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-cong-hoa-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cộng Hoà", caption: "Bảng tên công ty tại toà nhà" },
+    ],
+    intro: [
+      "Văn phòng Cộng Hoà toạ lạc tại số 123 Cộng Hoà, Phường Bảy Hiền, Quận Tân Bình — ngay trên một trong những trục đường lớn và sầm uất bậc nhất khu vực Tân Bình. Bảy Hiền từ lâu được biết đến là khu vực gắn liền với nghề dệt may truyền thống của người Quảng Nam di cư vào Sài Gòn, nay đã phát triển thành khu dân cư — thương mại sôi động với mật độ doanh nghiệp vừa và nhỏ dày đặc.",
+      "Giao lộ Bảy Hiền — nơi giao nhau giữa các trục Cách Mạng Tháng 8, Trường Chinh và Lý Thường Kiệt — là một trong những điểm trung chuyển giao thông quan trọng của cửa ngõ Tây Bắc thành phố, giúp việc di chuyển từ văn phòng đến Quận 10, Quận 11 hay sân bay Tân Sơn Nhất đều nhanh chóng, không mất nhiều thời gian.",
+      "Với vị trí mặt tiền đường Cộng Hoà, chi nhánh phù hợp cho các doanh nghiệp hoạt động trong lĩnh vực thương mại, may mặc, phân phối hoặc dịch vụ — những ngành vốn có truyền thống lâu đời tại khu vực này. MAX OFFICE cung cấp tại đây các gói văn phòng ảo BASE, ORIGIN và ORIGIN+ (từ 500.000đ/tháng), cùng đầy đủ dịch vụ văn phòng trọn gói, phòng họp theo giờ, thành lập doanh nghiệp và kế toán thuế.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng Cộng Hoà",
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ mặt tiền Cộng Hoà", desc: "Đủ điều kiện đăng ký kinh doanh, vị trí mặt tiền đường lớn dễ tìm." },
+      { icon: MapPinIcon, title: "Gần giao lộ Bảy Hiền", desc: "Kết nối nhanh đến Quận 10, Quận 11 và sân bay Tân Sơn Nhất." },
+      { icon: UsersIcon, title: "Phù hợp ngành thương mại, may mặc", desc: "Khu vực có truyền thống lâu đời về dệt may, phân phối, thương mại." },
+      { icon: BadgePercentIcon, title: "3 gói văn phòng ảo linh hoạt", desc: "BASE, ORIGIN, ORIGIN+ — từ 500.000đ/tháng, dễ nâng cấp theo nhu cầu." },
+      { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Mặt tiền đường Cộng Hoà, dễ di chuyển vào giờ cao điểm." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Giao lộ Bảy Hiền", desc: "Nút giao thông quan trọng, kết nối Cách Mạng Tháng 8, Trường Chinh, Lý Thường Kiệt." },
+      { name: "Khu vực dệt may Bảy Hiền", desc: "Khu dân cư — thương mại lâu đời, mật độ doanh nghiệp vừa và nhỏ dày đặc." },
+      { name: "Chợ Bảy Hiền", desc: "Chợ truyền thống sầm uất, thuận tiện sinh hoạt hàng ngày." },
+      { name: "Sân bay Tân Sơn Nhất", desc: "Khoảng 10-15 phút di chuyển từ chi nhánh." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt lớn đi qua giao lộ Bảy Hiền." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao tại khu vực mặt tiền đường lớn." },
+      { icon: CheckCircleIcon, title: "Trục Cộng Hoà — Trường Chinh", desc: "Kết nối nhanh đến Quận 10, Quận 11, sân bay Tân Sơn Nhất." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân sẵn sàng hướng dẫn cụ thể nếu bạn chưa quen khu vực Bảy Hiền." },
+    ],
+    parkingInfo: [
+      "Khu vực giữ xe máy ngay tại toà nhà mặt tiền đường Cộng Hoà.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực giao lộ Bảy Hiền.",
+      "Có bảo vệ hỗ trợ trông giữ xe trong suốt giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán ăn khu Bảy Hiền", desc: "Nhiều quán ăn lâu đời, đặc trưng ẩm thực miền Trung của cộng đồng Quảng Nam." },
+      { name: "Nhà hàng trục Cộng Hoà", desc: "Đa dạng lựa chọn từ cơm văn phòng đến nhà hàng phục vụ tiếp khách." },
+      { name: "Chợ Bảy Hiền", desc: "Thuận tiện mua sắm thực phẩm, ăn uống nhanh giữa giờ làm việc." },
+    ],
+    faqs: [
+      { q: "Văn phòng Cộng Hoà có vị trí mặt tiền hay trong hẻm?", a: "Văn phòng nằm mặt tiền đường Cộng Hoà, Phường Bảy Hiền — dễ tìm, thuận tiện cho khách hàng và đối tác đến giao dịch trực tiếp." },
+      { q: "Chi nhánh Cộng Hoà cung cấp những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp 3 gói: BASE (500.000đ/tháng), ORIGIN (595.000đ/tháng) và ORIGIN+ (699.000đ/tháng), phù hợp cho doanh nghiệp cần nâng cấp dần theo quy mô." },
+      { q: "Khu vực Bảy Hiền có phù hợp cho doanh nghiệp ngành may mặc, thương mại không?", a: "Rất phù hợp. Bảy Hiền là khu vực có truyền thống lâu đời về dệt may và thương mại, tập trung nhiều doanh nghiệp vừa và nhỏ hoạt động trong lĩnh vực này." },
+      { q: "Từ văn phòng Cộng Hoà đến sân bay Tân Sơn Nhất mất bao lâu?", a: "Khoảng 10-15 phút di chuyển qua trục Trường Chinh hoặc Cộng Hoà, tuỳ thời điểm giao thông." },
+      { q: "Địa chỉ 123 Cộng Hoà có hợp lệ để đăng ký kinh doanh không?", a: "Có. Địa chỉ này đáp ứng đầy đủ điều kiện pháp lý tại Phường Bảy Hiền, Quận Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
+      { q: "Tôi có thể thuê phòng họp theo giờ tại chi nhánh này không?", a: "Có. Chi nhánh Cộng Hoà cung cấp phòng họp theo giờ, phù hợp tiếp đối tác hoặc tổ chức họp nhóm nhỏ." },
+    ],
+    testimonials: [
+      { quote: "Vị trí mặt tiền Cộng Hoà rất dễ tìm, đối tác đến lần đầu cũng không bị lạc.", initial: "P", name: "Hoài Phương", role: "Chủ xưởng may gia công" },
+      { quote: "Gần giao lộ Bảy Hiền nên mình di chuyển đi giao hàng khắp thành phố đều thuận tiện.", initial: "D", name: "Anh Duy", role: "Giám đốc, công ty phân phối" },
     ],
   },
   "tan-thang": {
@@ -625,7 +698,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 13 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 14 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
       "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
     ],

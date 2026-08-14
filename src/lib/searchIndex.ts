@@ -73,6 +73,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "92 Yên Thế, P. Tân Sơn Hòa",
   },
   {
+    title: "Cộng Hoà, Tân Bình",
+    category: "Chi nhánh",
+    href: "/locations/cong-hoa",
+    desc: "123 Cộng Hoà, P. Bảy Hiền",
+  },
+  {
     title: "Tân Thắng, Tân Phú",
     category: "Chi nhánh",
     href: "/locations/tan-thang",
