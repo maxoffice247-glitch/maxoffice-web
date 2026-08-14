@@ -47,7 +47,7 @@ export default function Locations() {
               Chi nhánh
             </span>
             <h2 className="mb-3.5 font-display text-[28px] leading-[1.2] font-extrabold text-navy sm:text-[34px] lg:text-[40px]">
-              11 chi nhánh tại TP.HCM
+              13 chi nhánh tại TP.HCM
             </h2>
             <p className="text-[16.5px] text-body-text">
               Từ Tân Bình, Gò Vấp, Tân Phú, Quận 10 đến trung tâm Quận 1 —
@@ -56,7 +56,7 @@ export default function Locations() {
             </p>
           </div>
           <Button href="/dia-diem" variant="ghost">
-            Xem tất cả 11 chi nhánh
+            Xem tất cả 13 chi nhánh
           </Button>
         </Reveal>
         <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

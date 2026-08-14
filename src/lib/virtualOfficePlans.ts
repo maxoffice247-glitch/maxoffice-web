@@ -311,14 +311,6 @@ export type QuanBaAddonRow = {
   wPro: string;
 };
 
-/**
- * TODO: xác nhận lại phân bổ giờ miễn phí giữa W-BASE/W-PRO.
- * Bảng gốc (trích xuất từ PDF) ghi số giờ miễn phí ("24 giờ miễn phí/năm", "10 giờ
- * miễn phí/tháng", "48 giờ/năm") nhưng không rõ áp dụng cho W-BASE, W-PRO hay cả hai.
- * Tạm hiểu: giờ miễn phí chỉ thuộc gói W-PRO; W-BASE chỉ có giá tính theo giờ trả phí
- * (3 dòng: Phòng họp lớn, Phòng họp nhỏ, Chỗ ngồi làm việc linh động). Cần đối chiếu
- * lại với nguồn dữ liệu gốc trước khi coi đây là chính thức.
- */
 export const QUAN_7_ADDONS: QuanBaAddonRow[] = [
   { service: "Phòng họp lớn (6-8 người)", wBase: "120.000đ/giờ", wPro: "24 giờ miễn phí/năm" },
   { service: "Phòng họp nhỏ (4-5 người)", wBase: "90.000đ/giờ", wPro: "10 giờ miễn phí/tháng" },

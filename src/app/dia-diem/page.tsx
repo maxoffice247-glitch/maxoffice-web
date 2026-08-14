@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/dia-diem" },
   title: "11 Chi Nhánh Văn Phòng MAX OFFICE Tại TP.HCM",
   description:
-    "Danh sách đầy đủ 11 chi nhánh văn phòng ảo, văn phòng trọn gói và coworking của MAX OFFICE tại Tân Bình, Gò Vấp, Tân Phú, Quận 10 và Quận 1, TP.HCM.",
+    "Danh sách đầy đủ 13 chi nhánh văn phòng ảo, văn phòng trọn gói và coworking của MAX OFFICE tại Tân Bình, Gò Vấp, Tân Phú, Quận 10 và Quận 1, TP.HCM.",
   openGraph: {
     images: [{ url: "/images/og/hero-dia-diem.jpg", width: 1200, height: 630 }],
   },
@@ -24,7 +24,7 @@ export default function DiaDiemPage() {
       <PageHero
         image="/images/hero-dia-diem.jpg"
         eyebrow="Chi nhánh"
-        title="11 chi nhánh văn phòng tại TP.HCM"
+        title="13 chi nhánh văn phòng tại TP.HCM"
         description="Từ Tân Bình, Gò Vấp, Tân Phú, Quận 10 đến trung tâm Quận 1 — chọn địa chỉ gần đối tác, khách hàng hoặc thuận tiện nhất cho đội ngũ của bạn."
       />
       <Breadcrumb items={[{ label: "Chi nhánh" }]} />
@@ -33,7 +33,7 @@ export default function DiaDiemPage() {
         <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
           <SectionHead
             eyebrow="Hệ thống chi nhánh"
-            title="Toàn bộ 11 chi nhánh MAX OFFICE"
+            title="Toàn bộ 13 chi nhánh MAX OFFICE"
             description="Mỗi địa điểm đều đủ điều kiện đăng ký kinh doanh, đăng ký thuế và sẵn sàng phục vụ văn phòng ảo, văn phòng trọn gói, phòng họp và chỗ ngồi linh động."
           />
           <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

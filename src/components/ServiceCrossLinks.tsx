@@ -55,7 +55,7 @@ export default function ServiceCrossLinks({ currentSlug }: { currentSlug: string
             </span>
             <div>
               <h3 className="text-[15.5px] font-bold text-navy">
-                Xem 11 địa điểm tại TP.HCM
+                Xem 13 địa điểm tại TP.HCM
               </h3>
               <p className="text-[13.5px] text-body-text">
                 Chọn địa chỉ thuận tiện nhất cho bạn và đối tác.

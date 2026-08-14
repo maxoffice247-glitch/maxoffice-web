@@ -66,7 +66,7 @@ const MEGA_SERVICES = [
 ];
 
 const TRUST_STATS = [
-  { icon: MapPinIcon, label: "11 địa điểm tại TP.HCM" },
+  { icon: MapPinIcon, label: "13 địa điểm tại TP.HCM" },
   { icon: UsersIcon, label: "500+ doanh nghiệp tin dùng" },
   { icon: CalendarIcon, label: "Từ 2022" },
 ];
