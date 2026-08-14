@@ -189,11 +189,11 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua khu vực Tân Bình, gần trạm dừng." },
       { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, thời gian chờ trung bình ngắn nhờ vị trí trung tâm." },
       { icon: CheckCircleIcon, title: "Trục đường Cộng Hoà — Trường Sơn", desc: "Kết nối nhanh đến sân bay và trung tâm thành phố." },
-      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ lễ tân hỗ trợ hướng dẫn tận tình khi bạn đến lần đầu." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân tại trụ sở chính hỗ trợ chỉ dẫn tận tình, kể cả khi bạn chưa quen khu vực Tân Sơn Hoà." },
     ],
     parkingInfo: [
-      "Khu vực giữ xe máy rộng rãi ngay tại toà nhà.",
-      "Hỗ trợ chỗ đỗ ô tô cho khách đến làm việc, tham quan.",
+      "Bãi giữ xe máy rộng rãi ngay tại trụ sở chính, đủ sức chứa cho lượng khách ra vào đông đảo mỗi ngày.",
+      "Khu vực đỗ ô tô riêng dành cho khách đến làm việc, họp hoặc tham quan trụ sở.",
       "Bảo vệ trực gác 24/7, an ninh đảm bảo cho phương tiện.",
     ],
     diningItems: [
@@ -208,7 +208,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Tôi có thể sử dụng tất cả dịch vụ của MAX OFFICE tại đây không?", a: "Có. Đây là chi nhánh duy nhất cung cấp đầy đủ toàn bộ 6 dịch vụ cốt lõi cùng lúc." },
       { q: "Có chỗ đỗ xe ô tô cho khách đến tham quan không?", a: "Có. Chi nhánh hỗ trợ chỗ đỗ ô tô cho khách đến làm việc hoặc tham quan văn phòng." },
       { q: "Thời gian xử lý hồ sơ tại trụ sở chính có nhanh hơn các chi nhánh khác không?", a: "Có xu hướng nhanh hơn vì đây là nơi đội ngũ chuyên môn làm việc trực tiếp, giảm thời gian trung chuyển hồ sơ." },
-      { q: "Tôi có thể đặt lịch tham quan văn phòng Sông Thao không?", a: "Có. Bạn có thể đặt lịch tham quan miễn phí qua form trên trang này hoặc gọi hotline 089 8082 188." },
+      { q: "Tôi có thể đặt lịch tham quan văn phòng Sông Thao không?", a: "Có. Vì đây là trụ sở chính với đội ngũ vận hành đông đảo nhất hệ thống, bạn có thể đặt lịch tham quan miễn phí qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp khung giờ phù hợp." },
       { q: "Ngoài văn phòng ảo, tôi có thể thuê văn phòng trọn gói tại đây không?", a: "Có. Chi nhánh Sông Thao có văn phòng trọn gói sẵn sàng sử dụng ngay với đầy đủ nội thất và tiện ích." },
     ],
     testimonials: [
@@ -274,12 +274,12 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt trung tâm hoạt động qua trục Điện Biên Phủ." },
       { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao tại khu trung tâm, thời gian chờ rất ngắn." },
       { icon: CheckCircleIcon, title: "Trục đường Điện Biên Phủ", desc: "Tuyến đường huyết mạch kết nối Quận 1, Quận 3 và Bình Thạnh." },
-      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ lễ tân hỗ trợ hướng dẫn tận tình khi bạn đến lần đầu." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hướng dẫn tận tình cho khách lần đầu ghé khu Tân Định — Đa Kao, đảm bảo không lạc đường." },
     ],
     parkingInfo: [
       "Khu vực giữ xe máy ngay tại toà nhà, thuận tiện cho khách đến làm việc.",
       "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực do mật độ giao thông trung tâm Quận 1.",
-      "Bảo vệ trực gác, an ninh đảm bảo trong giờ làm việc.",
+      "Bảo vệ trực gác thường xuyên, đảm bảo an ninh cho phương tiện ngay tại khu trung tâm Quận 1.",
     ],
     diningItems: [
       { name: "Quán cà phê khu Tân Định — Đa Kao", desc: "Nhiều quán cà phê phong cách hiện đại, phù hợp tiếp khách." },
@@ -293,7 +293,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Vị trí này có phù hợp cho công ty tư vấn, tài chính không?", a: "Rất phù hợp. Địa chỉ Quận 1 thường được các ngành tư vấn, tài chính, pháp lý ưu tiên lựa chọn để tăng độ tin cậy với khách hàng." },
       { q: "Tôi có thể thuê phòng họp tại đây để tiếp đối tác quan trọng không?", a: "Có. Chi nhánh có phòng họp trang bị hiện đại, phù hợp tiếp đối tác, nhà đầu tư ngay tại trung tâm Quận 1." },
       { q: "Di chuyển đến chi nhánh này từ Quận 3, Bình Thạnh có xa không?", a: "Không xa. Vị trí trung tâm giúp di chuyển từ các quận lân cận chỉ mất vài phút." },
-      { q: "Tôi có thể đặt lịch tham quan văn phòng Điện Biên Phủ không?", a: "Có. Bạn có thể đặt lịch tham quan miễn phí qua form trên trang này hoặc gọi hotline 089 8082 188." },
+      { q: "Tôi có thể đặt lịch tham quan văn phòng Điện Biên Phủ không?", a: "Có. Đội ngũ lễ tân tại chi nhánh Quận 1 sẽ sắp xếp lịch tham quan miễn phí ngay khi bạn để lại thông tin qua form hoặc gọi hotline 089 8082 188." },
       { q: "MAX OFFICE có hỗ trợ thành lập doanh nghiệp ngay tại chi nhánh này không?", a: "Có. Dịch vụ thành lập doanh nghiệp và kế toán thuế đều được cung cấp đầy đủ tại chi nhánh Điện Biên Phủ." },
     ],
     testimonials: [
@@ -353,12 +353,12 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua trục Nguyễn Oanh, Phan Văn Trị." },
       { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, mật độ phương tiện cao trong khu vực." },
       { icon: CheckCircleIcon, title: "Trục đường Nguyễn Oanh", desc: "Tuyến đường chính kết nối Gò Vấp với Phú Nhuận, Tân Bình." },
-      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ lễ tân hỗ trợ hướng dẫn tận tình khi bạn đến lần đầu." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân tại chi nhánh hỗ trợ nhiệt tình, chỉ dẫn cụ thể tuyến đường Nguyễn Oanh cho khách đến lần đầu." },
     ],
     parkingInfo: [
-      "Khu vực giữ xe máy rộng rãi ngay tại toà nhà.",
-      "Hỗ trợ chỗ đỗ ô tô cho khách đến làm việc, tham quan.",
-      "Bảo vệ trực gác, an ninh đảm bảo trong giờ làm việc.",
+      "Khu vực gửi xe máy thoáng rộng ngay tại toà nhà, thuận tiện cho khách ở khu vực Gò Vấp.",
+      "Có chỗ đỗ ô tô riêng phục vụ khách đến tham quan hoặc làm việc tại chi nhánh.",
+      "Đội bảo vệ túc trực, hỗ trợ an ninh cho xe của khách trong suốt giờ làm việc.",
     ],
     diningItems: [
       { name: "Quán cà phê khu Gò Vấp", desc: "Nhiều lựa chọn quán cà phê bình dân đến hiện đại." },
@@ -372,7 +372,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Khu vực Gò Vấp có thuận tiện di chuyển đến trung tâm thành phố không?", a: "Có. Trục đường Nguyễn Oanh — Phan Văn Trị kết nối khá nhanh đến Phú Nhuận và trung tâm TP.HCM." },
       { q: "Tôi có thể thuê chỗ ngồi linh động tại chi nhánh này không?", a: "Có. Chi nhánh cung cấp đầy đủ dịch vụ chỗ ngồi linh động, phù hợp freelancer và nhóm nhỏ tại khu vực Gò Vấp." },
       { q: "Chi nhánh có hỗ trợ kế toán thuế cho hộ kinh doanh không?", a: "Có. Dịch vụ kế toán thuế trọn gói từ 500.000đ/tháng được cung cấp đầy đủ tại đây." },
-      { q: "Tôi có thể đặt lịch tham quan văn phòng Nguyễn Oanh không?", a: "Có. Bạn có thể đặt lịch tham quan miễn phí qua form trên trang này hoặc gọi hotline 089 8082 188." },
+      { q: "Tôi có thể đặt lịch tham quan văn phòng Nguyễn Oanh không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ tại Gò Vấp sẽ liên hệ xác nhận lịch tham quan phù hợp." },
       { q: "Văn phòng có chỗ đỗ xe cho khách vãng lai không?", a: "Có. Khu vực giữ xe máy và hỗ trợ đỗ ô tô ngay tại toà nhà." },
     ],
     testimonials: [
