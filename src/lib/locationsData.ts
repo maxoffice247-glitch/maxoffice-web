@@ -17,11 +17,71 @@ import type { DiningItem } from "@/components/LocationDining";
 import type { FaqItem } from "@/components/Faq";
 import type { Testimonial } from "@/components/Testimonials";
 
+export type AreaInfo = {
+  slug: string;
+  /** Tên đầy đủ dùng cho breadcrumb, tiêu đề trang, meta — mô tả khu vực địa lý thông thường, không phải đơn vị hành chính chính thức (TP.HCM đã bỏ cấp Quận từ 1/7/2025). */
+  name: string;
+  description: string;
+};
+
+export const AREAS: AreaInfo[] = [
+  {
+    slug: "quan-tan-binh-cu",
+    name: "Quận Tân Bình (cũ)",
+    description:
+      "Khu vực tập trung nhiều chi nhánh MAX OFFICE nhất, gần sân bay Tân Sơn Nhất, trải khắp các phường Tân Sơn Hoà, Tân Sơn Nhất, Bảy Hiền và Tân Bình.",
+  },
+  {
+    slug: "quan-1-cu",
+    name: "Quận 1 (cũ)",
+    description:
+      "Khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM, thuộc phường Tân Định.",
+  },
+  {
+    slug: "quan-go-vap-cu",
+    name: "Quận Gò Vấp (cũ)",
+    description: "Khu vực dân cư đông đúc phía Bắc thành phố, không xa sân bay Tân Sơn Nhất.",
+  },
+  {
+    slug: "quan-tan-phu-cu",
+    name: "Quận Tân Phú (cũ)",
+    description: "Khu vực phát triển nhanh phía Tây thành phố, gần Aeon Mall Tân Phú Celadon.",
+  },
+  {
+    slug: "quan-10-cu",
+    name: "Quận 10 (cũ)",
+    description: "Khu vực gần Ga Sài Gòn, kết nối thuận tiện đến Quận 1 và Quận 3.",
+  },
+  {
+    slug: "thu-duc-cu",
+    name: "Thủ Đức (cũ)",
+    description: "Khu vực cửa ngõ Đông Bắc thành phố, gần các trường đại học lớn và sông Sài Gòn.",
+  },
+  {
+    slug: "quan-7-cu",
+    name: "Quận 7 (cũ)",
+    description: "Khu vực Nam Sài Gòn, gần Khu chế xuất Tân Thuận và khu đô thị Phú Mỹ Hưng.",
+  },
+];
+
+export function getAreaBySlug(slug: string): AreaInfo | undefined {
+  return AREAS.find((a) => a.slug === slug);
+}
+
+const AREA_TAN_BINH = { slug: "quan-tan-binh-cu", name: "Quận Tân Bình (cũ)" };
+const AREA_QUAN_1 = { slug: "quan-1-cu", name: "Quận 1 (cũ)" };
+const AREA_GO_VAP = { slug: "quan-go-vap-cu", name: "Quận Gò Vấp (cũ)" };
+const AREA_TAN_PHU = { slug: "quan-tan-phu-cu", name: "Quận Tân Phú (cũ)" };
+const AREA_QUAN_10 = { slug: "quan-10-cu", name: "Quận 10 (cũ)" };
+const AREA_THU_DUC = { slug: "thu-duc-cu", name: "Thủ Đức (cũ)" };
+const AREA_QUAN_7 = { slug: "quan-7-cu", name: "Quận 7 (cũ)" };
+
 export type LocationListItem = {
   slug: string;
   name: string;
   shortAddress: string;
   tag?: string;
+  area: { slug: string; name: string };
 };
 
 export const LOCATIONS_LIST: LocationListItem[] = [
@@ -30,72 +90,86 @@ export const LOCATIONS_LIST: LocationListItem[] = [
     name: "Điện Biên Phủ, Quận 1",
     shortAddress: "Số 95 Điện Biên Phủ, P. Tân Định",
     tag: "Vị trí VIP",
+    area: AREA_QUAN_1,
   },
   {
     slug: "song-thao",
     name: "Sông Thao, Tân Bình",
     shortAddress: "Số 10 Sông Thao, P. Tân Sơn Hoà",
     tag: "Trụ sở chính",
+    area: AREA_TAN_BINH,
   },
   {
     slug: "nguyen-oanh",
     name: "Nguyễn Oanh, Gò Vấp",
     shortAddress: "238-240-242 Nguyễn Oanh, P. Gò Vấp",
+    area: AREA_GO_VAP,
   },
   {
     slug: "yen-the",
     name: "Yên Thế, Tân Bình",
     shortAddress: "92 Yên Thế, P. Tân Sơn Hòa",
+    area: AREA_TAN_BINH,
   },
   {
     slug: "cong-hoa",
     name: "Cộng Hoà, Tân Bình",
     shortAddress: "123 Cộng Hoà, P. Bảy Hiền",
+    area: AREA_TAN_BINH,
   },
   {
     slug: "tan-thang",
     name: "Tân Thắng, Tân Phú",
     shortAddress: "121A-123-125 Tân Thắng, P. Tân Sơn Nhì",
+    area: AREA_TAN_PHU,
   },
   {
     slug: "cuu-long",
     name: "Cửu Long, Tân Bình",
     shortAddress: "06-08-10 Cửu Long, P. Tân Sơn Hòa",
+    area: AREA_TAN_BINH,
   },
   {
     slug: "hoang-viet",
     name: "Hoàng Việt, Tân Bình",
     shortAddress: "1/12 Hoàng Việt, P. Tân Sơn Nhất",
+    area: AREA_TAN_BINH,
   },
   {
     slug: "bau-cat",
     name: "Bàu Cát 2, Tân Bình",
     shortAddress: "24A Bàu Cát 2, P. Tân Bình",
+    area: AREA_TAN_BINH,
   },
   {
     slug: "lam-son",
     name: "Lam Sơn, Tân Bình",
     shortAddress: "2-2B Lam Sơn, P. Tân Sơn Hòa",
+    area: AREA_TAN_BINH,
   },
   {
     slug: "hoang-ke-viem",
     name: "Hoàng Kế Viêm, Tân Bình",
     shortAddress: "26 Hoàng Kế Viêm, P. Bảy Hiền",
+    area: AREA_TAN_BINH,
   },
   {
     slug: "cmt8",
     name: "CMT8, Quận 10",
     shortAddress: "283/26-28 CMT8, P. Hoà Hưng",
+    area: AREA_QUAN_10,
   },
   {
     slug: "pham-van-dong",
     name: "Phạm Văn Đồng, Thủ Đức",
     shortAddress: "1148A Phạm Văn Đồng, P. Thủ Đức",
+    area: AREA_THU_DUC,
   },
   {
     slug: "quan-7",
     name: "Bùi Văn Ba, Quận 7",
     shortAddress: "210 Bùi Văn Ba, P. Tân Thuận",
+    area: AREA_QUAN_7,
   },
 ];
 
@@ -103,6 +177,8 @@ export type LocationData = {
   slug: string;
   name: string;
   tag?: string;
+  /** Khu vực (quận cũ) dùng cho breadcrumb Tier 2 và trang /dia-diem/[khu-vuc] — mô tả địa lý thông thường, không phải đơn vị hành chính chính thức. */
+  area: { slug: string; name: string };
   address: string;
   heroTitle: string;
   heroDescription: string;
@@ -152,6 +228,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     slug: "song-thao",
     name: "Sông Thao, Tân Bình",
     tag: "Trụ sở chính",
+    area: AREA_TAN_BINH,
     address: "Số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Sông Thao Tân Bình",
     heroDescription:
@@ -228,6 +305,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     slug: "dien-bien-phu",
     name: "Điện Biên Phủ, Quận 1",
     tag: "Vị trí VIP",
+    area: AREA_QUAN_1,
     address: "Số 95 Điện Biên Phủ, Phường Tân Định, Quận 1, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Điện Biên Phủ Quận 1",
     heroDescription:
@@ -312,6 +390,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "nguyen-oanh": {
     slug: "nguyen-oanh",
     name: "Nguyễn Oanh, Gò Vấp",
+    area: AREA_GO_VAP,
     address: "238-240-242 Nguyễn Oanh, Phường Gò Vấp, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Nguyễn Oanh Gò Vấp",
     heroDescription:
@@ -400,6 +479,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "yen-the": {
     slug: "yen-the",
     name: "Yên Thế, Tân Bình",
+    area: AREA_TAN_BINH,
     address: "92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Yên Thế Tân Bình",
     heroDescription: "Chi nhánh MAX OFFICE tại Yên Thế, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ cốt lõi.",
@@ -485,6 +565,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "cong-hoa": {
     slug: "cong-hoa",
     name: "Cộng Hoà, Tân Bình",
+    area: AREA_TAN_BINH,
     address: "123 Cộng Hoà, Phường Bảy Hiền, Quận Tân Bình, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Cộng Hoà Tân Bình",
     heroDescription: "Chi nhánh MAX OFFICE tại Cộng Hoà, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ cốt lõi.",
@@ -553,6 +634,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "tan-thang": {
     slug: "tan-thang",
     name: "Tân Thắng, Tân Phú",
+    area: AREA_TAN_PHU,
     address: "121A-123-125 Tân Thắng, Phường Tân Sơn Nhì, Quận Tân Phú, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Tân Thắng Tân Phú",
     heroDescription: "Chi nhánh MAX OFFICE tại Tân Thắng, Tân Phú — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ cốt lõi.",
@@ -619,6 +701,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "cuu-long": {
     slug: "cuu-long",
     name: "Cửu Long, Tân Bình",
+    area: AREA_TAN_BINH,
     address: "06-08-10 Cửu Long, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Cửu Long Tân Bình",
     heroDescription: "Chi nhánh MAX OFFICE tại Cửu Long, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE), đầy đủ dịch vụ cốt lõi.",
@@ -684,6 +767,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "hoang-viet": {
     slug: "hoang-viet",
     name: "Hoàng Việt, Tân Bình",
+    area: AREA_TAN_BINH,
     address: "1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Hoàng Việt Tân Bình",
     heroDescription: "Chi nhánh MAX OFFICE tại Hoàng Việt, Tân Bình — văn phòng ảo từ 299.000đ/tháng, đầy đủ dịch vụ cốt lõi.",
@@ -749,6 +833,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "bau-cat": {
     slug: "bau-cat",
     name: "Bàu Cát 2, Tân Bình",
+    area: AREA_TAN_BINH,
     address: "24A Bàu Cát 2, Phường Tân Bình, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Bàu Cát 2 Tân Bình",
     heroDescription: "Chi nhánh MAX OFFICE tại Bàu Cát 2, Tân Bình — văn phòng ảo từ 299.000đ/tháng, đầy đủ dịch vụ cốt lõi.",
@@ -814,6 +899,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "lam-son": {
     slug: "lam-son",
     name: "Lam Sơn, Tân Bình",
+    area: AREA_TAN_BINH,
     address: "2-2B Lam Sơn, Phường Tân Sơn Hòa, Quận Tân Bình, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Lam Sơn Tân Bình",
     heroDescription: "Chi nhánh MAX OFFICE tại Lam Sơn, Tân Bình — văn phòng ảo từ 299.000đ/tháng, đầy đủ dịch vụ cốt lõi.",
@@ -878,6 +964,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "hoang-ke-viem": {
     slug: "hoang-ke-viem",
     name: "Hoàng Kế Viêm, Tân Bình",
+    area: AREA_TAN_BINH,
     address: "26 Hoàng Kế Viêm, Phường Bảy Hiền, Quận Tân Bình, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê Hoàng Kế Viêm Tân Bình",
     heroDescription: "Chi nhánh MAX OFFICE tại Hoàng Kế Viêm, Tân Bình — văn phòng ảo từ 299.000đ/tháng, đầy đủ dịch vụ cốt lõi.",
@@ -948,6 +1035,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   cmt8: {
     slug: "cmt8",
     name: "CMT8, Quận 10",
+    area: AREA_QUAN_10,
     address: "283/26-28 Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10, TP.HCM",
     heroTitle: "Văn Phòng Cho Thuê CMT8 Quận 10",
     heroDescription: "Chi nhánh MAX OFFICE tại Cách Mạng Tháng 8, Quận 10 — văn phòng ảo từ 299.000đ/tháng, đầy đủ dịch vụ cốt lõi.",
@@ -1015,6 +1103,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "pham-van-dong": {
     slug: "pham-van-dong",
     name: "Phạm Văn Đồng, Thủ Đức",
+    area: AREA_THU_DUC,
     address: "1148A Phạm Văn Đồng, Phường Thủ Đức, Thành phố Hồ Chí Minh",
     heroTitle: "Văn Phòng Cho Thuê Phạm Văn Đồng Thủ Đức",
     heroDescription: "Chi nhánh MAX OFFICE tại Phạm Văn Đồng, Thủ Đức — văn phòng ảo từ 370.000đ/tháng (gói M-START, M-BASE, M-ORIGIN riêng biệt), toà nhà phong cách biệt thự sang trọng.",
@@ -1087,6 +1176,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
   "quan-7": {
     slug: "quan-7",
     name: "Bùi Văn Ba, Quận 7",
+    area: AREA_QUAN_7,
     address: "Unit B3.8, Tầng 3, Block B, 210 Bùi Văn Ba, Phường Tân Thuận, Thành phố Hồ Chí Minh",
     heroTitle: "Văn Phòng Cho Thuê Bùi Văn Ba Quận 7",
     heroDescription: "Chi nhánh MAX OFFICE tại Bùi Văn Ba, Quận 7 — văn phòng ảo từ 450.000đ/tháng (gói W-BASE, W-PRO riêng biệt), toà nhà cao tầng hiện đại view sông Sài Gòn.",
@@ -1160,4 +1250,8 @@ export function getLocationBySlug(slug: string): LocationData | undefined {
 
 export function getAllLocationSlugs(): string[] {
   return Object.keys(LOCATIONS_DATA);
+}
+
+export function getLocationsForArea(areaSlug: string): LocationListItem[] {
+  return LOCATIONS_LIST.filter((loc) => loc.area.slug === areaSlug);
 }

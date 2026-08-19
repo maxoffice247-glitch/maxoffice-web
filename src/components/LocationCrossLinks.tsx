@@ -5,7 +5,16 @@ import { MapPinIcon, ArrowRightSmallIcon, BuildingIcon } from "./icons";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
 
 export default function LocationCrossLinks({ currentSlug }: { currentSlug: string }) {
-  const otherLocations = LOCATIONS_LIST.filter((loc) => loc.slug !== currentSlug).slice(0, 5);
+  const currentArea = LOCATIONS_LIST.find((loc) => loc.slug === currentSlug)?.area.slug;
+  // Chi nhánh cùng khu vực (quận cũ) được ưu tiên hiển thị trước — thường gần
+  // nhau về địa lý nên hữu ích hơn cho khách đang cân nhắc lựa chọn thay thế.
+  const sameArea = LOCATIONS_LIST.filter(
+    (loc) => loc.slug !== currentSlug && loc.area.slug === currentArea
+  );
+  const otherAreas = LOCATIONS_LIST.filter(
+    (loc) => loc.slug !== currentSlug && loc.area.slug !== currentArea
+  );
+  const otherLocations = [...sameArea, ...otherAreas].slice(0, 5);
 
   return (
     <section className="bg-bg-tint py-9">

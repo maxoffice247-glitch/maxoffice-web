@@ -52,6 +52,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       <Breadcrumb
         items={[
           { label: "Chi nhánh", href: "/dia-diem" },
+          { label: data.area.name, href: `/dia-diem/${data.area.slug}` },
           { label: data.name },
         ]}
       />

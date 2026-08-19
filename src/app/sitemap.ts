@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/siteConfig";
 import { SERVICES_DATA } from "@/lib/servicesData";
-import { LOCATIONS_DATA } from "@/lib/locationsData";
+import { LOCATIONS_DATA, AREAS } from "@/lib/locationsData";
 import { KNOWLEDGE_CATEGORIES } from "@/lib/knowledgeCenterData";
 import { BLOG_POSTS } from "@/lib/blogData";
 
@@ -49,6 +49,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
+  const areaPages: MetadataRoute.Sitemap = AREAS.map((area) => ({
+    url: `${SITE_URL}/dia-diem/${area.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
   const toolPages: MetadataRoute.Sitemap = TOOL_SLUGS.map((slug) => ({
     url: `${SITE_URL}/tien-ich/${slug}`,
     lastModified: now,
@@ -74,6 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticPages,
     ...servicePages,
     ...locationPages,
+    ...areaPages,
     ...toolPages,
     ...knowledgeCategoryPages,
     ...blogPostPages,

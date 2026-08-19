@@ -133,6 +133,48 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "210 Bùi Văn Ba, P. Tân Thuận",
   },
   {
+    title: "Quận Tân Bình (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-tan-binh-cu",
+    desc: "8 chi nhánh MAX OFFICE quanh khu vực sân bay Tân Sơn Nhất",
+  },
+  {
+    title: "Quận 1 (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-1-cu",
+    desc: "Chi nhánh Điện Biên Phủ — trung tâm hành chính, tài chính TP.HCM",
+  },
+  {
+    title: "Quận Gò Vấp (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-go-vap-cu",
+    desc: "Chi nhánh Nguyễn Oanh — văn phòng ảo hạng A",
+  },
+  {
+    title: "Quận Tân Phú (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-tan-phu-cu",
+    desc: "Chi nhánh Tân Thắng — gần Aeon Mall Tân Phú Celadon",
+  },
+  {
+    title: "Quận 10 (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-10-cu",
+    desc: "Chi nhánh CMT8 — gần Ga Sài Gòn",
+  },
+  {
+    title: "Thủ Đức (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/thu-duc-cu",
+    desc: "Chi nhánh Phạm Văn Đồng — gần các trường đại học lớn",
+  },
+  {
+    title: "Quận 7 (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-7-cu",
+    desc: "Chi nhánh Bùi Văn Ba — gần Khu chế xuất Tân Thuận",
+  },
+  {
     title: "Bảng giá Văn phòng & Coworking",
     category: "Bảng giá",
     href: "/bang-gia",
