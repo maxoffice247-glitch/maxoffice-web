@@ -1025,6 +1025,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     facadeAspectRatio: "1086 / 1448",
     facadeImageSide: "left",
     interiorImages: [
+      { src: "/images/dia-diem-pham-van-dong-le-tan.jpg", alt: "Quầy lễ tân văn phòng Phạm Văn Đồng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-pham-van-dong-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Phạm Văn Đồng", caption: "Bảng tên công ty tại toà nhà" },
       { src: "/images/dia-diem-pham-van-dong-cho-ngoi-linh-dong.jpg", alt: "Không gian chỗ ngồi linh động văn phòng Phạm Văn Đồng", caption: "Không gian chỗ ngồi linh động" },
       { src: "/images/dia-diem-pham-van-dong-khong-gian-lam-viec.jpg", alt: "Không gian làm việc văn phòng Phạm Văn Đồng", caption: "Không gian làm việc" },
