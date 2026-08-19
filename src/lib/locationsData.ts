@@ -1030,6 +1030,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-pham-van-dong-cho-ngoi-linh-dong.jpg", alt: "Không gian chỗ ngồi linh động văn phòng Phạm Văn Đồng", caption: "Không gian chỗ ngồi linh động" },
       { src: "/images/dia-diem-pham-van-dong-khong-gian-lam-viec.jpg", alt: "Không gian làm việc văn phòng Phạm Văn Đồng", caption: "Không gian làm việc" },
       { src: "/images/dia-diem-pham-van-dong-san-trong.jpg", alt: "Văn phòng trọn gói tại Phạm Văn Đồng", caption: "Văn phòng trọn gói" },
+      { src: "/images/dia-diem-pham-van-dong-vi-tri.jpg", alt: "Bảng số nhà 1148 Phạm Văn Đồng", caption: "Bảng số nhà 1148 Phạm Văn Đồng" },
     ],
     intro: [
       "Văn phòng Phạm Văn Đồng toạ lạc tại 1148A Phạm Văn Đồng, Phường Thủ Đức, Thành phố Hồ Chí Minh — mặt tiền một trong những đại lộ hiện đại và rộng rãi bậc nhất thành phố, nối liền khu vực Gò Vấp, Bình Thạnh với cửa ngõ Đông Bắc Thủ Đức. Chi nhánh đặt trong một toà nhà phong cách biệt thự tân cổ điển, không gian sang trọng, tạo ấn tượng chuyên nghiệp ngay từ cổng vào.",
