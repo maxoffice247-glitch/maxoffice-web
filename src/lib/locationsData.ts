@@ -1255,3 +1255,29 @@ export function getAllLocationSlugs(): string[] {
 export function getLocationsForArea(areaSlug: string): LocationListItem[] {
   return LOCATIONS_LIST.filter((loc) => loc.area.slug === areaSlug);
 }
+
+export type GroupedLocations = {
+  /** Khu vực có từ 2 chi nhánh trở lên — hiển thị thành khối riêng. */
+  multiBranchGroups: { area: AreaInfo; locations: LocationListItem[] }[];
+  /** Chi nhánh thuộc các khu vực chỉ có 1 chi nhánh — gộp chung 1 danh sách. */
+  singleBranchLocations: LocationListItem[];
+};
+
+/**
+ * Nhóm 14 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
+ * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
+ * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
+ */
+export function getGroupedLocations(): GroupedLocations {
+  const areaGroups = AREAS.map((area) => ({
+    area,
+    locations: getLocationsForArea(area.slug),
+  })).filter((g) => g.locations.length > 0);
+
+  return {
+    multiBranchGroups: areaGroups.filter((g) => g.locations.length >= 2),
+    singleBranchLocations: areaGroups
+      .filter((g) => g.locations.length === 1)
+      .flatMap((g) => g.locations),
+  };
+}

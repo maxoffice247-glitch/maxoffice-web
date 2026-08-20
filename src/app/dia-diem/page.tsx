@@ -5,7 +5,7 @@ import SectionHead from "@/components/SectionHead";
 import { RevealGroup } from "@/components/Reveal";
 import CtaBanner from "@/components/CtaBanner";
 import LocationCard from "@/components/LocationCard";
-import { AREAS, getLocationsForArea } from "@/lib/locationsData";
+import { getGroupedLocations } from "@/lib/locationsData";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/dia-diem" },
@@ -18,18 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default function DiaDiemPage() {
-  // Khu vực có từ 2 chi nhánh trở lên được tách khối riêng có viền; khu vực
-  // chỉ 1 chi nhánh được gộp chung vào 1 khối — hoàn toàn tự động theo dữ
-  // liệu thật trong locationsData.ts, không cần sửa tay khi thêm chi nhánh mới.
-  const areaGroups = AREAS.map((area) => ({
-    area,
-    locations: getLocationsForArea(area.slug),
-  })).filter((g) => g.locations.length > 0);
-
-  const multiBranchGroups = areaGroups.filter((g) => g.locations.length >= 2);
-  const singleBranchLocations = areaGroups
-    .filter((g) => g.locations.length === 1)
-    .flatMap((g) => g.locations);
+  const { multiBranchGroups, singleBranchLocations } = getGroupedLocations();
 
   return (
     <main>
