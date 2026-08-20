@@ -22,18 +22,11 @@ export default function LocationCard({
         href={`/locations/${loc.slug}`}
         className="group flex h-full flex-col gap-4 rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
       >
-        {(areaBadge || loc.tag) && (
-          <div className="flex flex-wrap items-center gap-1.5">
-            {areaBadge && (
-              <span className="shrink-0 rounded-full bg-primary-tint px-2.5 py-1 text-[10.5px] font-bold whitespace-nowrap text-primary">
-                {areaBadge}
-              </span>
-            )}
-            {loc.tag && (
-              <span className="shrink-0 rounded-full bg-amber/12 px-2.5 py-1 text-[10.5px] font-bold whitespace-nowrap text-amber-dark">
-                {loc.tag}
-              </span>
-            )}
+        {areaBadge && (
+          <div className="flex justify-start">
+            <span className="shrink-0 rounded-full bg-primary-tint px-2.5 py-1 text-[10.5px] font-bold whitespace-nowrap text-primary">
+              {areaBadge}
+            </span>
           </div>
         )}
         <div className="flex gap-4">
@@ -41,7 +34,14 @@ export default function LocationCard({
             {String(index + 1).padStart(2, "0")}
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="mb-1 text-[15.5px] font-bold text-navy">{loc.name}</h3>
+            <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+              <h3 className="text-[15.5px] font-bold text-navy">{loc.name}</h3>
+              {loc.tag && (
+                <span className="shrink-0 rounded-full bg-amber/12 px-2 py-0.5 text-[10px] font-bold whitespace-nowrap text-amber-dark">
+                  {loc.tag}
+                </span>
+              )}
+            </div>
             <p className="text-[13.5px] text-body-text">{loc.shortAddress}</p>
           </div>
         </div>
