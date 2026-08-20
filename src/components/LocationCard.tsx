@@ -22,26 +22,26 @@ export default function LocationCard({
         href={`/locations/${loc.slug}`}
         className="group flex h-full flex-col gap-4 rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
       >
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex min-w-0 gap-4">
-            <div className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-[12px] bg-bg-tint font-mono text-[13px] font-bold text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
-              {String(index + 1).padStart(2, "0")}
-            </div>
-            <div className="min-w-0">
-              <h3 className="mb-1 text-[15.5px] font-bold text-navy">{loc.name}</h3>
-              <p className="text-[13.5px] text-body-text">{loc.shortAddress}</p>
-              {loc.tag && (
-                <span className="mt-2.5 inline-block rounded-full bg-amber/12 px-2.5 py-1 text-[11.5px] font-bold text-amber-dark">
-                  {loc.tag}
-                </span>
-              )}
-            </div>
-          </div>
-          {areaBadge && (
+        {areaBadge && (
+          <div className="flex justify-start">
             <span className="shrink-0 rounded-full bg-primary-tint px-2.5 py-1 text-[10.5px] font-bold whitespace-nowrap text-primary">
               {areaBadge}
             </span>
-          )}
+          </div>
+        )}
+        <div className="flex gap-4">
+          <div className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-[12px] bg-bg-tint font-mono text-[13px] font-bold text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="mb-1 text-[15.5px] font-bold text-navy">{loc.name}</h3>
+            <p className="text-[13.5px] text-body-text">{loc.shortAddress}</p>
+            {loc.tag && (
+              <span className="mt-2.5 inline-block rounded-full bg-amber/12 px-2.5 py-1 text-[11.5px] font-bold text-amber-dark">
+                {loc.tag}
+              </span>
+            )}
+          </div>
         </div>
         {cheapestPrice !== undefined && (
           <p className="-mt-1 text-[13px] text-body-text">

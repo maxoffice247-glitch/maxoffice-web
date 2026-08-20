@@ -163,7 +163,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "Chi nhánh CMT8 — gần Ga Sài Gòn",
   },
   {
-    title: "Thủ Đức (cũ)",
+    title: "Tp. Thủ Đức (Cũ)",
     category: "Khu vực",
     href: "/dia-diem/thu-duc-cu",
     desc: "Chi nhánh Phạm Văn Đồng — gần các trường đại học lớn",

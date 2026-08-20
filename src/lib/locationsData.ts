@@ -54,7 +54,7 @@ export const AREAS: AreaInfo[] = [
   },
   {
     slug: "thu-duc-cu",
-    name: "Thủ Đức (cũ)",
+    name: "Tp. Thủ Đức (Cũ)",
     description: "Khu vực cửa ngõ Đông Bắc thành phố, gần các trường đại học lớn và sông Sài Gòn.",
   },
   {
@@ -73,7 +73,7 @@ const AREA_QUAN_1 = { slug: "quan-1-cu", name: "Quận 1 (cũ)" };
 const AREA_GO_VAP = { slug: "quan-go-vap-cu", name: "Quận Gò Vấp (cũ)" };
 const AREA_TAN_PHU = { slug: "quan-tan-phu-cu", name: "Quận Tân Phú (cũ)" };
 const AREA_QUAN_10 = { slug: "quan-10-cu", name: "Quận 10 (cũ)" };
-const AREA_THU_DUC = { slug: "thu-duc-cu", name: "Thủ Đức (cũ)" };
+const AREA_THU_DUC = { slug: "thu-duc-cu", name: "Tp. Thủ Đức (Cũ)" };
 const AREA_QUAN_7 = { slug: "quan-7-cu", name: "Quận 7 (cũ)" };
 
 export type LocationListItem = {
