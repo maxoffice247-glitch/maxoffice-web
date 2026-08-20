@@ -29,7 +29,7 @@ function MegaMenuLocationItem({ loc, areaBadge }: { loc: LocationListItem; areaB
         )}
         <span className="mt-1 flex flex-wrap gap-1">
           {loc.tag && (
-            <span className="inline-block rounded-full bg-accent/8 px-2 py-0.5 text-[10px] font-bold text-accent">
+            <span className="inline-block rounded-full bg-amber/12 px-2 py-0.5 text-[10px] font-bold text-amber-dark">
               {loc.tag}
             </span>
           )}

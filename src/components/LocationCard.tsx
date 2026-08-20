@@ -31,7 +31,7 @@ export default function LocationCard({
               <h3 className="mb-1 text-[15.5px] font-bold text-navy">{loc.name}</h3>
               <p className="text-[13.5px] text-body-text">{loc.shortAddress}</p>
               {loc.tag && (
-                <span className="mt-2.5 inline-block rounded-full bg-accent/8 px-2.5 py-1 text-[11.5px] font-bold text-accent">
+                <span className="mt-2.5 inline-block rounded-full bg-amber/12 px-2.5 py-1 text-[11.5px] font-bold text-amber-dark">
                   {loc.tag}
                 </span>
               )}

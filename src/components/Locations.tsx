@@ -81,7 +81,7 @@ export default function Locations() {
                   </h3>
                   <p className="text-[13.5px] text-body-text">{loc.address}</p>
                   {loc.tag && (
-                    <span className="mt-2.5 inline-block rounded-full bg-accent/8 px-2.5 py-1 text-[11.5px] font-bold text-accent">
+                    <span className="mt-2.5 inline-block rounded-full bg-amber/12 px-2.5 py-1 text-[11.5px] font-bold text-amber-dark">
                       {loc.tag}
                     </span>
                   )}

@@ -8,6 +8,10 @@
      was 4.22:1, just under the 4.5:1 WCAG AA minimum. */
   --color-accent: #dc3530;
   --color-accent-dark: #c62828;
+  /* Badge "Trụ sở chính" / "Vị trí VIP" — tách tông khỏi accent (đỏ) để
+     không cạnh tranh thị giác với giá, vốn luôn dùng accent. */
+  --color-amber: #f59e0b;
+  --color-amber-dark: #b45309;
   --color-navy: #0b1f3a;
   --color-ink: #0f1b2d;
   --color-body-text: #4b5768;
@@ -30,6 +34,8 @@
   --color-primary-tint: var(--color-primary-tint);
   --color-accent: var(--color-accent);
   --color-accent-dark: var(--color-accent-dark);
+  --color-amber: var(--color-amber);
+  --color-amber-dark: var(--color-amber-dark);
   --color-navy: var(--color-navy);
   --color-ink: var(--color-ink);
   --color-body-text: var(--color-body-text);

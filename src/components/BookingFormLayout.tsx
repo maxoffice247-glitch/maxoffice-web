@@ -89,7 +89,7 @@ export default function BookingFormLayout(props: BookingFormProps) {
                           {loc.name}
                         </span>
                         {loc.tag && (
-                          <span className="rounded-full bg-accent/10 px-1.5 py-[2px] text-[9.5px] font-bold whitespace-nowrap text-accent">
+                          <span className="rounded-full bg-amber/14 px-1.5 py-[2px] text-[9.5px] font-bold whitespace-nowrap text-amber-dark">
                             {loc.tag}
                           </span>
                         )}
@@ -127,7 +127,7 @@ export default function BookingFormLayout(props: BookingFormProps) {
                         {loc.name}
                       </span>
                       {loc.tag && (
-                        <span className="rounded-full bg-accent/10 px-1.5 py-[2px] text-[9.5px] font-bold whitespace-nowrap text-accent">
+                        <span className="rounded-full bg-amber/14 px-1.5 py-[2px] text-[9.5px] font-bold whitespace-nowrap text-amber-dark">
                           {loc.tag}
                         </span>
                       )}

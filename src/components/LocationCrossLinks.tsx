@@ -42,8 +42,12 @@ export default function LocationCrossLinks({ currentSlug }: { currentSlug: strin
                   <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
                     <MapPinIcon className="h-5 w-5" />
                   </span>
-                  <h3 className="mb-1 text-[14.5px] font-bold text-navy">{loc.name}</h3>
-                  <p className="text-[12.5px] text-body-text">{loc.shortAddress}</p>
+                  <h3 className="mb-1 line-clamp-1 text-[14.5px] font-bold text-navy">
+                    {loc.name.split(",")[0].trim()}
+                  </h3>
+                  <p className="line-clamp-2 min-h-[34px] text-[12.5px] leading-relaxed text-body-text">
+                    {loc.shortAddress}
+                  </p>
                 </div>
                 <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-bold text-accent">
                   Xem chi tiết
