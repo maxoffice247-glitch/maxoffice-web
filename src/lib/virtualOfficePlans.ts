@@ -183,6 +183,26 @@ export function getCheapestPlanForLocation(slug: string): VirtualOfficePlan | un
   return plans.reduce((cheapest, p) => (p.price < cheapest.price ? p : cheapest), plans[0]);
 }
 
+/**
+ * Giá văn phòng ảo thấp nhất đang khả dụng tại một chi nhánh, bất kể chi
+ * nhánh đó dùng hệ thống giá nào (LITE–RISE chung, hay bảng giá riêng của
+ * Phạm Văn Đồng/Bùi Văn Ba) — dùng cho các thẻ chi nhánh trên /dia-diem.
+ */
+export function getCheapestPriceForLocation(slug: string): number | undefined {
+  if (slug === "pham-van-dong") {
+    return PHAM_VAN_DONG_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  }
+  if (slug === "quan-7") {
+    return QUAN_7_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  }
+  return getCheapestPlanForLocation(slug)?.price;
+}
+
+/** Định dạng giá dạng rút gọn "350K", "1.199K" — dùng Số nghìn theo chuẩn Việt Nam. */
+export function formatVoPriceShort(price: number): string {
+  return `${(price / 1000).toLocaleString("vi-VN")}K`;
+}
+
 export function getLocationsForPlan(planKey: VirtualOfficePlanKey): string[] {
   return Object.keys(LOCATION_VO_PLANS).filter((slug) => LOCATION_VO_PLANS[slug].includes(planKey));
 }

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import Breadcrumb from "@/components/Breadcrumb";
 import SectionHead from "@/components/SectionHead";
-import { RevealGroup, RevealItem } from "@/components/Reveal";
+import { RevealGroup } from "@/components/Reveal";
 import CtaBanner from "@/components/CtaBanner";
-import { ArrowRightSmallIcon, MapPinIcon } from "@/components/icons";
+import LocationCard from "@/components/LocationCard";
 import { AREAS, getLocationsForArea } from "@/lib/locationsData";
 
 export const metadata: Metadata = {
@@ -19,6 +18,19 @@ export const metadata: Metadata = {
 };
 
 export default function DiaDiemPage() {
+  // Khu vực có từ 2 chi nhánh trở lên được tách khối riêng có viền; khu vực
+  // chỉ 1 chi nhánh được gộp chung vào 1 khối — hoàn toàn tự động theo dữ
+  // liệu thật trong locationsData.ts, không cần sửa tay khi thêm chi nhánh mới.
+  const areaGroups = AREAS.map((area) => ({
+    area,
+    locations: getLocationsForArea(area.slug),
+  })).filter((g) => g.locations.length > 0);
+
+  const multiBranchGroups = areaGroups.filter((g) => g.locations.length >= 2);
+  const singleBranchLocations = areaGroups
+    .filter((g) => g.locations.length === 1)
+    .flatMap((g) => g.locations);
+
   return (
     <main>
       <PageHero
@@ -33,46 +45,41 @@ export default function DiaDiemPage() {
         <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
           <SectionHead
             eyebrow="Hệ thống chi nhánh"
-            title="Toàn bộ 14 chi nhánh MAX OFFICE, theo 7 khu vực"
-            description="Mỗi địa điểm đều đủ điều kiện đăng ký kinh doanh, đăng ký thuế và sẵn sàng phục vụ văn phòng ảo, văn phòng trọn gói, phòng họp và chỗ ngồi linh động. Chọn khu vực gần bạn nhất để xem chi tiết từng chi nhánh."
+            title="Toàn bộ 14 chi nhánh MAX OFFICE"
+            description="Mỗi địa điểm đều đủ điều kiện đăng ký kinh doanh, đăng ký thuế và sẵn sàng phục vụ văn phòng ảo, văn phòng trọn gói, phòng họp và chỗ ngồi linh động."
           />
-          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {AREAS.map((area) => {
-              const locations = getLocationsForArea(area.slug);
-              return (
-                <RevealItem key={area.slug} y={18}>
-                  <Link
-                    href={`/dia-diem/${area.slug}`}
-                    className="group flex h-full flex-col gap-4 rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
-                          <MapPinIcon className="h-5 w-5" />
-                        </span>
-                        <h3 className="text-[16px] font-bold text-navy">{area.name}</h3>
-                      </div>
-                      <span className="shrink-0 rounded-full bg-accent/8 px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-accent">
-                        {locations.length} chi nhánh
-                      </span>
-                    </div>
-                    <p className="text-[13.5px] leading-relaxed text-body-text">{area.description}</p>
-                    <ul className="space-y-1">
-                      {locations.map((loc) => (
-                        <li key={loc.slug} className="text-[12.5px] text-body-text">
-                          • {loc.name}
-                        </li>
-                      ))}
-                    </ul>
-                    <span className="mt-auto inline-flex items-center gap-1.5 text-[13px] font-bold text-primary">
-                      Xem chi nhánh trong khu vực
-                      <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
-                    </span>
-                  </Link>
-                </RevealItem>
-              );
-            })}
-          </RevealGroup>
+
+          {multiBranchGroups.map((group) => (
+            <div
+              key={group.area.slug}
+              className="mb-10 rounded-3xl border border-primary/15 bg-primary-tint/40 p-5 sm:p-7"
+            >
+              <div className="mb-5 flex items-center justify-between gap-3">
+                <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{group.area.name}</h3>
+                <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
+                  {group.locations.length} chi nhánh
+                </span>
+              </div>
+              <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {group.locations.map((loc, i) => (
+                  <LocationCard key={loc.slug} loc={loc} index={i} />
+                ))}
+              </RevealGroup>
+            </div>
+          ))}
+
+          {singleBranchLocations.length > 0 && (
+            <div>
+              <h3 className="mb-5 text-[18px] font-bold text-navy sm:text-[20px]">
+                Các chi nhánh khu vực khác
+              </h3>
+              <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {singleBranchLocations.map((loc, i) => (
+                  <LocationCard key={loc.slug} loc={loc} index={i} areaBadge={loc.area.name} />
+                ))}
+              </RevealGroup>
+            </div>
+          )}
         </div>
       </section>
 
