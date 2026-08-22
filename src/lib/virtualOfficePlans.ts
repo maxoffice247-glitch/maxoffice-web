@@ -195,6 +195,9 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "quan-7") {
     return QUAN_7_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
+  if (slug === "vuon-lai") {
+    return VUON_LAI_VO_PLAN.price;
+  }
   return getCheapestPlanForLocation(slug)?.price;
 }
 
@@ -342,4 +345,57 @@ export const QUAN_7_ADDONS: QuanBaAddonRow[] = [
   { service: "Domain (quốc tế)", wBase: "1 domain", wPro: "1 domain" },
   { service: "Hosting", wBase: "650.000đ/năm", wPro: "2GB" },
   { service: "Dịch vụ pháp lý trọn gói (GPKD, con dấu, hồ sơ thuế ban đầu)", wBase: "900.000đ", wPro: "900.000đ" },
+];
+
+/* ---------------------------------------------------------------------- */
+/* 314/6 Điện Biên Phủ, Quận 10 (cũ) — gói giá riêng, không thuộc hệ thống  */
+/* LITE-RISE hay các gói M / W riêng khác. Chỉ khả dụng tại "vuon-lai".    */
+/* ---------------------------------------------------------------------- */
+
+export type VuonLaiPlan = {
+  key: "v-start";
+  name: string;
+  price: number;
+  duration: string;
+  nameplateSize: string;
+  meetingRoom: string;
+  flexSeat: string;
+  features: string[];
+};
+
+/** Gói văn phòng ảo duy nhất tại chi nhánh 314/6 Điện Biên Phủ — cấu trúc tương tự M-START. */
+export const VUON_LAI_VO_PLAN: VuonLaiPlan = {
+  key: "v-start",
+  name: "V-START",
+  price: 380000,
+  duration: "/ tháng",
+  nameplateSize: "Bảng tên 30x10cm",
+  meetingRoom: "Không có",
+  flexSeat: "Không có",
+  features: ["Địa chỉ đăng ký kinh doanh (ĐKKD)", "Lễ tân", "Internet + nước uống", "Khu vực tiếp khách"],
+};
+
+export type VuonLaiPromo = {
+  label: string;
+  note: string;
+};
+
+/**
+ * Khuyến mãi riêng chi nhánh 314/6 Điện Biên Phủ — 2 lựa chọn TÁCH BIỆT cho
+ * hợp đồng 24 tháng tuỳ tình trạng pháp lý của khách (đã có GPKD hay chưa),
+ * khách chỉ chọn 1 trong 2, không cộng dồn.
+ */
+export const VUON_LAI_VO_PROMOS: VuonLaiPromo[] = [
+  {
+    label: "Hợp đồng 24 tháng — khách CHƯA có GPKD",
+    note: "Tặng 3 tháng sử dụng + tặng miễn phí dịch vụ thành lập doanh nghiệp (GPKD).",
+  },
+  {
+    label: "Hợp đồng 24 tháng — khách ĐÃ CÓ SẴN GPKD",
+    note: "Tặng 6 tháng sử dụng (thay cho lựa chọn tặng 3 tháng + GPKD ở trên).",
+  },
+  {
+    label: "Hợp đồng 12 tháng",
+    note: "Tặng 2 tháng sử dụng.",
+  },
 ];

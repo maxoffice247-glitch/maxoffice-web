@@ -121,6 +121,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "283/26-28 CMT8, P. Hoà Hưng",
   },
   {
+    title: "314/6 Điện Biên Phủ, Quận 10 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/vuon-lai",
+    desc: "314/6 Điện Biên Phủ, P. Vườn Lài",
+  },
+  {
     title: "Phạm Văn Đồng, Thủ Đức",
     category: "Chi nhánh",
     href: "/locations/pham-van-dong",
@@ -160,7 +166,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Quận 10 (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-10-cu",
-    desc: "Chi nhánh CMT8 — gần Ga Sài Gòn",
+    desc: "2 chi nhánh — CMT8 gần Ga Sài Gòn, 314/6 Điện Biên Phủ tại Vườn Lài",
   },
   {
     title: "Tp. Thủ Đức (Cũ)",

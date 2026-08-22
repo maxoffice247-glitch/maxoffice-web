@@ -12,7 +12,7 @@ import {
 const REASONS = [
   {
     icon: BuildingIcon,
-    title: "14 địa điểm trung tâm",
+    title: "15 địa điểm trung tâm",
     desc: "Hiện diện tại các quận trung tâm TP.HCM — chọn địa chỉ phù hợp nhất với khách hàng và đối tác của bạn.",
   },
   {

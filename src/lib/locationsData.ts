@@ -160,6 +160,12 @@ export const LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_QUAN_10,
   },
   {
+    slug: "vuon-lai",
+    name: "314/6 Điện Biên Phủ, Quận 10 (cũ)",
+    shortAddress: "314/6 Điện Biên Phủ, P. Vườn Lài",
+    area: AREA_QUAN_10,
+  },
+  {
     slug: "pham-van-dong",
     name: "Phạm Văn Đồng, Thủ Đức",
     shortAddress: "1148A Phạm Văn Đồng, P. Thủ Đức",
@@ -247,7 +253,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 14 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
+      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 15 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
       "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
@@ -333,7 +339,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 14 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
+      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 15 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
@@ -515,7 +521,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
-      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 14 địa điểm.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 15 địa điểm.",
       "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
@@ -782,7 +788,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 14 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 15 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
       "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
     ],
@@ -1050,7 +1056,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-cmt8-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng CMT8", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng CMT8 toạ lạc tại 283/26-28 Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10 — một trong những trục đường lớn và huyết mạch bậc nhất khu vực trung tâm TP.HCM, nối liền Quận 1, Quận 3 với Quận 10 và Quận Tân Bình. Đây là chi nhánh duy nhất của MAX OFFICE đặt tại Quận 10, phù hợp cho doanh nghiệp muốn có địa chỉ gần trung tâm với chi phí hợp lý hơn so với Quận 1.",
+      "Văn phòng CMT8 toạ lạc tại 283/26-28 Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10 — một trong những trục đường lớn và huyết mạch bậc nhất khu vực trung tâm TP.HCM, nối liền Quận 1, Quận 3 với Quận 10 và Quận Tân Bình. Đây là chi nhánh đầu tiên MAX OFFICE mở tại khu vực Quận 10 (cũ), phù hợp cho doanh nghiệp muốn có địa chỉ gần trung tâm với chi phí hợp lý hơn so với Quận 1.",
       "Khu vực Phường Hoà Hưng nằm gần Ga Sài Gòn — nhà ga đường sắt trung tâm của thành phố — cùng nhiều bệnh viện, trường đại học lớn như Bệnh viện Nhân dân 115, Đại học Bách Khoa lân cận, tạo nên mật độ dân cư và hoạt động kinh doanh sôi động suốt cả ngày. Trục Cách Mạng Tháng 8 cũng là tuyến đường được nhiều doanh nghiệp lựa chọn đặt văn phòng nhờ khả năng di chuyển thuận tiện đến hầu hết các quận trung tâm.",
       "Chi nhánh CMT8 cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — là lựa chọn kinh tế cho doanh nghiệp cần địa chỉ Quận 10 gần trung tâm mà không phải trả mức phí cao như khu vực Quận 1.",
     ],
@@ -1086,7 +1092,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { name: "Khu vực gần Ga Sài Gòn", desc: "Thuận tiện cho bữa ăn nhanh trước khi di chuyển bằng tàu." },
     ],
     faqs: [
-      { q: "Văn phòng CMT8 có phải chi nhánh duy nhất của MAX OFFICE tại Quận 10 không?", a: "Đúng vậy. Đây là chi nhánh duy nhất của MAX OFFICE đặt tại Quận 10, nằm mặt tiền trục Cách Mạng Tháng 8." },
+      { q: "Văn phòng CMT8 có phải chi nhánh duy nhất của MAX OFFICE tại khu vực Quận 10 (cũ) không?", a: "Không còn nữa. MAX OFFICE hiện có thêm chi nhánh 314/6 Điện Biên Phủ, Phường Vườn Lài trong cùng khu vực Quận 10 (cũ) — bạn có thể chọn chi nhánh gần đối tác hoặc thuận tiện di chuyển hơn." },
       { q: "Chi nhánh CMT8 có những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp 3 mức giá: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — đều đã bao gồm địa chỉ đăng ký kinh doanh hợp lệ." },
       { q: "Địa chỉ 283/26-28 Cách Mạng Tháng 8 có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Hoà Hưng, Quận 10, phù hợp đăng ký kinh doanh và đăng ký thuế." },
       { q: "Văn phòng CMT8 có gần Ga Sài Gòn không?", a: "Có. Chi nhánh nằm khá gần Ga Sài Gòn, thuận tiện nếu bạn hoặc đối tác di chuyển bằng đường sắt." },
@@ -1096,6 +1102,79 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Văn phòng ngay mặt tiền CMT8 nên khách hàng dễ tìm, công ty mình trông chuyên nghiệp hơn hẳn.", initial: "B", name: "Anh Bình", role: "Giám đốc công ty dịch vụ" },
       { quote: "Gần Ga Sài Gòn nên đối tác ở tỉnh ra công tác ghé văn phòng mình rất tiện.", initial: "X", name: "Thanh Xuân", role: "Trưởng phòng kinh doanh" },
+    ],
+  },
+
+  /* ===================== 314/6 ĐIỆN BIÊN PHỦ (VƯỜN LÀI) — GÓI GIÁ RIÊNG ===================== */
+  "vuon-lai": {
+    slug: "vuon-lai",
+    name: "314/6 Điện Biên Phủ, Quận 10 (cũ)",
+    area: AREA_QUAN_10,
+    address: "314/6 Điện Biên Phủ, Phường Vườn Lài, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 314/6 Điện Biên Phủ, Phường Vườn Lài",
+    heroDescription: "Chi nhánh MAX OFFICE tại 314/6 Điện Biên Phủ, Phường Vườn Lài, khu vực Quận 10 (cũ) — văn phòng ảo gói V-START từ 380.000đ/tháng, toà nhà mặt tiền hiện đại có tiệm bánh & cà phê tầng trệt.",
+    metaTitle: "Văn Phòng Ảo 314/6 Điện Biên Phủ, Quận 10 (cũ) | Từ 380K/Tháng",
+    metaDescription: "Thuê văn phòng ảo tại 314/6 Điện Biên Phủ, Phường Vườn Lài — gói V-START riêng biệt từ 380.000đ/tháng, toà nhà mặt tiền hiện đại, gần chi nhánh CMT8 cùng khu vực Quận 10 (cũ).",
+    image: IMAGE,
+    // Portrait street-front shot, không cắt — 1024x1535 gốc.
+    facadeAspectRatio: "1024 / 1535",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-vuon-lai-lam-viec.jpg", alt: "Không gian làm việc văn phòng 314/6 Điện Biên Phủ", caption: "Không gian làm việc" },
+      { src: "/images/dia-diem-vuon-lai-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 314/6 Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-vuon-lai-cho-ngoi.jpg", alt: "Chỗ ngồi làm việc văn phòng 314/6 Điện Biên Phủ", caption: "Chỗ ngồi làm việc" },
+      { src: "/images/dia-diem-vuon-lai-tiep-khach.jpg", alt: "Khu vực tiếp khách văn phòng 314/6 Điện Biên Phủ", caption: "Khu vực tiếp khách" },
+      { src: "/images/dia-diem-vuon-lai-tien-ich-tang-tret.jpg", alt: "Tiệm bánh và cà phê tại tầng trệt toà nhà 314/6 Điện Biên Phủ", caption: "Tiện ích: Tiệm bánh & cà phê tại tầng trệt toà nhà" },
+      { src: "/images/dia-diem-vuon-lai-khong-gian-trong.jpg", alt: "Không gian trống sẵn sàng bàn giao tại 314/6 Điện Biên Phủ", caption: "Không gian trống" },
+    ],
+    intro: [
+      "Văn phòng 314/6 Điện Biên Phủ toạ lạc tại Phường Vườn Lài, trên đoạn đường Điện Biên Phủ nối dài thuộc khu vực Quận 10 (cũ) — chi nhánh thứ hai MAX OFFICE mở tại khu vực này, bên cạnh chi nhánh CMT8 đã hoạt động từ trước. Lưu ý: đây là chi nhánh khác hoàn toàn với văn phòng \"Điện Biên Phủ, Quận 1\" tại Phường Tân Định — hai địa chỉ trùng tên đường nhưng thuộc hai khu vực khác nhau của thành phố, khách hàng cần phân biệt rõ khi tra cứu hoặc đặt lịch tham quan.",
+      "Toà nhà đặt chi nhánh mang phong cách kiến trúc hiện đại, mặt tiền ốp kính và khung thép đen nổi bật trên trục đường. Điểm cộng riêng của toà nhà là tầng trệt có tiệm bánh & cà phê 40&TEXAS Bakery — một tiện ích nhỏ nhưng hữu ích cho khách hàng ghé giao dịch hoặc nhân sự làm việc tại đây muốn nghỉ ngơi, gặp gỡ đối tác ngoài giờ làm việc chính thức mà không cần di chuyển xa.",
+      "Chi nhánh cung cấp duy nhất gói văn phòng ảo V-START (380.000đ/tháng, bảng tên 30x10cm) — thiết kế gọn nhẹ với các tiện ích cốt lõi gồm địa chỉ đăng ký kinh doanh, lễ tân, Internet, nước uống và khu vực tiếp khách, phù hợp cho doanh nghiệp mới thành lập cần tối ưu chi phí ban đầu tại khu vực Quận 10 (cũ).",
+      "Từ chi nhánh, việc di chuyển đến khu vực trung tâm Quận 1, Quận 3 hay sang chi nhánh CMT8 cùng khu vực đều khá thuận tiện nhờ vị trí nằm trên trục đường nối dài. Nếu doanh nghiệp bạn cần một địa chỉ đăng ký kinh doanh hợp lệ, chi phí thấp và không yêu cầu nhiều tiện ích cao cấp, chi nhánh 314/6 Điện Biên Phủ là lựa chọn kinh tế trong hệ thống MAX OFFICE.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 314/6 Điện Biên Phủ",
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ, toà nhà mặt tiền", desc: "Đủ điều kiện đăng ký kinh doanh, thiết kế hiện đại, khung kính-thép nổi bật." },
+      { icon: MapPinIcon, title: "Phường Vườn Lài, Quận 10 (cũ)", desc: "Chi nhánh thứ hai của MAX OFFICE tại khu vực này, bên cạnh CMT8." },
+      { icon: BadgePercentIcon, title: "Giá chỉ từ 380.000đ/tháng", desc: "Gói V-START riêng biệt, gọn nhẹ, tối ưu chi phí cho doanh nghiệp mới." },
+      { icon: UsersIcon, title: "Tiệm bánh & cà phê tầng trệt", desc: "Tiện ích 40&TEXAS Bakery ngay dưới toà nhà, thuận tiện gặp gỡ đối tác." },
+      { icon: ClockIcon, title: "Gần trung tâm Quận 1, Quận 3", desc: "Di chuyển thuận tiện qua trục Điện Biên Phủ nối dài." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    nearbyItems: [
+      { name: "Trục Điện Biên Phủ nối dài", desc: "Đoạn đường kết nối khu vực Vườn Lài với trung tâm Quận 1, Quận 3." },
+      { name: "Chi nhánh CMT8", desc: "Chi nhánh MAX OFFICE khác trong cùng khu vực Quận 10 (cũ), cách không xa." },
+      { name: "Khu dân cư Phường Vườn Lài", desc: "Khu vực dân cư ổn định, nhiều hàng quán và dịch vụ tiện ích xung quanh." },
+      { name: "Tiệm bánh & cà phê 40&TEXAS Bakery", desc: "Tiện ích ngay tầng trệt toà nhà, phù hợp gặp gỡ đối tác không chính thức." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua khu vực Phường Vườn Lài." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mặt tiền đường lớn, dễ dàng đặt xe vào mọi khung giờ." },
+      { icon: CheckCircleIcon, title: "Trục Điện Biên Phủ nối dài", desc: "Kết nối nhanh đến Quận 1, Quận 3 và khu vực trung tâm." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hỗ trợ chỉ dẫn tận tình, đặc biệt lưu ý phân biệt với chi nhánh Điện Biên Phủ Quận 1." },
+    ],
+    parkingInfo: [
+      "Khu vực giữ xe máy ngay tại toà nhà mặt tiền 314/6 Điện Biên Phủ.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực Phường Vườn Lài.",
+      "Bảo vệ toà nhà trực suốt giờ hành chính, hỗ trợ khách ra vào gửi xe.",
+    ],
+    diningItems: [
+      { name: "Tiệm bánh & cà phê 40&TEXAS Bakery", desc: "Ngay tầng trệt toà nhà — tiện lợi cho bữa sáng nhẹ hoặc gặp gỡ đối tác." },
+      { name: "Quán ăn khu Vườn Lài", desc: "Đa dạng lựa chọn ẩm thực phục vụ khu dân cư xung quanh." },
+      { name: "Nhà hàng trục Điện Biên Phủ", desc: "Thích hợp đặt tiệc nhỏ hoặc mời đối tác dùng bữa sau buổi họp." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 314/6 Điện Biên Phủ có phải cùng địa chỉ với chi nhánh Điện Biên Phủ, Quận 1 không?", a: "Không. Đây là hai chi nhánh hoàn toàn khác nhau — 314/6 Điện Biên Phủ thuộc Phường Vườn Lài, khu vực Quận 10 (cũ), còn chi nhánh còn lại (95 Điện Biên Phủ) thuộc Phường Tân Định, khu vực Quận 1 (cũ). Hai địa chỉ chỉ trùng tên đường, khách hàng cần kiểm tra kỹ khi đặt lịch tham quan." },
+      { q: "Chi nhánh này có những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp duy nhất gói V-START với giá 380.000đ/tháng, bao gồm địa chỉ đăng ký kinh doanh, lễ tân, Internet, nước uống và khu vực tiếp khách." },
+      { q: "Địa chỉ 314/6 Điện Biên Phủ có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Vườn Lài, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
+      { q: "Ký hợp đồng 24 tháng tại chi nhánh này được khuyến mãi gì?", a: "Có 2 lựa chọn tách biệt tuỳ tình trạng pháp lý của bạn: nếu CHƯA có giấy phép kinh doanh (GPKD), bạn được tặng 3 tháng sử dụng cộng thêm dịch vụ thành lập doanh nghiệp miễn phí; nếu ĐÃ CÓ SẴN GPKD và không cần thành lập mới, bạn được tặng 6 tháng sử dụng thay cho lựa chọn trên. Chỉ chọn 1 trong 2, không cộng dồn." },
+      { q: "Toà nhà có tiệm bánh hoặc cà phê nào không?", a: "Có. Tầng trệt toà nhà là tiệm bánh & cà phê 40&TEXAS Bakery — tiện ích thực tế của toà nhà, không phải dịch vụ do MAX OFFICE cung cấp, nhưng khách thuê văn phòng có thể sử dụng như một điểm gặp gỡ đối tác thuận tiện." },
+      { q: "Tôi có thể đến tham quan văn phòng 314/6 Điện Biên Phủ trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp lịch tham quan, đội ngũ sẽ hướng dẫn cụ thể đường đến chi nhánh để tránh nhầm với văn phòng Điện Biên Phủ Quận 1." },
+    ],
+    testimonials: [
+      { quote: "Ban đầu mình nhầm với chi nhánh Điện Biên Phủ bên Quận 1, may mà lễ tân gọi điện xác nhận địa chỉ trước, tránh mất công đi lộn chỗ.", initial: "P", name: "Anh Phúc", role: "Chủ hộ kinh doanh cá thể" },
+      { quote: "Gói V-START giá hợp lý, đủ dùng cho công ty mới thành lập, lại có tiệm bánh dưới nhà tiện gặp khách.", initial: "N", name: "Chị Ngọc", role: "Giám đốc công ty thương mại" },
     ],
   },
 
@@ -1264,7 +1343,7 @@ export type GroupedLocations = {
 };
 
 /**
- * Nhóm 14 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
+ * Nhóm 15 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
  * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
  * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
  */
