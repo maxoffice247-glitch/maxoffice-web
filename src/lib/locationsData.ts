@@ -9,6 +9,7 @@ import {
   CheckCircleIcon,
   KeyIcon,
   WifiIcon,
+  HeartHandshakeIcon,
 } from "@/components/icons";
 import type { BenefitItem } from "@/components/ServiceBenefits";
 import type { NearbyItem } from "@/components/LocationNearby";
@@ -799,7 +800,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Gần Công viên Gia Định", desc: "Không gian xanh thoáng đãng, chỉ vài phút di chuyển." },
       { icon: UsersIcon, title: "Phù hợp startup, hộ kinh doanh", desc: "Chi phí hợp lý cho doanh nghiệp giai đoạn đầu." },
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh sang Phú Nhuận và trung tâm thành phố." },
-      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+      { icon: HeadsetIcon, title: "Lễ tân trực tiếp tại quầy", desc: "Đội ngũ lễ tân MAX OFFICE tiếp nhận thư từ, bưu phẩm và đón tiếp khách ngay tại quầy khi đối tác ghé chi nhánh." },
+      { icon: HeartHandshakeIcon, title: "Khu vực tiếp khách riêng", desc: "Không gian tiếp khách riêng biệt với sofa, bàn tiếp khách — phù hợp trao đổi công việc với đối tác ngay tại văn phòng." },
     ],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Văn phòng nằm sát ranh giới sân bay, thuận tiện đón khách quốc tế." },
@@ -865,7 +867,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: BuildingIcon, title: "Không gian làm việc chung", desc: "Khu coworking thoáng đãng, phù hợp làm việc tập trung." },
       { icon: UsersIcon, title: "Phù hợp ngành thời trang, may mặc", desc: "Gần nguồn hàng, xưởng may, showroom thời trang trong khu vực." },
       { icon: MapPinIcon, title: "Gần chợ Bàu Cát", desc: "Thuận tiện sinh hoạt, giao thương hàng ngày." },
-      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+      { icon: HeadsetIcon, title: "Lễ tân tiếp nhận thư từ, bưu phẩm", desc: "Quầy lễ tân MAX OFFICE hoạt động thường xuyên, hỗ trợ nhận thư, bưu phẩm và tiếp đón khách đến giao dịch trực tiếp." },
+      { icon: HeartHandshakeIcon, title: "Khu vực tiếp khách riêng", desc: "Khu vực tiếp khách riêng biệt, có sofa và bàn tiếp khách — thuận tiện gặp gỡ khách hàng, đối tác ghé xem mẫu." },
     ],
     nearbyItems: [
       { name: "Khu thời trang, may mặc Bàu Cát", desc: "Tập trung nhiều xưởng may, showroom thời trang thiết kế nổi tiếng." },
@@ -930,7 +933,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Gần trục Lê Văn Sỹ", desc: "Kết nối nhanh đến Quận 3, Quận 1 qua tuyến phố ẩm thực sầm uất." },
       { icon: ClockIcon, title: "Di chuyển thuận tiện", desc: "Không phải vòng qua các trục lớn khác của Tân Bình." },
       { icon: UsersIcon, title: "Phù hợp văn phòng đại diện", desc: "Vị trí cân bằng giữa chi phí và khả năng tiếp cận trung tâm." },
-      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tiếp nhận thư từ", desc: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm hàng ngày; đội ngũ MAX OFFICE hỗ trợ vận hành và tư vấn từ xa qua điện thoại, Zalo." },
     ],
     nearbyItems: [
       { name: "Trục Lê Văn Sỹ", desc: "Tuyến phố ẩm thực, mua sắm sầm uất nối Tân Bình với Quận 3." },
@@ -942,7 +945,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua trục Lê Văn Sỹ, Cách Mạng Tháng 8." },
       { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, khu vực gần trung tâm nên mật độ xe ổn định." },
       { icon: CheckCircleIcon, title: "Trục Lê Văn Sỹ — CMT8", desc: "Kết nối trực tiếp đến Quận 3, Quận 1 mà không cần vòng xa." },
-      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân nhiệt tình hướng dẫn đường đi cho khách ghé thăm lần đầu." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ MAX OFFICE hướng dẫn đường qua điện thoại trước khi bạn đến; nhân viên toà nhà hỗ trợ tại chỗ." },
     ],
     parkingInfo: [
       "Văn phòng có khu vực gửi xe máy riêng ngay tại toà nhà.",
@@ -1001,7 +1004,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Gần trục Trường Chinh", desc: "Kết nối nhanh về hướng Quận 12, Hóc Môn và sân bay." },
       { icon: UsersIcon, title: "Khu dân cư ổn định", desc: "Môi trường yên tĩnh, xen kẽ trường học, phù hợp làm việc lâu dài." },
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Dễ dàng di chuyển ra các trục lớn khi cần." },
-      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tiếp nhận thư từ", desc: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm hàng ngày; đội ngũ MAX OFFICE hỗ trợ tư vấn, xử lý thủ tục qua điện thoại." },
+      { icon: HeartHandshakeIcon, title: "Khu vực tiếp khách riêng", desc: "Có khu vực tiếp khách riêng với sofa, bàn tiếp khách — phù hợp cho các buổi trao đổi ngắn với đối tác, khách hàng." },
     ],
     nearbyItems: [
       { name: "Trục đường Trường Chinh", desc: "Cửa ngõ Tây Bắc thành phố, kết nối Quận 12, Hóc Môn." },
@@ -1013,7 +1017,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Một số tuyến xe buýt chạy qua khu vực, kết nối ra trục Trường Chinh gần đó." },
       { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, khu dân cư ổn định nên tài xế quen đường." },
       { icon: CheckCircleIcon, title: "Trục Trường Chinh", desc: "Kết nối nhanh về hướng Quận 12, Hóc Môn và các khu công nghiệp." },
-      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân sẵn sàng hướng dẫn đường vào chi nhánh cho khách đến lần đầu." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ MAX OFFICE hỗ trợ chỉ đường qua điện thoại hoặc Zalo trước khi bạn ghé chi nhánh lần đầu." },
     ],
     parkingInfo: [
       "Toà nhà có khu vực gửi xe máy thuận tiện cho khách đến làm việc.",
@@ -1067,7 +1071,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: BadgePercentIcon, title: "Giá khởi điểm chỉ 299.000đ/tháng", desc: "Gói LITE, START, BASE — kinh tế hơn so với khu vực Quận 1." },
       { icon: UsersIcon, title: "Gần bệnh viện, trường đại học", desc: "Khu vực sôi động, phù hợp nhiều loại hình doanh nghiệp." },
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh đến Quận 1, Quận 3, Tân Bình qua trục CMT8." },
-      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+      { icon: HeadsetIcon, title: "Hỗ trợ tiếp nhận thư từ", desc: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm tại quầy chung; đội ngũ MAX OFFICE hỗ trợ tư vấn, xử lý hồ sơ qua điện thoại hoặc Zalo." },
     ],
     nearbyItems: [
       { name: "Ga Sài Gòn", desc: "Nhà ga đường sắt trung tâm, chỉ cách chi nhánh vài phút di chuyển." },
@@ -1079,7 +1083,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua trục Cách Mạng Tháng 8." },
       { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao tại khu vực mặt tiền đường lớn, dễ dàng đặt xe." },
       { icon: CheckCircleIcon, title: "Trục Cách Mạng Tháng 8", desc: "Kết nối nhanh đến Quận 1, Quận 3, Quận Tân Bình." },
-      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hỗ trợ chỉ dẫn tận tình nếu bạn chưa quen đường đến chi nhánh." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ MAX OFFICE hỗ trợ chỉ dẫn qua điện thoại nếu bạn chưa quen đường đến chi nhánh." },
     ],
     parkingInfo: [
       "Khu vực giữ xe máy ngay tại toà nhà mặt tiền CMT8.",

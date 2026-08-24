@@ -20,6 +20,18 @@ const LITE = VIRTUAL_OFFICE_PLANS.lite;
 const liteSlugs = getLocationsForPlan("lite");
 const liteLocations = LOCATIONS_LIST.filter((loc) => liteSlugs.includes(loc.slug));
 
+/** Mô hình lễ tân thực tế khác nhau theo chi nhánh — không phải mọi nơi đều có quầy lễ tân riêng của MAX OFFICE. */
+const RECEPTION_NOTE: Record<string, string> = {
+  "hoang-viet": "Lễ tân MAX OFFICE trực tại quầy, tiếp nhận thư từ và đón khách",
+  "bau-cat": "Lễ tân MAX OFFICE trực tại quầy, tiếp nhận thư từ và đón khách",
+  "lam-son": "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm",
+  "hoang-ke-viem": "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm",
+  cmt8: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm",
+};
+
+/** Chỉ 3/5 chi nhánh LITE có khu vực tiếp khách riêng biệt (sofa, bàn tiếp khách). */
+const HAS_GUEST_AREA = new Set(["hoang-viet", "bau-cat", "hoang-ke-viem"]);
+
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
 }
@@ -96,9 +108,15 @@ export default function VanPhongAoGiaRePage() {
                     {LITE.features.map((f) => (
                       <li key={f} className="flex items-start gap-1.5 text-[12.5px] text-body-text">
                         <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                        {f}
+                        {f === "Lễ tân" ? RECEPTION_NOTE[loc.slug] : f}
                       </li>
                     ))}
+                    {HAS_GUEST_AREA.has(loc.slug) && (
+                      <li className="flex items-start gap-1.5 text-[12.5px] text-body-text">
+                        <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                        Khu vực tiếp khách riêng
+                      </li>
+                    )}
                   </ul>
 
                   <Link
