@@ -63,6 +63,11 @@ export const AREAS: AreaInfo[] = [
     name: "Quận 7 (cũ)",
     description: "Khu vực Nam Sài Gòn, gần Khu chế xuất Tân Thuận và khu đô thị Phú Mỹ Hưng.",
   },
+  {
+    slug: "quan-3-cu",
+    name: "Quận 3 (cũ)",
+    description: "Khu vực trung tâm, gần Quận 1, nổi tiếng với các tuyến phố yên tĩnh và nhiều toà nhà văn phòng lâu năm.",
+  },
 ];
 
 export function getAreaBySlug(slug: string): AreaInfo | undefined {
@@ -76,6 +81,7 @@ const AREA_TAN_PHU = { slug: "quan-tan-phu-cu", name: "Quận Tân Phú (cũ)" }
 const AREA_QUAN_10 = { slug: "quan-10-cu", name: "Quận 10 (cũ)" };
 const AREA_THU_DUC = { slug: "thu-duc-cu", name: "Tp. Thủ Đức (Cũ)" };
 const AREA_QUAN_7 = { slug: "quan-7-cu", name: "Quận 7 (cũ)" };
+const AREA_QUAN_3 = { slug: "quan-3-cu", name: "Quận 3 (cũ)" };
 
 export type LocationListItem = {
   slug: string;
@@ -178,6 +184,12 @@ export const LOCATIONS_LIST: LocationListItem[] = [
     shortAddress: "210 Bùi Văn Ba, P. Tân Thuận",
     area: AREA_QUAN_7,
   },
+  {
+    slug: "nguyen-thong",
+    name: "60 Nguyễn Thông, Quận 3 (cũ)",
+    shortAddress: "60 Nguyễn Thông, P. Nhiêu Lộc",
+    area: AREA_QUAN_3,
+  },
 ];
 
 export type LocationData = {
@@ -254,7 +266,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 15 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
+      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 16 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
       "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
@@ -340,7 +352,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 15 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
+      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 16 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
@@ -522,7 +534,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
-      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 15 địa điểm.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 16 địa điểm.",
       "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
@@ -789,7 +801,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 15 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 16 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
       "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
     ],
@@ -1325,6 +1337,77 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Gần Khu chế xuất Tân Thuận nên đối tác của mình ghé văn phòng rất thuận tiện.", initial: "K", name: "Anh Khôi", role: "Trưởng phòng logistics" },
     ],
   },
+
+  /* ===================== 60 NGUYỄN THÔNG, QUẬN 3 (CŨ) — GÓI GIÁ RIÊNG ===================== */
+  "nguyen-thong": {
+    slug: "nguyen-thong",
+    name: "60 Nguyễn Thông, Quận 3 (cũ)",
+    area: AREA_QUAN_3,
+    address: "60 Nguyễn Thông, Phường Nhiêu Lộc, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 60 Nguyễn Thông, Quận 3 (cũ)",
+    heroDescription: "Chi nhánh MAX OFFICE tại 60 Nguyễn Thông, Phường Nhiêu Lộc — chi nhánh đầu tiên tại khu vực Quận 3 (cũ), văn phòng ảo 4 gói riêng biệt từ 379.000đ/tháng, toà nhà văn phòng cao tầng hiện đại.",
+    metaTitle: "Văn Phòng Ảo 60 Nguyễn Thông, Quận 3 (cũ) | Từ 379K/Tháng",
+    metaDescription: "Thuê văn phòng ảo tại 60 Nguyễn Thông, Phường Nhiêu Lộc — 4 gói riêng SAVE/SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), chi nhánh đầu tiên MAX OFFICE tại khu vực Quận 3 (cũ).",
+    image: IMAGE,
+    // Cropped street-front shot, không chỉnh sửa — 1122x1402 gốc.
+    facadeAspectRatio: "1122 / 1402",
+    facadeImageSide: "right",
+    interiorImages: [
+      { src: "/images/dia-diem-nguyen-thong-le-tan.jpg", alt: "Sảnh lễ tân và tiếp khách văn phòng 60 Nguyễn Thông", caption: "Sảnh lễ tân & tiếp khách" },
+      { src: "/images/dia-diem-nguyen-thong-phong-hop.jpg", alt: "Phòng họp văn phòng 60 Nguyễn Thông", caption: "Phòng họp" },
+      { src: "/images/dia-diem-nguyen-thong-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 60 Nguyễn Thông", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-nguyen-thong-wc.jpg", alt: "Khu vực vệ sinh văn phòng 60 Nguyễn Thông", caption: "Khu vực vệ sinh" },
+    ],
+    intro: [
+      "Văn phòng 60 Nguyễn Thông toạ lạc tại Phường Nhiêu Lộc, khu vực Quận 3 (cũ) — chi nhánh đầu tiên MAX OFFICE mở tại khu vực này, mở rộng mạng lưới về phía trung tâm thành phố, chỉ cách ranh giới Quận 1 (cũ) một đoạn ngắn. Đây là lựa chọn dành cho doanh nghiệp muốn có địa chỉ đăng ký kinh doanh ở khu vực trung tâm, gần các cơ quan hành chính, mà không phải chịu mức giá cao nhất của khu lõi Quận 1.",
+      "Toà nhà đặt chi nhánh là một cao ốc văn phòng nhiều tầng, mặt tiền kính hiện đại, sảnh lễ tân ốp đá cao cấp với khu vực tiếp khách riêng biệt. Đường Nguyễn Thông là một trong những tuyến phố yên tĩnh, ít kẹt xe của Quận 3 (cũ), quy tụ nhiều toà nhà văn phòng và trụ sở doanh nghiệp vừa và nhỏ lâu năm — phù hợp cho doanh nghiệp muốn một môi trường làm việc ổn định, chuyên nghiệp.",
+      "Khu vực Phường Nhiêu Lộc nằm dọc kênh Nhiêu Lộc - Thị Nghè, gần Bệnh viện Da Liễu Thành phố Hồ Chí Minh ngay trên cùng trục đường Nguyễn Thông, cùng nhiều trường học, cơ quan hành chính của Quận 3 (cũ). Mật độ dân cư ổn định và hạ tầng dịch vụ đầy đủ giúp khu vực này luôn có nhu cầu văn phòng, địa chỉ đăng ký kinh doanh cao từ các doanh nghiệp vừa và nhỏ.",
+      "Chi nhánh cung cấp 4 gói văn phòng ảo riêng biệt — SAVE (379.000đ/tháng), SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10% — phân hoá theo nhu cầu sử dụng phòng họp, sảnh tiếp khách và các dịch vụ pháp lý đi kèm, phù hợp cho cả doanh nghiệp mới thành lập lẫn doanh nghiệp cần nâng cấp hình ảnh chuyên nghiệp hơn.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 60 Nguyễn Thông",
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ, gần trung tâm", desc: "Đủ điều kiện đăng ký kinh doanh, cách ranh giới Quận 1 (cũ) một đoạn ngắn." },
+      { icon: MapPinIcon, title: "Khu vực Quận 3 (cũ) yên tĩnh", desc: "Chi nhánh đầu tiên MAX OFFICE tại khu vực này, tuyến phố ít kẹt xe." },
+      { icon: BadgePercentIcon, title: "4 gói giá linh hoạt", desc: "SAVE, SILVER, GOLD, PREMIUM — từ 379.000đ/tháng, tuỳ nhu cầu sử dụng." },
+      { icon: HeartHandshakeIcon, title: "Sảnh tiếp khách riêng biệt", desc: "Sảnh lễ tân ốp đá cao cấp, có khu vực tiếp khách miễn phí theo từng gói." },
+      { icon: UsersIcon, title: "Tiếp tân hành chính chuyên nghiệp", desc: "Tiếp nhận, chuyển tiếp thư từ, bưu phẩm; hỗ trợ đón khách khi ghé chi nhánh." },
+      { icon: ClockIcon, title: "Gần kênh Nhiêu Lộc - Thị Nghè", desc: "Không gian thoáng đãng, thuận tiện di chuyển về trung tâm thành phố." },
+    ],
+    nearbyItems: [
+      { name: "Kênh Nhiêu Lộc - Thị Nghè", desc: "Tuyến kênh cảnh quan chạy dọc khu vực, không gian đi bộ thoáng đãng." },
+      { name: "Bệnh viện Da Liễu Thành phố Hồ Chí Minh", desc: "Nằm ngay trên trục đường Nguyễn Thông, cách chi nhánh vài phút đi bộ." },
+      { name: "Khu hành chính Quận 3 (cũ)", desc: "Gần các cơ quan hành chính, thuận tiện cho thủ tục pháp lý doanh nghiệp." },
+      { name: "Ranh giới Quận 1 (cũ)", desc: "Chỉ cách trung tâm hành chính, tài chính của thành phố một đoạn ngắn." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua khu vực Nguyễn Thông, Nhiêu Lộc." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Khu vực trung tâm, mặt tiền đường lớn, dễ dàng đặt xe mọi thời điểm." },
+      { icon: CheckCircleIcon, title: "Kết nối nhanh về Quận 1", desc: "Di chuyển đến trung tâm hành chính, tài chính thành phố chỉ vài phút." },
+      { icon: HeadsetIcon, title: "Tiếp tân hỗ trợ đón khách", desc: "Đội ngũ tiếp tân tại sảnh hỗ trợ đón tiếp và hướng dẫn khách đến lần đầu." },
+    ],
+    parkingInfo: [
+      "Toà nhà có khu vực gửi xe máy dành riêng cho khách đến làm việc.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực khi cần đón đối tác.",
+      "Bảo vệ toà nhà trực thường xuyên, đảm bảo an toàn cho xe cộ trong giờ hành chính.",
+    ],
+    diningItems: [
+      { name: "Quán cà phê khu Nguyễn Thông", desc: "Nhiều quán cà phê yên tĩnh, phù hợp làm việc hoặc gặp gỡ đối tác nhẹ nhàng." },
+      { name: "Nhà hàng khu vực Quận 3 (cũ)", desc: "Đa dạng lựa chọn từ cơm văn phòng đến nhà hàng phục vụ tiếp khách trang trọng." },
+      { name: "Khu ẩm thực gần kênh Nhiêu Lộc", desc: "Không gian thoáng đãng ven kênh, thích hợp cho bữa trưa hoặc họp nhóm ngoài văn phòng." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 60 Nguyễn Thông có những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp 4 gói riêng biệt: SAVE (379.000đ/tháng), SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%." },
+      { q: "4 gói SAVE, SILVER, GOLD, PREMIUM khác nhau ở điểm nào?", a: "Cả 4 gói đều có địa chỉ ĐKKD, bảng tên điện tử, tiếp tân và tư vấn miễn phí. Khác biệt nằm ở: SAVE không có bảng tên vật lý (mica); từ SILVER trở lên có bảng tên mica; thời lượng miễn phí phòng họp và sảnh tiếp khách tăng dần qua từng gói; riêng GOLD và PREMIUM có thêm hỗ trợ chuyển đổi địa chỉ trên GPKD, và chỉ PREMIUM có thêm bộ hồ sơ pháp lý toà nhà." },
+      { q: "Giá gói văn phòng ảo tại đây đã bao gồm VAT chưa?", a: "Chưa. Toàn bộ mức giá niêm yết (379.000đ - 990.000đ/tháng tuỳ gói) là giá chưa bao gồm VAT 10%, sẽ được thể hiện rõ trong báo giá chính thức trước khi ký hợp đồng." },
+      { q: "Địa chỉ 60 Nguyễn Thông có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Nhiêu Lộc, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
+      { q: "Nếu cần đổi địa chỉ đăng ký kinh doanh hoặc khắc dấu công ty thì tính phí thế nào?", a: "Đây là các dịch vụ bổ sung phát sinh riêng ngoài gói văn phòng ảo: thay đổi địa chỉ đăng ký kinh doanh 1.296.000đ (đã bao gồm VAT), khắc dấu tròn doanh nghiệp/dấu chi nhánh/VPĐD 480.000đ." },
+      { q: "Tôi có thể đến tham quan văn phòng 60 Nguyễn Thông trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp lịch tham quan miễn phí." },
+    ],
+    testimonials: [
+      { quote: "Sảnh lễ tân sang trọng nên mỗi lần mời đối tác ghé văn phòng đều để lại ấn tượng tốt.", initial: "T", name: "Anh Tuấn", role: "Giám đốc công ty tư vấn" },
+      { quote: "Mình chọn gói GOLD vì có hỗ trợ đổi địa chỉ GPKD, thủ tục xử lý nhanh mà không phải tự lo giấy tờ.", initial: "M", name: "Chị Mai", role: "Chủ doanh nghiệp thương mại" },
+    ],
+  },
 };
 
 export function getLocationBySlug(slug: string): LocationData | undefined {
@@ -1347,7 +1430,7 @@ export type GroupedLocations = {
 };
 
 /**
- * Nhóm 15 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
+ * Nhóm 16 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
  * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
  * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
  */

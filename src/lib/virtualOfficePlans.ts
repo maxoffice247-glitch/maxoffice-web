@@ -198,6 +198,9 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "vuon-lai") {
     return VUON_LAI_VO_PLAN.price;
   }
+  if (slug === "nguyen-thong") {
+    return NGUYEN_THONG_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  }
   return getCheapestPlanForLocation(slug)?.price;
 }
 
@@ -398,4 +401,96 @@ export const VUON_LAI_VO_PROMOS: VuonLaiPromo[] = [
     label: "Hợp đồng 12 tháng",
     note: "Tặng 2 tháng sử dụng.",
   },
+];
+
+/* ---------------------------------------------------------------------- */
+/* 60 Nguyễn Thông, Quận 3 (cũ) — gói giá riêng, không thuộc hệ thống      */
+/* LITE-RISE hay các gói riêng khác. Chỉ khả dụng tại "nguyen-thong".      */
+/* ---------------------------------------------------------------------- */
+
+export type NguyenThongPlan = {
+  key: "save" | "silver" | "gold" | "premium";
+  name: string;
+  price: number;
+  duration: string;
+  nameplate: string;
+  meetingRoom: string;
+  guestLounge: string;
+  addressChangeSupport: boolean;
+  legalDossier: boolean;
+  features: string[];
+};
+
+const NGUYEN_THONG_COMMON_FEATURES = [
+  "Địa chỉ đăng ký kinh doanh (ĐKKD) + đăng ký thuế",
+  "Bảng tên điện tử",
+  "Tiếp tân hành chính văn phòng",
+  "Tiếp nhận, chuyển tiếp thư từ, bưu phẩm",
+  "Tư vấn miễn phí thành lập doanh nghiệp & kế toán",
+];
+
+/** 4 gói văn phòng ảo riêng tại chi nhánh 60 Nguyễn Thông — giá CHƯA bao gồm VAT 10%. */
+export const NGUYEN_THONG_VO_PLANS: NguyenThongPlan[] = [
+  {
+    key: "save",
+    name: "SAVE",
+    price: 379000,
+    duration: "/ tháng",
+    nameplate: "Không có bảng tên vật lý (mica)",
+    meetingRoom: "Miễn phí 60 phút/tháng",
+    guestLounge: "Miễn phí 30 phút/ngày",
+    addressChangeSupport: false,
+    legalDossier: false,
+    features: NGUYEN_THONG_COMMON_FEATURES,
+  },
+  {
+    key: "silver",
+    name: "SILVER",
+    price: 479000,
+    duration: "/ tháng",
+    nameplate: "Có bảng tên vật lý (mica)",
+    meetingRoom: "Miễn phí 60 phút/tháng",
+    guestLounge: "Miễn phí 30 phút/ngày",
+    addressChangeSupport: false,
+    legalDossier: false,
+    features: NGUYEN_THONG_COMMON_FEATURES,
+  },
+  {
+    key: "gold",
+    name: "GOLD",
+    price: 639000,
+    duration: "/ tháng",
+    nameplate: "Có bảng tên vật lý (mica)",
+    meetingRoom: "Miễn phí 90 phút/tháng",
+    guestLounge: "Miễn phí 60 phút/ngày",
+    addressChangeSupport: true,
+    legalDossier: false,
+    features: NGUYEN_THONG_COMMON_FEATURES,
+  },
+  {
+    key: "premium",
+    name: "PREMIUM",
+    price: 990000,
+    duration: "/ tháng",
+    nameplate: "Có bảng tên vật lý (mica)",
+    meetingRoom: "Miễn phí 120 phút/tháng",
+    guestLounge: "Miễn phí 60 phút/ngày",
+    addressChangeSupport: true,
+    legalDossier: true,
+    features: NGUYEN_THONG_COMMON_FEATURES,
+  },
+];
+
+export const NGUYEN_THONG_VAT_NOTE = "Giá trên chưa bao gồm thuế VAT 10%.";
+
+export type NguyenThongAddon = {
+  label: string;
+  price: number;
+  note?: string;
+};
+
+/** Dịch vụ bổ sung phát sinh sau khi ký hợp đồng tại chi nhánh 60 Nguyễn Thông. */
+export const NGUYEN_THONG_ADDONS: NguyenThongAddon[] = [
+  { label: "Thay đổi địa chỉ đăng ký kinh doanh", price: 1296000, note: "Đã bao gồm VAT" },
+  { label: "Khắc dấu tròn doanh nghiệp / dấu chi nhánh / VPĐD", price: 480000 },
 ];

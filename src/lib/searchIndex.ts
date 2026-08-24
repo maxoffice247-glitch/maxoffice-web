@@ -139,6 +139,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "210 Bùi Văn Ba, P. Tân Thuận",
   },
   {
+    title: "60 Nguyễn Thông, Quận 3 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/nguyen-thong",
+    desc: "60 Nguyễn Thông, P. Nhiêu Lộc",
+  },
+  {
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
@@ -179,6 +185,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Khu vực",
     href: "/dia-diem/quan-7-cu",
     desc: "Chi nhánh Bùi Văn Ba — gần Khu chế xuất Tân Thuận",
+  },
+  {
+    title: "Quận 3 (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-3-cu",
+    desc: "Chi nhánh 60 Nguyễn Thông — gần trung tâm Quận 1 (cũ)",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",
