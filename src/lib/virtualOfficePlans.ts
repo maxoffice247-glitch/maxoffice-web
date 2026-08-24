@@ -25,7 +25,7 @@ export const VIRTUAL_OFFICE_PLANS: Record<VirtualOfficePlanKey, VirtualOfficePla
     addOn: {
       label: "Bảng hiệu công ty",
       price: 500000,
-      note: "Phụ phí thêm nếu cần bảng hiệu, tính riêng 1 lần",
+      note: "Thu duy nhất 1 lần khi làm bảng hiệu ban đầu, không thu lại khi gia hạn hợp đồng các kỳ sau",
     },
   },
   start: {

@@ -33,7 +33,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         service: "Văn phòng ảo",
         price: "299.000đ",
         unit: "/ tháng",
-        desc: "Cạnh tranh nhất — chỉ áp dụng tại 5 chi nhánh. Bảng hiệu tính riêng.",
+        desc: "Cạnh tranh nhất — chỉ áp dụng tại 5 chi nhánh. Bảng hiệu 500K tính riêng, thu 1 lần duy nhất.",
         features: ["Địa chỉ đăng ký kinh doanh", "Lễ tân, Wifi", "Tham gia Workshop"],
         note: true,
         detailHref: "/van-phong-ao-gia-re",

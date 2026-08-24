@@ -57,7 +57,7 @@ const VO_MATRIX_PRICING: ServicePricing = {
     values: VIRTUAL_OFFICE_PLAN_ORDER.map((key) => row.values[key]),
   })),
   addonNote:
-    "Gói LITE chưa bao gồm Bảng hiệu công ty — phụ phí 500.000đ nếu cần, tính riêng 1 lần.",
+    "Gói LITE chưa bao gồm Bảng hiệu công ty — phụ phí 500.000đ nếu cần, thu duy nhất 1 lần khi làm bảng hiệu ban đầu, không thu lại khi gia hạn hợp đồng các kỳ sau.",
   promoNotes: VO_PROMO_NOTES,
   promoEffectiveDate: VO_PROMO_EFFECTIVE_DATE,
 };
@@ -224,7 +224,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { q: "Văn phòng ảo có phù hợp với công ty nước ngoài không?", a: "Phù hợp với văn phòng đại diện hoặc công ty có vốn đầu tư nước ngoài đã hoàn tất thủ tục đầu tư. Ngoài ra, MAX OFFICE còn hỗ trợ tư vấn và thực hiện thủ tục xin giấy phép kinh doanh, giấy phép đầu tư, cũng như mở văn phòng đại diện cho công ty FDI hoặc doanh nghiệp có vốn nước ngoài — liên hệ đội ngũ để được tư vấn cụ thể theo loại hình doanh nghiệp của bạn." },
       { q: "Tôi có được sử dụng phòng họp khi cần gặp khách hàng không?", a: "Tuỳ theo gói văn phòng ảo bạn chọn: một số gói (ORIGIN+, RISE) đã BAO GỒM SẴN thời gian sử dụng phòng họp miễn phí trong bảng giá (xem chi tiết tại bảng ma trận tính năng phía trên). Với các gói chưa bao gồm sẵn, khách hàng vẫn có thể THUÊ RIÊNG phòng họp theo giờ khi có nhu cầu, tại bất kỳ chi nhánh nào của MAX OFFICE, với mức giá ưu đãi dành cho khách hàng đang sử dụng dịch vụ văn phòng ảo." },
       { q: "Vì sao có 6 gói văn phòng ảo với giá khác nhau?", a: "Mỗi gói (Gói LITE, START, BASE, ORIGIN, ORIGIN+, RISE) bổ sung thêm quyền lợi — từ bảng hiệu, tư vấn pháp lý & thuế đến phòng họp và chỗ ngồi linh hoạt. Không phải chi nhánh nào cũng có đủ 6 gói, MAX OFFICE sẽ tư vấn gói phù hợp nhất theo chi nhánh bạn chọn." },
-      { q: "Chi phí văn phòng ảo đã bao gồm phí gì?", a: "Tuỳ theo gói: Gói LITE gồm địa chỉ đăng ký kinh doanh, lễ tân, wifi và workshop (chưa gồm bảng hiệu — phụ phí 500.000đ nếu cần); từ gói START trở lên đã bao gồm bảng hiệu và các quyền lợi cao hơn. Giá thuê chưa bao gồm VAT 10%." },
+      { q: "Chi phí văn phòng ảo đã bao gồm phí gì?", a: "Tuỳ theo gói: Gói LITE gồm địa chỉ đăng ký kinh doanh, lễ tân, wifi và workshop (chưa gồm bảng hiệu — phụ phí 500.000đ nếu cần, thu duy nhất 1 lần khi làm bảng hiệu ban đầu, không thu lại khi gia hạn); từ gói START trở lên đã bao gồm bảng hiệu và các quyền lợi cao hơn. Giá thuê chưa bao gồm VAT 10%." },
       { q: "Làm sao để bắt đầu sử dụng dịch vụ văn phòng ảo?", a: "Bạn chỉ cần liên hệ đội ngũ tư vấn, chọn chi nhánh phù hợp và ký hợp đồng — địa chỉ sẽ sẵn sàng sử dụng ngay trong ngày." },
       { q: "Nếu tôi ngừng sử dụng dịch vụ, địa chỉ đăng ký kinh doanh có bị ảnh hưởng không?", a: "Bạn cần thực hiện thủ tục thay đổi địa chỉ đăng ký kinh doanh trước khi ngừng hợp đồng để tránh gián đoạn hoạt động — đội ngũ MAX OFFICE sẽ hỗ trợ hướng dẫn quy trình này." },
     ],

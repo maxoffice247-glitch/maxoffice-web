@@ -86,7 +86,9 @@ export default function VanPhongAoGiaRePage() {
                       <p className="font-mono text-[19px] leading-tight font-bold text-accent">
                         {formatVND(LITE.addOn!.price)}
                       </p>
-                      <p className="text-[11px] text-body-text">thu 1 lần khi ký HĐ</p>
+                      <p className="text-[11px] text-body-text">
+                        Thu DUY NHẤT 1 LẦN, không thu lại khi gia hạn
+                      </p>
                     </div>
                   </div>
 
@@ -116,10 +118,11 @@ export default function VanPhongAoGiaRePage() {
               <BuildingIcon className="h-5 w-5" />
             </span>
             <p className="flex-1 text-[13.5px] leading-relaxed text-body-text">
-              <span className="font-bold text-navy">Lưu ý về phí bảng hiệu:</span> khoản{" "}
-              {formatVND(LITE.addOn!.price)} là phụ phí <span className="font-semibold">thu 1 lần</span> khi
-              ký hợp đồng nếu doanh nghiệp cần treo bảng hiệu công ty tại toà nhà, không tính vào chi phí
-              hàng tháng và không bắt buộc với mọi trường hợp đăng ký kinh doanh.
+              <span className="font-bold text-navy">Phí bảng hiệu: {formatVND(LITE.addOn!.price)}</span> — thu{" "}
+              <span className="font-bold text-accent">DUY NHẤT 1 LẦN</span> khi làm bảng hiệu ban đầu,{" "}
+              <span className="font-bold text-accent">KHÔNG thu lại</span> khi gia hạn hợp đồng các kỳ sau.
+              Đây là phụ phí chỉ áp dụng nếu doanh nghiệp cần treo bảng hiệu công ty tại toà nhà, không bắt
+              buộc với mọi trường hợp đăng ký kinh doanh.
             </p>
           </div>
         </div>
