@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/ve-chung-toi" },
   title: "Về MAX OFFICE - Đối Tác Vận Hành Doanh Nghiệp TP.HCM",
   description:
-    "MAX OFFICE thành lập từ 2022, đồng hành cùng hơn 500 doanh nghiệp tại 17 địa điểm trung tâm TP.HCM. Tìm hiểu câu chuyện, tầm nhìn, sứ mệnh và giá trị cốt lõi của chúng tôi.",
+    "MAX OFFICE thành lập từ 2022, đồng hành cùng hơn 500 doanh nghiệp tại 18 địa điểm trung tâm TP.HCM. Tìm hiểu câu chuyện, tầm nhìn, sứ mệnh và giá trị cốt lõi của chúng tôi.",
   openGraph: {
     images: [{ url: "/images/og/hero-ve-chung-toi.jpg", width: 1200, height: 630 }],
   },
@@ -24,7 +24,7 @@ export default function AboutPage() {
         image="/images/hero-ve-chung-toi.jpg"
         eyebrow="Về chúng tôi"
         title="Đối tác vận hành doanh nghiệp toàn diện tại TP.HCM"
-        description="Từ một địa chỉ tại Tân Bình năm 2022, MAX OFFICE đã trở thành hệ thống 17 địa điểm, đồng hành cùng hơn 500 doanh nghiệp trên hành trình khởi nghiệp và phát triển."
+        description="Từ một địa chỉ tại Tân Bình năm 2022, MAX OFFICE đã trở thành hệ thống 18 địa điểm, đồng hành cùng hơn 500 doanh nghiệp trên hành trình khởi nghiệp và phát triển."
       />
       <Breadcrumb items={[{ label: "Về chúng tôi" }]} />
       <AboutStats />

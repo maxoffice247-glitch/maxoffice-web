@@ -201,6 +201,9 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "nguyen-thong" || slug === "cach-mang-thang-8") {
     return QUAN_3_CU_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
+  if (BINH_THANH_LOCATIONS.includes(slug)) {
+    return BINH_THANH_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  }
   return getCheapestPlanForLocation(slug)?.price;
 }
 
@@ -495,3 +498,92 @@ export const QUAN_3_CU_ADDONS: Quan3CuAddon[] = [
   { label: "Thay đổi địa chỉ đăng ký kinh doanh", price: 1296000, note: "Đã bao gồm VAT" },
   { label: "Khắc dấu tròn doanh nghiệp / dấu chi nhánh / VPĐD", price: 480000 },
 ];
+
+/* ---------------------------------------------------------------------- */
+/* Khu vực Bình Thạnh (cũ) — gói giá riêng dùng CHUNG cho mọi chi nhánh    */
+/* của khu vực này (danh sách slug trong BINH_THANH_LOCATIONS), không      */
+/* thuộc hệ thống LITE-RISE hay các gói riêng khác của chi nhánh khác.     */
+/* ---------------------------------------------------------------------- */
+
+export type BinhThanhPlan = {
+  key: "bt-silver" | "bt-gold" | "bt-premium";
+  name: string;
+  price: number;
+  duration: string;
+  nameplate: string;
+  meetingRoom: string;
+  guestLounge: string;
+  addressChangeSupport: boolean;
+  legalDossier: boolean;
+  features: string[];
+};
+
+const BINH_THANH_COMMON_FEATURES = [
+  "Địa chỉ đăng ký kinh doanh (ĐKKD) + đăng ký thuế",
+  "Bảng tên điện tử",
+  "Bảng tên vật lý (mica)",
+  "Tiếp tân hành chính văn phòng",
+  "Tiếp nhận, chuyển tiếp thư từ, bưu phẩm",
+  "Tư vấn miễn phí thành lập doanh nghiệp & kế toán",
+];
+
+/** 3 gói văn phòng ảo riêng dùng chung cho các chi nhánh khu vực Bình Thạnh (cũ) — giá CHƯA bao gồm VAT 10%. */
+export const BINH_THANH_VO_PLANS: BinhThanhPlan[] = [
+  {
+    key: "bt-silver",
+    name: "SILVER",
+    price: 379000,
+    duration: "/ tháng",
+    nameplate: "Có bảng tên vật lý (mica)",
+    meetingRoom: "Miễn phí 60 phút/tháng (≤ 7 người)",
+    guestLounge: "Miễn phí 30 phút/ngày",
+    addressChangeSupport: false,
+    legalDossier: false,
+    features: BINH_THANH_COMMON_FEATURES,
+  },
+  {
+    key: "bt-gold",
+    name: "GOLD",
+    price: 490000,
+    duration: "/ tháng",
+    nameplate: "Có bảng tên vật lý (mica)",
+    meetingRoom: "Miễn phí 90 phút/tháng (≤ 7 người)",
+    guestLounge: "Miễn phí 60 phút/ngày",
+    addressChangeSupport: true,
+    legalDossier: false,
+    features: BINH_THANH_COMMON_FEATURES,
+  },
+  {
+    key: "bt-premium",
+    name: "PREMIUM",
+    price: 990000,
+    duration: "/ tháng",
+    nameplate: "Có bảng tên vật lý (mica)",
+    meetingRoom: "Miễn phí 120 phút/tháng (≤ 7 người)",
+    guestLounge: "Miễn phí 60 phút/ngày",
+    addressChangeSupport: true,
+    legalDossier: true,
+    features: BINH_THANH_COMMON_FEATURES,
+  },
+];
+
+export const BINH_THANH_VAT_NOTE = "Giá trên chưa bao gồm thuế VAT 10%.";
+
+export type BinhThanhAddon = {
+  label: string;
+  price: number;
+  note?: string;
+};
+
+/** Dịch vụ bổ sung phát sinh sau khi ký hợp đồng, áp dụng chung cho các chi nhánh khu vực Bình Thạnh (cũ). */
+export const BINH_THANH_ADDONS: BinhThanhAddon[] = [
+  { label: "Thay đổi địa chỉ đăng ký kinh doanh", price: 1296000, note: "Đã bao gồm VAT" },
+  { label: "Khắc dấu tròn doanh nghiệp / dấu chi nhánh / VPĐD", price: 480000 },
+];
+
+/**
+ * Chi nhánh khu vực Bình Thạnh (cũ) áp dụng bảng giá SILVER/GOLD/PREMIUM
+ * chung ở trên — thêm slug vào đây khi mở chi nhánh mới trong khu vực,
+ * KHÔNG tạo lại bộ gói mới.
+ */
+export const BINH_THANH_LOCATIONS: string[] = ["ung-van-khiem"];

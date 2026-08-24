@@ -151,6 +151,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "520 Cách Mạng Tháng 8, P. Nhiêu Lộc",
   },
   {
+    title: "161 Ung Văn Khiêm, Bình Thạnh (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/ung-van-khiem",
+    desc: "161 Ung Văn Khiêm, P. Thạnh Mỹ Tây",
+  },
+  {
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
@@ -197,6 +203,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Khu vực",
     href: "/dia-diem/quan-3-cu",
     desc: "2 chi nhánh — 60 Nguyễn Thông và 520 Cách Mạng Tháng 8, gần Quận 1 (cũ)",
+  },
+  {
+    title: "Bình Thạnh (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/binh-thanh-cu",
+    desc: "Chi nhánh 161 Ung Văn Khiêm — gần giao lộ Hàng Xanh",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",

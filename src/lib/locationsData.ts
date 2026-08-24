@@ -68,6 +68,11 @@ export const AREAS: AreaInfo[] = [
     name: "Quận 3 (cũ)",
     description: "Khu vực trung tâm, gần Quận 1, nổi tiếng với các tuyến phố yên tĩnh và nhiều toà nhà văn phòng lâu năm.",
   },
+  {
+    slug: "binh-thanh-cu",
+    name: "Bình Thạnh (cũ)",
+    description: "Khu vực cửa ngõ Đông Bắc trung tâm thành phố, gần cầu Sài Gòn, kênh Nhiêu Lộc - Thị Nghè và nhiều toà nhà văn phòng dọc trục Ung Văn Khiêm.",
+  },
 ];
 
 export function getAreaBySlug(slug: string): AreaInfo | undefined {
@@ -82,6 +87,7 @@ const AREA_QUAN_10 = { slug: "quan-10-cu", name: "Quận 10 (cũ)" };
 const AREA_THU_DUC = { slug: "thu-duc-cu", name: "Tp. Thủ Đức (Cũ)" };
 const AREA_QUAN_7 = { slug: "quan-7-cu", name: "Quận 7 (cũ)" };
 const AREA_QUAN_3 = { slug: "quan-3-cu", name: "Quận 3 (cũ)" };
+const AREA_BINH_THANH = { slug: "binh-thanh-cu", name: "Bình Thạnh (cũ)" };
 
 export type LocationListItem = {
   slug: string;
@@ -196,6 +202,12 @@ export const LOCATIONS_LIST: LocationListItem[] = [
     shortAddress: "520 CMT8, P. Nhiêu Lộc",
     area: AREA_QUAN_3,
   },
+  {
+    slug: "ung-van-khiem",
+    name: "161 Ung Văn Khiêm, Bình Thạnh (cũ)",
+    shortAddress: "161 Ung Văn Khiêm, P. Thạnh Mỹ Tây",
+    area: AREA_BINH_THANH,
+  },
 ];
 
 export type LocationData = {
@@ -272,7 +284,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 17 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
+      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 18 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
       "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
@@ -358,7 +370,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 17 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
+      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 18 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
@@ -540,7 +552,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
-      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 17 địa điểm.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 18 địa điểm.",
       "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
@@ -807,7 +819,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 17 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 18 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
       "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
     ],
@@ -1485,6 +1497,79 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Lúc đầu mình nhầm với chi nhánh CMT8 bên Quận 10, may mà gọi hotline xác nhận địa chỉ trước khi đi.", initial: "Y", name: "Chị Yến", role: "Chủ hộ kinh doanh cá thể" },
     ],
   },
+
+  /* =============== UNG VĂN KHIÊM (KHU VỰC BÌNH THẠNH MỚI) =============== */
+  "ung-van-khiem": {
+    slug: "ung-van-khiem",
+    name: "161 Ung Văn Khiêm, Bình Thạnh (cũ)",
+    area: AREA_BINH_THANH,
+    address: "161 Ung Văn Khiêm, Phường Thạnh Mỹ Tây, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 161 Ung Văn Khiêm, Bình Thạnh (cũ)",
+    heroDescription:
+      "Chi nhánh đầu tiên của MAX OFFICE tại khu vực Bình Thạnh (cũ) — văn phòng ảo 3 gói riêng biệt từ 379.000đ/tháng, toà nhà văn phòng cao tầng hiện đại ngay trục Ung Văn Khiêm.",
+    metaTitle: "Văn Phòng Ảo 161 Ung Văn Khiêm, Bình Thạnh (cũ) | Từ 379K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 161 Ung Văn Khiêm, Phường Thạnh Mỹ Tây (Bình Thạnh cũ) — chi nhánh đầu tiên MAX OFFICE tại khu vực này, 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần giao lộ Hàng Xanh.",
+    image: IMAGE,
+    // Ảnh mặt tiền gốc 813x1086, không chỉnh sửa.
+    facadeAspectRatio: "813 / 1086",
+    facadeImageSide: "right",
+    interiorImages: [
+      { src: "/images/dia-diem-ung-van-khiem-le-tan.jpg", alt: "Quầy lễ tân văn phòng 161 Ung Văn Khiêm", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-ung-van-khiem-tiep-khach.jpg", alt: "Sảnh tiếp khách văn phòng 161 Ung Văn Khiêm", caption: "Sảnh tiếp khách" },
+      { src: "/images/dia-diem-ung-van-khiem-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 161 Ung Văn Khiêm", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-ung-van-khiem-phong-hop.jpg", alt: "Phòng họp văn phòng 161 Ung Văn Khiêm", caption: "Phòng họp" },
+    ],
+    intro: [
+      "Văn phòng 161 Ung Văn Khiêm là chi nhánh đầu tiên MAX OFFICE mở tại khu vực Bình Thạnh (cũ), toạ lạc tại Phường Thạnh Mỹ Tây — khu vực cửa ngõ Đông Bắc trung tâm thành phố, không xa giao lộ Hàng Xanh và kênh Nhiêu Lộc - Thị Nghè. Sự xuất hiện của chi nhánh này mở rộng thêm một lựa chọn địa chỉ đăng ký kinh doanh cho doanh nghiệp muốn đặt trụ sở ở khu vực trung chuyển giữa trung tâm Quận 1 và phía Đông thành phố.",
+      "Toà nhà nơi đặt chi nhánh là một cao ốc văn phòng nhiều tầng với mặt tiền kính hiện đại, sảnh lễ tân được thiết kế theo phong cách tối giản, ốp gỗ và có khu vực tiếp khách riêng ngay lối vào. Bên trong toà nhà hiện đã có nhiều doanh nghiệp thuộc các lĩnh vực khác nhau đặt văn phòng, cho thấy đây là địa chỉ được nhiều công ty tin chọn làm nơi đăng ký hoạt động.",
+      "Chi nhánh cung cấp 3 gói văn phòng ảo riêng biệt — SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10%. Đây là bảng giá được thiết kế dùng chung cho các chi nhánh MAX OFFICE tại khu vực Bình Thạnh, phân hoá theo thời lượng sử dụng phòng họp, sảnh tiếp khách và các hỗ trợ pháp lý đi kèm như đổi địa chỉ trên giấy phép kinh doanh hay hồ sơ pháp lý toà nhà.",
+      "Với vị trí gần giao lộ Hàng Xanh và trục Điện Biên Phủ nối dài, doanh nghiệp đặt văn phòng tại 161 Ung Văn Khiêm có thể di chuyển nhanh về trung tâm Quận 1 hoặc qua cầu Sài Gòn sang khu vực phía Đông thành phố. Đây là lựa chọn phù hợp cho các công ty thương mại, dịch vụ cần một địa chỉ đăng ký kinh doanh thuận tiện kết nối nhiều hướng mà không phải đặt văn phòng ngay khu trung tâm với chi phí cao hơn.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 161 Ung Văn Khiêm",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh đầu tiên tại Bình Thạnh", desc: "Mở rộng hệ thống MAX OFFICE sang khu vực Bình Thạnh (cũ), toà cao ốc văn phòng hiện đại." },
+      { icon: MapPinIcon, title: "Gần giao lộ Hàng Xanh", desc: "Kết nối nhanh về trung tâm Quận 1 và nhiều trục đường lớn của thành phố." },
+      { icon: BadgePercentIcon, title: "3 gói giá linh hoạt", desc: "SILVER, GOLD, PREMIUM — từ 379.000đ/tháng, tuỳ nhu cầu sử dụng phòng họp và sảnh tiếp khách." },
+      { icon: HeartHandshakeIcon, title: "Sảnh tiếp khách riêng", desc: "Khu vực tiếp khách thiết kế riêng ngay lối vào, phù hợp đón đối tác trực tiếp." },
+      { icon: UsersIcon, title: "Toà nhà nhiều doanh nghiệp tin chọn", desc: "Cao ốc văn phòng đã có nhiều công ty đặt trụ sở, môi trường kinh doanh sôi động." },
+      { icon: ClockIcon, title: "Gần kênh Nhiêu Lộc - Thị Nghè", desc: "Không gian xanh dọc kênh, thuận tiện di chuyển sang nhiều khu vực lân cận." },
+    ],
+    nearbyItems: [
+      { name: "Giao lộ Hàng Xanh", desc: "Nút giao trọng điểm của khu vực Bình Thạnh, thuận tiện di chuyển nhiều hướng trong thành phố." },
+      { name: "Kênh Nhiêu Lộc - Thị Nghè", desc: "Không gian xanh dọc kênh, phù hợp đi bộ thư giãn ngoài giờ làm việc." },
+      { name: "Cầu Sài Gòn", desc: "Lối kết nối nhanh sang khu vực phía Đông thành phố khi cần di chuyển liên quận." },
+      { name: "Khu dân cư Phường Thạnh Mỹ Tây", desc: "Khu vực dân cư và văn phòng xen kẽ, tập trung nhiều tiện ích sinh hoạt xung quanh." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Có các tuyến xe buýt chạy ngang khu vực Bình Thạnh, điểm dừng gần trục Ung Văn Khiêm." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Vị trí gần giao lộ Hàng Xanh giúp việc gọi xe công nghệ nhanh chóng vào giờ cao điểm." },
+      { icon: CheckCircleIcon, title: "Trục Ung Văn Khiêm — Điện Biên Phủ", desc: "Từ chi nhánh có thể di chuyển nhanh về trung tâm Quận 1 hoặc qua cầu Sài Gòn sang khu Đông thành phố." },
+      { icon: HeadsetIcon, title: "Tiếp tân hỗ trợ đón khách", desc: "Lễ tân tại toà nhà hướng dẫn khách tận nơi ngay khi vừa đến." },
+    ],
+    parkingInfo: [
+      "Khu vực để xe máy nằm ngay trong khuôn viên toà nhà, thuận tiện cho khách ra vào làm việc mỗi ngày.",
+      "Sảnh trước toà nhà đủ rộng để tài xế dừng đỗ ngắn hạn khi đưa đón đối tác.",
+      "Có bảo vệ toà nhà theo dõi an ninh khu vực để xe trong suốt giờ hành chính.",
+    ],
+    diningItems: [
+      { name: "Quán ăn khu vực Ung Văn Khiêm", desc: "Nhiều quán cơm, quán ăn trưa phục vụ nhanh cho dân văn phòng trong bán kính đi bộ." },
+      { name: "Cà phê trục Điện Biên Phủ nối dài", desc: "Không gian cà phê phù hợp trao đổi công việc hoặc gặp gỡ khách hàng ngoài giờ họp chính thức." },
+      { name: "Nhà hàng khu Bình Thạnh", desc: "Có các nhà hàng quy mô vừa, thích hợp cho bữa tiếp đối tác cần không gian trang trọng hơn quán ăn thường." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 161 Ung Văn Khiêm có phải là chi nhánh đầu tiên của MAX OFFICE tại Bình Thạnh không?", a: "Đúng vậy. Đây là chi nhánh đầu tiên MAX OFFICE mở tại khu vực Bình Thạnh (cũ), toạ lạc tại Phường Thạnh Mỹ Tây, mở rộng thêm lựa chọn địa chỉ đăng ký kinh doanh cho doanh nghiệp ở khu vực cửa ngõ Đông Bắc trung tâm thành phố." },
+      { q: "Chi nhánh 161 Ung Văn Khiêm áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 3 gói riêng biệt: SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, khác với hệ thống LITE-RISE chung của các chi nhánh khác trong hệ thống." },
+      { q: "Địa chỉ 161 Ung Văn Khiêm có hợp lệ để mở công ty mới không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Thạnh Mỹ Tây, đủ điều kiện đăng ký kinh doanh và đăng ký thuế, áp dụng cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Gói SILVER, GOLD và PREMIUM tại chi nhánh này khác nhau ở điểm nào?", a: "Cả 3 gói đều có bảng tên vật lý và bảng tên điện tử tại toà nhà; điểm khác biệt nằm ở thời lượng miễn phí phòng họp, sảnh tiếp khách, cùng việc có hỗ trợ đổi địa chỉ trên giấy phép kinh doanh hay bộ hồ sơ pháp lý toà nhà hay không — xem chi tiết trong bảng giá phía trên." },
+      { q: "Chi nhánh có hỗ trợ đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty không?", a: "Có. Đây là 2 dịch vụ phát sinh riêng, tính thêm ngoài phí gói văn phòng ảo hàng tháng: thay đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã gồm VAT), và khắc dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện với giá 480.000đ cho mỗi con dấu." },
+      { q: "Làm sao để đặt lịch xem văn phòng tại 161 Ung Văn Khiêm trước khi ký hợp đồng?", a: "Bạn có thể để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí trong thời gian sớm nhất." },
+    ],
+    testimonials: [
+      { quote: "Ban đầu mình hơi ngại vì đây là chi nhánh mới bên Bình Thạnh, nhưng toà nhà rất chuyên nghiệp và đội ngũ hỗ trợ nhiệt tình.", initial: "T", name: "Anh Tuấn", role: "Giám đốc công ty thương mại" },
+      { quote: "Vị trí gần Hàng Xanh nên đối tác từ Quận 1 hay khu Đông thành phố ghé văn phòng đều khá thuận tiện.", initial: "L", name: "Chị Linh", role: "Chủ hộ kinh doanh dịch vụ" },
+    ],
+  },
 };
 
 export function getLocationBySlug(slug: string): LocationData | undefined {
@@ -1507,7 +1592,7 @@ export type GroupedLocations = {
 };
 
 /**
- * Nhóm 17 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
+ * Nhóm 18 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
  * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
  * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
  */
