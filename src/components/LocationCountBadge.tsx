@@ -2,9 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { MapPinIcon, CloseIcon } from "./icons";
+import Link from "next/link";
+import { MapPinIcon, CloseIcon, ArrowRightSmallIcon } from "./icons";
 
-export default function LocationCountBadge({ locations }: { locations: string[] }) {
+export default function LocationCountBadge({
+  locations,
+  moreHref,
+  moreLabel,
+}: {
+  locations: string[];
+  /** Khi có, hiện thêm 1 link nhỏ dưới danh sách chi nhánh — dùng cho gói LITE trỏ sang trang tổng hợp riêng. */
+  moreHref?: string;
+  moreLabel?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [rect, setRect] = useState<{ top: number; left: number; width: number } | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -84,6 +94,17 @@ export default function LocationCountBadge({ locations }: { locations: string[] 
                       {loc}
                     </li>
                   ))}
+                  {moreHref && (
+                    <li className="pt-1">
+                      <Link
+                        href={moreHref}
+                        className="inline-flex items-center gap-1 text-[12.5px] font-bold text-primary hover:gap-1.5"
+                      >
+                        {moreLabel}
+                        <ArrowRightSmallIcon className="h-3 w-3 shrink-0 transition-transform duration-200" />
+                      </Link>
+                    </li>
+                  )}
                 </ul>
               </div>
             )}
@@ -114,6 +135,17 @@ export default function LocationCountBadge({ locations }: { locations: string[] 
                       {loc}
                     </li>
                   ))}
+                  {moreHref && (
+                    <li className="pt-1">
+                      <Link
+                        href={moreHref}
+                        className="inline-flex items-center gap-1.5 text-[14px] font-bold text-primary"
+                      >
+                        {moreLabel}
+                        <ArrowRightSmallIcon className="h-3.5 w-3.5 shrink-0" />
+                      </Link>
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>

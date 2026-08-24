@@ -329,7 +329,15 @@ export default function ServicePricingTable({
                             </div>
                             <div className="text-[10.5px] font-medium text-body-text">{plan.unit}</div>
                             <div className="mt-1.5 flex justify-center">
-                              <LocationCountBadge locations={plan.locations} />
+                              <LocationCountBadge
+                                locations={plan.locations}
+                                moreHref={plan.key === "lite" ? "/van-phong-ao-gia-re" : undefined}
+                                moreLabel={
+                                  plan.key === "lite"
+                                    ? "Xem đầy đủ thông tin 5 chi nhánh giá 299K"
+                                    : undefined
+                                }
+                              />
                             </div>
                           </th>
                         ))}
