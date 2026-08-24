@@ -36,7 +36,7 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
         desc: "Cạnh tranh nhất — chỉ áp dụng tại 5 chi nhánh. Bảng hiệu tính riêng.",
         features: ["Địa chỉ đăng ký kinh doanh", "Lễ tân, Wifi", "Tham gia Workshop"],
         note: true,
-        detailHref: "/services/van-phong-ao#bang-gia",
+        detailHref: "/van-phong-ao-gia-re",
       },
       {
         name: "START",
