@@ -198,8 +198,8 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "vuon-lai") {
     return VUON_LAI_VO_PLAN.price;
   }
-  if (slug === "nguyen-thong") {
-    return NGUYEN_THONG_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  if (slug === "nguyen-thong" || slug === "cach-mang-thang-8") {
+    return QUAN_3_CU_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
   return getCheapestPlanForLocation(slug)?.price;
 }
@@ -404,11 +404,12 @@ export const VUON_LAI_VO_PROMOS: VuonLaiPromo[] = [
 ];
 
 /* ---------------------------------------------------------------------- */
-/* 60 Nguyễn Thông, Quận 3 (cũ) — gói giá riêng, không thuộc hệ thống      */
-/* LITE-RISE hay các gói riêng khác. Chỉ khả dụng tại "nguyen-thong".      */
+/* Khu vực Quận 3 (cũ) — gói giá riêng dùng CHUNG cho cả 2 chi nhánh tại   */
+/* khu vực này ("nguyen-thong" và "cach-mang-thang-8"), không thuộc hệ    */
+/* thống LITE-RISE hay các gói riêng khác của chi nhánh khác.             */
 /* ---------------------------------------------------------------------- */
 
-export type NguyenThongPlan = {
+export type Quan3CuPlan = {
   key: "save" | "silver" | "gold" | "premium";
   name: string;
   price: number;
@@ -421,7 +422,7 @@ export type NguyenThongPlan = {
   features: string[];
 };
 
-const NGUYEN_THONG_COMMON_FEATURES = [
+const QUAN_3_CU_COMMON_FEATURES = [
   "Địa chỉ đăng ký kinh doanh (ĐKKD) + đăng ký thuế",
   "Bảng tên điện tử",
   "Tiếp tân hành chính văn phòng",
@@ -430,7 +431,7 @@ const NGUYEN_THONG_COMMON_FEATURES = [
 ];
 
 /** 4 gói văn phòng ảo riêng tại chi nhánh 60 Nguyễn Thông — giá CHƯA bao gồm VAT 10%. */
-export const NGUYEN_THONG_VO_PLANS: NguyenThongPlan[] = [
+export const QUAN_3_CU_VO_PLANS: Quan3CuPlan[] = [
   {
     key: "save",
     name: "SAVE",
@@ -441,7 +442,7 @@ export const NGUYEN_THONG_VO_PLANS: NguyenThongPlan[] = [
     guestLounge: "Miễn phí 30 phút/ngày",
     addressChangeSupport: false,
     legalDossier: false,
-    features: NGUYEN_THONG_COMMON_FEATURES,
+    features: QUAN_3_CU_COMMON_FEATURES,
   },
   {
     key: "silver",
@@ -453,7 +454,7 @@ export const NGUYEN_THONG_VO_PLANS: NguyenThongPlan[] = [
     guestLounge: "Miễn phí 30 phút/ngày",
     addressChangeSupport: false,
     legalDossier: false,
-    features: NGUYEN_THONG_COMMON_FEATURES,
+    features: QUAN_3_CU_COMMON_FEATURES,
   },
   {
     key: "gold",
@@ -465,7 +466,7 @@ export const NGUYEN_THONG_VO_PLANS: NguyenThongPlan[] = [
     guestLounge: "Miễn phí 60 phút/ngày",
     addressChangeSupport: true,
     legalDossier: false,
-    features: NGUYEN_THONG_COMMON_FEATURES,
+    features: QUAN_3_CU_COMMON_FEATURES,
   },
   {
     key: "premium",
@@ -477,20 +478,20 @@ export const NGUYEN_THONG_VO_PLANS: NguyenThongPlan[] = [
     guestLounge: "Miễn phí 60 phút/ngày",
     addressChangeSupport: true,
     legalDossier: true,
-    features: NGUYEN_THONG_COMMON_FEATURES,
+    features: QUAN_3_CU_COMMON_FEATURES,
   },
 ];
 
-export const NGUYEN_THONG_VAT_NOTE = "Giá trên chưa bao gồm thuế VAT 10%.";
+export const QUAN_3_CU_VAT_NOTE = "Giá trên chưa bao gồm thuế VAT 10%.";
 
-export type NguyenThongAddon = {
+export type Quan3CuAddon = {
   label: string;
   price: number;
   note?: string;
 };
 
 /** Dịch vụ bổ sung phát sinh sau khi ký hợp đồng tại chi nhánh 60 Nguyễn Thông. */
-export const NGUYEN_THONG_ADDONS: NguyenThongAddon[] = [
+export const QUAN_3_CU_ADDONS: Quan3CuAddon[] = [
   { label: "Thay đổi địa chỉ đăng ký kinh doanh", price: 1296000, note: "Đã bao gồm VAT" },
   { label: "Khắc dấu tròn doanh nghiệp / dấu chi nhánh / VPĐD", price: 480000 },
 ];

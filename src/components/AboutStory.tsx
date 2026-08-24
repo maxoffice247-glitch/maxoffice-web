@@ -10,14 +10,14 @@ export default function AboutStory() {
             Câu chuyện MAX OFFICE
           </span>
           <h2 className="mb-5 font-display text-[28px] leading-[1.2] font-extrabold text-navy sm:text-[34px] lg:text-[40px]">
-            Bắt đầu từ một địa chỉ, phát triển thành hệ thống 16 địa điểm
+            Bắt đầu từ một địa chỉ, phát triển thành hệ thống 17 địa điểm
           </h2>
           <p className="text-justify-vn text-[16.5px] leading-relaxed text-body-text">
             MAX OFFICE ra đời năm 2022 tại Số 10 Sông Thao, Tân Bình, với một
             mục tiêu đơn giản: giúp doanh nghiệp Việt bắt đầu đúng luật, vận
             hành đúng tiến độ và không phải tự mình xoay sở với hàng loạt thủ
             tục pháp lý, thuế và văn phòng. Từ một trụ sở đầu tiên, chúng tôi
-            đã mở rộng thành hệ thống 16 địa điểm tại các quận trung tâm
+            đã mở rộng thành hệ thống 17 địa điểm tại các quận trung tâm
             TP.HCM, đồng hành cùng hơn 500 doanh nghiệp — từ những nhà sáng
             lập mới khởi nghiệp đến các công ty đang mở rộng quy mô.
           </p>

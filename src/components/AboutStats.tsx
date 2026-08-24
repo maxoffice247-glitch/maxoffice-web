@@ -2,7 +2,7 @@ import Reveal from "./Reveal";
 import { BuildingIcon, UsersIcon, CalendarIcon } from "./icons";
 
 const STATS = [
-  { icon: BuildingIcon, value: "16", label: "Chi nhánh tại TP.HCM" },
+  { icon: BuildingIcon, value: "17", label: "Chi nhánh tại TP.HCM" },
   { icon: UsersIcon, value: "500", suffix: "+", label: "Doanh nghiệp tin dùng" },
   { icon: CalendarIcon, value: "2022", label: "Năm thành lập" },
 ];

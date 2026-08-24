@@ -97,7 +97,7 @@ export default function Hero() {
             MAX OFFICE không chỉ cho thuê văn phòng — chúng tôi đồng hành
             cùng bạn từ ngày thành lập, xuyên suốt quá trình vận hành, đến
             khi mở rộng quy mô. Hơn 500 doanh nghiệp đã chọn MAX OFFICE tại
-            16 địa điểm trung tâm TP.HCM để vận hành đúng luật, đúng tiến độ
+            17 địa điểm trung tâm TP.HCM để vận hành đúng luật, đúng tiến độ
             và tối ưu chi phí.
           </motion.p>
           <motion.div variants={item} className="mb-6">
@@ -139,7 +139,7 @@ export default function Hero() {
               icon={<MapPinIcon />}
               className="w-full !px-5 text-center whitespace-normal sm:w-auto sm:whitespace-nowrap"
             >
-              Xem 16 chi nhánh
+              Xem 17 chi nhánh
             </Button>
             <Button
               href="tel:0898082188"

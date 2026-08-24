@@ -145,6 +145,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "60 Nguyễn Thông, P. Nhiêu Lộc",
   },
   {
+    title: "520 Cách Mạng Tháng 8, Quận 3 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/cach-mang-thang-8",
+    desc: "520 Cách Mạng Tháng 8, P. Nhiêu Lộc",
+  },
+  {
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
@@ -190,7 +196,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Quận 3 (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-3-cu",
-    desc: "Chi nhánh 60 Nguyễn Thông — gần trung tâm Quận 1 (cũ)",
+    desc: "2 chi nhánh — 60 Nguyễn Thông và 520 Cách Mạng Tháng 8, gần Quận 1 (cũ)",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",
