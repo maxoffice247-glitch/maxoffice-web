@@ -586,4 +586,4 @@ export const BINH_THANH_ADDONS: BinhThanhAddon[] = [
  * chung ở trên — thêm slug vào đây khi mở chi nhánh mới trong khu vực,
  * KHÔNG tạo lại bộ gói mới.
  */
-export const BINH_THANH_LOCATIONS: string[] = ["ung-van-khiem"];
+export const BINH_THANH_LOCATIONS: string[] = ["ung-van-khiem", "tan-cang"];

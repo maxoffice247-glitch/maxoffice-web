@@ -208,6 +208,12 @@ export const LOCATIONS_LIST: LocationListItem[] = [
     shortAddress: "161 Ung Văn Khiêm, P. Thạnh Mỹ Tây",
     area: AREA_BINH_THANH,
   },
+  {
+    slug: "tan-cang",
+    name: "23 Tân Cảng, Bình Thạnh (cũ)",
+    shortAddress: "23 Tân Cảng, P. Thạnh Mỹ Tây",
+    area: AREA_BINH_THANH,
+  },
 ];
 
 export type LocationData = {
@@ -284,7 +290,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 18 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
+      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 19 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
       "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
@@ -370,7 +376,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 18 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
+      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 19 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
@@ -552,7 +558,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
-      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 18 địa điểm.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 19 địa điểm.",
       "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
@@ -819,7 +825,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 18 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 19 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
       "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
     ],
@@ -1570,6 +1576,78 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Vị trí gần Hàng Xanh nên đối tác từ Quận 1 hay khu Đông thành phố ghé văn phòng đều khá thuận tiện.", initial: "L", name: "Chị Linh", role: "Chủ hộ kinh doanh dịch vụ" },
     ],
   },
+
+  /* =============== TÂN CẢNG (CHI NHÁNH THỨ 2 KHU VỰC BÌNH THẠNH) =============== */
+  "tan-cang": {
+    slug: "tan-cang",
+    name: "23 Tân Cảng, Bình Thạnh (cũ)",
+    area: AREA_BINH_THANH,
+    address: "23 Tân Cảng, Phường Thạnh Mỹ Tây, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 23 Tân Cảng, Bình Thạnh (cũ)",
+    heroDescription:
+      "Chi nhánh thứ hai của MAX OFFICE tại khu vực Bình Thạnh (cũ) — văn phòng ảo 3 gói riêng biệt từ 379.000đ/tháng, toạ lạc tại DHT Building gần ga Metro Tân Cảng.",
+    metaTitle: "Văn Phòng Ảo 23 Tân Cảng, Bình Thạnh (cũ) | Từ 379K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 23 Tân Cảng, Phường Thạnh Mỹ Tây (Bình Thạnh cũ) — DHT Building, 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần ga Metro Tân Cảng và Landmark 81.",
+    image: IMAGE,
+    // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
+    facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-tan-cang-le-tan.jpg", alt: "Sảnh lễ tân & tiếp khách văn phòng 23 Tân Cảng", caption: "Sảnh lễ tân & tiếp khách" },
+      { src: "/images/dia-diem-tan-cang-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 23 Tân Cảng", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-tan-cang-tien-ich.jpg", alt: "Tiện ích toà nhà văn phòng 23 Tân Cảng", caption: "Tiện ích toà nhà" },
+    ],
+    intro: [
+      "Văn phòng 23 Tân Cảng là chi nhánh thứ hai MAX OFFICE mở tại khu vực Bình Thạnh (cũ), toạ lạc tại DHT Building trên đường Tân Cảng, Phường Thạnh Mỹ Tây. Dù cùng phường với chi nhánh 161 Ung Văn Khiêm, đây là hai địa chỉ hoàn toàn khác nhau — Tân Cảng là con đường riêng biệt, gần khu vực Cảng Sài Gòn cũ và ga Metro Tân Cảng, khác hẳn trục Ung Văn Khiêm gần giao lộ Hàng Xanh.",
+      "DHT Building là một cao ốc văn phòng nhiều tầng với mặt tiền kính hiện đại, điểm nhấn khung nhôm màu cam nổi bật, sảnh lễ tân ốp gỗ ấm áp có khu vực tiếp khách ngay lối vào. Toà nhà hiện có nhiều doanh nghiệp thuộc nhiều lĩnh vực khác nhau thuê văn phòng, cho thấy đây là địa chỉ được thị trường tin chọn để đặt trụ sở lâu dài.",
+      "Chi nhánh áp dụng đúng bảng giá văn phòng ảo dùng chung của khu vực Bình Thạnh — 3 gói SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10% — cùng cấu trúc tính năng như chi nhánh 161 Ung Văn Khiêm, giúp khách hàng dễ dàng so sánh và lựa chọn chi nhánh phù hợp hơn về vị trí trong cùng khu vực.",
+      "Điểm mạnh của 23 Tân Cảng nằm ở vị trí gần ga Metro Tân Cảng thuộc tuyến Metro số 1 (Bến Thành - Suối Tiên), không xa khu phức hợp Landmark 81 và Vinhomes Central Park. Đây là lựa chọn phù hợp cho doanh nghiệp muốn có địa chỉ đăng ký kinh doanh gần khu vực phát triển hiện đại, thuận tiện di chuyển bằng cả đường bộ lẫn tuyến Metro khi mở rộng đội ngũ.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 23 Tân Cảng",
+    benefits: [
+      { icon: BuildingIcon, title: "Toạ lạc tại DHT Building", desc: "Cao ốc văn phòng hiện đại, nhiều doanh nghiệp đang thuê văn phòng lâu dài." },
+      { icon: MapPinIcon, title: "Gần ga Metro Tân Cảng", desc: "Thuộc tuyến Metro số 1 (Bến Thành - Suối Tiên), thuận tiện di chuyển bằng Metro." },
+      { icon: BadgePercentIcon, title: "3 gói giá linh hoạt", desc: "SILVER, GOLD, PREMIUM — từ 379.000đ/tháng, dùng chung bảng giá khu vực Bình Thạnh." },
+      { icon: HeartHandshakeIcon, title: "Sảnh tiếp khách ốp gỗ", desc: "Không gian tiếp khách ấm áp ngay lối vào, phù hợp đón đối tác trực tiếp." },
+      { icon: UsersIcon, title: "Gần Landmark 81, Vinhomes Central Park", desc: "Khu vực phát triển hiện đại, phù hợp doanh nghiệp muốn định vị hình ảnh cao cấp." },
+      { icon: ClockIcon, title: "Khác biệt rõ với 161 Ung Văn Khiêm", desc: "Cùng khu vực Bình Thạnh nhưng khác hẳn con đường, dễ chọn theo vị trí phù hợp." },
+    ],
+    nearbyItems: [
+      { name: "Ga Metro Tân Cảng", desc: "Ga thuộc tuyến Metro số 1 (Bến Thành - Suối Tiên), cách toà nhà không xa." },
+      { name: "Landmark 81", desc: "Toà tháp biểu tượng của thành phố, nằm trong khu phức hợp Vinhomes Central Park." },
+      { name: "Khu vực Cảng Sài Gòn cũ", desc: "Vị trí gắn liền với tên gọi Tân Cảng, gần sông Sài Gòn." },
+      { name: "Chi nhánh 161 Ung Văn Khiêm", desc: "Chi nhánh MAX OFFICE khác cùng khu vực Bình Thạnh (cũ), khác con đường." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Metro số 1 (Bến Thành - Suối Tiên)", desc: "Ga Tân Cảng nằm gần khu vực, thêm lựa chọn di chuyển ngoài đường bộ." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Khu vực đông đúc dân cư và văn phòng nên dễ dàng đặt xe mọi thời điểm." },
+      { icon: CheckCircleIcon, title: "Trục đường Tân Cảng — Điện Biên Phủ", desc: "Kết nối thuận tiện về trung tâm Quận 1 và khu vực Vinhomes Central Park." },
+      { icon: HeadsetIcon, title: "Bảo vệ toà nhà hỗ trợ chỉ dẫn", desc: "Đội ngũ bảo vệ tại sảnh DHT Building hỗ trợ khách tìm đúng văn phòng khi mới đến." },
+    ],
+    parkingInfo: [
+      "DHT Building có hầm/khu vực để xe riêng phục vụ khách đến làm việc tại toà nhà.",
+      "Có thể tấp xe tạm trước sảnh toà nhà khi cần đưa đón đối tác trong thời gian ngắn.",
+      "Bảo vệ toà nhà trực 24/7, hỗ trợ an ninh khu vực để xe cho khách ra vào.",
+    ],
+    diningItems: [
+      { name: "Quán ăn khu vực Tân Cảng", desc: "Nhiều lựa chọn quán ăn trưa gần toà nhà, phù hợp bữa ăn nhanh của dân văn phòng." },
+      { name: "Nhà hàng khu Vinhomes Central Park", desc: "Không xa khu phức hợp Landmark 81, có nhiều nhà hàng phù hợp tiếp đối tác cao cấp." },
+      { name: "Cà phê dọc trục Điện Biên Phủ", desc: "Không gian phù hợp trao đổi công việc nhanh trước hoặc sau cuộc họp." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 23 Tân Cảng có phải cùng địa chỉ với 161 Ung Văn Khiêm không?", a: "Không. Đây là hai chi nhánh khác nhau cùng thuộc khu vực Bình Thạnh (cũ) và cùng Phường Thạnh Mỹ Tây, nhưng nằm trên hai con đường riêng biệt — 23 Tân Cảng gần khu vực Cảng Sài Gòn cũ và ga Metro Tân Cảng, còn 161 Ung Văn Khiêm gần giao lộ Hàng Xanh." },
+      { q: "DHT Building là toà nhà của MAX OFFICE hay của bên khác quản lý?", a: "DHT Building là tên toà nhà văn phòng nơi MAX OFFICE thuê và vận hành chi nhánh 23 Tân Cảng, tương tự cách các chi nhánh khác của hệ thống đặt tại các toà nhà văn phòng khác nhau trong thành phố." },
+      { q: "Chi nhánh 23 Tân Cảng áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh dùng chung bảng giá với 161 Ung Văn Khiêm trong cùng khu vực Bình Thạnh, gồm 3 gói: SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%." },
+      { q: "Địa chỉ 23 Tân Cảng có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Thạnh Mỹ Tây, đủ điều kiện đăng ký kinh doanh, đăng ký thuế cho công ty TNHH, công ty cổ phần và hộ kinh doanh cá thể." },
+      { q: "Ngoài phí gói văn phòng ảo hàng tháng, chi nhánh còn dịch vụ phát sinh nào khác không?", a: "Có 2 khoản phát sinh tính riêng khi cần: đổi địa chỉ trên giấy phép kinh doanh, giá 1.296.000đ đã bao gồm VAT; và khắc con dấu — dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện — mỗi con dấu 480.000đ." },
+      { q: "Nên chọn 23 Tân Cảng hay 161 Ung Văn Khiêm khi cả hai cùng khu vực Bình Thạnh?", a: "Nếu bạn ưu tiên vị trí gần ga Metro và khu vực Landmark 81, Vinhomes Central Park, 23 Tân Cảng là lựa chọn phù hợp. Nếu ưu tiên gần giao lộ Hàng Xanh và trục Điện Biên Phủ, có thể tham khảo thêm chi nhánh 161 Ung Văn Khiêm — cả hai đều dùng chung một bảng giá nên bạn có thể chọn theo vị trí thuận tiện nhất." },
+    ],
+    testimonials: [
+      { quote: "Công ty mình chọn DHT Building vì gần ga Metro Tân Cảng, nhân viên đi làm bằng Metro rất tiện.", initial: "K", name: "Chị Khánh", role: "Trưởng phòng nhân sự, công ty dịch vụ" },
+      { quote: "Sảnh lễ tân toà nhà khá sang trọng, phù hợp cho những buổi hẹn gặp đối tác quan trọng.", initial: "B", name: "Anh Bảo", role: "Giám đốc công ty tư vấn" },
+    ],
+  },
 };
 
 export function getLocationBySlug(slug: string): LocationData | undefined {
@@ -1592,7 +1670,7 @@ export type GroupedLocations = {
 };
 
 /**
- * Nhóm 18 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
+ * Nhóm 19 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
  * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
  * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
  */

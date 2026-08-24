@@ -157,6 +157,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "161 Ung Văn Khiêm, P. Thạnh Mỹ Tây",
   },
   {
+    title: "23 Tân Cảng, Bình Thạnh (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/tan-cang",
+    desc: "23 Tân Cảng, P. Thạnh Mỹ Tây",
+  },
+  {
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
@@ -208,7 +214,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Bình Thạnh (cũ)",
     category: "Khu vực",
     href: "/dia-diem/binh-thanh-cu",
-    desc: "Chi nhánh 161 Ung Văn Khiêm — gần giao lộ Hàng Xanh",
+    desc: "2 chi nhánh — 161 Ung Văn Khiêm và 23 Tân Cảng, gần ga Metro Tân Cảng",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",
