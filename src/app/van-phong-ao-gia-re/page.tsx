@@ -40,7 +40,7 @@ export default function VanPhongAoGiaRePage() {
   return (
     <main>
       <PageHero
-        image="/images/hero-bang-gia.jpg"
+        image="/images/anh-hero-trang-chu.jpg"
         eyebrow="Văn phòng ảo giá tốt"
         title="Văn phòng ảo giá tốt — Từ 299.000đ/tháng"
         description="Gói LITE — mức giá khởi điểm thấp nhất trong toàn hệ thống MAX OFFICE, khả dụng tại 5 chi nhánh khu vực Tân Bình và Quận 10."
