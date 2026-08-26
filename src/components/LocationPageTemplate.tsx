@@ -97,6 +97,8 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         <BinhThanhVOServices branchName="161 Ung Văn Khiêm" />
       ) : data.slug === "tan-cang" ? (
         <BinhThanhVOServices branchName="23 Tân Cảng" />
+      ) : data.slug === "n1-dien-bien-phu" ? (
+        <BinhThanhVOServices branchName="N1 Điện Biên Phủ" />
       ) : (
         <LocationServicesList name={data.name} slug={data.slug} />
       )}

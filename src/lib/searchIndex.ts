@@ -163,6 +163,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "23 Tân Cảng, P. Thạnh Mỹ Tây",
   },
   {
+    title: "N1 Điện Biên Phủ, Bình Thạnh (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/n1-dien-bien-phu",
+    desc: "N1 Điện Biên Phủ, P. Thạnh Mỹ Tây",
+  },
+  {
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
@@ -214,7 +220,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Bình Thạnh (cũ)",
     category: "Khu vực",
     href: "/dia-diem/binh-thanh-cu",
-    desc: "2 chi nhánh — 161 Ung Văn Khiêm và 23 Tân Cảng, gần ga Metro Tân Cảng",
+    desc: "3 chi nhánh — 161 Ung Văn Khiêm, 23 Tân Cảng và N1 Điện Biên Phủ",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",
