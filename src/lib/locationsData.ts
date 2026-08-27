@@ -185,6 +185,12 @@ export const LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_THU_DUC,
   },
   {
+    slug: "quoc-huong",
+    name: "27C Quốc Hương, TP. Thủ Đức (cũ)",
+    shortAddress: "27C Quốc Hương, P. An Khánh",
+    area: AREA_THU_DUC,
+  },
+  {
     slug: "quan-7",
     name: "Bùi Văn Ba, Quận 7",
     shortAddress: "210 Bùi Văn Ba, P. Tân Thuận",
@@ -296,7 +302,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 20 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
+      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 21 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
       "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
@@ -382,7 +388,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 20 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
+      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 21 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
@@ -564,7 +570,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
-      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 20 địa điểm.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 21 địa điểm.",
       "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
@@ -831,7 +837,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 20 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 21 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
       "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
     ],
@@ -1726,6 +1732,79 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Toà nhà mặt tiền lớn nên rất dễ tìm, đối tác của mình không bị lạc như một số văn phòng trong hẻm mình từng thuê trước đây.", initial: "M", name: "Chị Minh", role: "Trưởng phòng kinh doanh" },
     ],
   },
+
+  /* =============== 27C QUỐC HƯƠNG (CHI NHÁNH THỨ 2 KHU VỰC THỦ ĐỨC) =============== */
+  "quoc-huong": {
+    slug: "quoc-huong",
+    name: "27C Quốc Hương, TP. Thủ Đức (cũ)",
+    area: AREA_THU_DUC,
+    address: "27C Quốc Hương, Phường An Khánh, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 27C Quốc Hương, TP. Thủ Đức (cũ)",
+    heroDescription:
+      "Chi nhánh thứ hai của MAX OFFICE tại khu vực Thủ Đức (cũ) — văn phòng ảo 3 gói riêng biệt từ 379.000đ/tháng, toạ lạc tại Bảo Thiện Building ngay khu Thảo Điền.",
+    metaTitle: "Văn Phòng Ảo 27C Quốc Hương, TP. Thủ Đức (cũ) | Từ 379K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 27C Quốc Hương, Phường An Khánh (TP. Thủ Đức cũ) — 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), khu vực Thảo Điền sầm uất, gần cầu Sài Gòn.",
+    image: IMAGE,
+    // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
+    facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-quoc-huong-le-tan.jpg", alt: "Sảnh lễ tân & tiếp khách văn phòng 27C Quốc Hương", caption: "Sảnh lễ tân & tiếp khách" },
+      { src: "/images/dia-diem-quoc-huong-phong-hop.jpg", alt: "Phòng họp văn phòng 27C Quốc Hương", caption: "Phòng họp" },
+      { src: "/images/dia-diem-quoc-huong-san-trong.jpg", alt: "Không gian trống văn phòng 27C Quốc Hương", caption: "Không gian trống" },
+      { src: "/images/dia-diem-quoc-huong-tien-ich.jpg", alt: "Tiện ích toà nhà văn phòng 27C Quốc Hương", caption: "Tiện ích toà nhà" },
+    ],
+    intro: [
+      "Văn phòng 27C Quốc Hương là chi nhánh thứ hai MAX OFFICE mở tại khu vực Thủ Đức (cũ), bên cạnh chi nhánh Phạm Văn Đồng đã hoạt động từ trước, toạ lạc tại Bảo Thiện Building, Phường An Khánh. Khu vực An Khánh vốn thuộc Quận 2 trước đây, nhưng đã chính thức sáp nhập vào TP. Thủ Đức từ năm 2021 — trước cả đợt sáp nhập phường toàn TP.HCM năm 2025 — nên về mặt địa giới lịch sử, đây vẫn thuộc khu vực Thủ Đức (cũ) trong hệ thống chi nhánh MAX OFFICE, không tách thành khu vực riêng.",
+      "Bảo Thiện Building là một toà nhà kiến trúc tân cổ điển, mặt tiền màu trắng nổi bật với các chi tiết phào chỉ tinh xảo, sảnh lễ tân sang trọng với đèn chùm và sàn đá hoa văn. Toà nhà nằm ngay khu Thảo Điền — khu vực nổi tiếng sầm uất, tập trung nhiều chuyên gia nước ngoài, nhà hàng và quán cà phê phong cách quốc tế.",
+      "Chi nhánh áp dụng bảng giá văn phòng ảo 3 gói SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10% — cùng bảng giá đang áp dụng tại các chi nhánh khu vực Bình Thạnh, phân hoá theo thời lượng sử dụng phòng họp, sảnh tiếp khách và các hỗ trợ pháp lý đi kèm.",
+      "Nhờ vị trí gần cầu Sài Gòn, từ chi nhánh có thể di chuyển nhanh sang khu vực Bình Thạnh hoặc về trung tâm Quận 1. Đây là lựa chọn phù hợp cho doanh nghiệp hoạt động trong lĩnh vực có yếu tố nước ngoài, muốn có địa chỉ đăng ký kinh doanh tại khu vực quốc tế hoá, gần đối tác và khách hàng đến từ nhiều quốc gia.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 27C Quốc Hương",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh thứ hai tại Thủ Đức", desc: "Mở rộng thêm lựa chọn vị trí, bên cạnh chi nhánh Phạm Văn Đồng." },
+      { icon: MapPinIcon, title: "Toạ lạc tại Bảo Thiện Building", desc: "Toà nhà kiến trúc tân cổ điển ngay khu Thảo Điền, Phường An Khánh." },
+      { icon: BadgePercentIcon, title: "3 gói giá linh hoạt", desc: "SILVER, GOLD, PREMIUM — từ 379.000đ/tháng." },
+      { icon: HeartHandshakeIcon, title: "Khu vực quốc tế, sầm uất", desc: "Thảo Điền tập trung nhiều chuyên gia nước ngoài và doanh nghiệp quốc tế." },
+      { icon: UsersIcon, title: "Không gian sàn rộng rãi", desc: "Có khu vực sàn trống thoáng đãng, phù hợp bố trí văn phòng theo nhu cầu." },
+      { icon: ClockIcon, title: "Gần cầu Sài Gòn", desc: "Kết nối nhanh sang khu vực Bình Thạnh và trung tâm Quận 1." },
+    ],
+    nearbyItems: [
+      { name: "Khu Thảo Điền", desc: "Khu vực sầm uất, nhiều nhà hàng, quán cà phê phong cách quốc tế." },
+      { name: "Cầu Sài Gòn", desc: "Kết nối nhanh sang khu vực Bình Thạnh và trung tâm Quận 1." },
+      { name: "Chi nhánh Phạm Văn Đồng", desc: "Chi nhánh MAX OFFICE khác trong cùng khu vực Thủ Đức (cũ), cách không xa." },
+      { name: "Khu dân cư Phường An Khánh", desc: "Khu vực dân cư cao cấp, nhiều tiện ích sinh hoạt xung quanh." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Có tuyến xe buýt hoạt động qua khu vực An Khánh, Thảo Điền." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Khu vực đông dân cư quốc tế nên dễ dàng đặt xe vào mọi khung giờ." },
+      { icon: CheckCircleIcon, title: "Trục Quốc Hương — Xa lộ Hà Nội", desc: "Kết nối nhanh về trung tâm Quận 1 và các khu vực lân cận." },
+      { icon: HeadsetIcon, title: "Lễ tân hỗ trợ đón khách", desc: "Đội ngũ tại chi nhánh hỗ trợ chỉ dẫn tận tình cho khách lần đầu ghé thăm." },
+    ],
+    parkingInfo: [
+      "Khu vực gửi xe máy nằm ngay trong khuôn viên toà nhà, phục vụ khách đến làm việc hằng ngày.",
+      "Có thể tấp xe tạm thời trước toà nhà khi cần đón đối tác trong thời gian ngắn.",
+      "Nhân viên bảo vệ túc trực tại sảnh, hỗ trợ trông xe cho khách trong giờ hành chính.",
+    ],
+    diningItems: [
+      { name: "Nhà hàng khu Thảo Điền", desc: "Đa dạng phong cách ẩm thực quốc tế, phù hợp tiếp đối tác nước ngoài." },
+      { name: "Cà phê khu vực An Khánh", desc: "Nhiều quán cà phê không gian hiện đại, thuận tiện gặp gỡ khách hàng." },
+      { name: "Quán ăn dọc Quốc Hương", desc: "Lựa chọn quán ăn trưa nhanh gọn cho dân văn phòng." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 27C Quốc Hương có phải là chi nhánh thứ hai của MAX OFFICE tại khu vực Thủ Đức không?", a: "Đúng vậy. Bên cạnh chi nhánh Phạm Văn Đồng đã hoạt động từ trước, 27C Quốc Hương là chi nhánh thứ hai MAX OFFICE mở tại khu vực Thủ Đức (cũ), toạ lạc tại Phường An Khánh." },
+      { q: "Vì sao 27C Quốc Hương thuộc khu vực Thủ Đức (cũ) mà không phải Quận 2 (cũ)?", a: "Vì Quận 2 (cũ) đã chính thức sáp nhập vào TP. Thủ Đức từ năm 2021 — trước cả đợt sáp nhập phường toàn TP.HCM năm 2025 — nên khu vực An Khánh về mặt địa giới lịch sử thuộc TP. Thủ Đức, không tách thành khu vực riêng trên hệ thống MAX OFFICE." },
+      { q: "Chi nhánh 27C Quốc Hương áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 3 gói: SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại các chi nhánh khu vực Bình Thạnh." },
+      { q: "Địa chỉ 27C Quốc Hương có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường An Khánh, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Ngoài phí gói văn phòng ảo hàng tháng, chi nhánh còn khoản phí phát sinh nào khác không?", a: "Có 2 dịch vụ tính riêng khi phát sinh nhu cầu: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Tôi có thể đến tham quan văn phòng 27C Quốc Hương trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp lịch tham quan miễn phí, đội ngũ sẽ hướng dẫn cụ thể đường vào Bảo Thiện Building." },
+    ],
+    testimonials: [
+      { quote: "Khu Thảo Điền có nhiều đối tác nước ngoài nên đặt văn phòng gần đây rất thuận tiện cho công ty mình.", initial: "V", name: "Chị Vy", role: "Giám đốc công ty xuất nhập khẩu" },
+      { quote: "Toà nhà kiến trúc đẹp, sảnh lễ tân sang trọng, phù hợp tiếp đối tác quốc tế.", initial: "A", name: "Anh An", role: "Founder công ty tư vấn" },
+    ],
+  },
 };
 
 export function getLocationBySlug(slug: string): LocationData | undefined {
@@ -1748,7 +1827,7 @@ export type GroupedLocations = {
 };
 
 /**
- * Nhóm 20 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
+ * Nhóm 21 chi nhánh theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
  * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
  * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
  */

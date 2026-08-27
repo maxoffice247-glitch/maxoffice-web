@@ -12,7 +12,11 @@ import {
   CheckCircleIcon,
   ArrowRightSmallIcon,
 } from "./icons";
-import { BINH_THANH_VO_PLANS, BINH_THANH_VAT_NOTE, BINH_THANH_ADDONS } from "@/lib/virtualOfficePlans";
+import {
+  SILVER_GOLD_PREMIUM_VO_PLANS,
+  SILVER_GOLD_PREMIUM_VAT_NOTE,
+  SILVER_GOLD_PREMIUM_ADDONS,
+} from "@/lib/virtualOfficePlans";
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
@@ -32,10 +36,12 @@ const OTHER_SERVICES = [
 ];
 
 /**
- * Bảng giá 3 gói SILVER/GOLD/PREMIUM dùng chung cho các chi nhánh khu vực
- * Bình Thạnh (cũ) — cùng nguồn dữ liệu, chỉ khác tên chi nhánh hiển thị.
+ * Bảng giá 3 gói SILVER/GOLD/PREMIUM dùng chung cho mọi chi nhánh áp dụng
+ * bảng giá "các Quận còn lại" — không gắn với 1 khu vực (area) cố định,
+ * hiện dùng cho cả Bình Thạnh (cũ) và Thủ Đức (cũ). Cùng nguồn dữ liệu,
+ * chỉ khác tên chi nhánh hiển thị qua prop branchName.
  */
-export default function BinhThanhVOServices({ branchName }: { branchName: string }) {
+export default function SilverGoldPremiumServices({ branchName }: { branchName: string }) {
   return (
     <section className="py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -68,7 +74,7 @@ export default function BinhThanhVOServices({ branchName }: { branchName: string
             </Link>
           </div>
           <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {BINH_THANH_VO_PLANS.map((plan) => (
+            {SILVER_GOLD_PREMIUM_VO_PLANS.map((plan) => (
               <RevealItem key={plan.key}>
                 <div className="flex h-full flex-col rounded-xl border border-line bg-bg-tint p-5">
                   <div className="mb-1 text-[14.5px] font-bold text-navy">{plan.name}</div>
@@ -109,12 +115,12 @@ export default function BinhThanhVOServices({ branchName }: { branchName: string
               </RevealItem>
             ))}
           </RevealGroup>
-          <p className="mt-4 text-[12px] text-body-text italic">{BINH_THANH_VAT_NOTE}</p>
+          <p className="mt-4 text-[12px] text-body-text italic">{SILVER_GOLD_PREMIUM_VAT_NOTE}</p>
 
           <div className="mt-5 rounded-xl bg-accent/8 p-4">
             <p className="mb-3 text-[12.5px] font-bold text-navy">Dịch vụ bổ sung (phát sinh sau khi ký hợp đồng)</p>
             <ul className="space-y-1.5">
-              {BINH_THANH_ADDONS.map((addon) => (
+              {SILVER_GOLD_PREMIUM_ADDONS.map((addon) => (
                 <li key={addon.label} className="flex flex-wrap items-baseline justify-between gap-x-3 text-[12.5px]">
                   <span className="text-body-text">{addon.label}</span>
                   <span className="font-mono font-bold text-accent">

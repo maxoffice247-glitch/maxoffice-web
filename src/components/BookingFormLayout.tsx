@@ -111,7 +111,7 @@ export default function BookingFormLayout(props: BookingFormProps) {
 
         <div className="scrollbar-thin min-h-0 flex-1 rounded-2xl border border-line bg-white p-5 lg:overflow-y-auto">
           <h3 className="mb-3.5 px-1 text-[12px] font-bold tracking-[0.1em] text-body-text uppercase">
-            20 địa điểm MAX OFFICE
+            21 địa điểm MAX OFFICE
           </h3>
           <ul className="space-y-1">
             {LOCATIONS_LIST.map((loc) => (

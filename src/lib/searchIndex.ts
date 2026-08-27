@@ -133,6 +133,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "1148A Phạm Văn Đồng, P. Thủ Đức",
   },
   {
+    title: "27C Quốc Hương, TP. Thủ Đức (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/quoc-huong",
+    desc: "27C Quốc Hương, P. An Khánh",
+  },
+  {
     title: "Bùi Văn Ba, Quận 7",
     category: "Chi nhánh",
     href: "/locations/quan-7",
@@ -202,7 +208,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Tp. Thủ Đức (Cũ)",
     category: "Khu vực",
     href: "/dia-diem/thu-duc-cu",
-    desc: "Chi nhánh Phạm Văn Đồng — gần các trường đại học lớn",
+    desc: "2 chi nhánh — Phạm Văn Đồng và 27C Quốc Hương, gần khu Thảo Điền",
   },
   {
     title: "Quận 7 (cũ)",

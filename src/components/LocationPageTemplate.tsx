@@ -12,7 +12,7 @@ import PhamVanDongServices from "./PhamVanDongServices";
 import QuanBaServices from "./QuanBaServices";
 import VuonLaiServices from "./VuonLaiServices";
 import Quan3CuVOServices from "./Quan3CuVOServices";
-import BinhThanhVOServices from "./BinhThanhVOServices";
+import SilverGoldPremiumServices from "./SilverGoldPremiumServices";
 import LocationCrossLinks from "./LocationCrossLinks";
 import LocationLeadForm from "./LocationLeadForm";
 import Testimonials from "./Testimonials";
@@ -94,11 +94,13 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       ) : data.slug === "cach-mang-thang-8" ? (
         <Quan3CuVOServices branchName="520 Cách Mạng Tháng 8" />
       ) : data.slug === "ung-van-khiem" ? (
-        <BinhThanhVOServices branchName="161 Ung Văn Khiêm" />
+        <SilverGoldPremiumServices branchName="161 Ung Văn Khiêm" />
       ) : data.slug === "tan-cang" ? (
-        <BinhThanhVOServices branchName="23 Tân Cảng" />
+        <SilverGoldPremiumServices branchName="23 Tân Cảng" />
       ) : data.slug === "n1-dien-bien-phu" ? (
-        <BinhThanhVOServices branchName="N1 Điện Biên Phủ" />
+        <SilverGoldPremiumServices branchName="N1 Điện Biên Phủ" />
+      ) : data.slug === "quoc-huong" ? (
+        <SilverGoldPremiumServices branchName="27C Quốc Hương" />
       ) : (
         <LocationServicesList name={data.name} slug={data.slug} />
       )}
