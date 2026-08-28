@@ -184,6 +184,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "89 Phan Đình Phùng, P. Phú Nhuận",
   },
   {
+    title: "84-86 Nguyễn Trường Tộ, Quận 4 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/nguyen-truong-to",
+    desc: "84-86 Nguyễn Trường Tộ, P. Xóm Chiếu",
+  },
+  {
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
@@ -242,6 +248,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Khu vực",
     href: "/dia-diem/phu-nhuan-cu",
     desc: "Chi nhánh 89 Phan Đình Phùng — gần chợ Phú Nhuận",
+  },
+  {
+    title: "Quận 4 (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-4-cu",
+    desc: "Chi nhánh 84-86 Nguyễn Trường Tộ — cách Quận 1 một nhịp cầu",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",

@@ -126,7 +126,7 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
               <div className="flex flex-col items-start gap-3 border-t border-line bg-bg-tint px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="flex items-center gap-2 text-[12.5px] text-body-text">
                   <MapPinIcon className="h-4 w-4 shrink-0 text-primary" />
-                  21 chi nhánh trung tâm TP.HCM — luôn có vị trí phù hợp nhu cầu của bạn
+                  22 chi nhánh trung tâm TP.HCM — luôn có vị trí phù hợp nhu cầu của bạn
                 </p>
                 <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
                   <Button
