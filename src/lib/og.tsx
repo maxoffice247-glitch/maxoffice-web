@@ -5,7 +5,7 @@ import { join } from "node:path";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const DEFAULT_SUBTITLE = "21 chi nhánh TP.HCM • 500+ doanh nghiệp tin dùng";
+const DEFAULT_SUBTITLE = "20 chi nhánh TP.HCM • 500+ doanh nghiệp tin dùng";
 const DEFAULT_HOTLINE = "Hotline: 089 8082 188";
 
 let fontsPromise: ReturnType<typeof loadFonts> | null = null;

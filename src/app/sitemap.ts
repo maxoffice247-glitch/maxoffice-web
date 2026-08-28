@@ -43,12 +43,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  const locationPages: MetadataRoute.Sitemap = Object.keys(LOCATIONS_DATA).map((slug) => ({
-    url: `${SITE_URL}/locations/${slug}`,
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.9,
-  }));
+  const locationPages: MetadataRoute.Sitemap = Object.values(LOCATIONS_DATA)
+    .filter((loc) => loc.isActive !== false)
+    .map((loc) => ({
+      url: `${SITE_URL}/locations/${loc.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    }));
 
   const areaPages: MetadataRoute.Sitemap = AREAS.map((area) => ({
     url: `${SITE_URL}/dia-diem/${area.slug}`,

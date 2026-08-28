@@ -120,12 +120,15 @@ export const SEARCH_INDEX: SearchItem[] = [
     href: "/locations/cmt8",
     desc: "283/26-28 CMT8, P. Hoà Hưng",
   },
-  {
-    title: "314/6 Điện Biên Phủ, Quận 10 (cũ)",
-    category: "Chi nhánh",
-    href: "/locations/vuon-lai",
-    desc: "314/6 Điện Biên Phủ, P. Vườn Lài",
-  },
+  // TẠM ẨN — chi nhánh "vuon-lai" đang isActive: false trong locationsData.ts,
+  // trang /locations/vuon-lai trả về 404. Bỏ comment khối bên dưới khi bật
+  // lại chi nhánh (nhớ đặt lại isActive: true trước).
+  // {
+  //   title: "314/6 Điện Biên Phủ, Quận 10 (cũ)",
+  //   category: "Chi nhánh",
+  //   href: "/locations/vuon-lai",
+  //   desc: "314/6 Điện Biên Phủ, P. Vườn Lài",
+  // },
   {
     title: "Phạm Văn Đồng, Thủ Đức",
     category: "Chi nhánh",
@@ -202,7 +205,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Quận 10 (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-10-cu",
-    desc: "2 chi nhánh — CMT8 gần Ga Sài Gòn, 314/6 Điện Biên Phủ tại Vườn Lài",
+    desc: "Chi nhánh CMT8 — gần Ga Sài Gòn",
   },
   {
     title: "Tp. Thủ Đức (Cũ)",
