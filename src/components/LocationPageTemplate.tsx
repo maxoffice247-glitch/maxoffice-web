@@ -101,6 +101,8 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         <SilverGoldPremiumServices branchName="N1 Điện Biên Phủ" />
       ) : data.slug === "quoc-huong" ? (
         <SilverGoldPremiumServices branchName="27C Quốc Hương" />
+      ) : data.slug === "phan-dinh-phung" ? (
+        <SilverGoldPremiumServices branchName="89 Phan Đình Phùng" />
       ) : (
         <LocationServicesList name={data.name} slug={data.slug} />
       )}

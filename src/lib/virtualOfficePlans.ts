@@ -592,4 +592,5 @@ export const SILVER_GOLD_PREMIUM_LOCATIONS: string[] = [
   "tan-cang",
   "n1-dien-bien-phu",
   "quoc-huong",
+  "phan-dinh-phung",
 ];

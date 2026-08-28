@@ -178,6 +178,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "N1 Điện Biên Phủ, P. Thạnh Mỹ Tây",
   },
   {
+    title: "89 Phan Đình Phùng, Phú Nhuận (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/phan-dinh-phung",
+    desc: "89 Phan Đình Phùng, P. Phú Nhuận",
+  },
+  {
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
@@ -230,6 +236,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Khu vực",
     href: "/dia-diem/binh-thanh-cu",
     desc: "3 chi nhánh — 161 Ung Văn Khiêm, 23 Tân Cảng và N1 Điện Biên Phủ",
+  },
+  {
+    title: "Phú Nhuận (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/phu-nhuan-cu",
+    desc: "Chi nhánh 89 Phan Đình Phùng — gần chợ Phú Nhuận",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",

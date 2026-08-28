@@ -11,7 +11,7 @@ import { GOOGLE_MAPS_REVIEW_URL } from "@/lib/siteConfig";
 const GOOGLE_RATING: { rating: number; reviewCount: number } | null = { rating: 5.0, reviewCount: 5 };
 
 const STATS = [
-  { icon: BuildingIcon, value: "20", label: "Chi nhánh tại TP.HCM" },
+  { icon: BuildingIcon, value: "21", label: "Chi nhánh tại TP.HCM" },
   { icon: UsersIcon, value: "500", suffix: "+", label: "Doanh nghiệp tin dùng" },
   { icon: CalendarIcon, value: "2022", label: "Năm thành lập" },
   { icon: TagIcon, value: "6", label: "Dịch vụ cốt lõi" },
