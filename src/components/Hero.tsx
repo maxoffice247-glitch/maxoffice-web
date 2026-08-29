@@ -35,40 +35,49 @@ const HERO_IMAGES = [
   "/images/anh-hero-trang-chu-1.jpg",
 ];
 
-/** Mỗi slide là 1 câu hỏi ("nỗi đau" khách hàng) + 1 câu trả lời ngắn, với
- * đúng 1 cụm từ khoá được tô màu xanh nhấn — nhất quán với cách H1 tĩnh cũ
- * tô màu "bắt đầu vững vàng". answer.highlight của slide đầu tiên được nội
- * suy số chi nhánh ĐANG ACTIVE thật (LOCATIONS_LIST.length), không hardcode. */
-type HeroSlide = {
-  question: string;
-  answerPre?: string;
-  answerHighlight: string;
-  answerPost?: string;
-};
+/** Khối mô tả dưới H1 (H1 nay đứng yên) xoay vòng 7 slide: slide đầu là
+ * đoạn giới thiệu gốc (không phải dạng hỏi-đáp), 6 slide còn lại là
+ * câu hỏi "nỗi đau" (in đậm, màu nhấn) + câu trả lời ngắn bên dưới.
+ * Số chi nhánh trong slide 1 và slide 2 lấy ĐỘNG từ LOCATIONS_LIST.length. */
+type HeroSlide =
+  | { kind: "intro"; text: string }
+  | { kind: "qa"; question: string; answer: string };
 
 function getHeroSlides(branchCount: number): HeroSlide[] {
   return [
     {
+      kind: "intro",
+      text: `MAX OFFICE không chỉ cho thuê văn phòng — chúng tôi đồng hành cùng bạn từ ngày thành lập, xuyên suốt quá trình vận hành, đến khi mở rộng quy mô. Hơn 500 doanh nghiệp đã chọn MAX OFFICE tại ${branchCount} địa điểm trung tâm TP.HCM để vận hành đúng luật, đúng tiến độ và tối ưu chi phí.`,
+    },
+    {
+      kind: "qa",
       question: "Cần địa chỉ kinh doanh hợp pháp nhưng ngại chi phí thuê văn phòng?",
-      answerPre: "Từ ",
-      answerHighlight: "299.000đ/tháng",
-      answerPost: `, ${branchCount} chi nhánh trung tâm TP.HCM.`,
+      answer: `Từ 299.000đ/tháng, ${branchCount} chi nhánh trung tâm TP.HCM.`,
     },
     {
+      kind: "qa",
       question: "Sợ ký hợp đồng dài hạn, không linh hoạt?",
-      answerHighlight: "Hợp đồng linh hoạt",
-      answerPost: ", có ưu đãi hấp dẫn khi gia hạn dài hạn.",
+      answer: "Hợp đồng linh hoạt, có ưu đãi hấp dẫn khi gia hạn dài hạn.",
     },
     {
+      kind: "qa",
       question: "Lo phí phát sinh không rõ ràng?",
-      answerPre: "Giá minh bạch, ",
-      answerHighlight: "không phí ẩn",
-      answerPost: " — cam kết rõ ràng bằng hợp đồng.",
+      answer: "Giá minh bạch, không phí ẩn — cam kết rõ ràng bằng hợp đồng.",
     },
     {
+      kind: "qa",
       question: "Cần hỗ trợ thủ tục pháp lý, không biết bắt đầu từ đâu?",
-      answerHighlight: "Tặng dịch vụ thành lập doanh nghiệp",
-      answerPost: " khi ký hợp đồng dài hạn.",
+      answer: "Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng dài hạn.",
+    },
+    {
+      kind: "qa",
+      question: "Thư từ thất lạc, mất thông báo thuế quan trọng?",
+      answer: "Lễ tân tiếp nhận thư từ, bưu phẩm — thông báo ngay qua Zalo, không lo thất lạc giấy tờ.",
+    },
+    {
+      kind: "qa",
+      question: "Ngân hàng từ chối mở tài khoản vì không có trụ sở thực?",
+      answer: "Địa chỉ thật, có bảng tên, có lễ tân — đầy đủ giấy tờ xác minh cho ngân hàng.",
     },
   ];
 }
@@ -89,11 +98,10 @@ export default function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
   const prefersReducedMotion = useReducedMotion();
 
-  // Auto-advance every ~4.5s. Re-armed off `activeSlide` (functional update
-  // not needed since we depend on it directly) so a manual dot click resets
-  // the countdown from that moment instead of firing early. Skipped entirely
-  // under prefers-reduced-motion — the carousel then sits fixed on whichever
-  // slide the visitor last chose (slide 1 by default), only dot clicks move it.
+  // Auto-advance every ~4.5s. Re-armed off `activeSlide` so a manual dot
+  // click resets the countdown from that moment instead of firing early.
+  // Skipped entirely under prefers-reduced-motion — the block then sits
+  // fixed on whichever slide the visitor last chose, only dot clicks move it.
   useEffect(() => {
     if (prefersReducedMotion) return;
     const id = setTimeout(() => {
@@ -140,20 +148,26 @@ export default function Hero() {
           >
             Đối tác vận hành doanh nghiệp toàn diện
           </motion.p>
+          <motion.h1
+            variants={item}
+            className="mb-4 font-display text-[32px] leading-[1.15] font-extrabold text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.35)] sm:text-[38px] lg:text-[51px] lg:leading-[1.12]"
+          >
+            Nơi doanh nghiệp của bạn{" "}
+            <span className="text-[#3B9EFF]">bắt đầu vững vàng</span>{" "}
+            &amp; phát triển bền vững
+          </motion.h1>
 
-          {/* Carousel "nỗi đau khách hàng": mỗi slide xếp chồng trong cùng 1 ô
-              grid (grid-area 1/1) nên chiều cao khối luôn bằng slide cao nhất
-              — không có slide nào gây nhảy/giật layout khi đổi câu hỏi. */}
-          <motion.div variants={item} className="mb-6 grid">
+          {/* Khối mô tả xoay vòng: mỗi slide xếp chồng trong cùng 1 ô grid
+              (grid-area 1/1 qua col-start-1/row-start-1) nên chiều cao khối
+              luôn bằng slide cao nhất trong 7 slide — không có slide nào
+              (kể cả slide 1, dài nhất) gây tràn hay để lại khoảng trống thừa. */}
+          <motion.div variants={item} className="mb-6 grid max-w-[700px]">
             {slides.map((slide, i) => {
               const isActive = i === activeSlide;
-              // Chỉ slide đang hiển thị mới thực sự là thẻ <h1> — các slide còn
-              // lại render dưới dạng <div> ẩn với trợ năng, tránh nhiều <h1>
-              // cùng lúc trong DOM.
-              const HeadingTag = isActive ? "h1" : "div";
+              const key = slide.kind === "intro" ? "intro" : slide.question;
               return (
                 <motion.div
-                  key={slide.question}
+                  key={key}
                   className="col-start-1 row-start-1"
                   aria-hidden={!isActive}
                   initial={false}
@@ -161,14 +175,16 @@ export default function Hero() {
                   transition={{ duration: 0.5, ease: EASE_PREMIUM }}
                   style={{ pointerEvents: isActive ? "auto" : "none" }}
                 >
-                  <HeadingTag className="mb-3 font-display text-[30px] leading-[1.18] font-extrabold text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.35)] sm:text-[36px] lg:text-[46px] lg:leading-[1.15]">
-                    {slide.question}
-                  </HeadingTag>
-                  <p className="text-lg font-semibold text-white/95 sm:text-xl lg:text-[26px]">
-                    {slide.answerPre}
-                    <span className="text-[#3B9EFF]">{slide.answerHighlight}</span>
-                    {slide.answerPost}
-                  </p>
+                  {slide.kind === "intro" ? (
+                    <p className="text-base text-white/86 sm:text-lg">{slide.text}</p>
+                  ) : (
+                    <div>
+                      <p className="text-base font-bold text-[#3B9EFF] sm:text-lg">
+                        {slide.question}
+                      </p>
+                      <p className="mt-1 text-base text-white/86 sm:text-lg">{slide.answer}</p>
+                    </div>
+                  )}
                 </motion.div>
               );
             })}
@@ -183,7 +199,7 @@ export default function Hero() {
           >
             {slides.map((slide, i) => (
               <button
-                key={slide.question}
+                key={slide.kind === "intro" ? "intro" : slide.question}
                 type="button"
                 role="tab"
                 aria-selected={i === activeSlide}
@@ -196,16 +212,6 @@ export default function Hero() {
             ))}
           </motion.div>
 
-          <motion.p
-            variants={item}
-            className="mb-6 max-w-[700px] text-base text-white/86 sm:text-lg"
-          >
-            MAX OFFICE không chỉ cho thuê văn phòng — chúng tôi đồng hành
-            cùng bạn từ ngày thành lập, xuyên suốt quá trình vận hành, đến
-            khi mở rộng quy mô. Hơn 500 doanh nghiệp đã chọn MAX OFFICE tại
-            22 địa điểm trung tâm TP.HCM để vận hành đúng luật, đúng tiến độ
-            và tối ưu chi phí.
-          </motion.p>
           <motion.div variants={item} className="mb-6">
             <nav
               aria-label="Dịch vụ nổi bật"
