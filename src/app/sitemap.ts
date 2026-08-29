@@ -9,6 +9,7 @@ const TOOL_SLUGS = [
   "chon-goi-van-phong",
   "tinh-chi-phi-thanh-lap",
   "tinh-le-phi-mon-bai",
+  "so-sanh-thue",
   "checklist-thanh-lap-doanh-nghiep",
   "checklist-mo-chi-nhanh",
   "checklist-thay-doi-giay-phep-kinh-doanh",

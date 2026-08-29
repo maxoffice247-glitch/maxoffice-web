@@ -367,7 +367,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Tiện ích miễn phí",
     category: "Trang",
     href: "/tien-ich",
-    desc: "3 công cụ miễn phí hỗ trợ doanh nghiệp",
+    desc: "10 công cụ miễn phí hỗ trợ doanh nghiệp",
   },
   {
     title: "Công cụ chọn gói văn phòng phù hợp",
@@ -386,6 +386,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Tiện ích",
     href: "/tien-ich/tinh-le-phi-mon-bai",
     desc: "Cập nhật quy định mới: bãi bỏ từ 01/01/2026 theo Nghị quyết 198/2025/QH15",
+  },
+  {
+    title: "So sánh thuế: TNCN vs Hộ kinh doanh",
+    category: "Tiện ích",
+    href: "/tien-ich/so-sanh-thue",
+    desc: "So sánh số thuế phải nộp giữa TNCN theo lương và hộ kinh doanh theo % doanh thu",
   },
   {
     title: "Checklist thành lập doanh nghiệp",

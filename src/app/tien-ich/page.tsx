@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tien-ich" },
   title: "Tiện Ích Miễn Phí - Công Cụ, Checklist, So Sánh | MAX OFFICE",
   description:
-    "9 tiện ích miễn phí: công cụ tính toán, checklist tải PDF, bảng so sánh dịch vụ/loại hình doanh nghiệp và timeline quy trình thành lập — hỗ trợ ra quyết định nhanh chóng.",
+    "10 tiện ích miễn phí: công cụ tính toán, checklist tải PDF, bảng so sánh dịch vụ/loại hình doanh nghiệp và timeline quy trình thành lập — hỗ trợ ra quyết định nhanh chóng.",
   openGraph: {
     images: [{ url: "/images/og/khong-gian-lam-viec.jpg", width: 1200, height: 630 }],
   },
@@ -52,6 +52,13 @@ const TOOL_GROUPS = [
         title: "Lệ phí môn bài đã bãi bỏ",
         desc: "Cập nhật quy định mới nhất: từ 01/01/2026, lệ phí môn bài đã chính thức bãi bỏ theo Nghị quyết 198/2025/QH15.",
         linkLabel: "Xem quy định mới",
+      },
+      {
+        slug: "so-sanh-thue",
+        icon: ScaleIcon,
+        title: "So sánh thuế: TNCN vs Hộ kinh doanh",
+        desc: "Nhập thu nhập theo tháng để so sánh nhanh số thuế phải nộp giữa đóng thuế TNCN và đăng ký hộ kinh doanh, theo biểu thuế 2026.",
+        linkLabel: "Dùng công cụ ngay",
       },
     ],
   },
@@ -118,7 +125,7 @@ export default function TienIchPage() {
         image="/images/khong-gian-lam-viec.jpg"
         eyebrow="Tiện ích"
         title="Công cụ miễn phí hỗ trợ doanh nghiệp"
-        description="9 tiện ích miễn phí giúp bạn ra quyết định nhanh chóng — từ công cụ tính toán, checklist tải PDF, đến bảng so sánh và lộ trình thành lập doanh nghiệp."
+        description="10 tiện ích miễn phí giúp bạn ra quyết định nhanh chóng — từ công cụ tính toán, checklist tải PDF, đến bảng so sánh và lộ trình thành lập doanh nghiệp."
       />
       <Breadcrumb items={[{ label: "Tiện ích" }]} />
 
