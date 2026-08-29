@@ -889,6 +889,123 @@ thumbnailPosition: "center",
       serviceLabel: "Xem dịch vụ kế toán & thuế",
     },
   },
+  {
+    slug: "ca-nhan-kinh-doanh-thue-tncn-hay-ho-kinh-doanh",
+    title: "Cá nhân kinh doanh nên đóng thuế TNCN hay đăng ký hộ kinh doanh? So sánh chi tiết",
+    excerpt:
+      "Nhiều người làm dịch vụ tự do, kinh doanh online vẫn đang chịu thuế TNCN theo lương trong khi có phương án tối ưu hơn — so sánh thuế TNCN và thuế hộ kinh doanh theo quy định mới nhất 2026.",
+    categorySlug: "ke-toan-thue",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-08-29",
+    readingTime: 7,
+    metaTitle: "Thuế TNCN Hay Hộ Kinh Doanh? So Sánh Chi Tiết 2026",
+    metaDescription:
+      "So sánh thuế TNCN từ tiền lương/tiền công và thuế hộ kinh doanh theo doanh thu — mức thuế suất, ngưỡng miễn thuế mới nhất 2026, khi nào nên chuyển đổi.",
+    heroImage: "/images/ke-toan-thue.jpg",
+    thumbnailImage: "/images/dich-vu-ke-toan-thue.jpg",
+    thumbnailPosition: "center",
+    sections: [
+      {
+        id: "tinh-huong-thuc-te",
+        heading: "Tình huống nhiều người đang gặp phải",
+        paragraphs: [
+          "Nhiều cá nhân làm dịch vụ tự do — thiết kế, marketing, lập trình, tư vấn độc lập, kinh doanh online — vẫn nhận thù lao theo hợp đồng dịch vụ hoặc hợp đồng lao động, bị khấu trừ thuế thu nhập cá nhân (TNCN) trước khi thanh toán, giống một nhân viên đi làm hưởng lương. Trong khi đó, nếu đăng ký hộ kinh doanh, thuế được tính theo cách khác hẳn — trên doanh thu, theo tỷ lệ % cố định — và có thể tối ưu hơn tuỳ quy mô thu nhập. Bài viết so sánh hai phương án theo quy định hiện hành, không thay thế tư vấn cá nhân hoá theo đúng tình huống của bạn.",
+        ],
+      },
+      {
+        id: "thue-tncn-tien-luong",
+        heading: "Phương án 1: Nộp thuế TNCN theo tiền lương, tiền công",
+        paragraphs: [
+          "Nếu bạn ký hợp đồng lao động hoặc nhận thù lao dịch vụ được xem là thu nhập từ tiền lương, tiền công, khoản thu nhập này chịu thuế TNCN theo biểu thuế luỹ tiến từng phần sau khi trừ các khoản giảm trừ gia cảnh, bảo hiểm bắt buộc (nếu có). Đáng chú ý, theo Luật Thuế thu nhập cá nhân sửa đổi được Quốc hội thông qua cuối năm 2025, biểu thuế luỹ tiến áp dụng cho thu nhập từ tiền lương, tiền công đã được rút gọn từ 7 bậc xuống còn 5 bậc, áp dụng từ kỳ tính thuế năm 2026:",
+        ],
+        bullets: [
+          "Bậc 1: thu nhập tính thuế đến 10 triệu đồng/tháng — thuế suất 5%",
+          "Bậc 2: trên 10 đến 30 triệu đồng/tháng — thuế suất 10%",
+          "Bậc 3: trên 30 đến 60 triệu đồng/tháng — thuế suất 20%",
+          "Bậc 4: trên 60 đến 100 triệu đồng/tháng — thuế suất 30%",
+          "Bậc 5: trên 100 triệu đồng/tháng — thuế suất 35%",
+        ],
+      },
+      {
+        id: "thue-tncn-luu-y",
+        heading: "Lưu ý khi tính thuế TNCN theo cách này",
+        paragraphs: [
+          "Mức giảm trừ gia cảnh cũng được điều chỉnh theo luật mới, nên xác nhận số liệu chính xác khi quyết toán. Với thu nhập vãng lai (thù lao không thường xuyên), bên chi trả thường khấu trừ tạm 10% nếu mỗi lần chi trả từ 2 triệu đồng trở lên, sau đó cá nhân tự quyết toán lại theo biểu luỹ tiến vào cuối năm — số thuế thực nộp cuối cùng vẫn theo các bậc thuế ở trên.",
+        ],
+      },
+      {
+        id: "thue-ho-kinh-doanh",
+        heading: "Phương án 2: Đăng ký hộ kinh doanh, nộp thuế theo doanh thu",
+        paragraphs: [
+          "Khi đăng ký hộ kinh doanh, cách tính thuế thay đổi hoàn toàn: thuế giá trị gia tăng (GTGT) và thuế TNCN được tính trực tiếp trên DOANH THU (không phải lợi nhuận), theo tỷ lệ % cố định tuỳ nhóm ngành nghề, không cần kê khai chi phí. Từ 01/01/2026, lệ phí môn bài và cơ chế thuế khoán đã chính thức bãi bỏ (xem thêm bài viết riêng về nội dung này); hộ kinh doanh chuyển sang kê khai theo doanh thu thực tế, chỉ còn 2 nghĩa vụ thuế là GTGT và TNCN. Mức tỷ lệ % phổ biến theo nhóm ngành nghề (áp dụng cho phần doanh thu vượt ngưỡng miễn thuế):",
+        ],
+        bullets: [
+          "Phân phối, cung cấp hàng hoá (bán buôn, bán lẻ): thuế GTGT 1%, thuế TNCN 0,5%",
+          "Dịch vụ, xây dựng không bao thầu nguyên vật liệu: thuế GTGT 5%, thuế TNCN 2%",
+          "Sản xuất, vận tải, dịch vụ có gắn hàng hoá, xây dựng có bao thầu nguyên vật liệu: thuế GTGT 3%, thuế TNCN 1,5%",
+          "Các hoạt động kinh doanh khác: thuế GTGT 2%, thuế TNCN 1%",
+        ],
+      },
+      {
+        id: "nguong-mien-thue-ho-kinh-doanh",
+        heading: "Ngưỡng miễn thuế hộ kinh doanh — số liệu cần xác nhận lại theo thời điểm",
+        paragraphs: [
+          "Ngưỡng doanh thu miễn thuế GTGT và TNCN cho hộ kinh doanh đã tăng liên tục trong 2025-2026 — từ 100 triệu đồng/năm lên 200 triệu, rồi 500 triệu, và mức áp dụng gần nhất là 1 tỷ đồng/năm theo văn bản sửa đổi hiệu lực từ 01/01/2026 (ngưỡng bắt buộc dùng hoá đơn điện tử từ máy tính tiền cũng đồng bộ ở mức này). Vì ngưỡng này thay đổi thường xuyên gần đây, hãy xác nhận lại con số chính xác tại thời điểm bạn đăng ký hoặc kê khai — qua cơ quan thuế hoặc đơn vị tư vấn — thay vì chỉ dựa vào bài viết này.",
+        ],
+      },
+      {
+        id: "khi-nao-nen-chuyen",
+        heading: "Khi nào nên chuyển sang đăng ký hộ kinh doanh",
+        paragraphs: [
+          "Một số dấu hiệu thực tế cho thấy đã đến lúc cân nhắc chuyển đổi:",
+        ],
+        bullets: [
+          "Doanh thu đã ổn định qua nhiều tháng, không còn là thu nhập phát sinh lẻ tẻ",
+          "Khách hàng, đối tác yêu cầu xuất hoá đơn hợp lệ để hạch toán chi phí",
+          "Muốn ký hợp đồng dịch vụ chính thức (B2B) với doanh nghiệp thay vì hợp đồng cá nhân",
+          "Có kế hoạch vay vốn ngân hàng, cần hồ sơ pháp lý kinh doanh rõ ràng",
+          "Muốn tách bạch tài chính cá nhân và tài chính kinh doanh để dễ quản lý, mở rộng về sau",
+        ],
+      },
+      {
+        id: "vai-tro-dia-chi-dang-ky",
+        heading: "Vai trò của địa chỉ đăng ký kinh doanh",
+        paragraphs: [
+          "Khi đăng ký hộ kinh doanh, một thông tin bắt buộc là địa chỉ trụ sở kinh doanh. Nhiều người làm tự do không có sẵn văn phòng, dùng nhà riêng lại vướng hạn chế tuỳ khu vực (chung cư không cho đăng ký kinh doanh, nhà thuê không muốn đứng tên...), hoặc muốn địa chỉ chuyên nghiệp hơn khi giao dịch B2B. Đây là lúc văn phòng ảo phát huy vai trò: địa chỉ đăng ký kinh doanh hợp pháp, đủ điều kiện đăng ký thuế, không cần thuê văn phòng vật lý — tại MAX OFFICE, gói LITE từ 299.000đ/tháng là lựa chọn khởi điểm phù hợp cho hộ kinh doanh mới đăng ký.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Hộ kinh doanh có bắt buộc phải có địa chỉ văn phòng riêng không?",
+        a: "Có, hộ kinh doanh bắt buộc kê khai địa chỉ trụ sở kinh doanh hợp lệ khi đăng ký — có thể là nhà riêng (nếu đủ điều kiện) hoặc địa chỉ văn phòng ảo, miễn đáp ứng yêu cầu hợp pháp của cơ quan đăng ký kinh doanh và cơ quan thuế.",
+      },
+      {
+        q: "Chuyển từ nộp thuế TNCN theo lương sang đăng ký hộ kinh doanh có phức tạp không?",
+        a: "Thủ tục đăng ký hộ kinh doanh khá gọn nhẹ so với thành lập công ty, nhưng vẫn cần chuẩn bị hồ sơ đúng quy định, xác định đúng ngành nghề và địa chỉ đăng ký — nên nhờ đơn vị tư vấn hỗ trợ để tránh sai sót ngay từ đầu.",
+      },
+      {
+        q: "Nếu doanh thu còn thấp, dưới ngưỡng miễn thuế thì có cần đăng ký hộ kinh doanh không?",
+        a: "Không bắt buộc nếu doanh thu còn thấp và chưa cần xuất hoá đơn hay ký hợp đồng B2B. Nhiều người vẫn chọn đăng ký sớm để có hồ sơ pháp lý rõ ràng ngay khi công việc ổn định, tránh phải xử lý dồn khi doanh thu tăng nhanh.",
+      },
+      {
+        q: "MAX OFFICE có hỗ trợ đăng ký hộ kinh doanh không?",
+        a: "Có. MAX OFFICE cung cấp dịch vụ thành lập doanh nghiệp trọn gói cho cả Hộ kinh doanh, Công ty TNHH và Công ty Cổ phần, kèm địa chỉ văn phòng ảo hợp pháp — để lại thông tin để được tư vấn miễn phí phương án phù hợp.",
+      },
+    ],
+    relatedLinks: [
+      { label: "Hộ kinh doanh vs Công ty TNHH vs Công ty Cổ phần: Nên chọn loại hình nào?", href: "/blog/ho-kinh-doanh-vs-tnhh-vs-co-phan" },
+      { label: "Lệ phí môn bài đã chính thức bãi bỏ từ 2026", href: "/blog/bai-bo-le-phi-mon-bai-2026" },
+      { label: "Dịch vụ thành lập doanh nghiệp MAX OFFICE (bao gồm hộ kinh doanh)", href: "/services/thanh-lap-doanh-nghiep" },
+    ],
+    cta: {
+      title: "Cân nhắc chuyển sang đăng ký hộ kinh doanh?",
+      description: "Để lại thông tin, MAX OFFICE tư vấn miễn phí phương án phù hợp và hỗ trợ đăng ký hộ kinh doanh trọn gói kèm địa chỉ văn phòng ảo hợp pháp.",
+      service: "Thành lập doanh nghiệp",
+      serviceHref: "/services/thanh-lap-doanh-nghiep",
+      serviceLabel: "Xem dịch vụ thành lập doanh nghiệp",
+    },
+  },
 
   // ===================== VĂN PHÒNG & ĐỊA ĐIỂM =====================
   {
