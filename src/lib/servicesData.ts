@@ -14,6 +14,7 @@ import {
   HeadsetIcon,
   BadgePercentIcon,
   ZapIcon,
+  MailIcon,
 } from "@/components/icons";
 import type { BenefitItem } from "@/components/ServiceBenefits";
 import type { FeatureItem } from "@/components/ServiceFeatures";
@@ -191,6 +192,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { icon: HeadsetIcon, title: "Lễ tân chuyên nghiệp", desc: "Đại diện tiếp nhận thư từ, cuộc gọi và khách đến liên hệ khi cần." },
       { icon: KeyIcon, title: "Nâng cấp linh hoạt", desc: "Dễ dàng thuê thêm phòng họp hoặc chuyển sang văn phòng trọn gói khi mở rộng." },
       { icon: BadgePercentIcon, title: "Xử lý nhanh chóng", desc: "Hồ sơ địa chỉ sẵn sàng sử dụng ngay để đăng ký kinh doanh trong ngày." },
+      { icon: MailIcon, title: "Thông báo thư từ tức thời", desc: "Nhận thư, bưu phẩm được lễ tân thông báo ngay qua Zalo, không lo thất lạc giấy tờ, thông báo thuế quan trọng." },
     ],
     featuresTitle: "Dịch vụ văn phòng ảo bao gồm những gì?",
     featuresDescription:
