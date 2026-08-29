@@ -1,3 +1,4 @@
+import Link from "next/link";
 import PageHero from "./PageHero";
 import Breadcrumb from "./Breadcrumb";
 import ServiceIntro from "./ServiceIntro";
@@ -12,6 +13,7 @@ import ServiceLeadForm from "./ServiceLeadForm";
 import Testimonials from "./Testimonials";
 import Faq from "./Faq";
 import CtaBanner from "./CtaBanner";
+import { ArrowRightSmallIcon, DocumentCheckIcon } from "./icons";
 import type { ServiceData } from "@/lib/servicesData";
 import { SITE_URL, SITE_NAME, COMPANY_PHONE, COMPANY_EMAIL } from "@/lib/siteConfig";
 import { SERVICE_NAME_BY_SLUG } from "@/lib/serviceSelectEvent";
@@ -103,6 +105,28 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
         items={data.faqs}
         tint
       />
+      {data.relatedGuide && (
+        <section className="py-9">
+          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+            <Link
+              href={data.relatedGuide.href}
+              className="group flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-bg-tint p-6 transition-all duration-300 ease-out hover:border-primary/30 hover:shadow-card sm:flex-nowrap"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
+                <DocumentCheckIcon className="h-5 w-5" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[15px] font-bold text-navy">{data.relatedGuide.label}</p>
+                <p className="text-[13px] text-body-text">{data.relatedGuide.description}</p>
+              </div>
+              <span className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-primary">
+                Xem hướng dẫn
+                <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
+              </span>
+            </Link>
+          </div>
+        </section>
+      )}
       <ServiceCrossLinks currentSlug={data.slug} />
       <ServiceLeadForm serviceName={data.name} />
       <CtaBanner service={serviceName} />

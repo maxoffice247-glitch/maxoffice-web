@@ -158,6 +158,8 @@ export type ServiceData = {
   comparisonTitle: string;
   comparisonAlternative: string;
   comparison: ComparisonRow[];
+  /** Link nổi bật đến 1 bài hướng dẫn chuyên sâu liên quan (vd. trang ngành nghề phù hợp) — hiển thị giữa FAQ và các dịch vụ liên quan, chỉ khi có khai báo. */
+  relatedGuide?: { label: string; description: string; href: string };
 };
 
 export const SERVICES_DATA: Record<string, ServiceData> = {
@@ -227,6 +229,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { q: "Chi phí văn phòng ảo đã bao gồm phí gì?", a: "Tuỳ theo gói: Gói LITE gồm địa chỉ đăng ký kinh doanh, lễ tân, wifi và workshop (chưa gồm bảng hiệu — phụ phí 500.000đ nếu cần, thu duy nhất 1 lần khi làm bảng hiệu ban đầu, không thu lại khi gia hạn); từ gói START trở lên đã bao gồm bảng hiệu và các quyền lợi cao hơn. Giá thuê chưa bao gồm VAT 10%." },
       { q: "Làm sao để bắt đầu sử dụng dịch vụ văn phòng ảo?", a: "Bạn chỉ cần liên hệ đội ngũ tư vấn, chọn chi nhánh phù hợp và ký hợp đồng — địa chỉ sẽ sẵn sàng sử dụng ngay trong ngày." },
       { q: "Nếu tôi ngừng sử dụng dịch vụ, địa chỉ đăng ký kinh doanh có bị ảnh hưởng không?", a: "Bạn cần thực hiện thủ tục thay đổi địa chỉ đăng ký kinh doanh trước khi ngừng hợp đồng để tránh gián đoạn hoạt động — đội ngũ MAX OFFICE sẽ hỗ trợ hướng dẫn quy trình này." },
+      { q: "Ngành nghề sản xuất, kho bãi, nhà hàng có thuê được văn phòng ảo không?", a: "Có. Văn phòng ảo dùng làm trụ sở chính để đăng ký, giao dịch — hoạt động sản xuất, lưu kho hoặc phục vụ khách vẫn diễn ra tại địa điểm kinh doanh đăng ký riêng theo đúng địa chỉ thật, không cần diễn ra tại chính địa chỉ văn phòng ảo. Xem hướng dẫn chi tiết theo từng ngành nghề tại trang \"Văn phòng ảo phù hợp với ngành nghề nào?\"." },
     ],
     testimonials: [
       { quote: "MAX OFFICE giúp công ty mình có địa chỉ kinh doanh tại Quận 1 chỉ trong vài ngày, thủ tục rõ ràng và đội ngũ hỗ trợ rất nhiệt tình.", initial: "H", name: "Thanh Hà", role: "Giám đốc, ABC Logistics" },
@@ -242,6 +245,12 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { criteria: "Khả năng mở rộng", max: "Nâng cấp lên phòng họp, văn phòng trọn gói dễ dàng", traditional: "Phải tìm thuê văn phòng mới khi phát triển" },
       { criteria: "Tính pháp lý", max: "Hồ sơ, hợp đồng đầy đủ hỗ trợ xác minh với cơ quan thuế", traditional: "Có thể bị từ chối nếu địa chỉ không đúng quy hoạch kinh doanh" },
     ],
+    relatedGuide: {
+      label: "Văn phòng ảo phù hợp với ngành nghề nào?",
+      description:
+        "Phân biệt trụ sở chính và địa điểm kinh doanh, lưu ý riêng cho ngành sản xuất, kho bãi, nhà hàng và hộ kinh doanh cá thể.",
+      href: "/van-phong-ao/nganh-nghe-phu-hop",
+    },
   },
 
   "van-phong-tron-goi": {
