@@ -35,10 +35,11 @@ const HERO_IMAGES = [
   "/images/anh-hero-trang-chu-1.jpg",
 ];
 
-/** Khối mô tả dưới H1 (H1 nay đứng yên) xoay vòng 7 slide: slide đầu là
- * đoạn giới thiệu gốc (không phải dạng hỏi-đáp), 6 slide còn lại là
- * câu hỏi "nỗi đau" (in đậm, màu nhấn) + câu trả lời ngắn bên dưới.
- * Số chi nhánh trong slide 1 và slide 2 lấy ĐỘNG từ LOCATIONS_LIST.length. */
+/** Khối mô tả dưới H1 (H1 nay đứng yên) xoay vòng 8 slide: 2 slide đầu là
+ * đoạn giới thiệu ngắn (không phải dạng hỏi-đáp), tách ra để độ dài gần
+ * tương đương 6 slide "nỗi đau" còn lại — câu hỏi (in đậm, màu nhấn) +
+ * câu trả lời ngắn bên dưới. Số chi nhánh trong slide 2 và slide 3 lấy
+ * ĐỘNG từ LOCATIONS_LIST.length. */
 type HeroSlide =
   | { kind: "intro"; text: string }
   | { kind: "qa"; question: string; answer: string };
@@ -47,7 +48,11 @@ function getHeroSlides(branchCount: number): HeroSlide[] {
   return [
     {
       kind: "intro",
-      text: `MAX OFFICE không chỉ cho thuê văn phòng — chúng tôi đồng hành cùng bạn từ ngày thành lập, xuyên suốt quá trình vận hành, đến khi mở rộng quy mô. Hơn 500 doanh nghiệp đã chọn MAX OFFICE tại ${branchCount} địa điểm trung tâm TP.HCM để vận hành đúng luật, đúng tiến độ và tối ưu chi phí.`,
+      text: "MAX OFFICE đồng hành cùng bạn từ ngày thành lập, xuyên suốt vận hành, đến khi mở rộng quy mô.",
+    },
+    {
+      kind: "intro",
+      text: `Hơn 500 doanh nghiệp tin chọn MAX OFFICE tại ${branchCount} địa điểm trung tâm TP.HCM.`,
     },
     {
       kind: "qa",
@@ -159,15 +164,14 @@ export default function Hero() {
 
           {/* Khối mô tả xoay vòng: mỗi slide xếp chồng trong cùng 1 ô grid
               (grid-area 1/1 qua col-start-1/row-start-1) nên chiều cao khối
-              luôn bằng slide cao nhất trong 7 slide — không có slide nào
-              (kể cả slide 1, dài nhất) gây tràn hay để lại khoảng trống thừa. */}
+              luôn bằng slide cao nhất trong 8 slide — không có slide nào
+              gây tràn hay để lại khoảng trống thừa. */}
           <motion.div variants={item} className="mb-6 grid max-w-[700px]">
             {slides.map((slide, i) => {
               const isActive = i === activeSlide;
-              const key = slide.kind === "intro" ? "intro" : slide.question;
               return (
                 <motion.div
-                  key={key}
+                  key={i}
                   className="col-start-1 row-start-1"
                   aria-hidden={!isActive}
                   initial={false}
@@ -199,7 +203,7 @@ export default function Hero() {
           >
             {slides.map((slide, i) => (
               <button
-                key={slide.kind === "intro" ? "intro" : slide.question}
+                key={i}
                 type="button"
                 role="tab"
                 aria-selected={i === activeSlide}

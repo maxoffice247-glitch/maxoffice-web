@@ -83,11 +83,12 @@ export default function TaxComparisonTool() {
         {/* Disclaimer — luôn hiển thị rõ, không ẩn/thu nhỏ. */}
         <Reveal className="mx-auto mb-8 max-w-[860px] rounded-2xl border-2 border-amber/40 bg-amber/8 p-5 sm:p-6">
           <p className="text-[13.5px] leading-relaxed font-semibold text-navy">
-            ⚠️ Đây là công cụ ƯỚC TÍNH tham khảo dựa trên quy định thuế hiện hành (2026), CHỈ áp
-            dụng phương pháp tính đơn giản theo tỷ lệ % doanh thu — chưa bao gồm các trường hợp
-            đặc biệt (nhiều nguồn thu nhập, chi phí được trừ, ưu đãi thuế riêng...). Vui lòng liên
-            hệ đội ngũ tư vấn MAX OFFICE hoặc kế toán/luật sư để có số liệu chính xác cho trường
-            hợp cụ thể của bạn trước khi ra quyết định.
+            ⚠️ Đây là công cụ ƯỚC TÍNH mang tính chất THAM KHẢO, dựa trên quy định thuế hiện hành.
+            Quy định về thuế tại Việt Nam trong giai đoạn này có thể được điều chỉnh theo các
+            Thông tư, Nghị định mới nhất — kết quả chính xác nhất cần được đối chiếu theo văn bản
+            pháp luật hiện hành tại thời điểm bạn tra cứu. Vui lòng liên hệ đội ngũ tư vấn MAX
+            OFFICE hoặc kế toán/luật sư để có số liệu chính xác cho trường hợp cụ thể của bạn
+            trước khi ra quyết định.
           </p>
         </Reveal>
 
