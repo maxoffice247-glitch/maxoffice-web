@@ -97,6 +97,9 @@ type MatrixPricing = {
   addonNote?: string;
   promoNotes?: string[];
   promoEffectiveDate?: string;
+  /** Tên + mô tả ngắn cho combo khuyến mãi chính (vd. "Gói Vững Bước Khởi Nghiệp"), hiển thị nổi bật ở đầu khối khuyến mãi. */
+  promoComboName?: string;
+  promoComboDesc?: string;
 };
 
 export type AccountingGroupKey = "A" | "B" | "C";
@@ -381,6 +384,16 @@ export default function ServicePricingTable({
             )}
             {pricing.promoNotes && pricing.promoNotes.length > 0 && (
               <div className="mt-6 w-full rounded-2xl border-2 border-accent/40 bg-accent/10 p-6 sm:p-7">
+                {pricing.promoComboName && (
+                  <div className="mb-5 border-b border-accent/20 pb-5">
+                    <span className="mb-2.5 inline-flex items-center gap-1.5 rounded-full bg-navy px-3 py-1.5 text-[11.5px] font-bold tracking-wide text-white">
+                      🚀 {pricing.promoComboName}
+                    </span>
+                    {pricing.promoComboDesc && (
+                      <p className="text-[14px] leading-relaxed text-navy">{pricing.promoComboDesc}</p>
+                    )}
+                  </div>
+                )}
                 <div className="mb-5 flex items-center gap-2.5">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-white">
                     <BadgePercentIcon className="h-4 w-4" />

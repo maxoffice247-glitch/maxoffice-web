@@ -225,6 +225,16 @@ export const VO_PROMO_NOTES: string[] = [
 
 export const VO_PROMO_EFFECTIVE_DATE = "01/06/2026";
 
+/**
+ * Tên gọi chính thức cho khuyến mãi "tặng dịch vụ thành lập doanh nghiệp khi
+ * ký hợp đồng văn phòng ảo dài hạn" — dùng thống nhất trên toàn site để dễ
+ * nhận diện và nhắc đến trong marketing/tư vấn. Điều kiện cụ thể (thời hạn
+ * hợp đồng, gói áp dụng...) vẫn khác nhau theo từng gói/chi nhánh, không đổi.
+ */
+export const VO_LONG_TERM_COMBO_NAME = "Gói Vững Bước Khởi Nghiệp";
+export const VO_LONG_TERM_COMBO_DESC =
+  "Bắt đầu hành trình kinh doanh vững vàng ngay từ bước đầu tiên — Gói Vững Bước Khởi Nghiệp giúp bạn có cả địa chỉ kinh doanh hợp pháp lẫn giấy phép thành lập doanh nghiệp, tiết kiệm thời gian và chi phí khi khởi sự.";
+
 /* ---------------------------------------------------------------------- */
 /* Phạm Văn Đồng — bảng giá riêng, không thuộc hệ thống LITE–RISE chung.   */
 /* Chỉ khả dụng tại chi nhánh "pham-van-dong".                             */
@@ -252,7 +262,7 @@ export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
     meetingRoom: "Không có",
     flexSeat: "Không có",
     features: ["Địa chỉ đăng ký kinh doanh (ĐKKD)", "Lễ tân", "Internet + nước uống", "Khu vực tiếp khách sang trọng"],
-    promoNote: "Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
+    promoNote: "🚀 Gói Vững Bước Khởi Nghiệp — Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
   },
   {
     key: "m-base",
@@ -269,7 +279,7 @@ export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
       "Khu vực tiếp khách sang trọng",
       "In ấn / photocopy / scan",
     ],
-    promoNote: "Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
+    promoNote: "🚀 Gói Vững Bước Khởi Nghiệp — Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
   },
   {
     key: "m-origin",
@@ -286,7 +296,7 @@ export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
       "Khu vực tiếp khách sang trọng",
       "In ấn / photocopy / scan",
     ],
-    promoNote: "Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 12 tháng",
+    promoNote: "🚀 Gói Vững Bước Khởi Nghiệp — Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 12 tháng",
   },
 ];
 
@@ -394,7 +404,7 @@ export type VuonLaiPromo = {
 export const VUON_LAI_VO_PROMOS: VuonLaiPromo[] = [
   {
     label: "Hợp đồng 24 tháng — khách CHƯA có GPKD",
-    note: "Tặng 3 tháng sử dụng + tặng miễn phí dịch vụ thành lập doanh nghiệp (GPKD).",
+    note: "Tặng 3 tháng sử dụng + tặng miễn phí dịch vụ thành lập doanh nghiệp (GPKD) — thuộc Gói Vững Bước Khởi Nghiệp.",
   },
   {
     label: "Hợp đồng 24 tháng — khách ĐÃ CÓ SẴN GPKD",

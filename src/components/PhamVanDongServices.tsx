@@ -12,10 +12,32 @@ import {
   CheckCircleIcon,
   ArrowRightSmallIcon,
 } from "./icons";
-import { PHAM_VAN_DONG_VO_PLANS, PHAM_VAN_DONG_VO_PROMOS } from "@/lib/virtualOfficePlans";
+import {
+  PHAM_VAN_DONG_VO_PLANS,
+  PHAM_VAN_DONG_VO_PROMOS,
+  VO_LONG_TERM_COMBO_NAME,
+} from "@/lib/virtualOfficePlans";
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
+}
+
+const COMBO_PREFIX = `🚀 ${VO_LONG_TERM_COMBO_NAME} — `;
+
+/** Tách badge "🚀 Gói Vững Bước Khởi Nghiệp" khỏi phần điều kiện cụ thể khi
+ * promoNote thuộc combo này, để hiển thị badge riêng thay vì lẫn trong câu. */
+function PromoNote({ note }: { note: string }) {
+  if (!note.startsWith(COMBO_PREFIX)) {
+    return <p className="text-[11.5px] font-medium text-accent">{note}</p>;
+  }
+  return (
+    <div className="space-y-1.5">
+      <span className="inline-flex items-center rounded-full bg-navy px-2.5 py-1 text-[10.5px] font-bold tracking-wide text-white">
+        🚀 {VO_LONG_TERM_COMBO_NAME}
+      </span>
+      <p className="text-[11.5px] font-medium text-accent">{note.slice(COMBO_PREFIX.length)}</p>
+    </div>
+  );
 }
 
 const PACKAGE_TIERS = [
@@ -35,8 +57,8 @@ const FLEX_SEAT_TIERS = [
 
 const FLEX_SEAT_TERMS = [
   "Hợp đồng 1 năm: cọc 2 tháng",
-  "Thanh toán 1 lần 6 tháng: tặng dịch vụ thành lập doanh nghiệp/đổi địa chỉ + 1 tháng",
-  "Thanh toán 1 lần 12 tháng: tặng dịch vụ thành lập doanh nghiệp/đổi địa chỉ + 2 tháng",
+  "Thanh toán 1 lần 6 tháng: tặng dịch vụ thành lập doanh nghiệp/đổi địa chỉ + 1 tháng (thuộc Gói Vững Bước Khởi Nghiệp)",
+  "Thanh toán 1 lần 12 tháng: tặng dịch vụ thành lập doanh nghiệp/đổi địa chỉ + 2 tháng (thuộc Gói Vững Bước Khởi Nghiệp)",
 ];
 
 const MEETING_ROOM_RATES = [
@@ -134,7 +156,7 @@ export default function PhamVanDongServices() {
                       </li>
                     ))}
                   </ul>
-                  <p className="text-[11.5px] font-medium text-accent">{plan.promoNote}</p>
+                  <PromoNote note={plan.promoNote} />
                 </div>
               </RevealItem>
             ))}

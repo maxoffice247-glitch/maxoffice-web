@@ -67,7 +67,7 @@ function getHeroSlides(branchCount: number): HeroSlide[] {
     {
       kind: "qa",
       question: "Cần hỗ trợ thủ tục pháp lý, không biết bắt đầu từ đâu?",
-      answer: "Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng dài hạn.",
+      answer: "🚀 Gói Vững Bước Khởi Nghiệp — tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng dài hạn.",
     },
     {
       kind: "qa",

@@ -23,7 +23,7 @@ const PRICING_FAQS = [
   },
   {
     q: "Giá ưu đãi thành lập doanh nghiệp kèm Văn phòng ảo áp dụng thế nào?",
-    a: "Ưu đãi áp dụng cụ thể theo từng chi nhánh:\n- Tại Sông Thao: khách ký hợp đồng Văn phòng ảo từ gói START (350.000đ/tháng) trở lên, thời hạn 2 năm, được TẶNG 100% phí dịch vụ thành lập doanh nghiệp, hoặc tặng 100% phí đổi địa chỉ trụ sở về Sông Thao (áp dụng 1 trong 2, tuỳ nhu cầu khách hàng).\n- Tại các chi nhánh còn lại: khách ký hợp đồng Văn phòng ảo từ gói BASE (500.000đ/tháng) trở lên, thời hạn 1 năm, được TẶNG 100% phí dịch vụ thành lập doanh nghiệp, hoặc tặng 100% phí đổi địa chỉ trụ sở về đúng chi nhánh đang thuê (áp dụng 1 trong 2, tuỳ nhu cầu khách hàng).\n\nLiên hệ đội ngũ tư vấn để được hướng dẫn cụ thể theo đúng chi nhánh và gói dịch vụ bạn quan tâm.",
+    a: "Ưu đãi này có tên gọi chính thức là \"🚀 Gói Vững Bước Khởi Nghiệp\". Ưu đãi áp dụng cụ thể theo từng chi nhánh:\n- Tại Sông Thao: khách ký hợp đồng Văn phòng ảo từ gói START (350.000đ/tháng) trở lên, thời hạn 2 năm, được TẶNG 100% phí dịch vụ thành lập doanh nghiệp, hoặc tặng 100% phí đổi địa chỉ trụ sở về Sông Thao (áp dụng 1 trong 2, tuỳ nhu cầu khách hàng).\n- Tại các chi nhánh còn lại: khách ký hợp đồng Văn phòng ảo từ gói BASE (500.000đ/tháng) trở lên, thời hạn 1 năm, được TẶNG 100% phí dịch vụ thành lập doanh nghiệp, hoặc tặng 100% phí đổi địa chỉ trụ sở về đúng chi nhánh đang thuê (áp dụng 1 trong 2, tuỳ nhu cầu khách hàng).\n\nLiên hệ đội ngũ tư vấn để được hướng dẫn cụ thể theo đúng chi nhánh và gói dịch vụ bạn quan tâm.",
   },
   {
     q: "Tôi có thể thanh toán theo tháng hay theo năm?",

@@ -3,7 +3,12 @@ import { RevealGroup, RevealItem } from "./Reveal";
 import Button from "./Button";
 import LeadFormButton from "./LeadFormButton";
 import { CheckCircleIcon } from "./icons";
-import { VO_PROMO_NOTES, VO_PROMO_EFFECTIVE_DATE } from "@/lib/virtualOfficePlans";
+import {
+  VO_PROMO_NOTES,
+  VO_PROMO_EFFECTIVE_DATE,
+  VO_LONG_TERM_COMBO_NAME,
+  VO_LONG_TERM_COMBO_DESC,
+} from "@/lib/virtualOfficePlans";
 
 type Plan = {
   name: string;
@@ -19,7 +24,16 @@ type Plan = {
   detailHref: string;
 };
 
-const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; promoNotes?: string[]; promoEffectiveDate?: string }[] = [
+const GROUPS: {
+  title: string;
+  plans: Plan[];
+  cols: string;
+  footnote?: string;
+  promoNotes?: string[];
+  promoEffectiveDate?: string;
+  promoComboName?: string;
+  promoComboDesc?: string;
+}[] = [
   {
     title: "Văn phòng ảo — 6 gói dịch vụ",
     cols: "sm:grid-cols-2 lg:grid-cols-3",
@@ -27,6 +41,8 @@ const GROUPS: { title: string; plans: Plan[]; cols: string; footnote?: string; p
       "*Gói và mức giá cụ thể tuỳ theo chi nhánh — xem chi tiết từng chi nhánh tại trang Văn phòng ảo.",
     promoNotes: VO_PROMO_NOTES,
     promoEffectiveDate: VO_PROMO_EFFECTIVE_DATE,
+    promoComboName: VO_LONG_TERM_COMBO_NAME,
+    promoComboDesc: VO_LONG_TERM_COMBO_DESC,
     plans: [
       {
         name: "LITE",
@@ -283,6 +299,16 @@ export default function Pricing() {
               )}
               {group.promoNotes && group.promoNotes.length > 0 && (
                 <div className="mx-auto mt-6 max-w-[640px] rounded-2xl border-2 border-accent/25 bg-accent/5 p-5">
+                  {group.promoComboName && (
+                    <div className="mb-4 border-b border-accent/20 pb-4">
+                      <span className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-navy px-3 py-1.5 text-[11.5px] font-bold tracking-wide text-white">
+                        🚀 {group.promoComboName}
+                      </span>
+                      {group.promoComboDesc && (
+                        <p className="text-[13px] leading-relaxed text-navy">{group.promoComboDesc}</p>
+                      )}
+                    </div>
+                  )}
                   <p className="mb-2 text-[13.5px] font-bold text-navy">Khuyến mãi chung (áp dụng mọi gói)</p>
                   <ul className="space-y-1.5">
                     {group.promoNotes.map((note) => (
