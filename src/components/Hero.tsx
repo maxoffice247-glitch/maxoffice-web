@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PhoneIcon, MapPinIcon } from "./icons";
 import Button from "./Button";
 import LeadFormButton from "./LeadFormButton";
+import { LOCATIONS_LIST } from "@/lib/locationsData";
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
 
@@ -34,6 +35,46 @@ const HERO_IMAGES = [
   "/images/anh-hero-trang-chu-1.jpg",
 ];
 
+/** Mỗi slide là 1 câu hỏi ("nỗi đau" khách hàng) + 1 câu trả lời ngắn, với
+ * đúng 1 cụm từ khoá được tô màu xanh nhấn — nhất quán với cách H1 tĩnh cũ
+ * tô màu "bắt đầu vững vàng". answer.highlight của slide đầu tiên được nội
+ * suy số chi nhánh ĐANG ACTIVE thật (LOCATIONS_LIST.length), không hardcode. */
+type HeroSlide = {
+  question: string;
+  answerPre?: string;
+  answerHighlight: string;
+  answerPost?: string;
+};
+
+function getHeroSlides(branchCount: number): HeroSlide[] {
+  return [
+    {
+      question: "Cần địa chỉ kinh doanh hợp pháp nhưng ngại chi phí thuê văn phòng?",
+      answerPre: "Từ ",
+      answerHighlight: "299.000đ/tháng",
+      answerPost: `, ${branchCount} chi nhánh trung tâm TP.HCM.`,
+    },
+    {
+      question: "Sợ ký hợp đồng dài hạn, không linh hoạt?",
+      answerHighlight: "Hợp đồng linh hoạt",
+      answerPost: ", có ưu đãi hấp dẫn khi gia hạn dài hạn.",
+    },
+    {
+      question: "Lo phí phát sinh không rõ ràng?",
+      answerPre: "Giá minh bạch, ",
+      answerHighlight: "không phí ẩn",
+      answerPost: " — cam kết rõ ràng bằng hợp đồng.",
+    },
+    {
+      question: "Cần hỗ trợ thủ tục pháp lý, không biết bắt đầu từ đâu?",
+      answerHighlight: "Tặng dịch vụ thành lập doanh nghiệp",
+      answerPost: " khi ký hợp đồng dài hạn.",
+    },
+  ];
+}
+
+const SLIDE_INTERVAL_MS = 4500;
+
 export default function Hero() {
   // Defaults to the first image so server and client render identically on
   // first paint (no hydration mismatch); the effect then swaps in a random
@@ -43,6 +84,23 @@ export default function Hero() {
   useEffect(() => {
     setHeroImage(HERO_IMAGES[Math.floor(Math.random() * HERO_IMAGES.length)]);
   }, []);
+
+  const slides = getHeroSlides(LOCATIONS_LIST.length);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
+
+  // Auto-advance every ~4.5s. Re-armed off `activeSlide` (functional update
+  // not needed since we depend on it directly) so a manual dot click resets
+  // the countdown from that moment instead of firing early. Skipped entirely
+  // under prefers-reduced-motion — the carousel then sits fixed on whichever
+  // slide the visitor last chose (slide 1 by default), only dot clicks move it.
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const id = setTimeout(() => {
+      setActiveSlide((i) => (i + 1) % slides.length);
+    }, SLIDE_INTERVAL_MS);
+    return () => clearTimeout(id);
+  }, [activeSlide, prefersReducedMotion, slides.length]);
 
   return (
     <section className="relative flex min-h-[80vh] items-center overflow-hidden pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-28 lg:pb-32">
@@ -82,14 +140,62 @@ export default function Hero() {
           >
             Đối tác vận hành doanh nghiệp toàn diện
           </motion.p>
-          <motion.h1
+
+          {/* Carousel "nỗi đau khách hàng": mỗi slide xếp chồng trong cùng 1 ô
+              grid (grid-area 1/1) nên chiều cao khối luôn bằng slide cao nhất
+              — không có slide nào gây nhảy/giật layout khi đổi câu hỏi. */}
+          <motion.div variants={item} className="mb-6 grid">
+            {slides.map((slide, i) => {
+              const isActive = i === activeSlide;
+              // Chỉ slide đang hiển thị mới thực sự là thẻ <h1> — các slide còn
+              // lại render dưới dạng <div> ẩn với trợ năng, tránh nhiều <h1>
+              // cùng lúc trong DOM.
+              const HeadingTag = isActive ? "h1" : "div";
+              return (
+                <motion.div
+                  key={slide.question}
+                  className="col-start-1 row-start-1"
+                  aria-hidden={!isActive}
+                  initial={false}
+                  animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
+                  transition={{ duration: 0.5, ease: EASE_PREMIUM }}
+                  style={{ pointerEvents: isActive ? "auto" : "none" }}
+                >
+                  <HeadingTag className="mb-3 font-display text-[30px] leading-[1.18] font-extrabold text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.35)] sm:text-[36px] lg:text-[46px] lg:leading-[1.15]">
+                    {slide.question}
+                  </HeadingTag>
+                  <p className="text-lg font-semibold text-white/95 sm:text-xl lg:text-[26px]">
+                    {slide.answerPre}
+                    <span className="text-[#3B9EFF]">{slide.answerHighlight}</span>
+                    {slide.answerPost}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Dot indicator — bấm để chuyển slide thủ công. */}
+          <motion.div
             variants={item}
-            className="mb-4 font-display text-[32px] leading-[1.15] font-extrabold text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.35)] sm:text-[38px] lg:text-[51px] lg:leading-[1.12]"
+            role="tablist"
+            aria-label="Chọn nội dung nổi bật"
+            className="mb-6 flex items-center gap-2"
           >
-            Nơi doanh nghiệp của bạn{" "}
-            <span className="text-[#3B9EFF]">bắt đầu vững vàng</span>{" "}
-            &amp; phát triển bền vững
-          </motion.h1>
+            {slides.map((slide, i) => (
+              <button
+                key={slide.question}
+                type="button"
+                role="tab"
+                aria-selected={i === activeSlide}
+                aria-label={`Xem nội dung ${i + 1} trên ${slides.length}`}
+                onClick={() => setActiveSlide(i)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === activeSlide ? "w-6 bg-[#3B9EFF]" : "w-2 bg-white/40 hover:bg-white/60"
+                }`}
+              />
+            ))}
+          </motion.div>
+
           <motion.p
             variants={item}
             className="mb-6 max-w-[700px] text-base text-white/86 sm:text-lg"
