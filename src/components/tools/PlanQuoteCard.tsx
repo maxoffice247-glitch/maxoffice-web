@@ -1,6 +1,18 @@
+import type { ReactNode } from "react";
 import { CheckCircleIcon } from "../icons";
 import type { OfferedPlan } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
+
+/**
+ * Icon ĐÃ được dựng thành JSX (không phải component reference) — bắt buộc
+ * vì trang chi tiết gói ([slug]/[plan]/page.tsx) là Server Component, còn
+ * PlanDetailActions/PlanQuoteCard chạy phía client ("use client"): truyền
+ * thẳng `BenefitItem.icon` (một function/component reference) qua ranh giới
+ * Server -> Client sẽ lỗi runtime "Functions cannot be passed directly to
+ * Client Components" vì React Server Components không serialize được hàm.
+ * JSX đã dựng sẵn (ReactNode) thì serialize bình thường.
+ */
+export type QuoteBenefitTag = { title: string; icon: ReactNode };
 
 /**
  * Nội dung ảnh báo giá 1080x1350 xuất bằng html-to-image (xem PlanDetailActions).
@@ -12,10 +24,13 @@ export default function PlanQuoteCard({
   plan,
   address,
   facadeSrc,
+  benefits,
 }: {
   plan: OfferedPlan;
   address: string;
   facadeSrc: string;
+  /** Tiện ích khu vực của chi nhánh — lấy nguyên trạng từ `LOCATIONS_DATA[slug].benefits` (đã có sẵn, dùng chung với "Vì sao nên chọn văn phòng..." trên trang chi nhánh). Bỏ trống hoặc undefined => ẩn khối "Tiện ích khu vực". */
+  benefits?: QuoteBenefitTag[];
 }) {
   return (
     <div
@@ -44,6 +59,23 @@ export default function PlanQuoteCard({
         <div className="min-w-0">
           <p className="text-[30px] leading-tight font-extrabold text-navy">{plan.locationName}</p>
           <p className="mt-2 text-[18px] leading-relaxed text-body-text">{address}</p>
+          {/* Tiện ích khu vực — tái sử dụng nguyên field benefits có sẵn của
+              chi nhánh (cùng dữ liệu với "Vì sao nên chọn văn phòng..." trên
+              trang chi nhánh), không bịa nội dung mới. Tối đa 4 tag, giữ
+              đúng thứ tự ưu tiên có sẵn trong data; ẩn hẳn khối nếu rỗng. */}
+          {benefits && benefits.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {benefits.slice(0, 4).map((b) => (
+                <span
+                  key={b.title}
+                  className="flex items-center gap-1.5 rounded-full bg-primary-tint px-3 py-1.5 text-[14px] font-semibold text-primary"
+                >
+                  {b.icon}
+                  {b.title}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

@@ -462,3 +462,14 @@ export function InfoIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function CarIcon({ className }: IconProps) {
+  return (
+    <svg className={className} {...base}>
+      <path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11" />
+      <rect x="3" y="11" width="18" height="6" rx="2" />
+      <circle cx="7.5" cy="17.5" r="1.5" />
+      <circle cx="16.5" cy="17.5" r="1.5" />
+    </svg>
+  );
+}

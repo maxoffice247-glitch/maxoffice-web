@@ -46,6 +46,14 @@ export default async function PlanDetailPage({
 
   const facadeSrc = `/images/dia-diem-${slug}.jpg`;
   const interiorImages = (location.interiorImages ?? []).slice(0, 2);
+  // Dựng sẵn icon thành JSX ngay tại Server Component này (không phải
+  // component reference) — PlanDetailActions là "use client", còn
+  // BenefitItem.icon là 1 function; truyền hàm qua ranh giới Server -> Client
+  // sẽ lỗi runtime vì React Server Components không serialize được hàm.
+  const quoteBenefits = location.benefits?.map((b) => ({
+    title: b.title,
+    icon: <b.icon className="h-4 w-4 shrink-0" />,
+  }));
 
   return (
     <main>
@@ -142,7 +150,12 @@ export default async function PlanDetailPage({
           </div>
 
           <div className="lg:sticky lg:top-24">
-            <PlanDetailActions plan={plan} address={location.address} facadeSrc={facadeSrc} />
+            <PlanDetailActions
+              plan={plan}
+              address={location.address}
+              facadeSrc={facadeSrc}
+              benefits={quoteBenefits}
+            />
           </div>
         </div>
       </section>

@@ -10,6 +10,7 @@ import {
   KeyIcon,
   WifiIcon,
   HeartHandshakeIcon,
+  CarIcon,
 } from "@/components/icons";
 import type { BenefitItem } from "@/components/ServiceBenefits";
 import type { NearbyItem } from "@/components/LocationNearby";
@@ -351,6 +352,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     benefitsTitle: "Vì sao nên chọn văn phòng Sông Thao",
     benefits: [
       { icon: BuildingIcon, title: "Trụ sở chính đầy đủ dịch vụ", desc: "Cung cấp toàn bộ 6 dịch vụ cốt lõi của MAX OFFICE tại một địa điểm." },
+      { icon: CarIcon, title: "Bãi đậu ô tô miễn phí", desc: "Khu vực đỗ ô tô riêng dành cho khách đến làm việc, họp hoặc tham quan trụ sở, không phát sinh phí." },
       { icon: MapPinIcon, title: "Gần sân bay Tân Sơn Nhất", desc: "Thuận tiện đón tiếp đối tác, khách hàng từ tỉnh khác hoặc nước ngoài." },
       { icon: UsersIcon, title: "Đội ngũ vận hành trực tiếp", desc: "Tiếp cận nhanh với bộ phận tư vấn, kế toán, pháp lý giàu kinh nghiệm." },
       { icon: ShieldCheckIcon, title: "Không gian rộng rãi, hiện đại", desc: "Cơ sở vật chất đầy đủ, phù hợp tiếp khách và làm việc lâu dài." },

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { DownloadIcon, PhoneIcon } from "../icons";
-import PlanQuoteCard from "./PlanQuoteCard";
+import PlanQuoteCard, { type QuoteBenefitTag } from "./PlanQuoteCard";
 import type { OfferedPlan } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
 
@@ -11,10 +11,12 @@ export default function PlanDetailActions({
   plan,
   address,
   facadeSrc,
+  benefits,
 }: {
   plan: OfferedPlan;
   address: string;
   facadeSrc: string;
+  benefits?: QuoteBenefitTag[];
 }) {
   const quoteRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
@@ -76,7 +78,7 @@ export default function PlanDetailActions({
         style={{ position: "fixed", top: 0, left: -99999, pointerEvents: "none" }}
       >
         <div ref={quoteRef}>
-          <PlanQuoteCard plan={plan} address={address} facadeSrc={facadeSrc} />
+          <PlanQuoteCard plan={plan} address={address} facadeSrc={facadeSrc} benefits={benefits} />
         </div>
       </div>
     </div>
