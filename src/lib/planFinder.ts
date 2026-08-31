@@ -221,3 +221,96 @@ export function findNearestPlans(plans: OfferedPlan[], bandKey: BudgetBandKey, l
 export function formatVoPrice(price: number): string {
   return price.toLocaleString("vi-VN") + "đ";
 }
+
+/* ---------------------------------------------------------------------- */
+/* Chế độ "Xem theo gói" — gộp các gói giống hệt nhau (cùng tên + cùng giá  */
+/* + cùng tính năng) từ nhiều chi nhánh khác nhau thành 1 nhóm duy nhất.   */
+/* ---------------------------------------------------------------------- */
+
+export type PlanGroupLocation = {
+  slug: string;
+  name: string;
+  shortAddress: string;
+  area: { slug: string; name: string };
+};
+
+export type PlanGroup = {
+  /** Slug ổn định dùng cho route /tien-ich/tim-goi-phu-hop/goi/[groupKey] — xem generatePlanGroupKeys() để biết cách tránh trùng. */
+  groupKey: string;
+  planName: string;
+  price: number;
+  duration: string;
+  features: string[];
+  addonNote?: string;
+  locations: PlanGroupLocation[];
+};
+
+function slugifyVN(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/đ/g, "d")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Khoá gộp nhóm: CÙNG tên gói + CÙNG giá + CÙNG danh sách tính năng (nối
+ * chuỗi để so sánh chính xác từng dòng). Chỉ trùng tên/giá KHÔNG đủ để gộp —
+ * vd. "PREMIUM" 990.000đ tồn tại ở CẢ hệ Quận 3 (cũ) lẫn hệ SILVER/GOLD/
+ * PREMIUM dùng chung, nhưng 2 hệ có nội dung tính năng khác nhau (phòng họp
+ * ghi thêm "≤ 7 người", danh sách tính năng gốc khác nhau) nên đây LÀ 2
+ * nhóm riêng biệt, không gộp nhầm dù tên và giá giống hệt.
+ */
+function groupSignature(p: OfferedPlan): string {
+  return `${p.planName}__${p.price}__${p.features.join("|")}`;
+}
+
+/** Toàn bộ gói, gộp theo nhóm giống hệt nhau, sắp xếp theo giá tăng dần. */
+export function getGroupedPlans(): PlanGroup[] {
+  const locationBySlug = new Map(LOCATIONS_LIST.map((l) => [l.slug, l]));
+  const bySignature = new Map<string, { plan: OfferedPlan; locations: PlanGroupLocation[] }>();
+
+  for (const plan of getAllOfferedPlans()) {
+    const sig = groupSignature(plan);
+    const loc = locationBySlug.get(plan.locationSlug);
+    const entry = bySignature.get(sig) ?? { plan, locations: [] };
+    entry.locations.push({
+      slug: plan.locationSlug,
+      name: plan.locationName,
+      shortAddress: loc?.shortAddress ?? "",
+      area: plan.area,
+    });
+    bySignature.set(sig, entry);
+  }
+
+  // Sắp xếp ổn định trước khi gán slug — cùng thứ tự này ở mọi lần build nên
+  // slug định danh (vd. hậu tố "-2" khi trùng tên+giá) không đổi qua các lần.
+  const groups = [...bySignature.values()].sort((a, b) => {
+    if (a.plan.price !== b.plan.price) return a.plan.price - b.plan.price;
+    if (a.plan.planName !== b.plan.planName) return a.plan.planName.localeCompare(b.plan.planName);
+    return a.locations[0].slug.localeCompare(b.locations[0].slug);
+  });
+
+  const baseSlugCounts = new Map<string, number>();
+  return groups.map(({ plan, locations }) => {
+    const base = `${slugifyVN(plan.planName)}-${Math.round(plan.price / 1000)}k`;
+    const seen = baseSlugCounts.get(base) ?? 0;
+    baseSlugCounts.set(base, seen + 1);
+    const groupKey = seen === 0 ? base : `${base}-${seen + 1}`;
+    return {
+      groupKey,
+      planName: plan.planName,
+      price: plan.price,
+      duration: plan.duration,
+      features: plan.features,
+      addonNote: plan.addonNote,
+      locations,
+    };
+  });
+}
+
+export function getPlanGroup(groupKey: string): PlanGroup | undefined {
+  return getGroupedPlans().find((g) => g.groupKey === groupKey);
+}

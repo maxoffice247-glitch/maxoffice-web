@@ -31,13 +31,19 @@ export default function PlanQuoteCard({
         </span>
       </div>
 
-      {/* Ảnh mặt tiền */}
-      <div className="relative mx-14 overflow-hidden rounded-3xl" style={{ height: 420 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={facadeSrc} alt={plan.locationName} className="h-full w-full object-cover" />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(11,31,58,0.75)] to-transparent px-8 pt-16 pb-6">
-          <p className="text-[30px] font-extrabold text-white">{plan.locationName}</p>
-          <p className="mt-1 text-[19px] text-white/85">{address}</p>
+      {/* Ảnh mặt tiền — ảnh gốc là ảnh DỌC, nên đặt cạnh phần tên/địa chỉ
+          thay vì phủ nền toàn chiều ngang như trước (cách đó giả định ảnh
+          NGANG, sẽ mất góc trên/dưới nặng khi ảnh thật là ảnh dọc). Khung
+          aspect-[3/4] + object-contain đảm bảo không cắt ảnh dù tỉ lệ thật
+          của từng chi nhánh khác nhau. */}
+      <div className="mx-14 flex items-center gap-7 rounded-3xl bg-bg-tint p-6">
+        <div className="relative aspect-[3/4] w-[270px] shrink-0 overflow-hidden rounded-2xl bg-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={facadeSrc} alt={plan.locationName} className="h-full w-full object-contain" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[30px] leading-tight font-extrabold text-navy">{plan.locationName}</p>
+          <p className="mt-2 text-[18px] leading-relaxed text-body-text">{address}</p>
         </div>
       </div>
 

@@ -4,7 +4,7 @@ import { SERVICES_DATA } from "@/lib/servicesData";
 import { LOCATIONS_DATA, AREAS } from "@/lib/locationsData";
 import { KNOWLEDGE_CATEGORIES } from "@/lib/knowledgeCenterData";
 import { BLOG_POSTS } from "@/lib/blogData";
-import { getAllOfferedPlans } from "@/lib/planFinder";
+import { getAllOfferedPlans, getGroupedPlans } from "@/lib/planFinder";
 
 const TOOL_SLUGS = [
   "chon-goi-van-phong",
@@ -78,6 +78,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
+  /** 1 URL cho mỗi NHÓM gói (chế độ "Xem theo gói") — cũng lấy động từ planFinder.ts. */
+  const planGroupPages: MetadataRoute.Sitemap = getGroupedPlans().map((g) => ({
+    url: `${SITE_URL}/tien-ich/tim-goi-phu-hop/goi/${g.groupKey}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
   const knowledgeCategoryPages: MetadataRoute.Sitemap = KNOWLEDGE_CATEGORIES.map((cat) => ({
     url: `${SITE_URL}/knowledge-center/${cat.slug}`,
     lastModified: now,
@@ -99,6 +107,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...areaPages,
     ...toolPages,
     ...planDetailPages,
+    ...planGroupPages,
     ...knowledgeCategoryPages,
     ...blogPostPages,
   ];

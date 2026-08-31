@@ -394,7 +394,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "So sánh số thuế phải nộp giữa TNCN theo lương và hộ kinh doanh theo % doanh thu",
   },
   {
-    title: "Tìm gói phù hợp với bạn",
+    title: "Tìm VPA theo nhu cầu",
     category: "Tiện ích",
     href: "/tien-ich/tim-goi-phu-hop",
     desc: "Chọn khu vực và ngân sách, nhận ngay danh sách gói văn phòng ảo phù hợp trong 22 chi nhánh",

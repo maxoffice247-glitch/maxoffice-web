@@ -58,7 +58,7 @@ export default async function PlanDetailPage({
       <Breadcrumb
         items={[
           { label: "Tiện ích", href: "/tien-ich" },
-          { label: "Tìm gói phù hợp", href: "/tien-ich/tim-goi-phu-hop" },
+          { label: "Tìm VPA theo nhu cầu", href: "/tien-ich/tim-goi-phu-hop" },
           { label: `${plan.planName} · ${plan.locationName}` },
         ]}
       />
@@ -67,13 +67,20 @@ export default async function PlanDetailPage({
         <div className="mx-auto grid max-w-[1240px] grid-cols-1 gap-10 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="relative col-span-1 aspect-[4/3] overflow-hidden rounded-2xl sm:col-span-2">
+              {/* Ảnh mặt tiền là ảnh DỌC — dùng đúng tỉ lệ thật của ảnh
+                  (facadeAspectRatio, giống cách /locations/[slug] tự làm) +
+                  object-contain thay vì ép vào khung 4:3 ngang như trước,
+                  để không còn cắt mất góc trên/dưới. */}
+              <div
+                className="relative col-span-1 overflow-hidden rounded-2xl bg-bg-tint sm:col-span-2"
+                style={{ aspectRatio: location.facadeAspectRatio }}
+              >
                 <Image
                   src={facadeSrc}
                   alt={`Mặt tiền văn phòng ${plan.locationName}`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 60vw"
-                  className="object-cover"
+                  className="object-contain"
                 />
               </div>
               {interiorImages.map((img) => (

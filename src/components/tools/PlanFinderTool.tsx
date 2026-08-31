@@ -9,12 +9,14 @@ import { ArrowRightSmallIcon } from "../icons";
 import { AREAS } from "@/lib/locationsData";
 import {
   getAllOfferedPlans,
+  getGroupedPlans,
   isPriceInBand,
   distanceToBand,
   findNearestPlans,
   BUDGET_BANDS,
   formatVoPrice,
   type OfferedPlan,
+  type PlanGroup,
   type BudgetBandKey,
 } from "@/lib/planFinder";
 
@@ -42,13 +44,16 @@ function PlanCard({ plan }: { plan: OfferedPlan }) {
   return (
     <Reveal y={20} duration={0.5} className="h-full">
       <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
-        <div className="relative h-[140px] w-full shrink-0 overflow-hidden bg-bg-tint">
+        {/* Ảnh mặt tiền gốc là ảnh DỌC (đúng cho trang chi nhánh) — khung
+            aspect-[3/4] + object-contain (không phải cover) để không cắt mất
+            góc trên/dưới khi nhét vào thẻ kết quả, khác tỉ lệ khung ngang cũ. */}
+        <div className="relative aspect-[3/4] w-full shrink-0 overflow-hidden bg-bg-tint">
           <Image
             src={`/images/dia-diem-${plan.locationSlug}.jpg`}
             alt={`Mặt tiền văn phòng ${plan.locationName}`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-contain transition-transform duration-500 group-hover:scale-105"
           />
           <span className="absolute top-3 right-3 rounded-full bg-navy px-3 py-1 font-mono text-[13px] font-bold text-white">
             {formatVoPrice(plan.price)}
@@ -73,8 +78,46 @@ function PlanCard({ plan }: { plan: OfferedPlan }) {
   );
 }
 
+/**
+ * Thẻ 1 NHÓM gói (chế độ "Xem theo gói") — không có ảnh mặt tiền đại diện
+ * vì 1 nhóm có thể gồm nhiều chi nhánh khác nhau, không có 1 ảnh nào đại
+ * diện đúng cho cả nhóm; danh sách chi nhánh cụ thể xem ở trang chi tiết.
+ */
+function GroupCard({ group }: { group: PlanGroup }) {
+  return (
+    <Reveal y={20} duration={0.5} className="h-full">
+      <div className="flex h-full flex-col rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-[17px] font-bold text-navy">Gói {group.planName}</h3>
+            <p className="mt-1 font-mono text-[22px] font-bold text-primary">
+              {formatVoPrice(group.price)}
+              <span className="text-[12px] font-sans font-medium text-body-text"> /tháng</span>
+            </p>
+          </div>
+          <span className="shrink-0 rounded-full bg-primary-tint px-3 py-1 text-[12px] font-bold whitespace-nowrap text-primary">
+            {group.locations.length} chi nhánh
+          </span>
+        </div>
+        <p className="mb-4 line-clamp-2 text-[12.5px] text-body-text">
+          {group.locations.map((l) => l.name.split(",")[0]).join(", ")}
+        </p>
+        <Link
+          href={`/tien-ich/tim-goi-phu-hop/goi/${group.groupKey}`}
+          className="group mt-auto inline-flex items-center gap-1.5 text-[13.5px] font-bold text-accent"
+        >
+          Xem chi tiết
+          <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
+        </Link>
+      </div>
+    </Reveal>
+  );
+}
+
 export default function PlanFinderTool() {
   const allPlans = useMemo(() => getAllOfferedPlans(), []);
+  const groupedPlans = useMemo(() => getGroupedPlans(), []);
+  const [viewMode, setViewMode] = useState<"area" | "group">("area");
   const [areaSlug, setAreaSlug] = useState<string>("all");
   const [budgetKey, setBudgetKey] = useState<BudgetBandKey>("400k-600k");
   const [submitted, setSubmitted] = useState(false);
@@ -118,10 +161,51 @@ export default function PlanFinderTool() {
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <SectionHead
           eyebrow="Công cụ miễn phí"
-          title="Tìm gói phù hợp với bạn"
+          title="Tìm VPA theo nhu cầu"
           description="Chọn khu vực và ngân sách mong muốn — công cụ sẽ gợi ý ngay các gói văn phòng ảo phù hợp nhất trong hệ thống 22 chi nhánh MAX OFFICE."
         />
 
+        {/* Toggle chế độ xem — độc lập với luồng lọc khu vực/ngân sách bên dưới. */}
+        <div role="tablist" aria-label="Chế độ xem" className="mx-auto mb-8 flex max-w-[420px] rounded-full border border-line bg-white p-1">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={viewMode === "area"}
+            onClick={() => setViewMode("area")}
+            className={`flex-1 rounded-full px-4 py-2.5 text-[13.5px] font-bold transition-all duration-200 ${
+              viewMode === "area" ? "bg-primary text-white shadow-[0_4px_12px_rgba(21,101,192,0.28)]" : "text-body-text hover:text-primary"
+            }`}
+          >
+            Xem theo khu vực
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={viewMode === "group"}
+            onClick={() => setViewMode("group")}
+            className={`flex-1 rounded-full px-4 py-2.5 text-[13.5px] font-bold transition-all duration-200 ${
+              viewMode === "group" ? "bg-primary text-white shadow-[0_4px_12px_rgba(21,101,192,0.28)]" : "text-body-text hover:text-primary"
+            }`}
+          >
+            Xem theo gói
+          </button>
+        </div>
+
+        {viewMode === "group" ? (
+          <div>
+            <p className="mb-6 text-center text-[14.5px] text-body-text">
+              <strong className="text-navy">{groupedPlans.length} nhóm gói</strong> khác nhau trong toàn hệ
+              thống — các chi nhánh có cùng tên gói, cùng giá và cùng tính năng được gộp chung 1 nhóm,
+              sắp xếp theo giá tăng dần.
+            </p>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {groupedPlans.map((g) => (
+                <GroupCard key={g.groupKey} group={g} />
+              ))}
+            </div>
+          </div>
+        ) : (
+        <>
         <Reveal className="mx-auto max-w-[720px] rounded-2xl border border-line bg-white p-7 sm:p-9">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
@@ -242,6 +326,8 @@ export default function PlanFinderTool() {
               </button>
             </div>
           </div>
+        )}
+        </>
         )}
       </div>
     </section>

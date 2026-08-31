@@ -5,7 +5,7 @@ import { ClockIcon, ScaleIcon, TagIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/tien-ich/tim-goi-phu-hop" },
-  title: "Công Cụ Tìm Gói Văn Phòng Ảo Phù Hợp Theo Ngân Sách | MAX OFFICE",
+  title: "Tìm VPA Theo Nhu Cầu - Công Cụ Chọn Văn Phòng Ảo Phù Hợp | MAX OFFICE",
   description:
     "Chọn khu vực và ngân sách mong muốn, nhận ngay danh sách gói văn phòng ảo phù hợp trong 22 chi nhánh MAX OFFICE — kèm giá, tính năng, ảnh mặt tiền và báo giá tải về.",
 };
@@ -50,9 +50,9 @@ const FAQS = [
 export default function TimGoiPhuHopPage() {
   return (
     <ToolPageTemplate
-      heroTitle="Tìm gói văn phòng ảo phù hợp với bạn"
+      heroTitle="Tìm VPA theo nhu cầu"
       heroDescription="Chọn khu vực và ngân sách mong muốn — công cụ gợi ý ngay các gói phù hợp trong toàn bộ 22 chi nhánh MAX OFFICE, kèm giá, tính năng và ảnh mặt tiền thực tế."
-      breadcrumbLabel="Tìm gói phù hợp"
+      breadcrumbLabel="Tìm VPA theo nhu cầu"
       benefitsTitle="Vì sao nên dùng công cụ này"
       benefits={BENEFITS}
       relatedServices={RELATED_SERVICES}

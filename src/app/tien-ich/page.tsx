@@ -64,7 +64,7 @@ const TOOL_GROUPS = [
       {
         slug: "tim-goi-phu-hop",
         icon: TagIcon,
-        title: "Tìm gói phù hợp với bạn",
+        title: "Tìm VPA theo nhu cầu",
         desc: "Chọn khu vực và ngân sách mong muốn, nhận ngay danh sách gói văn phòng ảo phù hợp trong 22 chi nhánh MAX OFFICE.",
         linkLabel: "Dùng công cụ ngay",
       },

@@ -27,7 +27,7 @@ const TOOL_CATEGORIES = [
       { slug: "tinh-chi-phi-thanh-lap", icon: DocumentCheckIcon, title: "Tính chi phí thành lập" },
       { slug: "tinh-le-phi-mon-bai", icon: BadgePercentIcon, title: "Lệ phí môn bài" },
       { slug: "so-sanh-thue", icon: ScaleIcon, title: "So sánh thuế TNCN vs Hộ KD" },
-      { slug: "tim-goi-phu-hop", icon: TagIcon, title: "Tìm gói phù hợp với bạn" },
+      { slug: "tim-goi-phu-hop", icon: TagIcon, title: "Tìm VPA theo nhu cầu" },
     ],
   },
   {
