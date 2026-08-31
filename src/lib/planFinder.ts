@@ -206,6 +206,19 @@ export function distanceToBand(price: number, bandKey: BudgetBandKey): number {
   return 0;
 }
 
+/**
+ * Khoảng ngân sách (band) chứa 1 mức giá cụ thể — dùng để đồng bộ giá trị
+ * thanh trượt ngân sách (kéo liên tục) với 4 nút chọn nhanh (theo khoảng)
+ * trong PlanFinderTool: dù chọn bằng cách nào, kết quả luôn quy về 1
+ * `budgetKey` duy nhất nên toàn bộ logic lọc/gợi ý bên dưới (isPriceInBand,
+ * findNearestPlans...) dùng lại được nguyên vẹn, không cần viết thêm nhánh
+ * xử lý riêng cho giá trị liên tục.
+ */
+export function bandForPrice(price: number): BudgetBandKey {
+  const band = BUDGET_BANDS.find((b) => price >= b.min && price < b.max);
+  return band?.key ?? BUDGET_BANDS[BUDGET_BANDS.length - 1].key;
+}
+
 /** Sắp xếp các gói theo độ gần với khoảng ngân sách (gần nhất trước), rồi theo giá tăng dần khi bằng nhau. */
 export function findNearestPlans(plans: OfferedPlan[], bandKey: BudgetBandKey, limit = 3): OfferedPlan[] {
   return [...plans]

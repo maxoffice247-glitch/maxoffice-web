@@ -13,6 +13,7 @@ import {
   isPriceInBand,
   distanceToBand,
   findNearestPlans,
+  bandForPrice,
   BUDGET_BANDS,
   formatVoPrice,
   type OfferedPlan,
@@ -114,13 +115,95 @@ function GroupCard({ group }: { group: PlanGroup }) {
   );
 }
 
+/** Điểm giữa 1 khoảng ngân sách, kẹp trong [rangeMin, rangeMax] thực tế của
+ * dữ liệu gói — băng cuối "Trên 900K" có max: Infinity nên dùng rangeMax
+ * thay thế; băng đầu "Dưới 400K" có min: 0 nên điểm giữa thô (200K) có thể
+ * thấp hơn giá gói rẻ nhất thực tế, cần kẹp lại về rangeMin. Dùng khi bấm 1
+ * trong 4 nút nhanh để thanh trượt tự nhảy về đúng vị trí tương ứng. */
+function bandMidpoint(band: { min: number; max: number }, rangeMin: number, rangeMax: number): number {
+  const hi = band.max === Infinity ? rangeMax : band.max;
+  const raw = (band.min + hi) / 2;
+  return Math.round(Math.min(rangeMax, Math.max(rangeMin, raw)));
+}
+
+/**
+ * Thanh trượt ngân sách 1 điểm kéo — track nền + track đã tô màu (2 lớp div
+ * tuyệt đối) đặt DƯỚI 1 <input type="range"> trong suốt để input lo toàn bộ
+ * việc kéo/gõ phím/chạm (accessibility, mobile) còn 2 div lo phần hiển thị,
+ * tránh phải tự viết lại xử lý con trỏ chuột/chạm vốn native input đã có.
+ */
+function BudgetSlider({
+  value,
+  min,
+  max,
+  onChange,
+}: {
+  value: number;
+  min: number;
+  max: number;
+  onChange: (value: number) => void;
+}) {
+  const pct = max > min ? ((value - min) / (max - min)) * 100 : 0;
+  return (
+    <div className="relative flex h-3 items-center">
+      <div className="absolute inset-x-0 h-1.5 rounded-full bg-line" aria-hidden />
+      <div
+        className="absolute h-1.5 rounded-full bg-[#3B9EFF]"
+        style={{ width: `${pct}%` }}
+        aria-hidden
+      />
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={1000}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        aria-labelledby="pf-budget-label"
+        aria-valuetext={formatVoPrice(value)}
+        className="relative z-10 h-4 w-full cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-[2.5px] [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#3B9EFF] [&::-moz-range-thumb]:shadow-[0_2px_5px_rgba(0,0,0,0.28)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-[2.5px] [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#3B9EFF] [&::-webkit-slider-thumb]:shadow-[0_2px_5px_rgba(0,0,0,0.28)]"
+      />
+    </div>
+  );
+}
+
 export default function PlanFinderTool() {
   const allPlans = useMemo(() => getAllOfferedPlans(), []);
   const groupedPlans = useMemo(() => getGroupedPlans(), []);
   const [viewMode, setViewMode] = useState<"area" | "group">("area");
   const [areaSlug, setAreaSlug] = useState<string>("all");
+  // `budgetKey` là nguồn sự thật DUY NHẤT cho logic lọc/gợi ý bên dưới, dù
+  // khách chọn bằng thanh trượt hay 4 nút nhanh — cả 2 cách đều cập nhật nó
+  // ngay khi tương tác, nên "Tìm gói phù hợp" luôn dùng đúng lựa chọn gần
+  // nhất mà không cần thêm nhánh xử lý riêng. `budgetValue` chỉ phục vụ hiển
+  // thị số tiền cụ thể trên thanh trượt; `budgetSource` chỉ phục vụ việc
+  // sáng/tắt trạng thái "đang chọn" của 4 nút nhanh.
   const [budgetKey, setBudgetKey] = useState<BudgetBandKey>("400k-600k");
+  const [budgetValue, setBudgetValue] = useState<number>(500_000);
+  const [budgetSource, setBudgetSource] = useState<"quick" | "slider">("quick");
   const [submitted, setSubmitted] = useState(false);
+
+  // Khoảng giá trị thanh trượt LẤY ĐỘNG từ giá thấp nhất/cao nhất thực tế
+  // trong toàn bộ dữ liệu gói — không hardcode, tự đúng khi có gói giá khác.
+  const priceRange = useMemo(() => {
+    const prices = allPlans.map((p) => p.price);
+    return { min: Math.min(...prices), max: Math.max(...prices) };
+  }, [allPlans]);
+
+  const handleQuickBudget = (key: BudgetBandKey) => {
+    const band = BUDGET_BANDS.find((b) => b.key === key)!;
+    setBudgetKey(key);
+    setBudgetValue(bandMidpoint(band, priceRange.min, priceRange.max));
+    setBudgetSource("quick");
+    setSubmitted(false);
+  };
+
+  const handleSliderBudget = (value: number) => {
+    setBudgetValue(value);
+    setBudgetKey(bandForPrice(value));
+    setBudgetSource("slider");
+    setSubmitted(false);
+  };
 
   const areaName = areaSlug === "all" ? null : AREAS.find((a) => a.slug === areaSlug)?.name;
 
@@ -228,6 +311,25 @@ export default function PlanFinderTool() {
                   </option>
                 ))}
               </select>
+
+              {/* Thanh trượt ngân sách — lấp khoảng trống cột trái (vốn chỉ có
+                  1 dropdown, thấp hơn hẳn cột phải) để 2 cột cao bằng nhau,
+                  không đẩy tổng chiều cao cụm bộ lọc tăng lên. Là cách chọn
+                  ngân sách THỨ 2 song song với 4 nút nhanh bên phải — xem
+                  handleQuickBudget/handleSliderBudget để biết cách 2 nguồn
+                  đồng bộ 2 chiều qua chung 1 `budgetKey`. */}
+              <div className="mt-2">
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-[12px] font-semibold text-body-text">Hoặc kéo chọn mức cụ thể</span>
+                  <span className="font-mono text-[13px] font-bold text-primary">{formatVoPrice(budgetValue)}</span>
+                </div>
+                <BudgetSlider
+                  value={budgetValue}
+                  min={priceRange.min}
+                  max={priceRange.max}
+                  onChange={handleSliderBudget}
+                />
+              </div>
             </div>
             <div>
               <label id="pf-budget-label" className={labelClass}>
@@ -238,12 +340,9 @@ export default function PlanFinderTool() {
                   <button
                     key={b.key}
                     type="button"
-                    aria-pressed={budgetKey === b.key}
-                    onClick={() => {
-                      setBudgetKey(b.key);
-                      setSubmitted(false);
-                    }}
-                    className={pillClass(budgetKey === b.key)}
+                    aria-pressed={budgetSource === "quick" && budgetKey === b.key}
+                    onClick={() => handleQuickBudget(b.key)}
+                    className={pillClass(budgetSource === "quick" && budgetKey === b.key)}
                   >
                     {b.label}
                   </button>
