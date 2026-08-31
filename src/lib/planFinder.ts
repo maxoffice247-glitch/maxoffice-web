@@ -15,8 +15,7 @@
  */
 import { LOCATIONS_LIST } from "./locationsData";
 import {
-  VIRTUAL_OFFICE_PLANS,
-  LOCATION_VO_PLANS,
+  getPlansForLocation,
   PHAM_VAN_DONG_VO_PLANS,
   QUAN_7_VO_PLANS,
   VUON_LAI_VO_PLAN,
@@ -154,14 +153,16 @@ export function getAllOfferedPlans(): OfferedPlan[] {
         });
       }
     } else {
-      const keys = LOCATION_VO_PLANS[slug] ?? [];
-      for (const k of keys) {
-        const p = VIRTUAL_OFFICE_PLANS[k];
+      // getPlansForLocation() (không phải VIRTUAL_OFFICE_PLANS trực tiếp) —
+      // để tự động áp dụng LOCATION_VO_PRICE_OVERRIDES khi 1 chi nhánh có
+      // giá riêng cho 1 gói cụ thể (vd. Nguyễn Oanh/ORIGIN), không cần sửa
+      // thêm gì ở đây khi override thay đổi.
+      for (const p of getPlansForLocation(slug)) {
         result.push({
           locationSlug: slug,
           locationName: name,
           area,
-          planKey: k,
+          planKey: p.key,
           planName: p.name,
           price: p.price,
           duration: p.duration,

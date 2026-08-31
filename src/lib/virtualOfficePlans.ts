@@ -172,9 +172,28 @@ export const LOCATION_VO_PLANS: Record<string, VirtualOfficePlanKey[]> = {
   cmt8: ["lite", "start", "base"],
 };
 
+/**
+ * Ghi đè giá riêng theo chi nhánh cho 1-2 gói cụ thể trong hệ LITE–RISE dùng
+ * chung — dùng khi MỘT chi nhánh áp dụng mức giá khuyến mãi/riêng khác với
+ * giá chung của cả hệ (vd. Nguyễn Oanh giảm giá gói ORIGIN), mà KHÔNG ảnh
+ * hưởng đến các chi nhánh khác đang dùng chung gói đó ở mức giá gốc. Không
+ * dùng cho trường hợp một chi nhánh có TOÀN BỘ bảng giá khác biệt — trường
+ * hợp đó nên tạo hệ giá riêng như Phạm Văn Đồng/Bùi Văn Ba thay vì override.
+ */
+export const LOCATION_VO_PRICE_OVERRIDES: Record<string, Partial<Record<VirtualOfficePlanKey, number>>> = {
+  // Khuyến mãi riêng chi nhánh — ORIGIN giảm từ 595.000đ còn 499.000đ/tháng,
+  // chỉ áp dụng tại Nguyễn Oanh. Yên Thế/Cộng Hoà/Tân Thắng vẫn giữ 595.000đ.
+  "nguyen-oanh": { origin: 499_000 },
+};
+
 export function getPlansForLocation(slug: string): VirtualOfficePlan[] {
   const keys = LOCATION_VO_PLANS[slug] ?? [];
-  return keys.map((k) => VIRTUAL_OFFICE_PLANS[k]);
+  const overrides = LOCATION_VO_PRICE_OVERRIDES[slug];
+  return keys.map((k) => {
+    const plan = VIRTUAL_OFFICE_PLANS[k];
+    const overridePrice = overrides?.[k];
+    return overridePrice !== undefined ? { ...plan, price: overridePrice } : plan;
+  });
 }
 
 export function getCheapestPlanForLocation(slug: string): VirtualOfficePlan | undefined {
