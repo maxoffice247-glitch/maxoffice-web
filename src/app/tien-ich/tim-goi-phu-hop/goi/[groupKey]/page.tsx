@@ -65,9 +65,9 @@ export default async function PlanGroupDetailPage({
                 <span className="text-[13px] text-body-text">/tháng · chưa gồm VAT 10%</span>
               </div>
 
-              <h3 className="mb-3.5 text-[15px] font-bold text-navy">
+              <h2 className="mb-3.5 text-[15px] font-bold text-navy">
                 Tính năng đi kèm gói {group.planName}
-              </h3>
+              </h2>
               <ul className="space-y-2.5">
                 {group.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-[14px] text-body-text">
@@ -84,9 +84,9 @@ export default async function PlanGroupDetailPage({
             </div>
 
             <div className="mt-8 rounded-2xl border border-line bg-white p-6 sm:p-7">
-              <h3 className="mb-4 text-[15px] font-bold text-navy">
+              <h2 className="mb-4 text-[15px] font-bold text-navy">
                 Áp dụng tại {group.locations.length} chi nhánh
-              </h3>
+              </h2>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {group.locations.map((loc) => (
                   <Link
