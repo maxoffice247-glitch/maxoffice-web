@@ -32,6 +32,15 @@ export default function PlanQuoteCard({
   /** Tiện ích khu vực của chi nhánh — lấy nguyên trạng từ `LOCATIONS_DATA[slug].benefits` (đã có sẵn, dùng chung với "Vì sao nên chọn văn phòng..." trên trang chi nhánh). Bỏ trống hoặc undefined => ẩn khối "Tiện ích khu vực". */
   benefits?: QuoteBenefitTag[];
 }) {
+  // Gói giá cao (VD RISE 1.199.000đ) có tới 9 tính năng — 1 cột dọc kéo card
+  // quá cao khi export PNG. Từ 6 tính năng trở lên thì chia lưới 2 cột, cột
+  // trái lấp đầy trước (grid-auto-flow: column + đúng số hàng), nên số lẻ tự
+  // cân đối kiểu 9 -> 5/4 chứ không lệch hẳn 1 bên. Dưới 6 tính năng (gói cơ
+  // bản như LITE) giữ 1 cột như cũ — 2 cột ở số lượng ít làm layout trống trải.
+  const features = plan.features.slice(0, 9);
+  const useFeatureGrid = features.length >= 6;
+  const featureGridRows = Math.ceil(features.length / 2);
+
   return (
     <div
       style={{ width: 1080, height: 1350 }}
@@ -96,8 +105,19 @@ export default function PlanQuoteCard({
       {/* Danh sách tính năng */}
       <div className="mx-14 mt-9 flex-1">
         <p className="mb-5 text-[20px] font-bold text-navy">Tính năng đi kèm</p>
-        <div className="flex flex-col gap-4">
-          {plan.features.slice(0, 9).map((f) => (
+        <div
+          className={useFeatureGrid ? "grid gap-x-8 gap-y-4" : "flex flex-col gap-4"}
+          style={
+            useFeatureGrid
+              ? {
+                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateRows: `repeat(${featureGridRows}, auto)`,
+                  gridAutoFlow: "column",
+                }
+              : undefined
+          }
+        >
+          {features.map((f) => (
             <div key={f} className="flex items-start gap-3.5">
               <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-tint text-primary">
                 <CheckCircleIcon className="h-4 w-4" />
