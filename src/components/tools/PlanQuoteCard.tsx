@@ -15,10 +15,17 @@ import { formatVoPrice } from "@/lib/planFinder";
 export type QuoteBenefitTag = { title: string; icon: ReactNode };
 
 /**
- * Nội dung ảnh báo giá 1080x1350 xuất bằng html-to-image (xem PlanDetailActions).
- * Kích thước cố định bằng inline style (không dùng class responsive) vì đây
- * là DOM off-screen được chụp đúng 1:1 pixel, không hiển thị trực tiếp cho
- * người dùng xem trên trang.
+ * Nội dung ảnh báo giá xuất bằng html-to-image (xem PlanDetailActions).
+ * Chỉ cố định CHIỀU RỘNG 1080px bằng inline style (không dùng class
+ * responsive, vì đây là DOM off-screen được chụp đúng 1:1 pixel, không hiển
+ * thị trực tiếp cho người dùng xem trên trang) — chiều cao để TỰ ĐO theo nội
+ * dung thực tế (số tính năng 1 cột hay 2 cột, có/không "Tiện ích khu vực"),
+ * giống cách PlanGroupQuoteCard đã làm. Trước đây từng cố định height:1350
+ * (tỉ lệ Instagram 4:5), nhưng không có ràng buộc kỹ thuật nào khác phụ
+ * thuộc vào con số đó (html-to-image không truyền width/height cố định khi
+ * gọi toPng, và card nhóm bên cạnh vốn đã auto-height) — cố định cứng chỉ
+ * gây khoảng trắng thừa cuối card khi nội dung ngắn hơn (VD gói LITE 1 cột,
+ * hoặc RISE 9 tính năng rút gọn còn 5 dòng sau khi chia 2 cột).
  */
 export default function PlanQuoteCard({
   plan,
@@ -42,10 +49,7 @@ export default function PlanQuoteCard({
   const featureGridRows = Math.ceil(features.length / 2);
 
   return (
-    <div
-      style={{ width: 1080, height: 1350 }}
-      className="flex flex-col bg-white"
-    >
+    <div style={{ width: 1080 }} className="flex flex-col bg-white">
       {/* Header — logo + tiêu đề báo giá */}
       <div className="flex items-center justify-between px-14 pt-12 pb-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -103,7 +107,7 @@ export default function PlanQuoteCard({
       </div>
 
       {/* Danh sách tính năng */}
-      <div className="mx-14 mt-9 flex-1">
+      <div className="mx-14 mt-9">
         <p className="mb-5 text-[20px] font-bold text-navy">Tính năng đi kèm</p>
         <div
           className={useFeatureGrid ? "grid gap-x-8 gap-y-4" : "flex flex-col gap-4"}

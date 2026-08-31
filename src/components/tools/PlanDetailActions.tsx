@@ -72,7 +72,7 @@ export default function PlanDetailActions({
         </p>
       )}
 
-      {/* Off-screen — dựng đúng 1080x1350px để html-to-image chụp lại, không hiển thị trực tiếp cho người dùng. */}
+      {/* Off-screen — dựng đúng 1080px rộng (cao tự động theo nội dung) để html-to-image chụp lại, không hiển thị trực tiếp cho người dùng. */}
       <div
         aria-hidden
         style={{ position: "fixed", top: 0, left: -99999, pointerEvents: "none" }}
