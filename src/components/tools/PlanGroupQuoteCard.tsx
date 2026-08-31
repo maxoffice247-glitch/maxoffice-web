@@ -1,4 +1,4 @@
-import { CheckCircleIcon } from "../icons";
+import { CheckCircleIcon, InfoIcon } from "../icons";
 import type { PlanGroup } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
 
@@ -27,19 +27,30 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
       </div>
 
       {/* Gói + giá */}
-      <div className="mx-14 flex items-center justify-between rounded-2xl bg-bg-tint px-8 py-7">
-        <div>
-          <p className="text-[16px] font-bold tracking-[0.08em] text-primary uppercase">
-            Gói {group.planName}
-          </p>
-          <p className="mt-1 text-[15px] text-body-text">
-            Văn phòng ảo · Áp dụng tại {group.locations.length} chi nhánh
-          </p>
+      <div className="mx-14 rounded-2xl bg-bg-tint px-8 py-7">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[16px] font-bold tracking-[0.08em] text-primary uppercase">
+              Gói {group.planName}
+            </p>
+            <p className="mt-1 text-[15px] text-body-text">
+              Văn phòng ảo · Áp dụng tại {group.locations.length} chi nhánh
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-[44px] font-extrabold text-accent">{formatVoPrice(group.price)}</p>
+            <p className="text-[15px] text-body-text">/tháng · chưa gồm VAT 10%</p>
+          </div>
         </div>
-        <div className="text-right">
-          <p className="text-[44px] font-extrabold text-accent">{formatVoPrice(group.price)}</p>
-          <p className="text-[15px] text-body-text">/tháng · chưa gồm VAT 10%</p>
-        </div>
+        {/* Phụ phí một lần (vd. bảng hiệu công ty của gói LITE) — tách biệt
+            khỏi danh sách "Tính năng đi kèm" bên dưới vì đây KHÔNG phải
+            tiện ích đi kèm hàng tháng, mà là 1 khoản thu riêng, 1 lần. */}
+        {group.addonNote && (
+          <p className="mt-5 flex items-start gap-2 border-t border-line pt-4 text-[14px] leading-relaxed text-amber-dark">
+            <InfoIcon className="mt-0.5 h-4 w-4 shrink-0" />
+            {group.addonNote}
+          </p>
+        )}
       </div>
 
       {/* Danh sách tính năng */}
