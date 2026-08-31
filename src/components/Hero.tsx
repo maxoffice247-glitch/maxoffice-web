@@ -35,52 +35,44 @@ const HERO_IMAGES = [
   "/images/anh-hero-trang-chu-1.jpg",
 ];
 
-/** Khối mô tả dưới H1 (H1 nay đứng yên) xoay vòng 8 slide: 2 slide đầu là
- * đoạn giới thiệu ngắn (không phải dạng hỏi-đáp), tách ra để độ dài gần
- * tương đương 6 slide "nỗi đau" còn lại — câu hỏi (in đậm, màu nhấn) +
- * câu trả lời ngắn bên dưới. Số chi nhánh trong slide 2 và slide 3 lấy
- * ĐỘNG từ LOCATIONS_LIST.length. */
-type HeroSlide =
-  | { kind: "intro"; text: string }
-  | { kind: "qa"; question: string; answer: string };
+/** Khối mô tả dưới H1 (H1 nay đứng yên) xoay vòng 8 slide, TẤT CẢ cùng 1
+ * cấu trúc: câu hỏi (nỗi đau khách hàng, in đậm màu nhấn) + câu trả lời
+ * ngắn bên dưới — kể cả 2 slide đầu (trước đây là đoạn giới thiệu 1 dòng,
+ * đã viết lại thành hỏi-đáp để đồng nhất với 6 slide còn lại). Số chi
+ * nhánh trong slide 2 và slide 3 lấy ĐỘNG từ LOCATIONS_LIST.length. */
+type HeroSlide = { question: string; answer: string };
 
 function getHeroSlides(branchCount: number): HeroSlide[] {
   return [
     {
-      kind: "intro",
-      text: "MAX OFFICE đồng hành cùng bạn từ ngày thành lập, xuyên suốt vận hành, đến khi mở rộng quy mô.",
+      question: "Băn khoăn chọn đơn vị đồng hành lâu dài, không chỉ thuê văn phòng đơn thuần?",
+      answer: "MAX OFFICE đồng hành cùng bạn từ ngày thành lập, xuyên suốt vận hành, đến khi mở rộng quy mô.",
     },
     {
-      kind: "intro",
-      text: `Hơn 500 doanh nghiệp tin chọn MAX OFFICE tại ${branchCount} địa điểm trung tâm TP.HCM.`,
+      question: "Chưa biết chọn đơn vị nào đủ uy tín, đủ chi nhánh để tin tưởng?",
+      answer: `Hơn 500 doanh nghiệp đã tin chọn MAX OFFICE, tại ${branchCount} địa điểm trung tâm TP.HCM.`,
     },
     {
-      kind: "qa",
       question: "Cần địa chỉ kinh doanh hợp pháp nhưng ngại chi phí thuê văn phòng?",
       answer: `Từ 299.000đ/tháng, ${branchCount} chi nhánh trung tâm TP.HCM.`,
     },
     {
-      kind: "qa",
       question: "Sợ ký hợp đồng dài hạn, không linh hoạt?",
       answer: "Hợp đồng linh hoạt, có ưu đãi hấp dẫn khi gia hạn dài hạn.",
     },
     {
-      kind: "qa",
       question: "Lo phí phát sinh không rõ ràng?",
       answer: "Giá minh bạch, không phí ẩn — cam kết rõ ràng bằng hợp đồng.",
     },
     {
-      kind: "qa",
       question: "Cần hỗ trợ thủ tục pháp lý, không biết bắt đầu từ đâu?",
       answer: "🚀 Gói Vững Bước Khởi Nghiệp — tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng dài hạn.",
     },
     {
-      kind: "qa",
       question: "Thư từ thất lạc, mất thông báo thuế quan trọng?",
       answer: "Lễ tân tiếp nhận thư từ, bưu phẩm — thông báo ngay qua Zalo, không lo thất lạc giấy tờ.",
     },
     {
-      kind: "qa",
       question: "Ngân hàng từ chối mở tài khoản vì không có trụ sở thực?",
       answer: "Địa chỉ thật, có bảng tên, có lễ tân — đầy đủ giấy tờ xác minh cho ngân hàng.",
     },
@@ -179,16 +171,12 @@ export default function Hero() {
                   transition={{ duration: 0.5, ease: EASE_PREMIUM }}
                   style={{ pointerEvents: isActive ? "auto" : "none" }}
                 >
-                  {slide.kind === "intro" ? (
-                    <p className="text-base text-white/86 sm:text-lg">{slide.text}</p>
-                  ) : (
-                    <div>
-                      <p className="text-base font-bold text-[#3B9EFF] sm:text-lg">
-                        {slide.question}
-                      </p>
-                      <p className="mt-1 text-base text-white/86 sm:text-lg">{slide.answer}</p>
-                    </div>
-                  )}
+                  <div>
+                    <p className="text-base font-bold text-[#3B9EFF] sm:text-lg">
+                      {slide.question}
+                    </p>
+                    <p className="mt-1 text-base text-white/86 sm:text-lg">{slide.answer}</p>
+                  </div>
                 </motion.div>
               );
             })}
