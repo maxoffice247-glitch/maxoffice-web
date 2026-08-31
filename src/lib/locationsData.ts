@@ -257,6 +257,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     shortAddress: "84-86 Nguyễn Trường Tộ, P. Xóm Chiếu",
     area: AREA_QUAN_4,
   },
+  {
+    slug: "le-quoc-hung",
+    name: "54-56 Lê Quốc Hưng, Quận 4 (cũ)",
+    shortAddress: "54-56 Lê Quốc Hưng, P. Xóm Chiếu",
+    area: AREA_QUAN_4,
+  },
 ];
 
 /**
@@ -344,7 +350,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 22 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
+      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 23 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
       "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
@@ -431,7 +437,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 22 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
+      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 23 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
@@ -613,7 +619,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
-      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 22 địa điểm.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 23 địa điểm.",
       "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
@@ -880,7 +886,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 22 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 23 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
       "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
     ],
@@ -1996,6 +2002,78 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Tối đi ăn hải sản khu Vĩnh Khánh với đối tác xong quay lại văn phòng ký hợp đồng luôn, khá tiện.", initial: "L", name: "Chị Lan", role: "Chủ hộ kinh doanh" },
     ],
   },
+
+  /* =============== 54-56 LÊ QUỐC HƯNG (KHU VỰC QUẬN 4, CHI NHÁNH THỨ 2) =============== */
+  "le-quoc-hung": {
+    slug: "le-quoc-hung",
+    name: "54-56 Lê Quốc Hưng, Quận 4 (cũ)",
+    area: AREA_QUAN_4,
+    address: "54-56 Lê Quốc Hưng, Phường Xóm Chiếu, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 54-56 Lê Quốc Hưng, Quận 4 (cũ)",
+    heroDescription:
+      "Chi nhánh thứ 2 của MAX OFFICE tại khu vực Quận 4 (cũ) — văn phòng ảo 3 gói riêng biệt từ 379.000đ/tháng, đặt tại toà nhà văn phòng The Vintage 54 hiện đại, gần trục Nguyễn Tất Thành và cầu Tân Thuận.",
+    metaTitle: "Văn Phòng Ảo 54-56 Lê Quốc Hưng, Quận 4 (cũ) | Từ 379K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 54-56 Lê Quốc Hưng, Phường Xóm Chiếu — chi nhánh thứ 2 MAX OFFICE tại Quận 4 (cũ), 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần cầu Tân Thuận và Quận 7.",
+    image: IMAGE,
+    // Ảnh mặt tiền gốc 1448x1086, không chỉnh sửa.
+    facadeAspectRatio: "1448 / 1086",
+    facadeImageSide: "right",
+    interiorImages: [
+      { src: "/images/dia-diem-le-quoc-hung-le-tan.jpg", alt: "Quầy lễ tân văn phòng 54-56 Lê Quốc Hưng", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-le-quoc-hung-sanh-tiep-khach.jpg", alt: "Sảnh tiếp khách văn phòng 54-56 Lê Quốc Hưng", caption: "Sảnh tiếp khách" },
+      { src: "/images/dia-diem-le-quoc-hung-san-trong.jpg", alt: "Không gian trống văn phòng 54-56 Lê Quốc Hưng", caption: "Không gian trống" },
+    ],
+    intro: [
+      "Văn phòng 54-56 Lê Quốc Hưng là chi nhánh thứ 2 của MAX OFFICE tại khu vực Quận 4 (cũ), cùng thuộc Phường Xóm Chiếu với chi nhánh 84-86 Nguyễn Trường Tộ nhưng nằm trên một trục đường khác, gần phía cầu Tân Thuận và trục Nguyễn Tất Thành hướng về Quận 7. Sự xuất hiện của chi nhánh thứ 2 giúp doanh nghiệp tại khu vực Quận 4 có thêm lựa chọn địa chỉ đăng ký kinh doanh mà không phải phụ thuộc vào một địa điểm duy nhất.",
+      "Chi nhánh đặt tại toà nhà văn phòng The Vintage 54 — công trình 2 tầng mặt tiền kính hiện đại, sảnh lễ tân ốp gỗ và đá kết hợp, tầng trệt là không gian sảnh trống thông thoáng với hệ cửa kính lớn đón nhiều ánh sáng tự nhiên. Khuôn viên có hàng cây xanh phía trước, tạo mặt tiền dễ nhận diện trên tuyến đường Lê Quốc Hưng.",
+      "Chi nhánh cung cấp 3 gói văn phòng ảo riêng biệt — SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10% — cùng bảng giá đang áp dụng tại các chi nhánh khu vực Bình Thạnh, Phú Nhuận, Thủ Đức và chi nhánh Nguyễn Trường Tộ, phân hoá theo thời lượng sử dụng phòng họp, sảnh tiếp khách và các hỗ trợ pháp lý đi kèm.",
+      "Với vị trí gần trục Nguyễn Tất Thành và cầu Tân Thuận, doanh nghiệp đặt văn phòng tại 54-56 Lê Quốc Hưng thuận tiện di chuyển sang khu vực Quận 7, Phú Mỹ Hưng lẫn vào trung tâm Quận 1. Đây là lựa chọn phù hợp cho các công ty thương mại, xuất nhập khẩu hoặc dịch vụ logistics cần một địa chỉ đăng ký kinh doanh gần khu vực cảng và tuyến giao thương Quận 4 — Quận 7.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 54-56 Lê Quốc Hưng",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh thứ 2 tại Quận 4", desc: "Thêm lựa chọn địa chỉ đăng ký kinh doanh tại khu vực Quận 4 (cũ), toà nhà The Vintage 54 hiện đại." },
+      { icon: MapPinIcon, title: "Gần cầu Tân Thuận", desc: "Kết nối nhanh sang Quận 7, Phú Mỹ Hưng qua trục Nguyễn Tất Thành." },
+      { icon: BadgePercentIcon, title: "3 gói giá linh hoạt", desc: "SILVER, GOLD, PREMIUM — từ 379.000đ/tháng." },
+      { icon: ShieldCheckIcon, title: "Toà nhà văn phòng riêng biệt", desc: "The Vintage 54 — mặt tiền kính hiện đại, sảnh lễ tân và không gian làm việc thoáng đãng." },
+      { icon: UsersIcon, title: "Không gian trệt rộng rãi", desc: "Tầng trệt sảnh trống nhiều cửa kính, phù hợp tiếp khách hoặc bố trí không gian làm việc chung." },
+      { icon: ClockIcon, title: "Gần chợ Xóm Chiếu", desc: "Khu vực dân cư, thương mại lâu đời của Quận 4, thuận tiện sinh hoạt hàng ngày." },
+    ],
+    nearbyItems: [
+      { name: "Chợ Xóm Chiếu", desc: "Khu chợ truyền thống lâu đời của Quận 4, sầm uất hàng ngày." },
+      { name: "Cầu Tân Thuận", desc: "Kết nối nhanh sang khu vực Quận 7, Phú Mỹ Hưng." },
+      { name: "Trục Nguyễn Tất Thành", desc: "Tuyến đường chính chạy dọc Quận 4, kết nối khu vực cảng Sài Gòn." },
+      { name: "Khu dân cư đường Lê Quốc Hưng", desc: "Tuyến đường nội bộ yên tĩnh hơn so với trục chính, xen kẽ nhà phố và văn phòng nhỏ." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua khu vực Quận 4." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Gần trục Nguyễn Tất Thành nên dễ dàng đặt xe vào mọi khung giờ." },
+      { icon: CheckCircleIcon, title: "Trục Nguyễn Tất Thành — Cầu Tân Thuận", desc: "Kết nối nhanh sang Quận 7 và trung tâm Quận 1 chỉ trong ít phút." },
+      { icon: HeadsetIcon, title: "Lễ tân hỗ trợ đón khách", desc: "Đội ngũ tại sảnh sẵn sàng hướng dẫn khách ngay khi vừa đến." },
+    ],
+    parkingInfo: [
+      "Khách gửi xe máy ngay tại khuôn viên toà nhà, thuận tiện khi đến làm việc mỗi ngày.",
+      "Có thể dừng đỗ ngắn hạn trước toà nhà khi cần đưa đón đối tác.",
+      "Bảo vệ toà nhà hỗ trợ trông giữ xe trong suốt giờ hành chính.",
+    ],
+    diningItems: [
+      { name: "Chợ Xóm Chiếu", desc: "Khu ẩm thực đường phố quen thuộc, nhiều lựa chọn ăn trưa nhanh gọn." },
+      { name: "Quán ăn khu Lê Quốc Hưng", desc: "Đa dạng quán ăn phục vụ dân văn phòng quanh khu vực." },
+      { name: "Nhà hàng khu vực Quận 4", desc: "Lựa chọn phù hợp cho các buổi tiếp đối tác cần không gian trang trọng hơn." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 54-56 Lê Quốc Hưng có phải là chi nhánh thứ 2 của MAX OFFICE tại Quận 4 không?", a: "Đúng vậy. Đây là chi nhánh thứ 2 MAX OFFICE mở tại khu vực Quận 4 (cũ), sau chi nhánh 84-86 Nguyễn Trường Tộ — cả hai cùng thuộc Phường Xóm Chiếu." },
+      { q: "Chi nhánh 54-56 Lê Quốc Hưng khác gì so với chi nhánh 84-86 Nguyễn Trường Tộ cũng ở Quận 4?", a: "Cả hai cùng thuộc Phường Xóm Chiếu nhưng nằm trên 2 trục đường khác nhau: Nguyễn Trường Tộ gần phía cầu Ông Lãnh, hướng về trung tâm Quận 1, còn Lê Quốc Hưng gần phía cầu Tân Thuận, hướng về Quận 7 và Phú Mỹ Hưng — bạn có thể chọn chi nhánh gần đối tác hoặc khách hàng của mình hơn." },
+      { q: "Chi nhánh 54-56 Lê Quốc Hưng áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 3 gói: SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại các chi nhánh khu vực Bình Thạnh, Phú Nhuận, Thủ Đức và chi nhánh Nguyễn Trường Tộ." },
+      { q: "Địa chỉ 54-56 Lê Quốc Hưng có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Xóm Chiếu, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Sau khi ký hợp đồng, đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty tính phí ra sao?", a: "Đây là 2 khoản phát sinh tính riêng ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Tôi có thể đến tham quan văn phòng 54-56 Lê Quốc Hưng trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
+    ],
+    testimonials: [
+      { quote: "Văn phòng gần cầu Tân Thuận nên mình chạy qua gặp đối tác bên Quận 7 rất nhanh, không mất nhiều thời gian.", initial: "M", name: "Anh Minh", role: "Giám đốc công ty xuất nhập khẩu" },
+      { quote: "Toà nhà mới, sảnh tiếp khách sạch đẹp nên mình khá yên tâm khi mời đối tác đến làm việc.", initial: "N", name: "Chị Ngọc", role: "Chủ hộ kinh doanh" },
+    ],
+  },
 };
 
 export function getLocationBySlug(slug: string): LocationData | undefined {
@@ -2018,7 +2096,7 @@ export type GroupedLocations = {
 };
 
 /**
- * Nhóm các chi nhánh ĐANG HIỂN THỊ CÔNG KHAI (22/23, 1 chi nhánh đang tạm ẩn)
+ * Nhóm các chi nhánh ĐANG HIỂN THỊ CÔNG KHAI (23/24, 1 chi nhánh đang tạm ẩn)
  * theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
  * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
  * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.

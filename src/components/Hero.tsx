@@ -243,7 +243,7 @@ export default function Hero() {
               icon={<MapPinIcon />}
               className="w-full !px-5 text-center whitespace-normal sm:w-auto sm:whitespace-nowrap"
             >
-              Xem 22 chi nhánh
+              Xem 23 chi nhánh
             </Button>
             <Button
               href="tel:0898082188"

@@ -190,6 +190,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "84-86 Nguyễn Trường Tộ, P. Xóm Chiếu",
   },
   {
+    title: "54-56 Lê Quốc Hưng, Quận 4 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/le-quoc-hung",
+    desc: "54-56 Lê Quốc Hưng, P. Xóm Chiếu",
+  },
+  {
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
@@ -253,7 +259,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Quận 4 (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-4-cu",
-    desc: "Chi nhánh 84-86 Nguyễn Trường Tộ — cách Quận 1 một nhịp cầu",
+    desc: "2 chi nhánh — 84-86 Nguyễn Trường Tộ và 54-56 Lê Quốc Hưng, cùng Phường Xóm Chiếu",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",
@@ -397,7 +403,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Tìm VPA theo nhu cầu",
     category: "Tiện ích",
     href: "/tien-ich/tim-goi-phu-hop",
-    desc: "Chọn khu vực và ngân sách, nhận ngay danh sách gói văn phòng ảo phù hợp trong 22 chi nhánh",
+    desc: "Chọn khu vực và ngân sách, nhận ngay danh sách gói văn phòng ảo phù hợp trong 23 chi nhánh",
   },
   {
     title: "Checklist thành lập doanh nghiệp",
