@@ -367,7 +367,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Tiện ích miễn phí",
     category: "Trang",
     href: "/tien-ich",
-    desc: "10 công cụ miễn phí hỗ trợ doanh nghiệp",
+    desc: "11 công cụ miễn phí hỗ trợ doanh nghiệp",
   },
   {
     title: "Công cụ chọn gói văn phòng phù hợp",
@@ -392,6 +392,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Tiện ích",
     href: "/tien-ich/so-sanh-thue",
     desc: "So sánh số thuế phải nộp giữa TNCN theo lương và hộ kinh doanh theo % doanh thu",
+  },
+  {
+    title: "Tìm gói phù hợp với bạn",
+    category: "Tiện ích",
+    href: "/tien-ich/tim-goi-phu-hop",
+    desc: "Chọn khu vực và ngân sách, nhận ngay danh sách gói văn phòng ảo phù hợp trong 22 chi nhánh",
   },
   {
     title: "Checklist thành lập doanh nghiệp",

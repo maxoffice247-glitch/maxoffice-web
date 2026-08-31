@@ -14,6 +14,7 @@ import {
   ShieldCheckIcon,
   ScaleIcon,
   RouteIcon,
+  TagIcon,
   ArrowRightSmallIcon,
 } from "@/components/icons";
 
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tien-ich" },
   title: "Tiện Ích Miễn Phí - Công Cụ, Checklist, So Sánh | MAX OFFICE",
   description:
-    "10 tiện ích miễn phí: công cụ tính toán, checklist tải PDF, bảng so sánh dịch vụ/loại hình doanh nghiệp và timeline quy trình thành lập — hỗ trợ ra quyết định nhanh chóng.",
+    "11 tiện ích miễn phí: công cụ tính toán, checklist tải PDF, bảng so sánh dịch vụ/loại hình doanh nghiệp và timeline quy trình thành lập — hỗ trợ ra quyết định nhanh chóng.",
   openGraph: {
     images: [{ url: "/images/og/khong-gian-lam-viec.jpg", width: 1200, height: 630 }],
   },
@@ -58,6 +59,13 @@ const TOOL_GROUPS = [
         icon: ScaleIcon,
         title: "So sánh thuế: TNCN vs Hộ kinh doanh",
         desc: "Nhập thu nhập theo tháng để so sánh nhanh số thuế phải nộp giữa đóng thuế TNCN và đăng ký hộ kinh doanh, theo biểu thuế 2026.",
+        linkLabel: "Dùng công cụ ngay",
+      },
+      {
+        slug: "tim-goi-phu-hop",
+        icon: TagIcon,
+        title: "Tìm gói phù hợp với bạn",
+        desc: "Chọn khu vực và ngân sách mong muốn, nhận ngay danh sách gói văn phòng ảo phù hợp trong 22 chi nhánh MAX OFFICE.",
         linkLabel: "Dùng công cụ ngay",
       },
     ],
@@ -125,7 +133,7 @@ export default function TienIchPage() {
         image="/images/khong-gian-lam-viec.jpg"
         eyebrow="Tiện ích"
         title="Công cụ miễn phí hỗ trợ doanh nghiệp"
-        description="10 tiện ích miễn phí giúp bạn ra quyết định nhanh chóng — từ công cụ tính toán, checklist tải PDF, đến bảng so sánh và lộ trình thành lập doanh nghiệp."
+        description="11 tiện ích miễn phí giúp bạn ra quyết định nhanh chóng — từ công cụ tính toán, checklist tải PDF, đến bảng so sánh và lộ trình thành lập doanh nghiệp."
       />
       <Breadcrumb items={[{ label: "Tiện ích" }]} />
 

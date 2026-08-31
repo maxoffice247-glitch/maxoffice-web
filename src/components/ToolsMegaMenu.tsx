@@ -12,6 +12,7 @@ import {
   ShieldCheckIcon,
   ScaleIcon,
   RouteIcon,
+  TagIcon,
   ChevronDownIcon,
   PhoneIcon,
   ArrowRightSmallIcon,
@@ -26,6 +27,7 @@ const TOOL_CATEGORIES = [
       { slug: "tinh-chi-phi-thanh-lap", icon: DocumentCheckIcon, title: "Tính chi phí thành lập" },
       { slug: "tinh-le-phi-mon-bai", icon: BadgePercentIcon, title: "Lệ phí môn bài" },
       { slug: "so-sanh-thue", icon: ScaleIcon, title: "So sánh thuế TNCN vs Hộ KD" },
+      { slug: "tim-goi-phu-hop", icon: TagIcon, title: "Tìm gói phù hợp với bạn" },
     ],
   },
   {
@@ -130,7 +132,7 @@ export default function ToolsMegaMenu({ solid, isActive }: { solid: boolean; isA
                     Cần tư vấn nhanh?
                   </span>
                   <p className="text-[13.5px] leading-relaxed text-white/75">
-                    10 công cụ miễn phí giúp bạn tự tra cứu — hoặc gọi ngay để
+                    11 công cụ miễn phí giúp bạn tự tra cứu — hoặc gọi ngay để
                     được chuyên viên hỗ trợ trực tiếp.
                   </p>
                 </div>

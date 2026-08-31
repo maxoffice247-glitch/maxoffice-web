@@ -16,9 +16,9 @@ export const metadata: Metadata = {
 export default async function ContactPage({
   searchParams,
 }: {
-  searchParams: Promise<{ service?: string }>;
+  searchParams: Promise<{ service?: string; location?: string }>;
 }) {
-  const { service } = await searchParams;
+  const { service, location } = await searchParams;
 
   return (
     <main>
@@ -38,6 +38,7 @@ export default async function ContactPage({
               description="Điền thông tin bên dưới, chuyên viên MAX OFFICE sẽ liên hệ tư vấn miễn phí trong thời gian sớm nhất."
               formType="Liên hệ"
               defaultService={service}
+              defaultLocationSlug={location}
             />
           </Reveal>
         </div>

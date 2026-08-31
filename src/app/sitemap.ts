@@ -4,12 +4,14 @@ import { SERVICES_DATA } from "@/lib/servicesData";
 import { LOCATIONS_DATA, AREAS } from "@/lib/locationsData";
 import { KNOWLEDGE_CATEGORIES } from "@/lib/knowledgeCenterData";
 import { BLOG_POSTS } from "@/lib/blogData";
+import { getAllOfferedPlans } from "@/lib/planFinder";
 
 const TOOL_SLUGS = [
   "chon-goi-van-phong",
   "tinh-chi-phi-thanh-lap",
   "tinh-le-phi-mon-bai",
   "so-sanh-thue",
+  "tim-goi-phu-hop",
   "checklist-thanh-lap-doanh-nghiep",
   "checklist-mo-chi-nhanh",
   "checklist-thay-doi-giay-phep-kinh-doanh",
@@ -68,6 +70,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
+  /** 1 URL cho mỗi gói/chi nhánh đang khả dụng — lấy động từ getAllOfferedPlans() nên tự đồng bộ khi bảng giá/chi nhánh thay đổi. */
+  const planDetailPages: MetadataRoute.Sitemap = getAllOfferedPlans().map((p) => ({
+    url: `${SITE_URL}/tien-ich/tim-goi-phu-hop/${p.locationSlug}/${p.planKey}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
   const knowledgeCategoryPages: MetadataRoute.Sitemap = KNOWLEDGE_CATEGORIES.map((cat) => ({
     url: `${SITE_URL}/knowledge-center/${cat.slug}`,
     lastModified: now,
@@ -88,6 +98,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...locationPages,
     ...areaPages,
     ...toolPages,
+    ...planDetailPages,
     ...knowledgeCategoryPages,
     ...blogPostPages,
   ];
