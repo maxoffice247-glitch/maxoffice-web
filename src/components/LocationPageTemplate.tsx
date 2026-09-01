@@ -112,7 +112,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       ) : data.slug === "le-quoc-hung" ? (
         <SilverGoldPremiumServices branchName="54-56 Lê Quốc Hưng" />
       ) : (
-        <LocationServicesList name={data.name} slug={data.slug} />
+        <LocationServicesList name={data.name} slug={data.slug} promotions={data.promotions} />
       )}
       {data.lowerTierAlternatives && data.lowerTierAlternatives.length > 0 && (
         <section className="pb-9">

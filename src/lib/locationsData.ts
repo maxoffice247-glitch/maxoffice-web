@@ -18,6 +18,21 @@ import type { TransportItem } from "@/components/LocationAccess";
 import type { DiningItem } from "@/components/LocationDining";
 import type { FaqItem } from "@/components/Faq";
 import type { Testimonial } from "@/components/Testimonials";
+import { PHAM_VAN_DONG_VO_PROMOS } from "./virtualOfficePlans";
+
+/**
+ * Một PHIÊN BẢN nội dung khuyến mãi, có hiệu lực từ 1 mốc thời gian cụ thể.
+ * Dùng khi khuyến mãi của 1 chi nhánh có THỜI HẠN đã biết trước (VD: chính
+ * sách áp dụng đến hết 1 ngày nào đó, sau đó tự động đổi sang chính sách
+ * mới) — khai báo sẵn tất cả các phiên bản ở đây, KHÔNG cần sửa code thủ
+ * công đúng ngày chuyển giao. `resolveTimedPromotions()` tự chọn đúng bản áp
+ * dụng dựa trên so sánh `effectiveFrom` với thời điểm render (`new Date()`).
+ */
+export type TimedPromoVersion = {
+  /** Ngày bắt đầu áp dụng phiên bản này, dạng ISO string (VD: "2027-01-01"). Bỏ trống = phiên bản GỐC/mặc định, dùng khi chưa tới ngày hiệu lực của bất kỳ phiên bản nào khác. */
+  effectiveFrom?: string;
+  promotions: string[];
+};
 
 export type AreaInfo = {
   slug: string;
@@ -327,11 +342,42 @@ export type LocationData = {
   testimonials: Testimonial[];
   /** Chi nhánh khác có gói văn phòng ảo giá thấp hơn (Gói LITE/START), hiển thị khi chi nhánh này chỉ bán gói cao cấp. */
   lowerTierAlternatives?: { slug: string; name: string }[];
-  /** Khuyến mãi có thời hạn/điều kiện riêng của chi nhánh — hiển thị trên card báo giá PNG (PlanQuoteCard), NGAY DƯỚI khối "Tiện ích khu vực". Khác với `benefits` (đặc điểm cố định), đây là ưu đãi có thể hết hạn nên tách riêng field, không gộp vào benefits. Bỏ trống/undefined => ẩn hẳn khối này trên card. */
-  promotions?: string[];
+  /** Khuyến mãi có thời hạn/điều kiện riêng của chi nhánh — hiển thị trên trang chi nhánh (qua LocationServicesList/component riêng) và trên card báo giá PNG (PlanQuoteCard/PlanGroupQuoteCard). Khác với `benefits` (đặc điểm cố định), đây là ưu đãi có thể hết hạn nên tách riêng field, không gộp vào benefits. Có thể là `string[]` đơn giản (không đổi theo thời gian) hoặc `TimedPromoVersion[]` (nhiều phiên bản theo mốc ngày, VD chính sách hiện tại + chính sách mới từ 1 ngày trong tương lai) — LUÔN đọc qua `resolveTimedPromotions()` ở nơi hiển thị, không đọc trực tiếp field này. Bỏ trống/undefined => ẩn hẳn khối khuyến mãi. */
+  promotions?: string[] | TimedPromoVersion[];
   /** Tạm ẩn chi nhánh khỏi mọi nơi hiển thị công khai (KHÔNG xoá dữ liệu) — trang /locations/[slug] trả về 404, loại khỏi sitemap. Mặc định `true` khi không khai báo. */
   isActive?: boolean;
 };
+
+/**
+ * Chọn đúng danh sách khuyến mãi áp dụng tại thời điểm `now` (mặc định là
+ * lúc gọi hàm) từ field `promotions` của `LocationData` — hỗ trợ cả dạng đơn
+ * giản (`string[]`, không đổi theo thời gian) lẫn dạng nhiều phiên bản theo
+ * mốc ngày (`TimedPromoVersion[]`).
+ *
+ * Logic: lấy phiên bản có `effectiveFrom` MỚI NHẤT mà đã tới ngày áp dụng
+ * (`effectiveFrom <= now`); nếu chưa phiên bản có ngày nào tới hạn, dùng
+ * phiên bản KHÔNG khai báo `effectiveFrom` (phiên bản gốc/mặc định) làm dự
+ * phòng. Dùng CHUNG được cho mọi chi nhánh/khuyến mãi có thời hạn tương tự
+ * trong tương lai — chỉ cần khai báo `TimedPromoVersion[]` ở `LocationData`,
+ * không cần sửa hàm này.
+ */
+export function resolveTimedPromotions(
+  promotions: LocationData["promotions"],
+  now: Date = new Date()
+): string[] | undefined {
+  if (!promotions || promotions.length === 0) return undefined;
+  // Dạng đơn giản — không có phiên bản theo thời gian, dùng nguyên trạng.
+  if (typeof promotions[0] === "string") return promotions as string[];
+  const versions = promotions as TimedPromoVersion[];
+  const applicable = versions
+    .filter((v) => !v.effectiveFrom || new Date(v.effectiveFrom).getTime() <= now.getTime())
+    .sort((a, b) => {
+      const aTime = a.effectiveFrom ? new Date(a.effectiveFrom).getTime() : -Infinity;
+      const bTime = b.effectiveFrom ? new Date(b.effectiveFrom).getTime() : -Infinity;
+      return bTime - aTime; // Mới nhất trước.
+    });
+  return applicable[0]?.promotions;
+}
 
 const IMAGE = "/images/khong-gian-lam-viec.jpg";
 
@@ -379,7 +425,30 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh đến trung tâm thành phố qua trục Cộng Hoà — Trường Sơn." },
       { icon: HeadsetIcon, title: "Ưu tiên hỗ trợ nhanh", desc: "Là trụ sở chính nên thời gian xử lý yêu cầu thường nhanh nhất hệ thống." },
     ],
-    promotions: ["Ký hợp đồng 12 tháng: tặng 2 tháng", "Ký hợp đồng 24 tháng: tặng 6 tháng và tặng dịch vụ làm GPKD"],
+    // 2 giai đoạn khuyến mãi theo thời hạn — xem TimedPromoVersion/
+    // resolveTimedPromotions() ở đầu file. Giai đoạn hiện tại (không khai
+    // báo effectiveFrom = phiên bản gốc) áp dụng đến hết 31/12/2026; từ
+    // 01/01/2027 tự động chuyển sang giai đoạn mới, không cần sửa code.
+    promotions: [
+      {
+        // Giai đoạn hiện tại, áp dụng đến hết 31/12/2026: 2 ưu đãi cùng lúc,
+        // không điều kiện GPKD.
+        promotions: [
+          "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+          "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí + tặng dịch vụ thành lập doanh nghiệp (GPKD)",
+        ],
+      },
+      {
+        // Giai đoạn mới, từ 01/01/2027: gói 24 tháng đổi thành 2 lựa chọn
+        // tuỳ tình trạng GPKD của khách (giống cấu trúc VUON_LAI_VO_PROMOS).
+        effectiveFrom: "2027-01-01",
+        promotions: [
+          "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+          "Ký hợp đồng 24 tháng — khách CHƯA có GPKD: tặng 3 tháng miễn phí + tặng dịch vụ thành lập doanh nghiệp (GPKD)",
+          "Ký hợp đồng 24 tháng — khách ĐÃ CÓ SẴN GPKD: tặng 6 tháng miễn phí (thay cho lựa chọn tặng 3 tháng + GPKD ở trên)",
+        ],
+      },
+    ],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Nằm trong khu vực Tân Sơn Hoà, thuận tiện đón khách từ sân bay." },
       { name: "Công viên Hoàng Văn Thụ", desc: "Không gian xanh lớn của Tân Bình, phù hợp nghỉ ngơi giữa giờ làm việc." },
@@ -1335,6 +1404,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: ClockIcon, title: "Kết nối liên vùng thuận tiện", desc: "Nối nhanh Gò Vấp, Bình Thạnh và cửa ngõ Đông Bắc thành phố." },
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
     ],
+    // Đồng bộ với PHAM_VAN_DONG_VO_PROMOS (đã hiển thị trên chính trang chi
+    // nhánh qua PhamVanDongServices.tsx) để công cụ "Tìm VPA theo nhu cầu"
+    // cũng xuất đúng khuyến mãi này trên ảnh báo giá PNG.
+    promotions: PHAM_VAN_DONG_VO_PROMOS,
     nearbyItems: [
       { name: "Đại lộ Phạm Văn Đồng", desc: "Trục đường lớn hiện đại, kết nối Gò Vấp, Bình Thạnh với khu vực Thủ Đức." },
       { name: "Các trường đại học khu vực Thủ Đức", desc: "Gần Đại học Quốc gia TP.HCM, Đại học Nông Lâm, Đại học Sư phạm Kỹ thuật." },

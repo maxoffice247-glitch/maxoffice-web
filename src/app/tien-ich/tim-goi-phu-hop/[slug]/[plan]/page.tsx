@@ -7,7 +7,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import PlanDetailActions from "@/components/tools/PlanDetailActions";
 import { CheckCircleIcon, MapPinIcon, ArrowRightSmallIcon } from "@/components/icons";
 import { getAllOfferedPlans, getOfferedPlan, formatVoPrice } from "@/lib/planFinder";
-import { LOCATIONS_DATA } from "@/lib/locationsData";
+import { LOCATIONS_DATA, resolveTimedPromotions } from "@/lib/locationsData";
 import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateStaticParams() {
@@ -155,7 +155,7 @@ export default async function PlanDetailPage({
               address={location.address}
               facadeSrc={facadeSrc}
               benefits={quoteBenefits}
-              promotions={location.promotions}
+              promotions={resolveTimedPromotions(location.promotions)}
             />
           </div>
         </div>

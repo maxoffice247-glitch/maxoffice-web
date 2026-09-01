@@ -1,6 +1,6 @@
 import Link from "next/link";
 import SectionHead from "./SectionHead";
-import { RevealGroup, RevealItem } from "./Reveal";
+import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import {
   BuildingIcon,
   KeyIcon,
@@ -11,6 +11,7 @@ import {
   ArrowRightSmallIcon,
 } from "./icons";
 import { getPlansForLocation } from "@/lib/virtualOfficePlans";
+import { resolveTimedPromotions, type LocationData } from "@/lib/locationsData";
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
@@ -49,10 +50,20 @@ const OTHER_SERVICES = [
   },
 ];
 
-export default function LocationServicesList({ name, slug }: { name: string; slug: string }) {
+export default function LocationServicesList({
+  name,
+  slug,
+  promotions,
+}: {
+  name: string;
+  slug: string;
+  /** Khuyến mãi có thời hạn/điều kiện riêng của chi nhánh — nguyên trạng từ `LocationData.promotions` (chưa resolve theo thời gian, có thể là `TimedPromoVersion[]`), tự chọn đúng phiên bản qua `resolveTimedPromotions()` ngay bên dưới. Bỏ trống/undefined => ẩn hẳn khối khuyến mãi. */
+  promotions?: LocationData["promotions"];
+}) {
   const voPlans = getPlansForLocation(slug);
   const cheapest = voPlans.reduce((min, p) => (p.price < min.price ? p : min), voPlans[0]);
   const voPlanNames = voPlans.map((p) => p.name).join(", ");
+  const resolvedPromotions = resolveTimedPromotions(promotions);
 
   return (
     <section className="py-9">
@@ -105,6 +116,25 @@ export default function LocationServicesList({ name, slug }: { name: string; slu
             </RevealItem>
           ))}
         </RevealGroup>
+        {/* Khuyến mãi riêng chi nhánh — chỉ hiện khi `promotions` có dữ liệu
+            sau khi resolve theo thời gian (đồng bộ cách hiển thị với
+            PhamVanDongServices.tsx). Đa số chi nhánh dùng component này
+            không có `promotions` riêng nên khối này ẩn hoàn toàn với các
+            chi nhánh đó, chỉ hiện với chi nhánh có khai báo (VD Sông Thao). */}
+        {resolvedPromotions && resolvedPromotions.length > 0 && (
+          <Reveal className="mt-6 rounded-2xl bg-accent/8 p-6 sm:p-7">
+            <p className="mb-2 flex items-center gap-1.5 text-[14.5px] font-bold text-navy">
+              <span aria-hidden>🎁</span> Khuyến mãi riêng chi nhánh
+            </p>
+            <ul className="space-y-1.5">
+              {resolvedPromotions.map((note) => (
+                <li key={note} className="text-[13.5px] leading-relaxed text-body-text">
+                  • {note}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        )}
       </div>
     </section>
   );
