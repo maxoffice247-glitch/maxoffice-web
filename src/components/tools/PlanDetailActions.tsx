@@ -12,11 +12,13 @@ export default function PlanDetailActions({
   address,
   facadeSrc,
   benefits,
+  promotions,
 }: {
   plan: OfferedPlan;
   address: string;
   facadeSrc: string;
   benefits?: QuoteBenefitTag[];
+  promotions?: string[];
 }) {
   const quoteRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
@@ -78,7 +80,7 @@ export default function PlanDetailActions({
         style={{ position: "fixed", top: 0, left: -99999, pointerEvents: "none" }}
       >
         <div ref={quoteRef}>
-          <PlanQuoteCard plan={plan} address={address} facadeSrc={facadeSrc} benefits={benefits} />
+          <PlanQuoteCard plan={plan} address={address} facadeSrc={facadeSrc} benefits={benefits} promotions={promotions} />
         </div>
       </div>
     </div>

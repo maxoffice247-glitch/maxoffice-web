@@ -155,6 +155,7 @@ export default async function PlanDetailPage({
               address={location.address}
               facadeSrc={facadeSrc}
               benefits={quoteBenefits}
+              promotions={location.promotions}
             />
           </div>
         </div>

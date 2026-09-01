@@ -327,6 +327,8 @@ export type LocationData = {
   testimonials: Testimonial[];
   /** Chi nhánh khác có gói văn phòng ảo giá thấp hơn (Gói LITE/START), hiển thị khi chi nhánh này chỉ bán gói cao cấp. */
   lowerTierAlternatives?: { slug: string; name: string }[];
+  /** Khuyến mãi có thời hạn/điều kiện riêng của chi nhánh — hiển thị trên card báo giá PNG (PlanQuoteCard), NGAY DƯỚI khối "Tiện ích khu vực". Khác với `benefits` (đặc điểm cố định), đây là ưu đãi có thể hết hạn nên tách riêng field, không gộp vào benefits. Bỏ trống/undefined => ẩn hẳn khối này trên card. */
+  promotions?: string[];
   /** Tạm ẩn chi nhánh khỏi mọi nơi hiển thị công khai (KHÔNG xoá dữ liệu) — trang /locations/[slug] trả về 404, loại khỏi sitemap. Mặc định `true` khi không khai báo. */
   isActive?: boolean;
 };
@@ -377,6 +379,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh đến trung tâm thành phố qua trục Cộng Hoà — Trường Sơn." },
       { icon: HeadsetIcon, title: "Ưu tiên hỗ trợ nhanh", desc: "Là trụ sở chính nên thời gian xử lý yêu cầu thường nhanh nhất hệ thống." },
     ],
+    promotions: ["Ký hợp đồng 12 tháng: tặng 2 tháng", "Ký hợp đồng 24 tháng: tặng dịch vụ làm GPKD"],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Nằm trong khu vực Tân Sơn Hoà, thuận tiện đón khách từ sân bay." },
       { name: "Công viên Hoàng Văn Thụ", desc: "Không gian xanh lớn của Tân Bình, phù hợp nghỉ ngơi giữa giờ làm việc." },

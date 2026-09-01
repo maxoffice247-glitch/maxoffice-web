@@ -32,12 +32,15 @@ export default function PlanQuoteCard({
   address,
   facadeSrc,
   benefits,
+  promotions,
 }: {
   plan: OfferedPlan;
   address: string;
   facadeSrc: string;
   /** Tiện ích khu vực của chi nhánh — lấy nguyên trạng từ `LOCATIONS_DATA[slug].benefits` (đã có sẵn, dùng chung với "Vì sao nên chọn văn phòng..." trên trang chi nhánh). Bỏ trống hoặc undefined => ẩn khối "Tiện ích khu vực". */
   benefits?: QuoteBenefitTag[];
+  /** Khuyến mãi có thời hạn/điều kiện riêng của chi nhánh — lấy nguyên trạng từ `LOCATIONS_DATA[slug].promotions`. Toàn bộ đều là chuỗi thuần (không icon component) nên qua thẳng ranh giới Server -> Client mà không cần dựng JSX trước như `benefits`. Bỏ trống hoặc undefined => ẩn khối "Khuyến mãi". */
+  promotions?: string[];
 }) {
   // Gói giá cao (VD RISE 1.199.000đ) có tới 9 tính năng — 1 cột dọc kéo card
   // quá cao khi export PNG. Từ 6 tính năng trở lên thì chia lưới 2 cột, cột
@@ -87,6 +90,27 @@ export default function PlanQuoteCard({
                   {b.title}
                 </span>
               ))}
+            </div>
+          )}
+          {/* Khuyến mãi — tách riêng khỏi "Tiện ích khu vực" phía trên bằng
+              chủ đích: benefits là đặc điểm CỐ ĐỊNH của địa điểm (pill nền
+              xanh primary), còn khuyến mãi là ưu đãi có thời hạn/điều kiện
+              nên dùng tông đỏ/cam (accent) + dạng list gọn (không pill) để
+              không bị hiểu nhầm là 1 tiện ích thường trực. Tối đa 3 dòng để
+              không kéo dài card; ẩn hẳn khối nếu rỗng, giống pattern benefits. */}
+          {promotions && promotions.length > 0 && (
+            <div className="mt-4">
+              <p className="mb-1.5 flex items-center gap-1.5 text-[14px] font-bold text-accent">
+                <span aria-hidden>🎁</span> Khuyến mãi
+              </p>
+              <ul className="space-y-1">
+                {promotions.slice(0, 3).map((p) => (
+                  <li key={p} className="flex items-start gap-2 text-[14px] leading-snug text-ink">
+                    <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
