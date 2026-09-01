@@ -76,6 +76,10 @@ function getHeroSlides(branchCount: number): HeroSlide[] {
       question: "Ngân hàng từ chối mở tài khoản vì không có trụ sở thực?",
       answer: "Địa chỉ thật, có bảng tên, có lễ tân — đầy đủ giấy tờ xác minh cho ngân hàng.",
     },
+    {
+      question: "Sợ hóa đơn sai địa chỉ khiến mất quyền khấu trừ thuế VAT?",
+      answer: "Địa chỉ tại MAX OFFICE luôn ổn định, được cơ quan thuế xác nhận hợp lệ, giúp bạn an tâm không lo bị truy thu.",
+    },
   ];
 }
 
@@ -187,8 +191,14 @@ export default function Hero() {
                         viền bóng tối dạng outline (3 lớp text-shadow, mờ dần
                         từ sát nét đến toả rộng) thay vì shadow mờ đơn lớp
                         của H1 — viền tối đủ dày để chữ đỏ vẫn đọc được rõ dù
-                        rơi vào vùng sáng nhất của ảnh nền. */}
-                    <p className="text-base font-bold text-accent [text-shadow:0_0_2px_rgba(0,0,0,0.95),0_0_6px_rgba(0,0,0,0.85),0_1px_14px_rgba(0,0,0,0.6)] sm:text-lg">
+                        rơi vào vùng sáng nhất của ảnh nền.
+                        text-lg/sm:text-xl (18px/20px) thay vì text-base/
+                        sm:text-lg (16px/18px) trước đây — tăng đúng 1 bậc
+                        thang chữ Tailwind ở mỗi breakpoint (+12.5% và +11.1%,
+                        trong khoảng 10-15% yêu cầu) để phân tầng rõ hơn với
+                        câu trả lời (giữ nguyên text-base/sm:text-lg) mà vẫn
+                        thấp hơn hẳn H1 tĩnh. */}
+                    <p className="text-lg font-bold text-accent [text-shadow:0_0_2px_rgba(0,0,0,0.95),0_0_6px_rgba(0,0,0,0.85),0_1px_14px_rgba(0,0,0,0.6)] sm:text-xl">
                       {slide.question}
                     </p>
                     <p className="mt-1 text-base text-white/86 sm:text-lg">{slide.answer}</p>
