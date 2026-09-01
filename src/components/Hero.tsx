@@ -45,7 +45,7 @@ type HeroSlide = { question: string; answer: string };
 function getHeroSlides(branchCount: number): HeroSlide[] {
   return [
     {
-      question: "Cần đối tác đồng hành lâu dài, không chỉ thuê văn phòng đơn thuần?",
+      question: "Bạn cần đối tác đồng hành lâu dài, không chỉ thuê văn phòng đơn thuần?",
       answer: "MAX OFFICE đồng hành cùng bạn từ ngày thành lập đến khi mở rộng quy mô.",
     },
     {
