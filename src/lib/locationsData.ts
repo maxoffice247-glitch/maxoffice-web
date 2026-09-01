@@ -379,7 +379,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh đến trung tâm thành phố qua trục Cộng Hoà — Trường Sơn." },
       { icon: HeadsetIcon, title: "Ưu tiên hỗ trợ nhanh", desc: "Là trụ sở chính nên thời gian xử lý yêu cầu thường nhanh nhất hệ thống." },
     ],
-    promotions: ["Ký hợp đồng 12 tháng: tặng 2 tháng", "Ký hợp đồng 24 tháng: tặng dịch vụ làm GPKD"],
+    promotions: ["Ký hợp đồng 12 tháng: tặng 2 tháng", "Ký hợp đồng 24 tháng: tặng 6 tháng và tặng dịch vụ làm GPKD"],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Nằm trong khu vực Tân Sơn Hoà, thuận tiện đón khách từ sân bay." },
       { name: "Công viên Hoàng Văn Thụ", desc: "Không gian xanh lớn của Tân Bình, phù hợp nghỉ ngơi giữa giờ làm việc." },

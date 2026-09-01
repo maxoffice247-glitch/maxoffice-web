@@ -101,7 +101,7 @@ export default function PlanQuoteCard({
           {promotions && promotions.length > 0 && (
             <div className="mt-4">
               <p className="mb-1.5 flex items-center gap-1.5 text-[14px] font-bold text-accent">
-                <span aria-hidden>🎁</span> Khuyến mãi
+                <span aria-hidden>🎁</span> Ưu đãi khi ký hợp đồng dài hạn
               </p>
               <ul className="space-y-1">
                 {promotions.slice(0, 3).map((p) => (

@@ -13,7 +13,7 @@
  * getCheapestPriceForLocation) sẽ tự động nhận diện lại mà KHÔNG cần sửa
  * code.
  */
-import { LOCATIONS_LIST } from "./locationsData";
+import { LOCATIONS_LIST, LOCATIONS_DATA } from "./locationsData";
 import {
   getPlansForLocation,
   PHAM_VAN_DONG_VO_PLANS,
@@ -246,6 +246,8 @@ export type PlanGroupLocation = {
   name: string;
   shortAddress: string;
   area: { slug: string; name: string };
+  /** Khuyến mãi riêng của CHI NHÁNH này (từ `LOCATIONS_DATA[slug].promotions`) — không phải của cả nhóm gói, vì trong 1 nhóm mỗi chi nhánh có thể có ưu đãi khác nhau. Undefined/rỗng nếu chi nhánh không có khuyến mãi nào được ghi nhận. */
+  promotions?: string[];
 };
 
 export type PlanGroup = {
@@ -295,6 +297,7 @@ export function getGroupedPlans(): PlanGroup[] {
       name: plan.locationName,
       shortAddress: loc?.shortAddress ?? "",
       area: plan.area,
+      promotions: LOCATIONS_DATA[plan.locationSlug]?.promotions,
     });
     bySignature.set(sig, entry);
   }

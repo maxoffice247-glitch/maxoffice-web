@@ -14,7 +14,31 @@ import { formatVoPrice } from "@/lib/planFinder";
  * ảnh báo giá 1 chi nhánh — số chi nhánh mỗi nhóm chênh lệch quá lớn để dùng
  * chung 1 chiều cao cố định mà không bị trống hoặc tràn.
  */
+/**
+ * Xác định cách hiển thị khuyến mãi cho cả nhóm gói (nhiều chi nhánh):
+ * - "none": không chi nhánh nào trong nhóm có khuyến mãi được ghi nhận
+ *   -> ẩn hẳn khối này ở card.
+ * - "shared": MỌI chi nhánh trong nhóm có ĐÚNG cùng 1 danh sách khuyến mãi
+ *   -> hiển thị chung 1 lần ngay dưới "Gói + giá", đỡ lặp lại 7 lần giống
+ *   hệt nhau khi cả nhóm dùng chung 1 chính sách.
+ * - "per-location": các chi nhánh có khuyến mãi khác nhau (hoặc chỉ 1 vài
+ *   chi nhánh có, số còn lại không) -> hiển thị riêng theo từng dòng chi
+ *   nhánh trong "Danh sách chi nhánh áp dụng", bỏ qua chi nhánh không có.
+ */
+function resolvePromoDisplay(locations: PlanGroup["locations"]) {
+  const withPromo = locations.filter((l) => l.promotions && l.promotions.length > 0);
+  if (withPromo.length === 0) return { mode: "none" as const };
+  const allHavePromo = withPromo.length === locations.length;
+  const first = JSON.stringify(withPromo[0].promotions);
+  const allSame = allHavePromo && withPromo.every((l) => JSON.stringify(l.promotions) === first);
+  return allSame
+    ? { mode: "shared" as const, promotions: withPromo[0].promotions! }
+    : { mode: "per-location" as const };
+}
+
 export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
+  const promoDisplay = resolvePromoDisplay(group.locations);
+
   return (
     <div style={{ width: 1080 }} className="flex flex-col bg-white">
       {/* Header — logo + tiêu đề báo giá */}
@@ -53,6 +77,27 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
         )}
       </div>
 
+      {/* Khuyến mãi dùng CHUNG cho cả nhóm — chỉ hiện khi mọi chi nhánh
+          trong nhóm có ĐÚNG cùng 1 danh sách khuyến mãi (resolvePromoDisplay).
+          Nếu khuyến mãi khác nhau giữa các chi nhánh thì hiển thị riêng theo
+          từng dòng trong "Danh sách chi nhánh áp dụng" bên dưới thay vì ở
+          đây, để không gán nhầm ưu đãi của 1 chi nhánh cho cả nhóm. */}
+      {promoDisplay.mode === "shared" && (
+        <div className="mx-14 mt-6 rounded-2xl border border-accent/25 bg-accent/8 px-8 py-6">
+          <p className="mb-2 flex items-center gap-1.5 text-[16px] font-bold text-accent">
+            <span aria-hidden>🎁</span> Ưu đãi khi ký hợp đồng dài hạn
+          </p>
+          <ul className="space-y-1.5">
+            {promoDisplay.promotions.slice(0, 3).map((p) => (
+              <li key={p} className="flex items-start gap-2 text-[15px] leading-snug text-ink">
+                <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Danh sách tính năng */}
       <div className="mx-14 mt-9">
         <p className="mb-5 text-[20px] font-bold text-navy">Tính năng đi kèm</p>
@@ -87,6 +132,17 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
               <div className="min-w-0">
                 <p className="text-[19px] font-bold text-navy">{loc.name}</p>
                 <p className="text-[15px] text-body-text">{loc.shortAddress}</p>
+                {/* Chế độ "per-location": mỗi chi nhánh có ưu đãi khác nhau
+                    (hoặc chỉ 1 vài chi nhánh có), nên gắn đúng vào dòng của
+                    chi nhánh đó thay vì 1 khối chung dễ gây hiểu nhầm là áp
+                    dụng cho tất cả. Bỏ qua hẳn dòng này nếu chi nhánh không
+                    có khuyến mãi nào được ghi nhận. */}
+                {promoDisplay.mode === "per-location" && loc.promotions && loc.promotions.length > 0 && (
+                  <p className="mt-1 flex items-start gap-1.5 text-[13px] leading-snug text-accent">
+                    <span aria-hidden>🎁</span>
+                    <span>{loc.promotions.slice(0, 2).join(" · ")}</span>
+                  </p>
+                )}
               </div>
             </div>
           ))}
