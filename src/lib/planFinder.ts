@@ -1,9 +1,9 @@
 /**
  * Gộp toàn bộ 5 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
  * nhánh; M-START/M-BASE/M-ORIGIN riêng Phạm Văn Đồng; W-BASE/W-PRO riêng
- * Bùi Văn Ba; SAVE/SILVER/GOLD/PREMIUM riêng Quận 3 (cũ); SILVER/GOLD/
- * PREMIUM dùng chung Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức) thành MỘT danh
- * sách phẳng — dùng cho công cụ /tien-ich/tim-goi-phu-hop.
+ * Bùi Văn Ba; SAVE/SILVER/GOLD/PREMIUM dùng chung Quận 1 (cũ) + Quận 3
+ * (cũ); SILVER/GOLD/PREMIUM dùng chung Bình Thạnh/Phú Nhuận/Quận 4/Thủ
+ * Đức) thành MỘT danh sách phẳng — dùng cho công cụ /tien-ich/tim-goi-phu-hop.
  *
  * Nguồn dữ liệu: LOCATIONS_LIST (đã tự lọc `isActive !== false`) +
  * virtualOfficePlans.ts. Vì hàm này lặp qua LOCATIONS_LIST (không phải
@@ -19,12 +19,13 @@ import {
   PHAM_VAN_DONG_VO_PLANS,
   QUAN_7_VO_PLANS,
   VUON_LAI_VO_PLAN,
-  QUAN_3_CU_VO_PLANS,
+  SAVE_SILVER_GOLD_PREMIUM_PLANS,
+  SAVE_SILVER_GOLD_PREMIUM_LOCATIONS,
   SILVER_GOLD_PREMIUM_VO_PLANS,
   SILVER_GOLD_PREMIUM_LOCATIONS,
   type PhamVanDongPlan,
   type VuonLaiPlan,
-  type Quan3CuPlan,
+  type SaveSilverGoldPremiumPlan,
   type SilverGoldPremiumPlan,
 } from "./virtualOfficePlans";
 
@@ -126,8 +127,8 @@ export function getAllOfferedPlans(): OfferedPlan[] {
         duration: p.duration,
         features: withPhamVanDongStyleFeatures(p),
       });
-    } else if (slug === "nguyen-thong" || slug === "cach-mang-thang-8") {
-      for (const p of QUAN_3_CU_VO_PLANS as Quan3CuPlan[]) {
+    } else if (SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.includes(slug)) {
+      for (const p of SAVE_SILVER_GOLD_PREMIUM_PLANS as SaveSilverGoldPremiumPlan[]) {
         result.push({
           locationSlug: slug,
           locationName: name,

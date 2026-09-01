@@ -55,6 +55,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "Số 95 Điện Biên Phủ, P. Tân Định — Vị trí VIP",
   },
   {
+    title: "36 Mạc Đĩnh Chi, Quận 1 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/mac-dinh-chi",
+    desc: "36 Mạc Đĩnh Chi, P. Tân Định",
+  },
+  {
     title: "Sông Thao, Tân Bình",
     category: "Chi nhánh",
     href: "/locations/song-thao",
@@ -205,7 +211,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Quận 1 (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-1-cu",
-    desc: "Chi nhánh Điện Biên Phủ — trung tâm hành chính, tài chính TP.HCM",
+    desc: "2 chi nhánh — Điện Biên Phủ và 36 Mạc Đĩnh Chi, trung tâm hành chính, tài chính TP.HCM",
   },
   {
     title: "Quận Gò Vấp (cũ)",
@@ -403,7 +409,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Tìm VPA theo nhu cầu",
     category: "Tiện ích",
     href: "/tien-ich/tim-goi-phu-hop",
-    desc: "Chọn khu vực và ngân sách, nhận ngay danh sách gói văn phòng ảo phù hợp trong 23 chi nhánh",
+    desc: "Chọn khu vực và ngân sách, nhận ngay danh sách gói văn phòng ảo phù hợp trong 24 chi nhánh",
   },
   {
     title: "Checklist thành lập doanh nghiệp",

@@ -27,7 +27,7 @@ export default function LocationCrossLinks({ currentSlug }: { currentSlug: strin
             Khám phá các địa điểm khác của MAX OFFICE
           </h2>
           <p className="text-[15.5px] text-body-text">
-            23 địa điểm trải khắp TP.HCM — chọn chi nhánh gần đối tác, khách
+            24 địa điểm trải khắp TP.HCM — chọn chi nhánh gần đối tác, khách
             hàng hoặc thuận tiện nhất cho đội ngũ của bạn.
           </p>
         </Reveal>
@@ -68,7 +68,7 @@ export default function LocationCrossLinks({ currentSlug }: { currentSlug: strin
             </span>
             <div>
               <h3 className="text-[15.5px] font-bold text-navy">
-                Xem toàn bộ 23 địa điểm
+                Xem toàn bộ 24 địa điểm
               </h3>
               <p className="text-[13.5px] text-body-text">
                 So sánh vị trí và chọn chi nhánh phù hợp nhất với bạn.

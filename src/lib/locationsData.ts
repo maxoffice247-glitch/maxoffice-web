@@ -263,6 +263,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     shortAddress: "54-56 Lê Quốc Hưng, P. Xóm Chiếu",
     area: AREA_QUAN_4,
   },
+  {
+    slug: "mac-dinh-chi",
+    name: "36 Mạc Đĩnh Chi, Quận 1 (cũ)",
+    shortAddress: "36 Mạc Đĩnh Chi, P. Tân Định",
+    area: AREA_QUAN_1,
+  },
 ];
 
 /**
@@ -350,7 +356,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 23 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
+      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 24 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
       "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
@@ -437,7 +443,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 23 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
+      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 24 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
@@ -619,7 +625,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
-      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 23 địa điểm.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 24 địa điểm.",
       "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
@@ -886,7 +892,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 23 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 24 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
       "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
     ],
@@ -2074,6 +2080,78 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Toà nhà mới, sảnh tiếp khách sạch đẹp nên mình khá yên tâm khi mời đối tác đến làm việc.", initial: "N", name: "Chị Ngọc", role: "Chủ hộ kinh doanh" },
     ],
   },
+
+  /* =============== 36 MẠC ĐĨNH CHI (KHU VỰC QUẬN 1, CHI NHÁNH THỨ 2) =============== */
+  "mac-dinh-chi": {
+    slug: "mac-dinh-chi",
+    name: "36 Mạc Đĩnh Chi, Quận 1 (cũ)",
+    area: AREA_QUAN_1,
+    address: "36 Mạc Đĩnh Chi, Phường Tân Định, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 36 Mạc Đĩnh Chi, Quận 1 (cũ)",
+    heroDescription:
+      "Chi nhánh thứ 2 của MAX OFFICE tại Quận 1 (cũ) — văn phòng ảo 4 gói riêng biệt từ 379.000đ/tháng, đặt tại cao ốc văn phòng nhiều tầng trên trục Mạc Đĩnh Chi, gần Thảo Cầm Viên và khu vực nhiều lãnh sự quán.",
+    metaTitle: "Văn Phòng Ảo 36 Mạc Đĩnh Chi, Quận 1 (cũ) | Từ 379K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 36 Mạc Đĩnh Chi, Phường Tân Định — chi nhánh thứ 2 MAX OFFICE tại Quận 1 (cũ), 4 gói SAVE/SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần Thảo Cầm Viên Sài Gòn.",
+    image: IMAGE,
+    // Ảnh mặt tiền gốc 1145x1374, không chỉnh sửa.
+    facadeAspectRatio: "1145 / 1374",
+    facadeImageSide: "right",
+    interiorImages: [
+      { src: "/images/dia-diem-mac-dinh-chi-le-tan.jpg", alt: "Quầy lễ tân văn phòng 36 Mạc Đĩnh Chi", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-mac-dinh-chi-tiep-khach.jpg", alt: "Khu vực tiếp khách văn phòng 36 Mạc Đĩnh Chi", caption: "Khu vực tiếp khách" },
+      { src: "/images/dia-diem-mac-dinh-chi-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 36 Mạc Đĩnh Chi", caption: "Bảng tên công ty tại toà nhà" },
+    ],
+    intro: [
+      "Văn phòng 36 Mạc Đĩnh Chi là chi nhánh thứ 2 của MAX OFFICE tại khu vực Quận 1 (cũ), cùng thuộc Phường Tân Định với chi nhánh Điện Biên Phủ nhưng nằm trên một trục đường khác — gần Thảo Cầm Viên Sài Gòn và khu vực tập trung nhiều lãnh sự quán, văn phòng đại diện nước ngoài. Sự xuất hiện của chi nhánh thứ 2 giúp doanh nghiệp tại Quận 1 có thêm lựa chọn địa chỉ đăng ký kinh doanh mà không phải phụ thuộc vào một địa điểm duy nhất.",
+      "Chi nhánh đặt tại một cao ốc văn phòng nhiều tầng, mặt tiền kính hiện đại với hệ lam che nắng màu cam đặc trưng, đã quy tụ sẵn nhiều công ty trong lĩnh vực truyền thông, thương mại và dịch vụ. Sảnh lễ tân ốp gỗ ấm áp, khu vực tiếp khách được thiết kế hiện đại, tạo không gian chuyên nghiệp ngay từ lối vào toà nhà.",
+      "Chi nhánh cung cấp 4 gói văn phòng ảo riêng biệt — SAVE (379.000đ/tháng), SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10% — cùng bảng giá đang áp dụng tại 2 chi nhánh khu vực Quận 3 (cũ) là 60 Nguyễn Thông và 520 Cách Mạng Tháng 8, phân hoá theo thời lượng sử dụng phòng họp, sảnh tiếp khách và các hỗ trợ pháp lý đi kèm. Đây là hệ giá HOÀN TOÀN KHÁC với gói START/BASE (hệ LITE-RISE) đang áp dụng tại chi nhánh Điện Biên Phủ cùng khu vực Quận 1.",
+      "Với vị trí gần Thảo Cầm Viên và khu vực nhiều lãnh sự quán, doanh nghiệp đặt văn phòng tại 36 Mạc Đĩnh Chi có lợi thế về hình ảnh khi làm việc với đối tác nước ngoài, đồng thời thuận tiện di chuyển vào trung tâm hành chính Quận 1. Đây là lựa chọn phù hợp cho các công ty tư vấn, thương mại quốc tế hoặc dịch vụ chuyên nghiệp cần một địa chỉ đăng ký kinh doanh tại khu vực trung tâm, gần các cơ quan đại diện nước ngoài.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 36 Mạc Đĩnh Chi",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh thứ 2 tại Quận 1", desc: "Thêm lựa chọn địa chỉ đăng ký kinh doanh tại Quận 1 (cũ), cao ốc văn phòng nhiều tầng hiện đại." },
+      { icon: MapPinIcon, title: "Gần Thảo Cầm Viên", desc: "Khu vực xanh mát, gần nhiều lãnh sự quán và văn phòng đại diện nước ngoài." },
+      { icon: BadgePercentIcon, title: "4 gói giá linh hoạt", desc: "SAVE, SILVER, GOLD, PREMIUM — từ 379.000đ/tháng." },
+      { icon: ShieldCheckIcon, title: "Toà nhà nhiều công ty đang hoạt động", desc: "Cao ốc văn phòng đã quy tụ sẵn nhiều doanh nghiệp truyền thông, thương mại, dịch vụ." },
+      { icon: UsersIcon, title: "Sảnh tiếp khách hiện đại", desc: "Không gian lễ tân, tiếp khách thiết kế chuyên nghiệp ngay từ lối vào." },
+      { icon: ClockIcon, title: "Gần trung tâm hành chính Quận 1", desc: "Di chuyển nhanh vào khu trung tâm, thuận tiện giao dịch với đối tác." },
+    ],
+    nearbyItems: [
+      { name: "Thảo Cầm Viên Sài Gòn", desc: "Công viên, sở thú lâu đời của thành phố, không gian xanh mát gần chi nhánh." },
+      { name: "Khu vực lãnh sự quán", desc: "Tập trung nhiều lãnh sự quán, văn phòng đại diện nước ngoài." },
+      { name: "Dinh Độc Lập", desc: "Di tích lịch sử nổi tiếng, không xa khu vực Mạc Đĩnh Chi." },
+      { name: "Trung tâm Quận 1", desc: "Chỉ vài phút di chuyển đến khu vực trung tâm hành chính, tài chính TP.HCM." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt trung tâm hoạt động qua khu vực Mạc Đĩnh Chi." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao tại khu trung tâm, thời gian chờ rất ngắn." },
+      { icon: CheckCircleIcon, title: "Trục đường Mạc Đĩnh Chi", desc: "Kết nối nhanh đến trung tâm Quận 1 và khu vực Thảo Cầm Viên." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hướng dẫn tận tình cho khách lần đầu ghé khu vực, đảm bảo không lạc đường." },
+    ],
+    parkingInfo: [
+      "Khu vực giữ xe máy ngay tại toà nhà, thuận tiện cho khách đến làm việc.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực do mật độ giao thông trung tâm Quận 1.",
+      "Bảo vệ trực gác thường xuyên, đảm bảo an ninh cho phương tiện ngay tại khu trung tâm Quận 1.",
+    ],
+    diningItems: [
+      { name: "Quán cà phê khu Mạc Đĩnh Chi", desc: "Nhiều quán cà phê phong cách hiện đại, phù hợp tiếp khách hoặc làm việc ngoài giờ." },
+      { name: "Nhà hàng trung tâm Quận 1", desc: "Đa dạng lựa chọn ẩm thực từ bình dân đến cao cấp." },
+      { name: "Khu ẩm thực gần Thảo Cầm Viên", desc: "Thuận tiện cho bữa trưa nhanh hoặc gặp gỡ đối tác ngoài giờ hành chính." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 36 Mạc Đĩnh Chi có phải là chi nhánh thứ 2 của MAX OFFICE tại Quận 1 không?", a: "Đúng vậy. Đây là chi nhánh thứ 2 MAX OFFICE mở tại khu vực Quận 1 (cũ), sau chi nhánh Điện Biên Phủ — cả hai cùng thuộc Phường Tân Định." },
+      { q: "Chi nhánh 36 Mạc Đĩnh Chi khác gì so với chi nhánh Điện Biên Phủ cũng ở Quận 1?", a: "Cả hai cùng thuộc Phường Tân Định nhưng nằm trên 2 trục đường khác nhau và áp dụng 2 bảng giá HOÀN TOÀN KHÁC NHAU: Điện Biên Phủ dùng gói START/BASE thuộc hệ LITE-RISE chung của MAX OFFICE, còn 36 Mạc Đĩnh Chi dùng 4 gói SAVE/SILVER/GOLD/PREMIUM riêng — cùng bảng giá đang áp dụng tại 2 chi nhánh khu vực Quận 3 (cũ)." },
+      { q: "Chi nhánh 36 Mạc Đĩnh Chi áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 4 gói: SAVE (379.000đ/tháng), SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại 60 Nguyễn Thông và 520 Cách Mạng Tháng 8 (Quận 3 cũ)." },
+      { q: "Địa chỉ 36 Mạc Đĩnh Chi có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Định, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Sau khi ký hợp đồng, đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty tính phí ra sao?", a: "Đây là 2 khoản phát sinh tính riêng ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Tôi có thể đến tham quan văn phòng 36 Mạc Đĩnh Chi trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
+    ],
+    testimonials: [
+      { quote: "Toà nhà đã có nhiều công ty truyền thông, thương mại hoạt động sẵn nên khá yên tâm về mức độ chuyên nghiệp.", initial: "H", name: "Chị Hà", role: "Giám đốc công ty truyền thông" },
+      { quote: "Gần Thảo Cầm Viên nên mỗi lần đối tác nước ngoài ghé thăm đều để lại ấn tượng tốt về khu vực.", initial: "P", name: "Anh Phúc", role: "Chủ doanh nghiệp thương mại quốc tế" },
+    ],
+  },
 };
 
 export function getLocationBySlug(slug: string): LocationData | undefined {
@@ -2096,7 +2174,7 @@ export type GroupedLocations = {
 };
 
 /**
- * Nhóm các chi nhánh ĐANG HIỂN THỊ CÔNG KHAI (23/24, 1 chi nhánh đang tạm ẩn)
+ * Nhóm các chi nhánh ĐANG HIỂN THỊ CÔNG KHAI (24/25, 1 chi nhánh đang tạm ẩn)
  * theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
  * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
  * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.

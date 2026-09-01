@@ -217,8 +217,8 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "vuon-lai") {
     return VUON_LAI_VO_PLAN.price;
   }
-  if (slug === "nguyen-thong" || slug === "cach-mang-thang-8") {
-    return QUAN_3_CU_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  if (SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.includes(slug)) {
+    return SAVE_SILVER_GOLD_PREMIUM_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
   if (SILVER_GOLD_PREMIUM_LOCATIONS.includes(slug)) {
     return SILVER_GOLD_PREMIUM_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
@@ -436,12 +436,17 @@ export const VUON_LAI_VO_PROMOS: VuonLaiPromo[] = [
 ];
 
 /* ---------------------------------------------------------------------- */
-/* Khu vực Quận 3 (cũ) — gói giá riêng dùng CHUNG cho cả 2 chi nhánh tại   */
-/* khu vực này ("nguyen-thong" và "cach-mang-thang-8"), không thuộc hệ    */
-/* thống LITE-RISE hay các gói riêng khác của chi nhánh khác.             */
+/* Gói SAVE/SILVER/GOLD/PREMIUM — bảng giá riêng dùng CHUNG cho mọi chi    */
+/* nhánh có slug trong SAVE_SILVER_GOLD_PREMIUM_LOCATIONS, không thuộc hệ */
+/* thống LITE-RISE hay các gói riêng khác của chi nhánh khác. Đặt tên     */
+/* theo TÊN GÓI (không phải "QUAN_3_CU" như ban đầu) vì hệ giá này ban    */
+/* đầu chỉ dùng cho 2 chi nhánh Quận 3 (cũ) nhưng nay đã dùng chung cho cả */
+/* chi nhánh Quận 1 (cũ) — xem SAVE_SILVER_GOLD_PREMIUM_LOCATIONS bên     */
+/* dưới để biết đầy đủ danh sách, giống cách đặt tên của hệ SILVER/GOLD/  */
+/* PREMIUM (3 gói) dùng chung cho Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức.    */
 /* ---------------------------------------------------------------------- */
 
-export type Quan3CuPlan = {
+export type SaveSilverGoldPremiumPlan = {
   key: "save" | "silver" | "gold" | "premium";
   name: string;
   price: number;
@@ -454,7 +459,7 @@ export type Quan3CuPlan = {
   features: string[];
 };
 
-const QUAN_3_CU_COMMON_FEATURES = [
+const SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES = [
   "Địa chỉ đăng ký kinh doanh (ĐKKD) + đăng ký thuế",
   "Bảng tên điện tử",
   "Tiếp tân hành chính văn phòng",
@@ -462,8 +467,8 @@ const QUAN_3_CU_COMMON_FEATURES = [
   "Tư vấn miễn phí thành lập doanh nghiệp & kế toán",
 ];
 
-/** 4 gói văn phòng ảo riêng tại chi nhánh 60 Nguyễn Thông — giá CHƯA bao gồm VAT 10%. */
-export const QUAN_3_CU_VO_PLANS: Quan3CuPlan[] = [
+/** 4 gói văn phòng ảo dùng chung cho các chi nhánh áp dụng bảng giá SAVE/SILVER/GOLD/PREMIUM — giá CHƯA bao gồm VAT 10%. */
+export const SAVE_SILVER_GOLD_PREMIUM_PLANS: SaveSilverGoldPremiumPlan[] = [
   {
     key: "save",
     name: "SAVE",
@@ -474,7 +479,7 @@ export const QUAN_3_CU_VO_PLANS: Quan3CuPlan[] = [
     guestLounge: "Miễn phí 30 phút/ngày",
     addressChangeSupport: false,
     legalDossier: false,
-    features: QUAN_3_CU_COMMON_FEATURES,
+    features: SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES,
   },
   {
     key: "silver",
@@ -486,7 +491,7 @@ export const QUAN_3_CU_VO_PLANS: Quan3CuPlan[] = [
     guestLounge: "Miễn phí 30 phút/ngày",
     addressChangeSupport: false,
     legalDossier: false,
-    features: QUAN_3_CU_COMMON_FEATURES,
+    features: SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES,
   },
   {
     key: "gold",
@@ -498,7 +503,7 @@ export const QUAN_3_CU_VO_PLANS: Quan3CuPlan[] = [
     guestLounge: "Miễn phí 60 phút/ngày",
     addressChangeSupport: true,
     legalDossier: false,
-    features: QUAN_3_CU_COMMON_FEATURES,
+    features: SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES,
   },
   {
     key: "premium",
@@ -510,22 +515,34 @@ export const QUAN_3_CU_VO_PLANS: Quan3CuPlan[] = [
     guestLounge: "Miễn phí 60 phút/ngày",
     addressChangeSupport: true,
     legalDossier: true,
-    features: QUAN_3_CU_COMMON_FEATURES,
+    features: SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES,
   },
 ];
 
-export const QUAN_3_CU_VAT_NOTE = "Giá trên chưa bao gồm thuế VAT 10%.";
+export const SAVE_SILVER_GOLD_PREMIUM_VAT_NOTE = "Giá trên chưa bao gồm thuế VAT 10%.";
 
-export type Quan3CuAddon = {
+export type SaveSilverGoldPremiumAddon = {
   label: string;
   price: number;
   note?: string;
 };
 
-/** Dịch vụ bổ sung phát sinh sau khi ký hợp đồng tại chi nhánh 60 Nguyễn Thông. */
-export const QUAN_3_CU_ADDONS: Quan3CuAddon[] = [
+/** Dịch vụ bổ sung phát sinh sau khi ký hợp đồng, áp dụng chung cho các chi nhánh dùng bảng giá SAVE/SILVER/GOLD/PREMIUM. */
+export const SAVE_SILVER_GOLD_PREMIUM_ADDONS: SaveSilverGoldPremiumAddon[] = [
   { label: "Thay đổi địa chỉ đăng ký kinh doanh", price: 1296000, note: "Đã bao gồm VAT" },
   { label: "Khắc dấu tròn doanh nghiệp / dấu chi nhánh / VPĐD", price: 480000 },
+];
+
+/**
+ * Chi nhánh áp dụng bảng giá SAVE/SILVER/GOLD/PREMIUM chung ở trên — có thể
+ * thuộc nhiều khu vực (area) khác nhau (hiện dùng cho cả Quận 3 (cũ) và
+ * Quận 1 (cũ)). Thêm slug vào đây khi mở chi nhánh mới dùng bảng giá này,
+ * KHÔNG tạo lại bộ gói mới.
+ */
+export const SAVE_SILVER_GOLD_PREMIUM_LOCATIONS: string[] = [
+  "nguyen-thong",
+  "cach-mang-thang-8",
+  "mac-dinh-chi",
 ];
 
 /* ---------------------------------------------------------------------- */
