@@ -31,7 +31,7 @@ const DEFAULT_FAQS: FaqItem[] = [
   },
   {
     q: "MAX OFFICE có bao nhiêu địa điểm tại TP.HCM?",
-    a: "MAX OFFICE hiện có 24 địa điểm tại các quận trung tâm TP.HCM như Tân Bình, Gò Vấp, Tân Phú, Quận 10 và Quận 1 — bạn có thể chọn địa chỉ thuận tiện nhất cho khách hàng và đội ngũ.",
+    a: "MAX OFFICE hiện có 25 địa điểm tại các quận trung tâm TP.HCM như Tân Bình, Gò Vấp, Tân Phú, Quận 10 và Quận 1 — bạn có thể chọn địa chỉ thuận tiện nhất cho khách hàng và đội ngũ.",
   },
   {
     q: "Hợp đồng thuê văn phòng ảo và văn phòng trọn gói có ràng buộc dài hạn không?",

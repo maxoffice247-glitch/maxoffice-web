@@ -543,6 +543,7 @@ export const SAVE_SILVER_GOLD_PREMIUM_LOCATIONS: string[] = [
   "nguyen-thong",
   "cach-mang-thang-8",
   "mac-dinh-chi",
+  "pasteur",
 ];
 
 /* ---------------------------------------------------------------------- */

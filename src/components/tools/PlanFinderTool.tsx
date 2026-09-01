@@ -245,7 +245,7 @@ export default function PlanFinderTool() {
         <SectionHead
           eyebrow="Công cụ miễn phí"
           title="Tìm VPA theo nhu cầu"
-          description="Chọn khu vực và ngân sách mong muốn — công cụ sẽ gợi ý ngay các gói văn phòng ảo phù hợp nhất trong hệ thống 24 chi nhánh MAX OFFICE."
+          description="Chọn khu vực và ngân sách mong muốn — công cụ sẽ gợi ý ngay các gói văn phòng ảo phù hợp nhất trong hệ thống 25 chi nhánh MAX OFFICE."
         />
 
         {/* Toggle chế độ xem — độc lập với luồng lọc khu vực/ngân sách bên dưới. */}

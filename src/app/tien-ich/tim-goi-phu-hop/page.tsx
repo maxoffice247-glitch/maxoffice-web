@@ -7,12 +7,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tien-ich/tim-goi-phu-hop" },
   title: "Tìm VPA Theo Nhu Cầu - Công Cụ Chọn Văn Phòng Ảo Phù Hợp | MAX OFFICE",
   description:
-    "Chọn khu vực và ngân sách mong muốn, nhận ngay danh sách gói văn phòng ảo phù hợp trong 24 chi nhánh MAX OFFICE — kèm giá, tính năng, ảnh mặt tiền và báo giá tải về.",
+    "Chọn khu vực và ngân sách mong muốn, nhận ngay danh sách gói văn phòng ảo phù hợp trong 25 chi nhánh MAX OFFICE — kèm giá, tính năng, ảnh mặt tiền và báo giá tải về.",
 };
 
 const BENEFITS = [
   { icon: ClockIcon, title: "Kết quả tức thì", desc: "Chọn khu vực và ngân sách, nhận ngay danh sách gói phù hợp không cần chờ tư vấn." },
-  { icon: ScaleIcon, title: "So sánh toàn hệ thống", desc: "Đối chiếu cùng lúc 24 chi nhánh, dữ liệu giá đúng bảng giá hiện hành của từng chi nhánh." },
+  { icon: ScaleIcon, title: "So sánh toàn hệ thống", desc: "Đối chiếu cùng lúc 25 chi nhánh, dữ liệu giá đúng bảng giá hiện hành của từng chi nhánh." },
   { icon: TagIcon, title: "Gợi ý khi không khớp ngân sách", desc: "Không tìm được gói đúng ngân sách? Công cụ tự gợi ý lựa chọn gần nhất." },
   { icon: HeadsetIcon, title: "Tải báo giá ngay", desc: "Xuất ảnh báo giá đầy đủ thông tin để lưu hoặc gửi cho đối tác, không cần chờ nhân viên soạn." },
 ];
@@ -51,7 +51,7 @@ export default function TimGoiPhuHopPage() {
   return (
     <ToolPageTemplate
       heroTitle="Tìm VPA theo nhu cầu"
-      heroDescription="Chọn khu vực và ngân sách mong muốn — công cụ gợi ý ngay các gói phù hợp trong toàn bộ 24 chi nhánh MAX OFFICE, kèm giá, tính năng và ảnh mặt tiền thực tế."
+      heroDescription="Chọn khu vực và ngân sách mong muốn — công cụ gợi ý ngay các gói phù hợp trong toàn bộ 25 chi nhánh MAX OFFICE, kèm giá, tính năng và ảnh mặt tiền thực tế."
       breadcrumbLabel="Tìm VPA theo nhu cầu"
       benefitsTitle="Vì sao nên dùng công cụ này"
       benefits={BENEFITS}

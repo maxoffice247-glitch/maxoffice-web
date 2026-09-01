@@ -6,6 +6,6 @@ export default async function Image() {
   return renderOgImage({
     title: "So Sánh Công Ty TNHH & Công Ty Cổ Phần | MAX OFFICE",
     backgroundImagePath: "/images/og/anh-hero-trang-chu.jpg",
-    subtitle: "24 chi nhánh TP.HCM • Công cụ miễn phí",
+    subtitle: "25 chi nhánh TP.HCM • Công cụ miễn phí",
   });
 }

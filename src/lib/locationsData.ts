@@ -269,6 +269,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     shortAddress: "36 Mạc Đĩnh Chi, P. Tân Định",
     area: AREA_QUAN_1,
   },
+  {
+    slug: "pasteur",
+    name: "28-34 Pasteur, Quận 1 (cũ)",
+    shortAddress: "28-34 Pasteur, P. Sài Gòn",
+    area: AREA_QUAN_1,
+  },
 ];
 
 /**
@@ -356,7 +362,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-song-thao-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Sông Thao", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 24 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
+      "Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống 25 địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.",
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
       "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
@@ -443,7 +449,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 24 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
+      "Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống 25 địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.",
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
@@ -625,7 +631,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
-      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 24 địa điểm.",
+      "Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống 25 địa điểm.",
       "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
@@ -892,7 +898,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
-      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 24 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
+      "Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống 25 chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.",
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
       "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
     ],
@@ -2152,6 +2158,79 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Gần Thảo Cầm Viên nên mỗi lần đối tác nước ngoài ghé thăm đều để lại ấn tượng tốt về khu vực.", initial: "P", name: "Anh Phúc", role: "Chủ doanh nghiệp thương mại quốc tế" },
     ],
   },
+
+  /* =============== 28-34 PASTEUR (KHU VỰC QUẬN 1, CHI NHÁNH THỨ 3) =============== */
+  "pasteur": {
+    slug: "pasteur",
+    name: "28-34 Pasteur, Quận 1 (cũ)",
+    area: AREA_QUAN_1,
+    address: "28-34 Pasteur, Phường Sài Gòn, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 28-34 Pasteur, Quận 1 (cũ)",
+    heroDescription:
+      "Chi nhánh thứ 3 của MAX OFFICE tại Quận 1 (cũ) — văn phòng ảo 4 gói riêng biệt từ 379.000đ/tháng, đặt tại toà nhà văn phòng trên trục Pasteur, gần chợ Bến Thành và phố đi bộ Nguyễn Huệ.",
+    metaTitle: "Văn Phòng Ảo 28-34 Pasteur, Quận 1 (cũ) | Từ 379K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 28-34 Pasteur, Phường Sài Gòn — chi nhánh thứ 3 MAX OFFICE tại Quận 1 (cũ), 4 gói SAVE/SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần chợ Bến Thành.",
+    image: IMAGE,
+    // Ảnh mặt tiền gốc 1024x1536, không chỉnh sửa.
+    facadeAspectRatio: "1024 / 1536",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-pasteur-le-tan-sanh-tiep-khach.jpg", alt: "Sảnh lễ tân và tiếp khách văn phòng 28-34 Pasteur", caption: "Sảnh lễ tân & tiếp khách" },
+      { src: "/images/dia-diem-pasteur-ban-hop.jpg", alt: "Phòng họp văn phòng 28-34 Pasteur", caption: "Phòng họp" },
+      { src: "/images/dia-diem-pasteur-san-trong.jpg", alt: "Không gian trống văn phòng 28-34 Pasteur", caption: "Không gian trống" },
+      { src: "/images/dia-diem-pasteur-wc.jpg", alt: "Tiện ích toà nhà văn phòng 28-34 Pasteur", caption: "Tiện ích toà nhà" },
+    ],
+    intro: [
+      "Văn phòng 28-34 Pasteur là chi nhánh thứ 3 của MAX OFFICE tại khu vực Quận 1 (cũ), thuộc Phường Sài Gòn — khác phường với 2 chi nhánh Điện Biên Phủ và 36 Mạc Đĩnh Chi (cùng thuộc Phường Tân Định). Đây là khu vực trung tâm nhất trong lõi trung tâm thành phố, gần chợ Bến Thành và phố đi bộ Nguyễn Huệ — biểu tượng thương mại, du lịch của Sài Gòn. Sự xuất hiện của chi nhánh thứ 3 giúp doanh nghiệp tại Quận 1 có thêm một lựa chọn địa chỉ đăng ký kinh doanh ngay sát khu lõi trung tâm.",
+      "Chi nhánh đặt tại một toà nhà văn phòng nhiều tầng trên trục đường Pasteur, sảnh lễ tân và khu vực tiếp khách được thiết kế hiện đại với hệ đèn led âm trần, ghế sofa êm ái — tạo không gian đón khách chuyên nghiệp. Toà nhà có phòng họp riêng trang bị bảng trắng, máy lạnh, phù hợp các buổi trao đổi công việc quy mô nhỏ, cùng tầng văn phòng trống rộng rãi nhiều cửa kính đón ánh sáng tự nhiên.",
+      "Chi nhánh cung cấp 4 gói văn phòng ảo riêng biệt — SAVE (379.000đ/tháng), SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10% — cùng bảng giá đang áp dụng tại 2 chi nhánh khu vực Quận 3 (cũ) và chi nhánh 36 Mạc Đĩnh Chi. Đây là hệ giá HOÀN TOÀN KHÁC với gói START/BASE (hệ LITE-RISE) đang áp dụng tại chi nhánh Điện Biên Phủ cùng khu vực Quận 1.",
+      "Với vị trí gần chợ Bến Thành và phố đi bộ Nguyễn Huệ, doanh nghiệp đặt văn phòng tại 28-34 Pasteur vừa thuận tiện tiếp đối tác, khách hàng ngay tại khu trung tâm sầm uất nhất thành phố, vừa dễ dàng di chuyển đến các khu vực lân cận. Đây là lựa chọn phù hợp cho các công ty thương mại, dịch vụ, du lịch hoặc bán lẻ cần một địa chỉ đăng ký kinh doanh ngay tại lõi trung tâm Quận 1.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 28-34 Pasteur",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh thứ 3 tại Quận 1", desc: "Thêm lựa chọn địa chỉ đăng ký kinh doanh ngay lõi trung tâm Quận 1 (cũ)." },
+      { icon: MapPinIcon, title: "Gần chợ Bến Thành", desc: "Biểu tượng thương mại, du lịch của Sài Gòn, chỉ vài phút di chuyển." },
+      { icon: BadgePercentIcon, title: "4 gói giá linh hoạt", desc: "SAVE, SILVER, GOLD, PREMIUM — từ 379.000đ/tháng." },
+      { icon: UsersIcon, title: "Phòng họp riêng biệt", desc: "Trang bị bảng trắng, máy lạnh, phù hợp trao đổi công việc kín đáo." },
+      { icon: ShieldCheckIcon, title: "Sảnh tiếp khách hiện đại", desc: "Không gian lễ tân, tiếp khách thiết kế chuyên nghiệp ngay lối vào." },
+      { icon: ClockIcon, title: "Gần phố đi bộ Nguyễn Huệ", desc: "Thuận tiện tiếp đối tác, khách hàng tại khu trung tâm sầm uất nhất TP.HCM." },
+    ],
+    nearbyItems: [
+      { name: "Chợ Bến Thành", desc: "Biểu tượng thương mại, du lịch nổi tiếng của Sài Gòn." },
+      { name: "Phố đi bộ Nguyễn Huệ", desc: "Không gian đi bộ sầm uất, nhiều sự kiện thương mại, giải trí." },
+      { name: "Nhà hát Thành phố", desc: "Công trình kiến trúc lịch sử, không xa khu vực Pasteur." },
+      { name: "Trung tâm thương mại Quận 1", desc: "Tập trung nhiều toà nhà văn phòng, trung tâm mua sắm lớn." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt trung tâm hoạt động qua khu vực Pasteur." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao tại khu trung tâm, thời gian chờ rất ngắn." },
+      { icon: CheckCircleIcon, title: "Trục đường Pasteur", desc: "Kết nối nhanh đến chợ Bến Thành và phố đi bộ Nguyễn Huệ." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hướng dẫn tận tình cho khách lần đầu ghé khu vực trung tâm." },
+    ],
+    parkingInfo: [
+      "Toà nhà bố trí khu vực đậu xe máy riêng cho khách đến làm việc, không thu thêm phí gửi xe trong giờ hành chính.",
+      "Với ô tô, do nằm ngay khu lõi trung tâm nên lễ tân sẽ hỗ trợ tư vấn các bãi giữ xe gần nhất khi khách cần.",
+      "Camera an ninh và bảo vệ toà nhà trực suốt ngày, khách có thể yên tâm để xe trong lúc làm việc.",
+    ],
+    diningItems: [
+      { name: "Ẩm thực chợ Bến Thành", desc: "Đa dạng món ăn đường phố, phù hợp bữa trưa nhanh gọn." },
+      { name: "Nhà hàng khu Nguyễn Huệ", desc: "Nhiều lựa chọn từ bình dân đến cao cấp, phù hợp tiếp đối tác." },
+      { name: "Quán cà phê khu Pasteur", desc: "Không gian hiện đại, phù hợp làm việc hoặc gặp gỡ khách hàng ngoài giờ." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 28-34 Pasteur có phải là chi nhánh thứ 3 của MAX OFFICE tại Quận 1 không?", a: "Đúng vậy. Đây là chi nhánh thứ 3 MAX OFFICE mở tại khu vực Quận 1 (cũ), sau chi nhánh Điện Biên Phủ và 36 Mạc Đĩnh Chi." },
+      { q: "Chi nhánh 28-34 Pasteur khác gì so với 2 chi nhánh Điện Biên Phủ và 36 Mạc Đĩnh Chi cũng ở Quận 1?", a: "Cả 3 chi nhánh đều ở Quận 1 (cũ) nhưng khác phường và khác bảng giá: Điện Biên Phủ và 36 Mạc Đĩnh Chi cùng thuộc Phường Tân Định, còn 28-34 Pasteur thuộc Phường Sài Gòn. Về giá, Điện Biên Phủ dùng gói START/BASE thuộc hệ LITE-RISE chung, trong khi 36 Mạc Đĩnh Chi và 28-34 Pasteur cùng dùng 4 gói SAVE/SILVER/GOLD/PREMIUM — bảng giá riêng, giống hệt nhau giữa 2 chi nhánh này." },
+      { q: "Chi nhánh 28-34 Pasteur áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 4 gói: SAVE (379.000đ/tháng), SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại 60 Nguyễn Thông, 520 Cách Mạng Tháng 8 (Quận 3 cũ) và 36 Mạc Đĩnh Chi (Quận 1 cũ)." },
+      { q: "Địa chỉ 28-34 Pasteur có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Sài Gòn, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Sau khi ký hợp đồng, đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty tính phí ra sao?", a: "Đây là 2 khoản phát sinh tính riêng ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Tôi có thể đến tham quan văn phòng 28-34 Pasteur trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
+    ],
+    testimonials: [
+      { quote: "Văn phòng gần chợ Bến Thành nên đối tác nước ngoài của mình rất dễ tìm, lại tiện ghé phố đi bộ sau giờ làm.", initial: "T", name: "Chị Thu", role: "Giám đốc công ty du lịch" },
+      { quote: "Phòng họp riêng khá kín đáo, phù hợp những buổi trao đổi cần sự tập trung với khách hàng.", initial: "D", name: "Anh Duy", role: "Chủ doanh nghiệp dịch vụ" },
+    ],
+  },
 };
 
 export function getLocationBySlug(slug: string): LocationData | undefined {
@@ -2174,7 +2253,7 @@ export type GroupedLocations = {
 };
 
 /**
- * Nhóm các chi nhánh ĐANG HIỂN THỊ CÔNG KHAI (24/25, 1 chi nhánh đang tạm ẩn)
+ * Nhóm các chi nhánh ĐANG HIỂN THỊ CÔNG KHAI (25/26, 1 chi nhánh đang tạm ẩn)
  * theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
  * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
  * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
