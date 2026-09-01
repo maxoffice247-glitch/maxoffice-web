@@ -45,8 +45,8 @@ type HeroSlide = { question: string; answer: string };
 function getHeroSlides(branchCount: number): HeroSlide[] {
   return [
     {
-      question: "Băn khoăn chọn đơn vị đồng hành lâu dài, không chỉ thuê văn phòng đơn thuần?",
-      answer: "MAX OFFICE đồng hành cùng bạn từ ngày thành lập, xuyên suốt vận hành, đến khi mở rộng quy mô.",
+      question: "Cần đối tác đồng hành lâu dài, không chỉ thuê văn phòng đơn thuần?",
+      answer: "MAX OFFICE đồng hành cùng bạn từ ngày thành lập đến khi mở rộng quy mô.",
     },
     {
       question: "Chưa biết chọn đơn vị nào đủ uy tín, đủ chi nhánh để tin tưởng?",
@@ -172,7 +172,23 @@ export default function Hero() {
                   style={{ pointerEvents: isActive ? "auto" : "none" }}
                 >
                   <div>
-                    <p className="text-base font-bold text-[#3B9EFF] sm:text-lg">
+                    {/* Đỏ thương hiệu (--color-accent, cùng tông nút "Nhận tư
+                        vấn miễn phí"/logo) thay vì xanh #3B9EFF trước đây —
+                        H1 tĩnh phía trên đã dùng xanh cho "bắt đầu vững
+                        vàng", câu hỏi xoay vòng dùng đỏ để 2 khối tách bạch
+                        rõ ràng khi nhìn thoáng qua. Đỏ có độ tương phản gốc
+                        thấp hơn nhiều so với xanh/trắng trên nền ảnh — đo
+                        bằng cách lấy mẫu pixel thực tế phía sau chữ, có điểm
+                        chỉ ~1.2:1 (dưới cả ngưỡng WCAG 3:1 cho chữ lớn) tại
+                        vùng sáng của ảnh (cửa kính, bầu trời), nhất là với
+                        các câu dài tràn ra ngoài dải làm tối bên trái (chỉ
+                        phủ ~65% chiều rộng). Không có biến đỏ sáng hơn nào
+                        khác trong hệ thống màu để thay thế, nên bù bằng 1
+                        viền bóng tối dạng outline (3 lớp text-shadow, mờ dần
+                        từ sát nét đến toả rộng) thay vì shadow mờ đơn lớp
+                        của H1 — viền tối đủ dày để chữ đỏ vẫn đọc được rõ dù
+                        rơi vào vùng sáng nhất của ảnh nền. */}
+                    <p className="text-base font-bold text-accent [text-shadow:0_0_2px_rgba(0,0,0,0.95),0_0_6px_rgba(0,0,0,0.85),0_1px_14px_rgba(0,0,0,0.6)] sm:text-lg">
                       {slide.question}
                     </p>
                     <p className="mt-1 text-base text-white/86 sm:text-lg">{slide.answer}</p>
