@@ -23,11 +23,12 @@ const TOOL_CATEGORIES = [
   {
     title: "Công cụ tính toán",
     tools: [
+      // Công cụ chính/quan trọng nhất trong nhóm — luôn đứng đầu danh sách.
+      { slug: "tim-goi-phu-hop", icon: TagIcon, title: "Tìm VPA theo nhu cầu" },
       { slug: "chon-goi-van-phong", icon: KeyIcon, title: "Chọn gói văn phòng" },
       { slug: "tinh-chi-phi-thanh-lap", icon: DocumentCheckIcon, title: "Tính chi phí thành lập" },
       { slug: "tinh-le-phi-mon-bai", icon: BadgePercentIcon, title: "Lệ phí môn bài" },
       { slug: "so-sanh-thue", icon: ScaleIcon, title: "So sánh thuế TNCN vs Hộ KD" },
-      { slug: "tim-goi-phu-hop", icon: TagIcon, title: "Tìm VPA theo nhu cầu" },
     ],
   },
   {
