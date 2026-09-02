@@ -63,8 +63,11 @@ export default async function PlanDetailPage({
 
   return (
     <main>
+      {/* Ảnh mặt tiền riêng của chi nhánh (facadeSrc, đã tính ở trên) thay
+          vì location.image dùng chung "khong-gian-lam-viec.jpg" cho mọi
+          chi nhánh/gói trước đây. */}
       <PageHero
-        image={location.image}
+        image={facadeSrc}
         eyebrow="Chi tiết gói văn phòng ảo"
         title={`Gói ${plan.planName} tại ${plan.locationName}`}
         description={`${formatVoPrice(plan.price)}/tháng (chưa gồm VAT 10%) — ${plan.area.name}`}

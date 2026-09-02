@@ -46,8 +46,13 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
       />
 
+      {/* Banner dùng đúng ảnh mặt tiền riêng của chi nhánh (cùng file dùng
+          trong LocationImagesSection/gallery bên dưới và OG image), thay
+          vì data.image — ảnh dùng chung "khong-gian-lam-viec.jpg" cho MỌI
+          chi nhánh trước đây. Đã xác nhận đủ 25/25 chi nhánh đang hoạt
+          động có sẵn file này trong /public/images. */}
       <PageHero
-        image={data.image}
+        image={`/images/dia-diem-${data.slug}.jpg`}
         eyebrow="Chi nhánh"
         title={data.heroTitle}
         description={data.heroDescription}
