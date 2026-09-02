@@ -42,9 +42,23 @@ const pillClass = (active: boolean) =>
  * hơn nó nhiều lần) — toàn bộ danh sách bị kẹt ở opacity: 0 vĩnh viễn.
  */
 function PlanCard({ plan }: { plan: OfferedPlan }) {
+  // Trụ sở chính (Sông Thao) — đặc quyền RIÊNG, không áp dụng cho chi nhánh
+  // nào khác: viền đỏ thương hiệu dày hơn + badge góc trên. Việc GHIM lên
+  // đầu danh sách xử lý ở nơi tính exactMatches/nearestInArea/
+  // otherAreaCandidates (xem pinHeadquarters bên dưới), không phải ở đây.
+  const isHeadquarters = plan.locationSlug === "song-thao";
   return (
     <Reveal y={20} duration={0.5} className="h-full">
-      <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
+      {/* Cả thẻ là 1 Link (không chỉ nút "Xem chi tiết") — tăng vùng bấm,
+          đỡ khó chịu trên mobile. "Xem chi tiết" bên dưới giữ nguyên hiển
+          thị như 1 chỉ dấu trực quan (span, không phải <Link> lồng bên
+          trong <Link> — HTML không cho phép lồng thẻ <a>). */}
+      <Link
+        href={`/tien-ich/tim-goi-phu-hop/${plan.locationSlug}/${plan.planKey}`}
+        className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-white transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-card ${
+          isHeadquarters ? "border-2 border-accent" : "border border-line hover:border-primary/30"
+        }`}
+      >
         {/* Ảnh mặt tiền gốc là ảnh DỌC (đúng cho trang chi nhánh) — khung
             aspect-[3/4] + object-contain (không phải cover) để không cắt mất
             góc trên/dưới khi nhét vào thẻ kết quả, khác tỉ lệ khung ngang cũ. */}
@@ -56,6 +70,11 @@ function PlanCard({ plan }: { plan: OfferedPlan }) {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-contain transition-transform duration-500 group-hover:scale-105"
           />
+          {isHeadquarters && (
+            <span className="absolute top-3 left-3 rounded-full bg-accent px-2.5 py-1 text-[11px] font-bold whitespace-nowrap text-white shadow-[0_2px_8px_rgba(220,53,48,0.35)]">
+              🏢 Trụ sở chính
+            </span>
+          )}
           <span className="absolute top-3 right-3 rounded-full bg-navy px-3 py-1 font-mono text-[13px] font-bold text-white">
             {formatVoPrice(plan.price)}
           </span>
@@ -66,15 +85,12 @@ function PlanCard({ plan }: { plan: OfferedPlan }) {
           </span>
           <h3 className="mb-1 text-[15.5px] font-bold text-navy">{plan.locationName}</h3>
           <p className="mb-4 text-[13px] text-body-text">Gói {plan.planName} · /tháng</p>
-          <Link
-            href={`/tien-ich/tim-goi-phu-hop/${plan.locationSlug}/${plan.planKey}`}
-            className="mt-auto inline-flex items-center gap-1.5 text-[13.5px] font-bold text-accent transition-all duration-200 group-hover:gap-2.5"
-          >
+          <span className="mt-auto inline-flex items-center gap-1.5 text-[13.5px] font-bold text-accent transition-all duration-200 group-hover:gap-2.5">
             Xem chi tiết
             <ArrowRightSmallIcon />
-          </Link>
+          </span>
         </div>
-      </div>
+      </Link>
     </Reveal>
   );
 }
@@ -87,7 +103,11 @@ function PlanCard({ plan }: { plan: OfferedPlan }) {
 function GroupCard({ group }: { group: PlanGroup }) {
   return (
     <Reveal y={20} duration={0.5} className="h-full">
-      <div className="flex h-full flex-col rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card">
+      {/* Cả thẻ là 1 Link, giống PlanCard — xem giải thích ở PlanCard. */}
+      <Link
+        href={`/tien-ich/tim-goi-phu-hop/goi/${group.groupKey}`}
+        className="group flex h-full flex-col rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card"
+      >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
             <h3 className="text-[17px] font-bold text-navy">Gói {group.planName}</h3>
@@ -103,16 +123,29 @@ function GroupCard({ group }: { group: PlanGroup }) {
         <p className="mb-4 line-clamp-2 text-[12.5px] text-body-text">
           {group.locations.map((l) => l.name.split(",")[0]).join(", ")}
         </p>
-        <Link
-          href={`/tien-ich/tim-goi-phu-hop/goi/${group.groupKey}`}
-          className="group mt-auto inline-flex items-center gap-1.5 text-[13.5px] font-bold text-accent"
-        >
+        <span className="mt-auto inline-flex items-center gap-1.5 text-[13.5px] font-bold text-accent">
           Xem chi tiết
           <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
-        </Link>
-      </div>
+        </span>
+      </Link>
     </Reveal>
   );
+}
+
+/**
+ * Ghim gói của Sông Thao (trụ sở chính) lên ĐẦU danh sách kết quả, giữ
+ * nguyên thứ tự tương đối của các gói còn lại (đã sắp theo giá/độ gần ngân
+ * sách trước đó) — đặc quyền RIÊNG của Sông Thao, không áp dụng chi nhánh
+ * nào khác. Không làm gì (trả nguyên mảng) nếu Sông Thao không có mặt trong
+ * danh sách đã lọc — KHÔNG ép hiển thị khi khách lọc khu vực khác không
+ * chứa Sông Thao. Áp dụng cho mọi danh sách PlanCard hiển thị (kết quả khớp
+ * chính xác, gợi ý gần nhất cùng khu vực, gợi ý khu vực khác).
+ */
+function pinHeadquarters(plans: OfferedPlan[]): OfferedPlan[] {
+  const hq = plans.filter((p) => p.locationSlug === "song-thao");
+  if (hq.length === 0) return plans;
+  const rest = plans.filter((p) => p.locationSlug !== "song-thao");
+  return [...hq, ...rest];
 }
 
 /** Điểm giữa 1 khoảng ngân sách, kẹp trong [rangeMin, rangeMax] thực tế của
@@ -213,21 +246,26 @@ export default function PlanFinderTool() {
   );
 
   const exactMatches = useMemo(
-    () => [...filteredByArea].filter((p) => isPriceInBand(p.price, budgetKey)).sort((a, b) => a.price - b.price),
+    () =>
+      pinHeadquarters(
+        [...filteredByArea].filter((p) => isPriceInBand(p.price, budgetKey)).sort((a, b) => a.price - b.price)
+      ),
     [filteredByArea, budgetKey]
   );
 
   const nearestInArea = useMemo(
-    () => (exactMatches.length === 0 ? findNearestPlans(filteredByArea, budgetKey, 3) : []),
+    () => (exactMatches.length === 0 ? pinHeadquarters(findNearestPlans(filteredByArea, budgetKey, 3)) : []),
     [exactMatches.length, filteredByArea, budgetKey]
   );
 
   const otherAreaCandidates = useMemo(() => {
     if (exactMatches.length > 0 || areaSlug === "all") return [];
-    return findNearestPlans(
-      allPlans.filter((p) => p.area.slug !== areaSlug),
-      budgetKey,
-      3
+    return pinHeadquarters(
+      findNearestPlans(
+        allPlans.filter((p) => p.area.slug !== areaSlug),
+        budgetKey,
+        3
+      )
     );
   }, [exactMatches.length, areaSlug, allPlans, budgetKey]);
 
