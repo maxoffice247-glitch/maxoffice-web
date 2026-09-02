@@ -244,20 +244,20 @@ export default function Hero() {
                 <Link
                   key={kw.href}
                   href={kw.href}
-                  // text-accent (đỏ, cùng token với nút "Nhận tư vấn miễn
-                  // phí") thay vì xanh #3B9EFF trước đây — quy tắc màu Hero:
-                  // đỏ = phần tử bấm được (link, CTA), xanh = nhấn nội
-                  // dung/thương hiệu (H1, câu hỏi carousel).
-                  // Cần tách bạch với nền ảnh (đặc biệt cột phải của lưới 3
-                  // cột — "Chỗ ngồi linh động", "Kế toán & thuế" — rơi vào
-                  // vùng sáng của ảnh, ngoài dải làm tối ~65% bên trái). Đã
-                  // thử text-shadow trắng (halo mờ — bị báo CHÓI) rồi khung
-                  // bo viền trắng bao quanh chữ (bị báo nhầm ý — muốn viền
-                  // CHỮ, không phải khung chứa trong suốt) — đổi sang
-                  // -webkit-text-stroke trắng mảnh viền thẳng vào nét chữ,
-                  // không có khung/nền, không lan toả như shadow, vẫn tách
-                  // bạch được với ảnh ở mọi vùng sáng/tối.
-                  className="text-[12.5px] font-bold text-accent [-webkit-text-stroke:0.5px_white] transition-colors duration-200 hover:text-white hover:underline"
+                  // Đỏ (phần tử bấm được, cùng quy tắc màu Hero với xanh =
+                  // nhấn nội dung/thương hiệu) — nhưng KHÔNG dùng text-accent
+                  // (#dc3530) nữa mà #FF3B30, đỏ tươi/sáng hơn để nổi hơn
+                  // trên nền ảnh, theo yêu cầu riêng cho 6 link này (không
+                  // áp dụng lại quy tắc "chỉ dùng token có sẵn" như các nơi
+                  // khác — đây là ngoại lệ có chủ ý).
+                  // Lịch sử thử nghiệm: text-shadow trắng (halo mờ — CHÓI)
+                  // -> khung bo viền trắng chứa chữ (hiểu sai ý, viền
+                  // KHUNG chứ không phải viền CHỮ) -> -webkit-text-stroke
+                  // trắng viền chữ (bị báo "thảm hoạ còn dữ hơn" — có lẽ do
+                  // stroke làm chữ bệt/nhoè ở cỡ nhỏ 12.5px) -> quay lại
+                  // đúng bản ĐẦU TIÊN: text-shadow ĐEN 3 lớp (không dùng
+                  // trắng/stroke nữa), chỉ đổi thêm đỏ tươi hơn.
+                  className="text-[12.5px] font-bold text-[#FF3B30] [text-shadow:0_0_1px_rgba(0,0,0,0.9),0_0_4px_rgba(0,0,0,0.75),0_1px_8px_rgba(0,0,0,0.5)] transition-colors duration-200 hover:text-white hover:underline"
                 >
                   {kw.label}
                 </Link>
