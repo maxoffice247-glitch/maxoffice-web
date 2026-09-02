@@ -236,7 +236,9 @@ export default function Hero() {
           <motion.div variants={item} className="mb-6">
             <nav
               aria-label="Dịch vụ nổi bật"
-              className="grid grid-cols-1 gap-y-2 sm:grid-cols-3 sm:gap-x-6"
+              // 2 cột trên mobile (trước đây 1 cột — xếp dọc quá dài) — 3 cột
+              // từ sm: trở lên.
+              className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 sm:gap-x-6"
             >
               {SERVICE_KEYWORDS.map((kw) => (
                 <Link
@@ -248,15 +250,14 @@ export default function Hero() {
                   // dung/thương hiệu (H1, câu hỏi carousel).
                   // Cần tách bạch với nền ảnh (đặc biệt cột phải của lưới 3
                   // cột — "Chỗ ngồi linh động", "Kế toán & thuế" — rơi vào
-                  // vùng sáng của ảnh, ngoài dải làm tối ~65% bên trái).
-                  // Từng thử viền text-shadow trắng (halo mờ quanh chữ)
-                  // nhưng bị báo là CHÓI — đổi sang khung bo viền trắng SẮC
-                  // NÉT (border, không blur) + nền đen mờ phía sau (bg-
-                  // black/20) thay cho glow: viền/nền tạo đủ tách bạch khỏi
-                  // ảnh ở MỌI vùng sáng/tối mà không gây chói như shadow lan
-                  // toả. justify-self-start để khung chỉ ôm sát nội dung
-                  // (chip), không giãn hết chiều rộng cột lưới.
-                  className="inline-flex w-fit items-center justify-self-start rounded-full border border-white/70 bg-black/20 px-3 py-1 text-[12.5px] font-bold text-accent transition-colors duration-200 hover:border-white hover:bg-white hover:text-accent-dark"
+                  // vùng sáng của ảnh, ngoài dải làm tối ~65% bên trái). Đã
+                  // thử text-shadow trắng (halo mờ — bị báo CHÓI) rồi khung
+                  // bo viền trắng bao quanh chữ (bị báo nhầm ý — muốn viền
+                  // CHỮ, không phải khung chứa trong suốt) — đổi sang
+                  // -webkit-text-stroke trắng mảnh viền thẳng vào nét chữ,
+                  // không có khung/nền, không lan toả như shadow, vẫn tách
+                  // bạch được với ảnh ở mọi vùng sáng/tối.
+                  className="text-[12.5px] font-bold text-accent [-webkit-text-stroke:0.5px_white] transition-colors duration-200 hover:text-white hover:underline"
                 >
                   {kw.label}
                 </Link>
