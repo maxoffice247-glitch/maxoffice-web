@@ -74,6 +74,7 @@ const FAQS = [
 export default function SoSanhVanPhongAoTronGoiPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/van-phong-tron-goi.jpg"
       heroTitle="So sánh Văn phòng ảo và Văn phòng trọn gói"
       heroDescription="Bảng so sánh chi tiết tính năng, chi phí và đối tượng phù hợp giữa hai gói dịch vụ phổ biến nhất của MAX OFFICE."
       breadcrumbLabel="So sánh Văn phòng ảo & Trọn gói"

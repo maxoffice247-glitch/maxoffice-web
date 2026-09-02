@@ -37,6 +37,7 @@ const FAQS = [
 export default function ChonGoiVanPhongPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/hero-tim-vpa.png"
       heroTitle="Công cụ chọn gói văn phòng phù hợp"
       heroDescription="Trả lời vài câu hỏi ngắn để nhận gợi ý gói văn phòng tối ưu nhất cho nhu cầu và ngân sách của bạn — hoàn toàn miễn phí."
       breadcrumbLabel="Chọn gói văn phòng"

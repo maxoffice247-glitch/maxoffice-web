@@ -76,7 +76,7 @@ export default function DichVuPage() {
   return (
     <main>
       <PageHero
-        image="/images/khong-gian-lam-viec.jpg"
+        image="/images/hero-dich-vu.png"
         eyebrow="Dịch vụ"
         title="Toàn bộ giải pháp vận hành doanh nghiệp"
         description="6 dịch vụ cốt lõi giúp doanh nghiệp bạn khởi động, vận hành và mở rộng tại TP.HCM — chọn đúng giải pháp cho từng giai đoạn phát triển."

@@ -5,8 +5,7 @@ export { size, contentType };
 
 export default async function Image() {
   return renderOgImage({
-    title: "Checklist Mở Chi Nhánh Công Ty — Tải PDF Miễn Phí | MAX OFFICE",
+    title: `${ACTIVE_BRANCH_COUNT} Chi Nhánh Văn Phòng MAX OFFICE Tại TP.HCM`,
     backgroundImagePath: "/images/og/hero-chi-nhanh.jpg",
-    subtitle: `${ACTIVE_BRANCH_COUNT} chi nhánh TP.HCM • Công cụ miễn phí`,
   });
 }

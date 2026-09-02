@@ -6,7 +6,7 @@ export { size, contentType };
 export default async function Image() {
   return renderOgImage({
     title: "Công Cụ Tính Chi Phí Thành Lập Công Ty Miễn Phí | MAX OFFICE",
-    backgroundImagePath: "/images/og/anh-hero-trang-chu.jpg",
+    backgroundImagePath: "/images/og/ke-toan-thue.jpg",
     subtitle: `${ACTIVE_BRANCH_COUNT} chi nhánh TP.HCM • Công cụ miễn phí`,
   });
 }

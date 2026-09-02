@@ -50,6 +50,7 @@ const FAQS = [
 export default function TimGoiPhuHopPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/hero-tim-vpa.png"
       heroTitle="Tìm VPA theo nhu cầu"
       heroDescription={`Chọn khu vực và ngân sách mong muốn — công cụ gợi ý ngay các gói phù hợp trong toàn bộ ${ACTIVE_BRANCH_COUNT} chi nhánh MAX OFFICE, kèm giá, tính năng và ảnh mặt tiền thực tế.`}
       breadcrumbLabel="Tìm VPA theo nhu cầu"

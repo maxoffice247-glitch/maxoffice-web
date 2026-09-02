@@ -36,6 +36,7 @@ const FAQS = [
 export default function TinhLePhiMonBaiPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/ke-toan-thue.jpg"
       heroTitle="Lệ phí môn bài đã bãi bỏ từ 2026"
       heroDescription="Cập nhật quy định mới nhất theo Nghị quyết 198/2025/QH15 — doanh nghiệp, hộ kinh doanh không còn phải nộp lệ phí môn bài."
       breadcrumbLabel="Lệ phí môn bài"

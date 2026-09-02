@@ -41,7 +41,7 @@ export default async function PlanGroupDetailPage({
   return (
     <main>
       <PageHero
-        image="/images/khong-gian-lam-viec.jpg"
+        image="/images/hero-tim-vpa.png"
         eyebrow="Báo giá tổng hợp theo gói"
         title={`Gói ${group.planName}`}
         description={`${formatVoPrice(group.price)}/tháng (chưa gồm VAT 10%) — áp dụng tại ${group.locations.length} chi nhánh MAX OFFICE`}

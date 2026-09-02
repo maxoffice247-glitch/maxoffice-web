@@ -62,6 +62,7 @@ const FAQS = [
 export default function SoSanhTnhhCoPhanPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/thanh-lap-doanh-nghiep.jpg"
       heroTitle="So sánh Công ty TNHH và Công ty Cổ phần"
       heroDescription="Bảng so sánh chi tiết vốn điều lệ, cơ cấu quản lý và khả năng huy động vốn để bạn chọn đúng loại hình doanh nghiệp."
       breadcrumbLabel="So sánh TNHH & Cổ phần"

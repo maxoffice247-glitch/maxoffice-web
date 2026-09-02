@@ -32,7 +32,7 @@ export default function KnowledgeCenterPage() {
   return (
     <main>
       <PageHero
-        image="/images/khong-gian-lam-viec.jpg"
+        image="/images/hero-kien-thuc.png"
         eyebrow="Kiến thức"
         title="Cẩm nang kiến thức cho doanh nghiệp"
         description="Kiến thức pháp lý, thuế, văn phòng và vận hành doanh nghiệp được hệ thống theo từng chủ đề — giúp bạn tra cứu nhanh và chính xác."

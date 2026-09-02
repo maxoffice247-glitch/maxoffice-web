@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
   return (
     <main>
       <PageHero
-        image="/images/khong-gian-lam-viec.jpg"
+        image="/images/hero-bang-gia-2.png"
         eyebrow="Pháp lý"
         title="Chính sách bảo mật"
         description={`Cập nhật lần cuối: ${LAST_UPDATED}`}

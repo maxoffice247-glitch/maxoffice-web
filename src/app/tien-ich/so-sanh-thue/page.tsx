@@ -50,6 +50,7 @@ const FAQS = [
 export default function SoSanhThuePage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/hero-so-sanh-thue.png"
       heroTitle="So sánh thuế: TNCN vs Hộ kinh doanh"
       heroDescription="Nhập thu nhập hoặc doanh thu dự kiến theo tháng để so sánh nhanh số thuế phải nộp giữa 2 phương án — theo biểu thuế TNCN 5 bậc và tỷ lệ thuế hộ kinh doanh 2026."
       breadcrumbLabel="So sánh thuế"

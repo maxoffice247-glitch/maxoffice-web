@@ -71,6 +71,7 @@ const FAQS = [
 export default function ChecklistThayDoiGiayPhepPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/hero-lien-he-2.png"
       heroTitle="Checklist thay đổi giấy phép kinh doanh"
       heroDescription="Danh sách các bước khi thay đổi nội dung giấy phép kinh doanh: đổi tên, đổi địa chỉ, đổi ngành nghề, đổi vốn điều lệ — tick từng mục hoặc tải PDF để lưu lại."
       breadcrumbLabel="Checklist thay đổi giấy phép"

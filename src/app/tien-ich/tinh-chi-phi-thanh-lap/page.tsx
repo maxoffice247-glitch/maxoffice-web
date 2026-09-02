@@ -37,6 +37,7 @@ const FAQS = [
 export default function TinhChiPhiThanhLapPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/ke-toan-thue.jpg"
       heroTitle="Công cụ tính chi phí thành lập công ty"
       heroDescription="Chọn gói dịch vụ và các dịch vụ pháp lý sửa đổi (nếu có) để nhận ước tính chi phí theo bảng giá mới nhất — nhanh chóng, minh bạch."
       breadcrumbLabel="Tính chi phí thành lập"

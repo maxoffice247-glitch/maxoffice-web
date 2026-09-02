@@ -13,6 +13,7 @@ import { ArrowRightSmallIcon } from "./icons";
 type RelatedService = { slug: string; name: string; desc: string };
 
 export default function ToolPageTemplate({
+  heroImage,
   heroTitle,
   heroDescription,
   breadcrumbLabel,
@@ -24,6 +25,11 @@ export default function ToolPageTemplate({
   defaultService,
   children,
 }: {
+  /** Trước đây cố định "/images/khong-gian-lam-viec.jpg" cho MỌI công cụ
+      /tien-ich/* (11 trang) — cùng 1 ảnh hero cho toàn bộ nhóm trang khác
+      chủ đề nhau. Giờ mỗi trang tự truyền ảnh riêng (xem từng page.tsx);
+      giữ nguyên ảnh cũ làm mặc định để trang nào chưa kịp gán không bị vỡ. */
+  heroImage?: string;
   heroTitle: string;
   heroDescription: string;
   breadcrumbLabel: string;
@@ -38,7 +44,7 @@ export default function ToolPageTemplate({
   return (
     <main>
       <PageHero
-        image="/images/khong-gian-lam-viec.jpg"
+        image={heroImage ?? "/images/khong-gian-lam-viec.jpg"}
         eyebrow="Tiện ích miễn phí"
         title={heroTitle}
         description={heroDescription}

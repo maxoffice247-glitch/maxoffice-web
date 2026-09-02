@@ -75,6 +75,7 @@ const FAQS = [
 export default function ChecklistThanhLapDoanhNghiepPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/thanh-lap-doanh-nghiep.jpg"
       heroTitle="Checklist thành lập doanh nghiệp"
       heroDescription="Danh sách đầy đủ các bước và giấy tờ cần chuẩn bị khi thành lập Hộ kinh doanh, Công ty TNHH hoặc Công ty Cổ phần — tick từng mục hoặc tải PDF để lưu lại."
       breadcrumbLabel="Checklist thành lập doanh nghiệp"

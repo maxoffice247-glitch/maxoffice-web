@@ -73,6 +73,7 @@ const FAQS = [
 export default function ChecklistMoChiNhanhPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/hero-chi-nhanh.png"
       heroTitle="Checklist mở chi nhánh công ty"
       heroDescription="Danh sách đầy đủ các bước và giấy tờ cần chuẩn bị khi mở chi nhánh công ty — tick từng mục hoặc tải PDF để lưu lại."
       breadcrumbLabel="Checklist mở chi nhánh"

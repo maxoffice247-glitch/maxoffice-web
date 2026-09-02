@@ -88,6 +88,7 @@ const FAQS = [
 export default function QuyTrinhThanhLapDoanhNghiepPage() {
   return (
     <ToolPageTemplate
+      heroImage="/images/thanh-lap-doanh-nghiep.jpg"
       heroTitle="Quy trình thành lập doanh nghiệp"
       heroDescription="Timeline tương tác toàn bộ hành trình từ lúc tư vấn loại hình đến khi chính thức vận hành — bấm vào từng bước để xem chi tiết."
       breadcrumbLabel="Quy trình thành lập doanh nghiệp"
