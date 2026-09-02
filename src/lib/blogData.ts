@@ -38,6 +38,13 @@ export type BlogCta = {
 export type BlogPost = {
   slug: string;
   title: string;
+  /** Tiêu đề rút gọn dùng riêng cho khối PageHero (banner ảnh lớn đầu bài) —
+      chỉ cần khi `title` đầy đủ quá dài, xuống dòng xấu ở khối H1 cỡ chữ lớn
+      (32-50px tuỳ breakpoint, container tối đa 760px, xem PageHero.tsx).
+      Breadcrumb, share buttons, JSON-LD headline, thẻ bài trên trang danh
+      sách và metaTitle vẫn dùng nguyên `title` đầy đủ — chỉ H1 trong banner
+      đổi sang bản này khi có. Bỏ trống = dùng `title`. */
+  heroTitle?: string;
   excerpt: string;
   categorySlug: string;
   author: string;
@@ -3349,6 +3356,11 @@ thumbnailImage: "/images/mo-rong-kinh-doanh-sme.jpg",
   {
     slug: "cong-ty-luat-thue-van-phong-ao-3-loai-giay-to",
     title: "Công ty Luật thuê văn phòng ảo: Đừng ký hợp đồng nếu chưa kiểm tra đủ 3 loại giấy tờ này",
+    // Tiêu đề đầy đủ ở trên xuống 4-5 dòng trong banner PageHero (H1 32-50px,
+    // container 760px) tuỳ breakpoint — đo thực tế: 5 dòng ở mobile
+    // 375-414px, 4 dòng ở vùng chuyển breakpoint 640px. Bản rút gọn này giữ
+    // đúng 3 dòng ở mọi breakpoint đã test (375/414/640/1024px).
+    heroTitle: "Công ty Luật thuê VPA: Đừng ký khi chưa đủ 3 giấy tờ",
     excerpt:
       "Nhiều công ty luật, văn phòng đại diện thuê văn phòng ảo gặp tình trạng hồ sơ bị yêu cầu bổ sung — không phải do thiếu giấy tờ của mình, mà do đơn vị cho thuê thiếu hồ sơ pháp lý. Đây là 3 loại giấy tờ cần kiểm tra trước khi ký hợp đồng.",
     categorySlug: "van-phong-dia-diem",
@@ -3358,7 +3370,13 @@ thumbnailImage: "/images/mo-rong-kinh-doanh-sme.jpg",
     metaTitle: "Văn Phòng Ảo Cho Công Ty Luật: 3 Giấy Tờ Cần Kiểm Tra | MAX OFFICE",
     metaDescription:
       "Công ty luật, văn phòng đại diện thuê văn phòng ảo cần kiểm tra đủ 3 loại giấy tờ pháp lý trước khi ký hợp đồng. MAX OFFICE đáp ứng đầy đủ tại mọi chi nhánh.",
-    heroImage: "/images/cong-ty-luat-thue-van-phong-ao.png",
+    // Ảnh hero dùng chung với bài "9 rủi ro..." (chủ đề văn phòng ảo gần
+    // nhất) — lấy từ pool ảnh hero sẵn có của blog, không dùng ảnh graphic
+    // riêng của bài này (ảnh đó dành cho thumbnail, xem bên dưới).
+    heroImage: "/images/anh-hero-moi.jpg",
+    // Ảnh mô tả/graphic riêng cho bài này — dùng làm thumbnail card ở
+    // trang danh sách blog, không dùng làm hero (đã đổi hero sang ảnh sẵn có).
+    thumbnailImage: "/images/cong-ty-luat-thue-van-phong-ao.png",
     sections: [
       {
         id: "tinh-huong-thuc-te-thuong-gap",

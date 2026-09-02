@@ -88,7 +88,7 @@ export default async function BlogArticlePage({
       <PageHero
         image={post.heroImage}
         eyebrow={getCategoryName(post.categorySlug)}
-        title={post.title}
+        title={post.heroTitle ?? post.title}
         description={post.excerpt}
       />
       <Breadcrumb items={[{ label: "Blog", href: "/blog" }, { label: post.title }]} />
