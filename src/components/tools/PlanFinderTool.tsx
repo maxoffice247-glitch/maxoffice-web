@@ -6,7 +6,7 @@ import Image from "next/image";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import { ArrowRightSmallIcon } from "../icons";
-import { AREAS } from "@/lib/locationsData";
+import { AREAS, ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 import {
   getAllOfferedPlans,
   getGroupedPlans,
@@ -245,7 +245,7 @@ export default function PlanFinderTool() {
         <SectionHead
           eyebrow="Công cụ miễn phí"
           title="Tìm VPA theo nhu cầu"
-          description="Chọn khu vực và ngân sách mong muốn — công cụ sẽ gợi ý ngay các gói văn phòng ảo phù hợp nhất trong hệ thống 25 chi nhánh MAX OFFICE."
+          description={`Chọn khu vực và ngân sách mong muốn — công cụ sẽ gợi ý ngay các gói văn phòng ảo phù hợp nhất trong hệ thống ${ACTIVE_BRANCH_COUNT} chi nhánh MAX OFFICE.`}
         />
 
         {/* Toggle chế độ xem — độc lập với luồng lọc khu vực/ngân sách bên dưới. */}

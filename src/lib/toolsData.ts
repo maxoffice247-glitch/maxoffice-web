@@ -10,6 +10,7 @@ import {
   RouteIcon,
   TagIcon,
 } from "@/components/icons";
+import { ACTIVE_BRANCH_COUNT } from "./locationsData";
 
 /**
  * Nguồn dữ liệu DUY NHẤT cho danh sách "Tiện ích" — dùng chung cho dropdown
@@ -48,7 +49,7 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
         icon: TagIcon,
         title: "Tìm VPA theo nhu cầu",
         titleFull: "Tìm VPA theo nhu cầu",
-        desc: "Chọn khu vực và ngân sách mong muốn, nhận ngay danh sách gói văn phòng ảo phù hợp trong 25 chi nhánh MAX OFFICE.",
+        desc: `Chọn khu vực và ngân sách mong muốn, nhận ngay danh sách gói văn phòng ảo phù hợp trong ${ACTIVE_BRANCH_COUNT} chi nhánh MAX OFFICE.`,
         linkLabel: "Dùng công cụ ngay",
         highlight: true,
       },

@@ -3,6 +3,7 @@ import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import Button from "./Button";
 import { ArrowRightSmallIcon, BuildingIcon } from "./icons";
 import { SERVICES_LIST } from "@/lib/servicesData";
+import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
 export default function ServiceCrossLinks({ currentSlug }: { currentSlug: string }) {
   const related = SERVICES_LIST.filter((s) => s.slug !== currentSlug);
@@ -55,7 +56,7 @@ export default function ServiceCrossLinks({ currentSlug }: { currentSlug: string
             </span>
             <div>
               <h3 className="text-[15.5px] font-bold text-navy">
-                Xem 25 địa điểm tại TP.HCM
+                Xem {ACTIVE_BRANCH_COUNT} địa điểm tại TP.HCM
               </h3>
               <p className="text-[13.5px] text-body-text">
                 Chọn địa chỉ thuận tiện nhất cho bạn và đối tác.

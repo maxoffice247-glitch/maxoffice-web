@@ -1,6 +1,11 @@
 import SectionHead from "./SectionHead";
 import { RevealGroup, RevealItem } from "./Reveal";
+import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
+// Mốc "hiện tại" (mục cuối cùng) LUÔN phải khớp ACTIVE_BRANCH_COUNT — 3 mốc
+// đầu là số liệu LỊCH SỬ tại đúng thời điểm đó nên giữ nguyên số cứng, không
+// đổi theo ACTIVE_BRANCH_COUNT (khác với mốc cuối, vốn mô tả trạng thái hiện
+// tại nên phải tự cập nhật khi mở thêm chi nhánh).
 const MILESTONES = [
   {
     year: "2022",
@@ -20,7 +25,7 @@ const MILESTONES = [
   {
     year: "2025",
     title: "Vượt mốc 500 doanh nghiệp",
-    desc: "Vượt mốc 500 doanh nghiệp, mở thêm CN Điện Biên Phủ, tổng 22 địa điểm.",
+    desc: `Vượt mốc 500 doanh nghiệp, mở thêm CN Điện Biên Phủ, tổng ${ACTIVE_BRANCH_COUNT} địa điểm.`,
   },
 ];
 
@@ -30,7 +35,7 @@ export default function AboutTimeline() {
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <SectionHead
           eyebrow="Hành trình phát triển"
-          title="Từ 1 địa điểm đến 22 địa điểm trong 3 năm"
+          title={`Từ 1 địa điểm đến ${ACTIVE_BRANCH_COUNT} địa điểm trong 3 năm`}
         />
         <RevealGroup className="relative grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-14 lg:grid-cols-4 lg:gap-0">
           <div

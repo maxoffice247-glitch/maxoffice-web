@@ -246,14 +246,20 @@ export default function Hero() {
                   // phí") thay vì xanh #3B9EFF trước đây — quy tắc màu Hero:
                   // đỏ = phần tử bấm được (link, CTA), xanh = nhấn nội
                   // dung/thương hiệu (H1, câu hỏi carousel).
-                  // Viền bóng tối 3 lớp (đo pixel thực tế trên ảnh nền phát
+                  // Viền bóng TRẮNG 3 lớp (đo pixel thực tế trên ảnh nền phát
                   // hiện: cột phải của lưới 3 cột — "Chỗ ngồi linh động",
                   // "Kế toán & thuế" — rơi vào vùng sáng của ảnh, ngoài dải
                   // làm tối ~65% bên trái, contrast đỏ-trên-sáng chỉ ~1.1-
-                  // 1.5:1, rất khó đọc) — cùng kỹ thuật đã dùng cho câu hỏi
-                  // carousel, chỉ nhẹ hơn tương ứng cỡ chữ nhỏ hơn (12.5px
-                  // so với 18-20px) để không làm chữ bết lại thành khối mờ.
-                  className="text-[12.5px] font-bold text-accent [text-shadow:0_0_1px_rgba(0,0,0,0.9),0_0_4px_rgba(0,0,0,0.75),0_1px_8px_rgba(0,0,0,0.5)] transition-colors duration-200 hover:text-white hover:underline"
+                  // 1.5:1, rất khó đọc). Bản đầu dùng viền ĐEN nhưng bị báo
+                  // là đỏ+đen làm đỏ kém nổi (viền đen hoà lẫn vào nền tối
+                  // navy của dải gradient wash, không tạo đủ tách bạch quanh
+                  // chữ) — đổi sang viền TRẮNG tạo halo sáng bao quanh chữ,
+                  // tương phản được với CẢ nền tối lẫn nền sáng của ảnh, và
+                  // bản thân đỏ trên nền trắng luôn nổi rõ hơn đỏ trên nền
+                  // đen. Nhẹ hơn tương ứng cỡ chữ nhỏ (12.5px so với 18-20px
+                  // của câu hỏi carousel) để không làm chữ bết lại thành
+                  // khối mờ.
+                  className="text-[12.5px] font-bold text-accent [text-shadow:0_0_1px_rgba(255,255,255,0.9),0_0_4px_rgba(255,255,255,0.75),0_1px_8px_rgba(255,255,255,0.5)] transition-colors duration-200 hover:text-white hover:underline"
                 >
                   {kw.label}
                 </Link>
@@ -283,7 +289,7 @@ export default function Hero() {
               icon={<MapPinIcon />}
               className="w-full !px-5 text-center whitespace-normal sm:w-auto sm:whitespace-nowrap"
             >
-              Xem 25 chi nhánh
+              Xem {LOCATIONS_LIST.length} chi nhánh
             </Button>
             <Button
               href="tel:0898082188"

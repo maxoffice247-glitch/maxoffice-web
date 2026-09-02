@@ -18,6 +18,7 @@ import {
   CalendarIcon,
 } from "./icons";
 import { useNavIndicator } from "./NavIndicator";
+import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
 const MEGA_SERVICES = [
   {
@@ -66,7 +67,7 @@ const MEGA_SERVICES = [
 ];
 
 const TRUST_STATS = [
-  { icon: MapPinIcon, label: "25 địa điểm tại TP.HCM" },
+  { icon: MapPinIcon, label: `${ACTIVE_BRANCH_COUNT} địa điểm tại TP.HCM` },
   { icon: UsersIcon, label: "500+ doanh nghiệp tin dùng" },
   { icon: CalendarIcon, label: "Từ 2022" },
 ];

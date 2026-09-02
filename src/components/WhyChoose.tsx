@@ -8,11 +8,12 @@ import {
   ClockIcon,
   HeartHandshakeIcon,
 } from "./icons";
+import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
 const REASONS = [
   {
     icon: BuildingIcon,
-    title: "25 địa điểm trung tâm",
+    title: `${ACTIVE_BRANCH_COUNT} địa điểm trung tâm`,
     desc: "Hiện diện tại các quận trung tâm TP.HCM — chọn địa chỉ phù hợp nhất với khách hàng và đối tác của bạn.",
   },
   {

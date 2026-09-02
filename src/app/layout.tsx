@@ -15,6 +15,7 @@ import {
   COMPANY_PHONE,
   COMPANY_EMAIL,
 } from "@/lib/siteConfig";
+import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
 const beVietnamPro = Be_Vietnam_Pro({
   variable: "--font-be-vietnam-pro",
@@ -33,8 +34,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "MAX OFFICE — Giải Pháp Vận Hành Doanh Nghiệp Toàn Diện",
-  description:
-    "MAX OFFICE đồng hành cùng hơn 500 doanh nghiệp tại 25 địa điểm trung tâm TP.HCM với văn phòng ảo, văn phòng trọn gói, coworking, phòng họp, thành lập doanh nghiệp và kế toán thuế.",
+  description: `MAX OFFICE đồng hành cùng hơn 500 doanh nghiệp tại ${ACTIVE_BRANCH_COUNT} địa điểm trung tâm TP.HCM với văn phòng ảo, văn phòng trọn gói, coworking, phòng họp, thành lập doanh nghiệp và kế toán thuế.`,
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },

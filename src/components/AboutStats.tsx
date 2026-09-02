@@ -1,8 +1,9 @@
 import Reveal from "./Reveal";
 import { BuildingIcon, UsersIcon, CalendarIcon } from "./icons";
+import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
 const STATS = [
-  { icon: BuildingIcon, value: "22", label: "Chi nhánh tại TP.HCM" },
+  { icon: BuildingIcon, value: String(ACTIVE_BRANCH_COUNT), label: "Chi nhánh tại TP.HCM" },
   { icon: UsersIcon, value: "500", suffix: "+", label: "Doanh nghiệp tin dùng" },
   { icon: CalendarIcon, value: "2022", label: "Năm thành lập" },
 ];

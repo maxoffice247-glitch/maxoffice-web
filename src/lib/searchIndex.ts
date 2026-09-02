@@ -1,3 +1,5 @@
+import { ACTIVE_BRANCH_COUNT } from "./locationsData";
+
 export type SearchItem = {
   title: string;
   category: string;
@@ -415,7 +417,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Tìm VPA theo nhu cầu",
     category: "Tiện ích",
     href: "/tien-ich/tim-goi-phu-hop",
-    desc: "Chọn khu vực và ngân sách, nhận ngay danh sách gói văn phòng ảo phù hợp trong 25 chi nhánh",
+    desc: `Chọn khu vực và ngân sách, nhận ngay danh sách gói văn phòng ảo phù hợp trong ${ACTIVE_BRANCH_COUNT} chi nhánh`,
   },
   {
     title: "Checklist thành lập doanh nghiệp",

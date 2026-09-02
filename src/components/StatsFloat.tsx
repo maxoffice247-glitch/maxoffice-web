@@ -2,6 +2,7 @@ import Reveal from "./Reveal";
 import StatNumber from "./StatNumber";
 import { BuildingIcon, UsersIcon, CalendarIcon, TagIcon, StarIcon } from "./icons";
 import { GOOGLE_MAPS_REVIEW_URL } from "@/lib/siteConfig";
+import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
 // Static, not auto-fetched — see GoogleReviews component history: the Places API
 // key on this project is blocked from Places API (New) (API_KEY_SERVICE_BLOCKED,
@@ -11,7 +12,7 @@ import { GOOGLE_MAPS_REVIEW_URL } from "@/lib/siteConfig";
 const GOOGLE_RATING: { rating: number; reviewCount: number } | null = { rating: 5.0, reviewCount: 5 };
 
 const STATS = [
-  { icon: BuildingIcon, value: "22", label: "Chi nhánh tại TP.HCM" },
+  { icon: BuildingIcon, value: String(ACTIVE_BRANCH_COUNT), label: "Chi nhánh tại TP.HCM" },
   { icon: UsersIcon, value: "500", suffix: "+", label: "Doanh nghiệp tin dùng" },
   { icon: CalendarIcon, value: "2022", label: "Năm thành lập" },
   { icon: TagIcon, value: "6", label: "Dịch vụ cốt lõi" },

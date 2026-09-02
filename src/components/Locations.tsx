@@ -1,7 +1,11 @@
 import Link from "next/link";
 import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import Button from "./Button";
+import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
+// Chỉ 6 chi nhánh NỔI BẬT làm preview trên trang chủ (không phải toàn bộ
+// danh sách) — xem đủ ACTIVE_BRANCH_COUNT chi nhánh tại /dia-diem qua nút
+// "Xem tất cả" bên dưới. Không đổi mảng này theo ACTIVE_BRANCH_COUNT.
 const LOCATIONS = [
   {
     num: "01",
@@ -53,7 +57,7 @@ export default function Locations() {
               Chi nhánh
             </span>
             <h2 className="mb-3.5 font-display text-[28px] leading-[1.2] font-extrabold text-navy sm:text-[34px] lg:text-[40px]">
-              25 chi nhánh tại TP.HCM
+              {ACTIVE_BRANCH_COUNT} chi nhánh tại TP.HCM
             </h2>
             <p className="text-[16.5px] text-body-text">
               Từ Tân Bình, Gò Vấp, Tân Phú, Quận 10 đến trung tâm Quận 1 —
@@ -62,7 +66,7 @@ export default function Locations() {
             </p>
           </div>
           <Button href="/dia-diem" variant="ghost">
-            Xem tất cả 25 chi nhánh
+            Xem tất cả {ACTIVE_BRANCH_COUNT} chi nhánh
           </Button>
         </Reveal>
         <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
