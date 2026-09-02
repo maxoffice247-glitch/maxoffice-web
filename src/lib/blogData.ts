@@ -1132,6 +1132,10 @@ thumbnailPosition: "center",
     metaDescription:
       "Văn phòng ảo giá rẻ có an toàn không? 9 rủi ro thường gặp về địa chỉ, hợp đồng, biển hiệu, chi phí ẩn — và cách MAX OFFICE giúp bạn tránh ngay từ đầu.",
     heroImage: "/images/anh-hero-moi.jpg",
+    // Ảnh đại diện riêng cho bài này (graphic tóm tắt 9 rủi ro + cách MAX
+    // OFFICE khắc phục từng mục) — dùng làm thumbnail card ở trang danh
+    // sách/related posts, không đổi heroImage (banner đầu bài giữ ảnh chung).
+    thumbnailImage: "/images/9-rui-ro-vpa.png",
     sections: [
       {
         id: "thi-truong-van-phong-ao-va-khoang-cach-gia",
