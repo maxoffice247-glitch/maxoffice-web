@@ -176,29 +176,23 @@ export default function Hero() {
                   style={{ pointerEvents: isActive ? "auto" : "none" }}
                 >
                   <div>
-                    {/* Đỏ thương hiệu (--color-accent, cùng tông nút "Nhận tư
-                        vấn miễn phí"/logo) thay vì xanh #3B9EFF trước đây —
-                        H1 tĩnh phía trên đã dùng xanh cho "bắt đầu vững
-                        vàng", câu hỏi xoay vòng dùng đỏ để 2 khối tách bạch
-                        rõ ràng khi nhìn thoáng qua. Đỏ có độ tương phản gốc
-                        thấp hơn nhiều so với xanh/trắng trên nền ảnh — đo
-                        bằng cách lấy mẫu pixel thực tế phía sau chữ, có điểm
-                        chỉ ~1.2:1 (dưới cả ngưỡng WCAG 3:1 cho chữ lớn) tại
-                        vùng sáng của ảnh (cửa kính, bầu trời), nhất là với
-                        các câu dài tràn ra ngoài dải làm tối bên trái (chỉ
-                        phủ ~65% chiều rộng). Không có biến đỏ sáng hơn nào
-                        khác trong hệ thống màu để thay thế, nên bù bằng 1
-                        viền bóng tối dạng outline (3 lớp text-shadow, mờ dần
-                        từ sát nét đến toả rộng) thay vì shadow mờ đơn lớp
-                        của H1 — viền tối đủ dày để chữ đỏ vẫn đọc được rõ dù
-                        rơi vào vùng sáng nhất của ảnh nền.
-                        text-lg/sm:text-xl (18px/20px) thay vì text-base/
-                        sm:text-lg (16px/18px) trước đây — tăng đúng 1 bậc
-                        thang chữ Tailwind ở mỗi breakpoint (+12.5% và +11.1%,
-                        trong khoảng 10-15% yêu cầu) để phân tầng rõ hơn với
-                        câu trả lời (giữ nguyên text-base/sm:text-lg) mà vẫn
-                        thấp hơn hẳn H1 tĩnh. */}
-                    <p className="text-lg font-bold text-accent [text-shadow:0_0_2px_rgba(0,0,0,0.95),0_0_6px_rgba(0,0,0,0.85),0_1px_14px_rgba(0,0,0,0.6)] sm:text-xl">
+                    {/* Quay lại tông xanh (không dùng đỏ nữa — đỏ giờ dành
+                        riêng cho phần tử bấm/tương tác: 6 link dịch vụ + nút
+                        CTA, xem SERVICE_KEYWORDS bên dưới), nhưng KHÔNG dùng
+                        lại #3B9EFF của H1 để tránh lặp vấn đề khó phân biệt
+                        giữa H1 tĩnh và câu hỏi carousel động đã từng gặp.
+                        Dùng --color-primary (#1565c0, text-primary) — biến
+                        xanh có sẵn trong hệ thống màu (globals.css), đậm và
+                        trầm hơn hẳn #3B9EFF (xanh da trời sáng, không phải
+                        token hệ thống, chỉ là hex rời rạc riêng của H1) nên
+                        đủ tách bạch khi nhìn thoáng qua dù cùng là "xanh".
+                        Giữ nguyên 3 lớp text-shadow outline tối (đo bằng
+                        pixel sampling thực tế trên ảnh nền, xem PlanFinder
+                        contrast note cũ) vì #1565c0 cũng có độ tương phản
+                        gốc thấp ở vùng sáng của ảnh (cửa kính, bầu trời),
+                        không chỉ riêng đỏ mới cần viền tối này. Cỡ chữ giữ
+                        nguyên text-lg/sm:text-xl từ lần tăng trước. */}
+                    <p className="text-lg font-bold text-primary [text-shadow:0_0_2px_rgba(0,0,0,0.95),0_0_6px_rgba(0,0,0,0.85),0_1px_14px_rgba(0,0,0,0.6)] sm:text-xl">
                       {slide.question}
                     </p>
                     <p className="mt-1 text-base text-white/86 sm:text-lg">{slide.answer}</p>
@@ -239,7 +233,18 @@ export default function Hero() {
                 <Link
                   key={kw.href}
                   href={kw.href}
-                  className="text-[12.5px] font-bold text-[#3B9EFF] transition-colors duration-200 hover:text-white hover:underline"
+                  // text-accent (đỏ, cùng token với nút "Nhận tư vấn miễn
+                  // phí") thay vì xanh #3B9EFF trước đây — quy tắc màu Hero:
+                  // đỏ = phần tử bấm được (link, CTA), xanh = nhấn nội
+                  // dung/thương hiệu (H1, câu hỏi carousel).
+                  // Viền bóng tối 3 lớp (đo pixel thực tế trên ảnh nền phát
+                  // hiện: cột phải của lưới 3 cột — "Chỗ ngồi linh động",
+                  // "Kế toán & thuế" — rơi vào vùng sáng của ảnh, ngoài dải
+                  // làm tối ~65% bên trái, contrast đỏ-trên-sáng chỉ ~1.1-
+                  // 1.5:1, rất khó đọc) — cùng kỹ thuật đã dùng cho câu hỏi
+                  // carousel, chỉ nhẹ hơn tương ứng cỡ chữ nhỏ hơn (12.5px
+                  // so với 18-20px) để không làm chữ bết lại thành khối mờ.
+                  className="text-[12.5px] font-bold text-accent [text-shadow:0_0_1px_rgba(0,0,0,0.9),0_0_4px_rgba(0,0,0,0.75),0_1px_8px_rgba(0,0,0,0.5)] transition-colors duration-200 hover:text-white hover:underline"
                 >
                   {kw.label}
                 </Link>
