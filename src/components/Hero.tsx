@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { PhoneIcon, MapPinIcon } from "./icons";
 import Button from "./Button";
 import LeadFormButton from "./LeadFormButton";
@@ -85,6 +85,25 @@ function getHeroSlides(branchCount: number): HeroSlide[] {
 
 const SLIDE_INTERVAL_MS = 4500;
 
+// Chiều cao wrapper bọc Hero cho hiệu ứng "dính rồi co nhỏ/mờ dần" — tham
+// khảo litespace.com.vn/vi: wrapper CAO HƠN section thật (section dùng
+// `sticky top-0`), phần chênh lệch = khoảng đệm cuộn mà Hero "dính" ở đỉnh
+// màn hình (không trôi lên bình thường) trong lúc co nhỏ + mờ dần, trước
+// khi nhả cho nội dung bên dưới.
+//
+// Cố định bằng CSS tĩnh (min-h-[calc(80vh+520px)] ở JSX bên dưới) — KHÔNG
+// đo bằng ResizeObserver/JS như bản đầu tiên: đo Lighthouse before/after
+// phát hiện set chiều cao SAU khi hydrate (dù đã dùng useLayoutEffect) vẫn
+// gây Cumulative Layout Shift (0 -> 0.052) vì HTML server-render ban đầu
+// (SSR, chưa chạy JS) không thể biết trước offsetHeight đo được ở client —
+// bất kỳ giá trị nào set sau khi trang đã paint lần đầu đều tính là shift,
+// bất kể dùng effect nào. 80vh khớp đúng chiều cao sàn của chính section
+// (min-h-[80vh]); +520px đủ dư so với chiều cao nội dung thực tế đã đo được
+// ở mọi breakpoint đã test (mobile 375px với carousel 9 slide + link 2 cột
+// là trường hợp cao nhất) cộng khoảng đệm cuộn mong muốn — đổi lại kém
+// "chính xác từng px" hơn bản đo động, nhưng bằng 0 rủi ro CLS.
+const HERO_WRAPPER_MIN_HEIGHT = "min-h-[calc(80vh+520px)]";
+
 export default function Hero() {
   // Defaults to the first image so server and client render identically on
   // first paint (no hydration mismatch); the effect then swaps in a random
@@ -111,37 +130,83 @@ export default function Hero() {
     return () => clearTimeout(id);
   }, [activeSlide, prefersReducedMotion, slides.length]);
 
-  return (
-    <section className="relative flex min-h-[80vh] items-center overflow-hidden pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-28 lg:pb-32">
-      <div className="absolute inset-0">
-        <Image
-          src={heroImage}
-          alt="Không gian văn phòng MAX OFFICE"
-          fill
-          loading="eager"
-          fetchPriority="high"
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        {/* Left-to-right wash — darkest (65%) at the left edge under the text,
-            fading to clear by ~65% width where all 3 photos' busier detail
-            (desks, skyline) sits. */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[rgba(9,15,28,0.65)] from-0% via-[rgba(9,15,28,0.28)] via-45% to-[rgba(9,15,28,0)] to-65%" />
-        {/* Separate, independent strip so the header nav always reads clearly
-            regardless of how light the photo is right at the top edge. */}
-        <div className="absolute inset-x-0 top-0 h-[110px] bg-gradient-to-b from-[rgba(6,12,24,0.85)] to-transparent" />
-        {/* Mobile-only extra wash — narrow viewports show proportionally more
-            of the un-overlaid right side of the photo, so add a flat dark
-            layer here without touching the desktop/tablet gradient above. */}
-        <div className="absolute inset-0 bg-[rgba(9,15,28,0.13)] sm:hidden" />
-      </div>
+  // --- Hiệu ứng cuộn "dính rồi co nhỏ/mờ dần" (tham khảo litespace.com.vn) ---
+  // KHÔNG đụng gì đến carousel/dot indicator/auto-advance ở trên — chỉ thêm
+  // phần scroll progress riêng cho hiệu ứng nền/khung Hero.
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-      <motion.div
-        className="relative z-10 mx-auto w-full max-w-[1240px] px-5 sm:px-8"
-        initial="hidden"
-        animate="visible"
-        variants={container}
+  // offset "end end" (không phải "end start") — progress=1 phải đúng vào
+  // lúc mép DƯỚI wrapper chạm mép DƯỚI viewport (= đúng lúc sticky nhả ra,
+  // vì wrapper cao hơn section thật một khoảng đệm cố định — xem
+  // HERO_WRAPPER_MIN_HEIGHT), không phải lúc mép dưới wrapper chạm mép TRÊN
+  // viewport (progress=1 sẽ xảy ra quá muộn, gần hết cả chiều cao wrapper
+  // thay vì chỉ đúng khoảng đệm).
+  const { scrollYProgress } = useScroll({
+    target: wrapperRef,
+    offset: ["start start", "end end"],
+  });
+
+  // Kỹ thuật 2 — co nhỏ + mờ dần TOÀN KHỐI Hero (bo góc nhẹ thêm, giống hiệu
+  // ứng "lùi vào trong màn hình" của trang tham khảo) khi cuộn qua.
+  const rawScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  const rawOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.4]);
+  const rawRadius = useTransform(scrollYProgress, [0, 1], [0, 28]);
+  // Kỹ thuật 1 — parallax: khối nội dung chữ dịch lên NHIỀU hơn (-24px) so
+  // với ảnh nền (-8px) khi cuộn, tạo cảm giác ảnh nền "chậm hơn"/ở xa hơn.
+  const rawContentY = useTransform(scrollYProgress, [0, 1], [0, -24]);
+  const rawBgY = useTransform(scrollYProgress, [0, 1], [0, -8]);
+  // Tắt hẳn dưới prefers-reduced-motion — Hero cuộn bình thường, không dính/
+  // không co/không mờ, giống cách carousel cũng tắt auto-advance ở trên.
+  const scrollStyle = prefersReducedMotion
+    ? undefined
+    : { scale: rawScale, opacity: rawOpacity, borderRadius: rawRadius };
+  const bgParallaxStyle = prefersReducedMotion ? undefined : { y: rawBgY };
+  const contentParallaxStyle = prefersReducedMotion ? undefined : { y: rawContentY };
+
+  return (
+    <div ref={wrapperRef} className={`relative ${prefersReducedMotion ? "" : HERO_WRAPPER_MIN_HEIGHT}`}>
+      <motion.section
+        style={scrollStyle}
+        className={`relative flex min-h-[80vh] items-center overflow-hidden pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-28 lg:pb-32 ${
+          prefersReducedMotion ? "" : "sticky top-0"
+        }`}
       >
+        {/* Không đặt will-change tĩnh (transform/opacity) ở đây — đo Lighthouse
+            trước/sau phát hiện will-change khai báo sẵn từ lúc tải trang buộc
+            trình duyệt tạo compositor layer SỚM cho các phần tử này dù chưa
+            hề cuộn, làm chậm LCP/FCP đáng kể (Performance 77->66, LCP +2.9s).
+            transform/opacity vẫn được tăng tốc GPU bình thường khi bắt đầu
+            animate mà không cần khai báo trước. */}
+        <motion.div className="absolute inset-x-0 -top-4 -bottom-4" style={bgParallaxStyle}>
+          <Image
+            src={heroImage}
+            alt="Không gian văn phòng MAX OFFICE"
+            fill
+            loading="eager"
+            fetchPriority="high"
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          {/* Left-to-right wash — darkest (65%) at the left edge under the text,
+              fading to clear by ~65% width where all 3 photos' busier detail
+              (desks, skyline) sits. */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[rgba(9,15,28,0.65)] from-0% via-[rgba(9,15,28,0.28)] via-45% to-[rgba(9,15,28,0)] to-65%" />
+          {/* Separate, independent strip so the header nav always reads clearly
+              regardless of how light the photo is right at the top edge. */}
+          <div className="absolute inset-x-0 top-0 h-[110px] bg-gradient-to-b from-[rgba(6,12,24,0.85)] to-transparent" />
+          {/* Mobile-only extra wash — narrow viewports show proportionally more
+              of the un-overlaid right side of the photo, so add a flat dark
+              layer here without touching the desktop/tablet gradient above. */}
+          <div className="absolute inset-0 bg-[rgba(9,15,28,0.13)] sm:hidden" />
+        </motion.div>
+
+        <motion.div
+          className="relative z-10 mx-auto w-full max-w-[1240px] px-5 sm:px-8"
+          initial="hidden"
+          animate="visible"
+          variants={container}
+          style={contentParallaxStyle}
+        >
         <div className="max-w-[760px]">
           <motion.p
             variants={item}
@@ -300,6 +365,7 @@ export default function Hero() {
           </motion.div>
         </div>
       </motion.div>
-    </section>
+      </motion.section>
+    </div>
   );
 }
