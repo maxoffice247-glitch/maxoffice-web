@@ -4,8 +4,8 @@ import { ShieldCheckIcon, BadgePercentIcon, HeadsetIcon, CheckCircleIcon } from 
 const BADGES = [
   {
     icon: ShieldCheckIcon,
-    title: "Địa chỉ hợp lệ",
-    desc: "Đăng ký kinh doanh & thuế",
+    title: "Địa chỉ hợp pháp 100%",
+    desc: "Đáp ứng Điều 42 Luật DN",
   },
   {
     icon: BadgePercentIcon,
