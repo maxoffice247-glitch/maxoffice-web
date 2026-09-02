@@ -13,9 +13,12 @@ export const metadata: Metadata = {
   title: "Tiện Ích Miễn Phí - Công Cụ, Checklist, So Sánh | MAX OFFICE",
   description:
     "11 tiện ích miễn phí: công cụ tính toán, checklist tải PDF, bảng so sánh dịch vụ/loại hình doanh nghiệp và timeline quy trình thành lập — hỗ trợ ra quyết định nhanh chóng.",
-  openGraph: {
-    images: [{ url: "/images/og/khong-gian-lam-viec.jpg", width: 1200, height: 630 }],
-  },
+  // KHÔNG khai báo openGraph.images ở đây — ảnh OG giờ đến từ
+  // opengraph-image.tsx cùng thư mục (renderOgImage(), có logo+overlay).
+  // Trước đây field này trỏ thẳng 1 ảnh nền thô, và vì metadata khai báo
+  // trực tiếp LUÔN được Next.js ưu tiên hơn ảnh sinh ra từ file convention
+  // cùng cấp, nó đã âm thầm che mất opengraph-image.tsx khi file đó được
+  // thêm vào sau — khiến share link vẫn ra ảnh thô, không logo/tiêu đề.
 };
 
 export default function TienIchPage() {

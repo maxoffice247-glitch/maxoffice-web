@@ -16,9 +16,9 @@ export const metadata: Metadata = {
   title: "Kiến Thức Doanh Nghiệp — Cẩm Nang MAX OFFICE",
   description:
     "Kiến thức pháp lý, thuế, văn phòng và vận hành doanh nghiệp theo từng chủ đề — cập nhật bởi đội ngũ MAX OFFICE.",
-  openGraph: {
-    images: [{ url: "/images/og/khong-gian-lam-viec.jpg", width: 1200, height: 630 }],
-  },
+  // KHÔNG khai báo openGraph.images ở đây — xem giải thích tại
+  // src/app/tien-ich/page.tsx (metadata tĩnh khai báo trực tiếp che mất
+  // opengraph-image.tsx cùng thư mục).
 };
 
 export default function KnowledgeCenterPage() {

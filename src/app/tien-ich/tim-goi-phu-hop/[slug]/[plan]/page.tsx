@@ -8,7 +8,6 @@ import PlanDetailActions from "@/components/tools/PlanDetailActions";
 import { CheckCircleIcon, MapPinIcon, ArrowRightSmallIcon } from "@/components/icons";
 import { getAllOfferedPlans, getOfferedPlan, formatVoPrice } from "@/lib/planFinder";
 import { LOCATIONS_DATA, resolveTimedPromotions } from "@/lib/locationsData";
-import { SITE_URL } from "@/lib/siteConfig";
 
 export async function generateStaticParams() {
   return getAllOfferedPlans().map((p) => ({ slug: p.locationSlug, plan: p.planKey }));
@@ -28,9 +27,11 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: `/tien-ich/tim-goi-phu-hop/${slug}/${planKey}` },
-    openGraph: {
-      images: [{ url: `${SITE_URL}/images/og/dia-diem-${slug}.jpg`, width: 1200, height: 630 }],
-    },
+    // KHÔNG khai báo openGraph.images ở đây — trước đây trỏ thẳng ảnh mặt
+    // tiền GỐC, không qua renderOgImage() nên share link chỉ hiện ảnh
+    // trơn, không logo/tiêu đề/overlay. Ảnh OG giờ đến từ
+    // opengraph-image.tsx cùng thư mục (dùng đúng ảnh mặt tiền chi nhánh
+    // này, nhưng render qua template chuẩn chung).
   };
 }
 

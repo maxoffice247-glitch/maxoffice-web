@@ -32,15 +32,11 @@ export async function generateMetadata({
     title: post.metaTitle,
     description: post.metaDescription,
     alternates: { canonical: `/blog/${post.slug}` },
-    openGraph: {
-      images: [
-        {
-          url: post.heroImage.replace("/images/", "/images/og/"),
-          width: 1200,
-          height: 630,
-        },
-      ],
-    },
+    // KHÔNG khai báo openGraph.images ở đây nữa — trước đây field này trỏ
+    // thẳng ảnh hero GỐC (post.heroImage), không qua renderOgImage() nên
+    // share link chỉ hiện ảnh trơn, không logo/tiêu đề/overlay. Ảnh OG giờ
+    // đến từ opengraph-image.tsx cùng thư mục (dùng đúng nguồn dữ liệu
+    // post.heroImage này nhưng render qua template chuẩn).
   };
 }
 

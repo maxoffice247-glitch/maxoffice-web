@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   title: "Blog MAX OFFICE — Kiến Thức Vận Hành Doanh Nghiệp",
   description:
     "Cập nhật kiến thức về thành lập doanh nghiệp, kế toán thuế, pháp lý và vận hành văn phòng từ đội ngũ MAX OFFICE.",
-  openGraph: {
-    images: [{ url: "/images/og/coworking.jpg", width: 1200, height: 630 }],
-  },
+  // KHÔNG khai báo openGraph.images ở đây — ảnh OG giờ đến từ
+  // opengraph-image.tsx mới tạo cùng thư mục (renderOgImage(), có
+  // logo+overlay) thay vì trỏ thẳng ảnh nền thô như trước.
 };
 
 export default async function BlogPage({
