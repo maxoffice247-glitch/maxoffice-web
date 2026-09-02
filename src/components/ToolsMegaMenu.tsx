@@ -3,59 +3,9 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  KeyIcon,
-  DocumentCheckIcon,
-  BadgePercentIcon,
-  ListIcon,
-  BuildingIcon,
-  ShieldCheckIcon,
-  ScaleIcon,
-  RouteIcon,
-  TagIcon,
-  ChevronDownIcon,
-  PhoneIcon,
-  ArrowRightSmallIcon,
-} from "./icons";
+import { ChevronDownIcon, PhoneIcon, ArrowRightSmallIcon } from "./icons";
 import { useNavIndicator } from "./NavIndicator";
-
-const TOOL_CATEGORIES = [
-  {
-    title: "Công cụ tính toán",
-    tools: [
-      // Công cụ chính/quan trọng nhất trong nhóm — luôn đứng đầu danh sách.
-      { slug: "tim-goi-phu-hop", icon: TagIcon, title: "Tìm VPA theo nhu cầu" },
-      { slug: "chon-goi-van-phong", icon: KeyIcon, title: "Chọn gói văn phòng" },
-      { slug: "tinh-chi-phi-thanh-lap", icon: DocumentCheckIcon, title: "Tính chi phí thành lập" },
-      { slug: "tinh-le-phi-mon-bai", icon: BadgePercentIcon, title: "Lệ phí môn bài" },
-      { slug: "so-sanh-thue", icon: ScaleIcon, title: "So sánh thuế TNCN vs Hộ KD" },
-    ],
-  },
-  {
-    title: "Checklist tải về",
-    tools: [
-      { slug: "checklist-thanh-lap-doanh-nghiep", icon: ListIcon, title: "Checklist thành lập DN" },
-      { slug: "checklist-mo-chi-nhanh", icon: BuildingIcon, title: "Checklist mở chi nhánh" },
-      {
-        slug: "checklist-thay-doi-giay-phep-kinh-doanh",
-        icon: ShieldCheckIcon,
-        title: "Checklist thay đổi giấy phép",
-      },
-    ],
-  },
-  {
-    title: "So sánh & lộ trình",
-    tools: [
-      {
-        slug: "so-sanh-van-phong-ao-va-tron-goi",
-        icon: ScaleIcon,
-        title: "So sánh Văn phòng ảo & Trọn gói",
-      },
-      { slug: "so-sanh-tnhh-va-co-phan", icon: ScaleIcon, title: "So sánh TNHH & Cổ phần" },
-      { slug: "quy-trinh-thanh-lap-doanh-nghiep", icon: RouteIcon, title: "Quy trình thành lập DN" },
-    ],
-  },
-];
+import { TOOL_GROUPS } from "@/lib/toolsData";
 
 export default function ToolsMegaMenu({ solid, isActive }: { solid: boolean; isActive: boolean }) {
   const [open, setOpen] = useState(false);
@@ -103,7 +53,7 @@ export default function ToolsMegaMenu({ solid, isActive }: { solid: boolean; isA
           >
             <div className="grid grid-cols-[2.2fr_1fr] overflow-hidden rounded-2xl border border-line bg-white shadow-[0_30px_70px_rgba(11,31,58,0.22)]">
               <div className="grid grid-cols-3 gap-4 p-6">
-                {TOOL_CATEGORIES.map((cat) => (
+                {TOOL_GROUPS.map((cat) => (
                   <div key={cat.title}>
                     <h4 className="mb-3 text-[11px] font-bold tracking-[0.08em] text-body-text uppercase">
                       {cat.title}
@@ -115,7 +65,16 @@ export default function ToolsMegaMenu({ solid, isActive }: { solid: boolean; isA
                           href={`/tien-ich/${tool.slug}`}
                           className="group flex items-start gap-2.5 rounded-lg px-2 py-2 transition-colors duration-200 hover:bg-bg-tint"
                         >
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
+                          {/* highlight (Tìm VPA theo nhu cầu, So sánh thuế):
+                              icon tô đỏ (accent) thay vì xanh mặc định để
+                              làm điểm nhấn nổi bật hơn các mục còn lại. */}
+                          <span
+                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-200 ${
+                              tool.highlight
+                                ? "bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white"
+                                : "bg-primary-tint text-primary group-hover:bg-primary group-hover:text-white"
+                            }`}
+                          >
                             <tool.icon className="h-4 w-4" />
                           </span>
                           <span className="pt-1.5 text-[12.5px] leading-snug font-semibold text-navy">
