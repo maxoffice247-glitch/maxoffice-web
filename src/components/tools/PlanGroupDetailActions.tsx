@@ -2,10 +2,11 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { DownloadIcon, PhoneIcon } from "../icons";
+import { DownloadIcon, PhoneIcon, SpinnerIcon } from "../icons";
 import PlanGroupQuoteCard from "./PlanGroupQuoteCard";
 import type { PlanGroup } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
+import { waitForImages } from "@/lib/waitForImages";
 
 export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) {
   const quoteRef = useRef<HTMLDivElement>(null);
@@ -16,15 +17,19 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
     if (!node) return;
     setStatus("generating");
     try {
-      const { toPng } = await import("html-to-image");
-      // 2 lượt liên tiếp: html-to-image thi thoảng chụp thiếu ảnh nếu <img>
-      // (mặt tiền, logo) chưa kịp decode xong ở lượt gọi đầu tiên.
-      await toPng(node, { pixelRatio: 1, cacheBust: true });
-      const dataUrl = await toPng(node, { pixelRatio: 1, cacheBust: true });
+      // Đợi mọi <img> trong card (logo + ảnh từng chi nhánh — có thể 7+
+      // tấm) load + decode xong TRƯỚC khi chụp, xem chi tiết lý do trong
+      // PlanDetailActions (component tương đương cho báo giá 1 chi nhánh).
+      await waitForImages(node);
+      const { toBlob } = await import("html-to-image");
+      const blob = await toBlob(node, { pixelRatio: 1, cacheBust: true });
+      if (!blob) throw new Error("toBlob returned null");
+      const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.download = `bao-gia-tong-hop-${group.groupKey}.png`;
-      link.href = dataUrl;
+      link.href = blobUrl;
       link.click();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
       setStatus("idle");
     } catch {
       setStatus("error");
@@ -55,8 +60,12 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
         disabled={status === "generating"}
         className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border-2 border-navy px-6 py-3.5 text-[15px] font-bold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-navy hover:text-white disabled:pointer-events-none disabled:opacity-60"
       >
-        <DownloadIcon className="h-4 w-4" />
-        {status === "generating" ? "Đang tạo ảnh báo giá..." : "Tải báo giá tổng hợp"}
+        {status === "generating" ? (
+          <SpinnerIcon className="h-4 w-4" />
+        ) : (
+          <DownloadIcon className="h-4 w-4" />
+        )}
+        {status === "generating" ? "Đang tạo báo giá..." : "Tải báo giá tổng hợp"}
       </button>
       {status === "error" && (
         <p className="mt-2 text-center text-[12.5px] text-accent">

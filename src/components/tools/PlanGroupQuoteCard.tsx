@@ -122,9 +122,14 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
           {group.locations.map((loc) => (
             <div key={loc.slug} className="flex items-center gap-4 rounded-2xl bg-bg-tint p-3">
               <div className="relative aspect-[3/4] w-[64px] shrink-0 overflow-hidden rounded-xl bg-white">
+                {/* /images/quote/ — bản đã resize/nén riêng cho xuất ảnh báo
+                    giá (xem waitForImages.ts), không phải ảnh gốc full-res:
+                    hiển thị ở đây chỉ 64px, ảnh gốc vài trăm KB là dư thừa
+                    và làm chậm export trên mobile khi nhóm có nhiều chi
+                    nhánh. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`/images/dia-diem-${loc.slug}.jpg`}
+                  src={`/images/quote/dia-diem-${loc.slug}.jpg`}
                   alt={loc.name}
                   className="h-full w-full object-contain"
                 />

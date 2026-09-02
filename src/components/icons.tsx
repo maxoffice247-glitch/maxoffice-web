@@ -435,6 +435,25 @@ export function DownloadIcon({ className }: IconProps) {
   );
 }
 
+/** Vòng xoay loading — dùng thay DownloadIcon khi nút "Tải báo giá" đang xử
+    lý (xem PlanDetailActions/PlanGroupDetailActions), để khách không tưởng
+    máy bị đứng trong lúc chờ chụp/xuất ảnh (thường 1-3s, có thể lâu hơn
+    trên mobile mạng chậm). Không dùng `base` (stroke) như các icon khác vì
+    cần viền mờ cố định + phần đang xoay đậm màu để tạo hiệu ứng quay. */
+export function SpinnerIcon({ className }: IconProps) {
+  return (
+    <svg className={`${className ?? ""} animate-spin`} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" opacity="0.25" />
+      <path
+        d="M21 12a9 9 0 0 0-9-9"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function RouteIcon({ className }: IconProps) {
   return (
     <svg className={className} {...base}>

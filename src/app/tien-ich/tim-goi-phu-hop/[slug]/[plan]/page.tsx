@@ -45,6 +45,12 @@ export default async function PlanDetailPage({
   if (!plan || !location || location.isActive === false) notFound();
 
   const facadeSrc = `/images/dia-diem-${slug}.jpg`;
+  // Bản đã resize/nén riêng cho card báo giá xuất ảnh (PlanDetailActions ->
+  // PlanQuoteCard, xem waitForImages.ts) — card đó chỉ hiển thị ảnh ở khung
+  // 270px, dùng ảnh gốc facadeSrc (có thể tới ~600KB) vừa dư thừa vừa làm
+  // chậm export trên mobile. Ảnh gốc facadeSrc vẫn dùng nguyên cho hiển thị
+  // full trên trang này (qua next/image ở dưới).
+  const quoteFacadeSrc = `/images/quote/dia-diem-${slug}.jpg`;
   const interiorImages = (location.interiorImages ?? []).slice(0, 2);
   // Dựng sẵn icon thành JSX ngay tại Server Component này (không phải
   // component reference) — PlanDetailActions là "use client", còn
@@ -153,7 +159,7 @@ export default async function PlanDetailPage({
             <PlanDetailActions
               plan={plan}
               address={location.address}
-              facadeSrc={facadeSrc}
+              facadeSrc={quoteFacadeSrc}
               benefits={quoteBenefits}
               promotions={resolveTimedPromotions(location.promotions)}
             />

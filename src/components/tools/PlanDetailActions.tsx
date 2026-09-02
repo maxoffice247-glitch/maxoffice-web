@@ -2,10 +2,11 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { DownloadIcon, PhoneIcon } from "../icons";
+import { DownloadIcon, PhoneIcon, SpinnerIcon } from "../icons";
 import PlanQuoteCard, { type QuoteBenefitTag } from "./PlanQuoteCard";
 import type { OfferedPlan } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
+import { waitForImages } from "@/lib/waitForImages";
 
 export default function PlanDetailActions({
   plan,
@@ -16,6 +17,10 @@ export default function PlanDetailActions({
 }: {
   plan: OfferedPlan;
   address: string;
+  /** Ảnh mặt tiền dành riêng cho luồng xuất ảnh báo giá — đã resize/nén
+      (xem /public/images/quote), KHÔNG phải ảnh gốc full-res dùng hiển thị
+      trên trang (card báo giá chỉ hiển thị ảnh ở khung 270px, dùng ảnh gốc
+      vài trăm KB–600KB không cần thiết và làm chậm export trên mobile). */
   facadeSrc: string;
   benefits?: QuoteBenefitTag[];
   promotions?: string[];
@@ -28,15 +33,27 @@ export default function PlanDetailActions({
     if (!node) return;
     setStatus("generating");
     try {
-      const { toPng } = await import("html-to-image");
-      // 2 lượt liên tiếp: html-to-image thi thoảng chụp thiếu ảnh nếu <img>
-      // (mặt tiền, logo) chưa kịp decode xong ở lượt gọi đầu tiên.
-      await toPng(node, { pixelRatio: 1, cacheBust: true });
-      const dataUrl = await toPng(node, { pixelRatio: 1, cacheBust: true });
+      // Đợi mọi <img> trong card (logo + ảnh mặt tiền) load + decode xong
+      // TRƯỚC khi chụp — trước đây không đợi gì, chỉ vá bằng cách gọi
+      // toPng() 2 lần liên tiếp (vẫn có thể trật trên mobile/mạng chậm,
+      // đồng thời tốn gần gấp đôi thời gian xử lý một cách không cần thiết).
+      await waitForImages(node);
+      const { toBlob } = await import("html-to-image");
+      // toBlob thay vì toPng (trả data: URL): Safari iOS xử lý thuộc tính
+      // `download` trên <a> trỏ tới data: URL lớn không ổn định — thường mở
+      // thẳng ảnh ra xem (điều hướng) thay vì tải về, hoặc treo lâu khi
+      // phải điều hướng tới 1 chuỗi base64 vài MB. blob: URL qua
+      // createObjectURL được Safari hỗ trợ tải về đáng tin cậy hơn nhiều.
+      const blob = await toBlob(node, { pixelRatio: 1, cacheBust: true });
+      if (!blob) throw new Error("toBlob returned null");
+      const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.download = `bao-gia-${plan.locationSlug}-${plan.planKey}.png`;
-      link.href = dataUrl;
+      link.href = blobUrl;
       link.click();
+      // Trì hoãn revoke — thu hồi ngay có thể huỷ tải trên vài trình duyệt
+      // (đặc biệt Safari) nếu việc tải chưa kịp bắt đầu đọc blob.
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
       setStatus("idle");
     } catch {
       setStatus("error");
@@ -65,8 +82,12 @@ export default function PlanDetailActions({
         disabled={status === "generating"}
         className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border-2 border-navy px-6 py-3.5 text-[15px] font-bold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-navy hover:text-white disabled:pointer-events-none disabled:opacity-60"
       >
-        <DownloadIcon className="h-4 w-4" />
-        {status === "generating" ? "Đang tạo ảnh báo giá..." : "Tải báo giá"}
+        {status === "generating" ? (
+          <SpinnerIcon className="h-4 w-4" />
+        ) : (
+          <DownloadIcon className="h-4 w-4" />
+        )}
+        {status === "generating" ? "Đang tạo báo giá..." : "Tải báo giá"}
       </button>
       {status === "error" && (
         <p className="mt-2 text-center text-[12.5px] text-accent">
