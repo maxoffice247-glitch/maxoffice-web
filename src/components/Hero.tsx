@@ -49,7 +49,7 @@ function getHeroSlides(branchCount: number): HeroSlide[] {
       answer: "MAX OFFICE đồng hành cùng bạn từ ngày thành lập đến khi mở rộng quy mô.",
     },
     {
-      question: "Chưa biết chọn đơn vị nào đủ uy tín, đủ chi nhánh để tin tưởng?",
+      question: "Chưa biết chọn đơn vị nào đủ uy tín để tin tưởng?",
       answer: `Hơn 500 doanh nghiệp đã tin chọn MAX OFFICE, tại ${branchCount} địa điểm trung tâm TP.HCM.`,
     },
     {
@@ -77,7 +77,7 @@ function getHeroSlides(branchCount: number): HeroSlide[] {
       answer: "Địa chỉ thật, có bảng tên, có lễ tân — đầy đủ giấy tờ xác minh cho ngân hàng.",
     },
     {
-      question: "Sợ hóa đơn sai địa chỉ khiến mất quyền khấu trừ thuế VAT?",
+      question: "Sợ hóa đơn sai địa chỉ, mất quyền khấu trừ VAT?",
       answer: "Địa chỉ tại MAX OFFICE luôn ổn định, được cơ quan thuế xác nhận hợp lệ, giúp bạn an tâm không lo bị truy thu.",
     },
   ];
