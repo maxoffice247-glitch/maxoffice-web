@@ -1,4 +1,9 @@
 import { KNOWLEDGE_CATEGORIES } from "./knowledgeCenterData";
+// Ngoại lệ có chủ ý: hầu hết nội dung blog đã xuất bản KHÔNG dùng
+// ACTIVE_BRANCH_COUNT (giữ nguyên số liệu tại thời điểm đăng, xem comment ở
+// locationsData.ts) — nhưng bài "công ty luật thuê văn phòng ảo" bên dưới
+// được yêu cầu lấy số chi nhánh ĐỘNG, nên import riêng cho bài đó.
+import { ACTIVE_BRANCH_COUNT } from "./locationsData";
 
 export type BlogCategory = { slug: string; name: string };
 
@@ -3339,6 +3344,111 @@ thumbnailImage: "/images/mo-rong-kinh-doanh-sme.jpg",
       service: "Văn phòng trọn gói",
       serviceHref: "/dia-diem",
       serviceLabel: "Xem các chi nhánh MAX OFFICE",
+    },
+  },
+  {
+    slug: "cong-ty-luat-thue-van-phong-ao-3-loai-giay-to",
+    title: "Công ty Luật thuê văn phòng ảo: Đừng ký hợp đồng nếu chưa kiểm tra đủ 3 loại giấy tờ này",
+    excerpt:
+      "Nhiều công ty luật, văn phòng đại diện thuê văn phòng ảo gặp tình trạng hồ sơ bị yêu cầu bổ sung — không phải do thiếu giấy tờ của mình, mà do đơn vị cho thuê thiếu hồ sơ pháp lý. Đây là 3 loại giấy tờ cần kiểm tra trước khi ký hợp đồng.",
+    categorySlug: "van-phong-dia-diem",
+    author: "Đội ngũ MAX OFFICE",
+    date: "2026-09-02",
+    readingTime: 6,
+    metaTitle: "Văn Phòng Ảo Cho Công Ty Luật: 3 Giấy Tờ Cần Kiểm Tra | MAX OFFICE",
+    metaDescription:
+      "Công ty luật, văn phòng đại diện thuê văn phòng ảo cần kiểm tra đủ 3 loại giấy tờ pháp lý trước khi ký hợp đồng. MAX OFFICE đáp ứng đầy đủ tại mọi chi nhánh.",
+    heroImage: "/images/cong-ty-luat-thue-van-phong-ao.png",
+    sections: [
+      {
+        id: "tinh-huong-thuc-te-thuong-gap",
+        heading: "Hồ sơ đăng ký trụ sở bị yêu cầu bổ sung — không phải lỗi của công ty luật",
+        paragraphs: [
+          "Nhiều công ty luật, văn phòng đại diện khi thuê văn phòng ảo để đăng ký trụ sở hoặc mở văn phòng đại diện đã gặp phải tình trạng hồ sơ bị yêu cầu bổ sung, chậm trễ, thậm chí bị từ chối tiếp nhận. Điều đáng nói là nguyên nhân thường không nằm ở hồ sơ của công ty luật — mà ở phía đơn vị cho thuê văn phòng ảo, khi không cung cấp đủ giấy tờ chứng minh tính hợp pháp của địa chỉ cho thuê.",
+          "So với đăng ký doanh nghiệp thông thường, hồ sơ chứng minh trụ sở của tổ chức hành nghề luật sư hoặc văn phòng đại diện thường được cơ quan quản lý xem xét kỹ hơn. Vì vậy, việc chọn đúng đơn vị cho thuê văn phòng ảo — đủ khả năng chứng minh địa chỉ hợp pháp bằng giấy tờ cụ thể — cần được thực hiện ngay từ đầu, trước khi đặt bút ký hợp đồng, thay vì phát hiện thiếu sót sau khi đã nộp hồ sơ và mất thời gian chờ bổ sung.",
+        ],
+      },
+      {
+        id: "3-loai-giay-to-can-kiem-tra",
+        heading: "3 loại giấy tờ pháp lý cần yêu cầu đơn vị cho thuê cung cấp trước khi ký hợp đồng",
+        paragraphs: [
+          "Theo kinh nghiệm thực tế hơn 10 năm hỗ trợ doanh nghiệp và công ty luật thuê văn phòng ảo đặt trụ sở hoặc mở văn phòng đại diện, khi làm việc với cơ quan quản lý (Sở Tư pháp, Đoàn Luật sư), hồ sơ chứng minh trụ sở thường được xem xét kỹ càng. Trước khi ký hợp đồng, công ty luật nên chủ động yêu cầu đơn vị cho thuê cung cấp đầy đủ 3 loại giấy tờ sau:",
+        ],
+        bullets: [
+          "Giấy chứng nhận quyền sử dụng đất (sổ đỏ) của toà nhà — chứng minh toà nhà có chủ sở hữu hợp pháp, rõ ràng.",
+          "Hợp đồng thuê GIỮA đơn vị cho thuê văn phòng ảo và chủ nhà thật (chủ sở hữu toà nhà) — chứng minh đơn vị cho thuê có quyền hợp pháp để cho thuê lại địa chỉ đó, không phải cho thuê \"chui\", không phép.",
+          "Giấy phép kinh doanh (GPKD) của chính đơn vị cho thuê văn phòng ảo — chứng minh đây là một doanh nghiệp hợp pháp, có đăng ký kinh doanh rõ ràng, không phải cá nhân tự phát đứng ra cho thuê.",
+        ],
+      },
+      {
+        id: "vi-sao-nhieu-don-vi-khong-du",
+        heading: "Vì sao nhiều đơn vị cho thuê văn phòng ảo không đáp ứng đủ 3 giấy tờ này",
+        paragraphs: [
+          "Trên thực tế, không phải đơn vị cho thuê văn phòng ảo nào cũng sẵn sàng xuất trình đủ 3 loại giấy tờ trên. MAX OFFICE từng phân tích chi tiết vấn đề này trong bài viết 9 rủi ro khi thuê văn phòng ảo giá rẻ — một trong những rủi ro phổ biến nhất đến từ mô hình cho thuê lại (sublease): đơn vị cho thuê không trực tiếp sở hữu hoặc thuê chính chủ toà nhà, mà thuê lại một phần diện tích rồi chia nhỏ cho nhiều khách hàng cùng đăng ký làm địa chỉ trụ sở.",
+          "Trong mô hình này, đơn vị cho thuê thường không có — hoặc không thể xuất trình — hợp đồng thuê gốc với chủ nhà thật, tức đúng loại giấy tờ thứ hai trong 3 loại nêu trên. Với công ty luật, văn phòng đại diện, nơi hồ sơ trụ sở thường được xem xét kỹ hơn, thiếu sót này dễ khiến hồ sơ bị yêu cầu bổ sung hoặc kéo dài thời gian xử lý hơn bình thường.",
+        ],
+      },
+      {
+        id: "cach-max-office-dap-ung",
+        heading: `MAX OFFICE đáp ứng đầy đủ cả 3 loại giấy tờ tại toàn bộ ${ACTIVE_BRANCH_COUNT} chi nhánh`,
+        paragraphs: [
+          `MAX OFFICE có đầy đủ sổ đỏ, hợp đồng thuê chính chủ với chủ toà nhà, và giấy phép kinh doanh hợp pháp tại toàn bộ ${ACTIVE_BRANCH_COUNT} chi nhánh đang hoạt động tại TP.HCM. Với công ty luật, văn phòng đại diện cần bộ hồ sơ pháp lý đầy đủ để làm việc với Sở Tư pháp, Đoàn Luật sư hoặc bất kỳ cơ quan quản lý nào, MAX OFFICE sẵn sàng cung cấp ngay khi được yêu cầu — không mất thời gian chờ đợi bổ sung giấy tờ.`,
+        ],
+        bullets: [
+          "Giấy chứng nhận quyền sử dụng đất (sổ đỏ) của toà nhà — cung cấp bản sao để đối chiếu khi cần.",
+          "Hợp đồng thuê chính chủ giữa MAX OFFICE và chủ sở hữu toà nhà — không qua trung gian, không cho thuê lại trái phép.",
+          "Giấy phép kinh doanh của MAX OFFICE — doanh nghiệp hoạt động hợp pháp, minh bạch, có đăng ký rõ ràng.",
+        ],
+      },
+      {
+        id: "dong-bo-giua-cac-chi-nhanh",
+        heading: "Đồng bộ hồ sơ pháp lý giữa các chi nhánh — không phụ thuộc vào 1 địa điểm duy nhất",
+        paragraphs: [
+          "Vì cả 3 loại giấy tờ trên đều được chuẩn hoá tại mọi chi nhánh thay vì chỉ đầy đủ ở một vài địa điểm, công ty luật hoặc văn phòng đại diện có thể chọn chi nhánh theo tiêu chí vị trí, ngân sách hay diện tích phù hợp nhất — mà không phải đánh đổi giữa vị trí tốt và mức độ đầy đủ của hồ sơ pháp lý.",
+        ],
+      },
+      {
+        id: "thu-tuc-dang-ky-to-chuc-hanh-nghe-luat-su",
+        heading: "Về thủ tục đăng ký tổ chức hành nghề luật sư",
+        paragraphs: [
+          "Quy trình đăng ký hoạt động của tổ chức hành nghề luật sư (văn phòng luật sư, công ty luật) hoặc văn phòng đại diện cần thực hiện tại Sở Tư pháp, và có thể liên quan đến Đoàn Luật sư địa phương tuỳ từng trường hợp — thủ tục này có những yêu cầu riêng, khác với đăng ký doanh nghiệp thông thường. MAX OFFICE không phải đơn vị tư vấn pháp lý chuyên về lĩnh vực hành nghề luật sư, nên với các câu hỏi cụ thể về hồ sơ, trình tự hoặc thời gian xử lý tại Sở Tư pháp, công ty luật/văn phòng đại diện nên liên hệ đơn vị tư vấn pháp lý chuyên về lĩnh vực này để được hướng dẫn chính xác.",
+          "Phần MAX OFFICE tập trung và cam kết chắc chắn nhất là đảm bảo địa chỉ trụ sở có đầy đủ hồ sơ pháp lý — nền tảng cần thiết trước khi bắt đầu bất kỳ thủ tục đăng ký nào.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Công ty luật cần chuẩn bị gì khi thuê văn phòng ảo để đăng ký trụ sở?",
+        a: "Nên yêu cầu đơn vị cho thuê cung cấp đủ 3 loại giấy tờ: sổ đỏ của toà nhà, hợp đồng thuê chính chủ giữa đơn vị cho thuê và chủ nhà thật, và giấy phép kinh doanh của đơn vị cho thuê — trước khi ký hợp đồng. Song song đó, chuẩn bị hồ sơ nội bộ theo đúng yêu cầu của Sở Tư pháp cho tổ chức hành nghề luật sư/văn phòng đại diện.",
+      },
+      {
+        q: "MAX OFFICE có cung cấp đủ hồ sơ pháp lý cho Sở Tư pháp không?",
+        a: `Có. MAX OFFICE cung cấp đầy đủ sổ đỏ, hợp đồng thuê chính chủ và giấy phép kinh doanh tại toàn bộ ${ACTIVE_BRANCH_COUNT} chi nhánh, sẵn sàng cung cấp ngay khi công ty luật hoặc văn phòng đại diện cần.`,
+      },
+      {
+        q: "Thủ tục đăng ký hoạt động văn phòng luật sư mất bao lâu nếu địa chỉ đã có đủ hồ sơ pháp lý?",
+        a: "Thời gian xử lý cụ thể phụ thuộc quy định của Sở Tư pháp và hồ sơ nội bộ của tổ chức hành nghề luật sư, không thuộc phạm vi MAX OFFICE tư vấn trực tiếp — nên liên hệ đơn vị tư vấn pháp lý chuyên về lĩnh vực này để được hướng dẫn cụ thể. Tuy nhiên, địa chỉ có đủ hồ sơ pháp lý ngay từ đầu giúp tránh được bước phát sinh phổ biến nhất khi đăng ký trụ sở: bị yêu cầu bổ sung giấy tờ chứng minh địa chỉ.",
+      },
+      {
+        q: "Văn phòng đại diện của công ty nước ngoài có thể dùng địa chỉ văn phòng ảo tại MAX OFFICE không?",
+        a: "MAX OFFICE cung cấp địa chỉ hợp pháp, đầy đủ hồ sơ pháp lý tại mọi chi nhánh, phù hợp làm địa chỉ trụ sở cho nhiều loại hình tổ chức. Điều kiện cụ thể áp dụng riêng cho văn phòng đại diện của thương nhân nước ngoài nên được xác nhận với đơn vị tư vấn pháp lý hoặc cơ quan cấp phép liên quan trước khi tiến hành.",
+      },
+      {
+        q: "Nếu Sở Tư pháp yêu cầu xác minh trực tiếp địa chỉ, MAX OFFICE có hỗ trợ không?",
+        a: "Có. Các chi nhánh MAX OFFICE đặt tại toà nhà văn phòng thực tế, có biển hiệu công ty và đội ngũ lễ tân tại chỗ, sẵn sàng phối hợp khi cơ quan chức năng cần đến xác minh trực tiếp trụ sở.",
+      },
+    ],
+    relatedLinks: [
+      { label: "9 rủi ro khi thuê văn phòng ảo giá rẻ và cách MAX OFFICE giúp bạn tránh", href: "/blog/rui-ro-khi-thue-van-phong-ao-gia-re" },
+      { label: "Kinh nghiệm chọn địa chỉ đăng ký kinh doanh tại TP.HCM", href: "/blog/kinh-nghiem-chon-dia-chi-dang-ky-kinh-doanh-tphcm" },
+      { label: "Dịch vụ Văn phòng ảo MAX OFFICE", href: "/services/van-phong-ao" },
+    ],
+    cta: {
+      title: "Cần bộ hồ sơ pháp lý đầy đủ cho địa chỉ trụ sở?",
+      description: `MAX OFFICE sẵn sàng cung cấp sổ đỏ, hợp đồng thuê chính chủ và giấy phép kinh doanh ngay khi cần — phù hợp cho công ty luật, văn phòng đại diện và doanh nghiệp cần độ tin cậy pháp lý cao, tại toàn bộ ${ACTIVE_BRANCH_COUNT} chi nhánh TP.HCM.`,
+      service: "Văn phòng ảo",
+      serviceHref: "/services/van-phong-ao",
+      serviceLabel: "Xem dịch vụ Văn phòng ảo",
     },
   },
 ];
