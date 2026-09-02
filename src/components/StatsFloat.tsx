@@ -1,8 +1,12 @@
-import Reveal from "./Reveal";
+"use client";
+
+import { motion } from "framer-motion";
 import StatNumber from "./StatNumber";
 import { BuildingIcon, UsersIcon, CalendarIcon, TagIcon, StarIcon } from "./icons";
 import { GOOGLE_MAPS_REVIEW_URL } from "@/lib/siteConfig";
 import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
+
+const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
 
 // Static, not auto-fetched — see GoogleReviews component history: the Places API
 // key on this project is blocked from Places API (New) (API_KEY_SERVICE_BLOCKED,
@@ -80,7 +84,18 @@ export default function StatsFloat() {
 
   return (
     <div className="relative z-20 mx-auto -mt-20 max-w-[1240px] px-5 sm:-mt-24 sm:px-8 lg:-mt-28">
-      <Reveal
+      {/* Entrance riêng khi khối này lọt vào khung nhìn — CHỦ Ý không dùng
+          <Reveal> chung (mặc định có opacity 0->1) vì bị phản hồi "làm mờ
+          thì người ta không đọc được" — khối stat này là bằng chứng/uy tín
+          (số chi nhánh, số khách hàng, đánh giá Google) nên phải luôn rõ
+          nét, đọc được ngay từ khung hình đầu. Chỉ scale (thu nhỏ nhẹ 0.92
+          -> 1) + trượt lên (y 24 -> 0), không đụng opacity. once:true nên
+          chỉ chạy 1 lần khi cuộn tới, không lặp lại khi cuộn qua lại. */}
+      <motion.div
+        initial={{ scale: 0.92, y: 24 }}
+        whileInView={{ scale: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.6, ease: EASE_PREMIUM }}
         className={`grid grid-cols-2 rounded-2xl bg-white shadow-float ${hasGoogleRating ? "md:grid-cols-3 lg:grid-cols-5" : "sm:grid-cols-4"}`}
       >
         {STATS.map((stat, i) => (
@@ -119,7 +134,7 @@ export default function StatsFloat() {
             </div>
           </a>
         )}
-      </Reveal>
+      </motion.div>
     </div>
   );
 }
