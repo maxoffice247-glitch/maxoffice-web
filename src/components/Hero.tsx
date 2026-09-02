@@ -85,25 +85,6 @@ function getHeroSlides(branchCount: number): HeroSlide[] {
 
 const SLIDE_INTERVAL_MS = 4500;
 
-// Chiều cao wrapper bọc Hero cho hiệu ứng "dính rồi co nhỏ/mờ dần" — tham
-// khảo litespace.com.vn/vi: wrapper CAO HƠN section thật (section dùng
-// `sticky top-0`), phần chênh lệch = khoảng đệm cuộn mà Hero "dính" ở đỉnh
-// màn hình (không trôi lên bình thường) trong lúc co nhỏ + mờ dần, trước
-// khi nhả cho nội dung bên dưới.
-//
-// Cố định bằng CSS tĩnh (min-h-[calc(80vh+520px)] ở JSX bên dưới) — KHÔNG
-// đo bằng ResizeObserver/JS như bản đầu tiên: đo Lighthouse before/after
-// phát hiện set chiều cao SAU khi hydrate (dù đã dùng useLayoutEffect) vẫn
-// gây Cumulative Layout Shift (0 -> 0.052) vì HTML server-render ban đầu
-// (SSR, chưa chạy JS) không thể biết trước offsetHeight đo được ở client —
-// bất kỳ giá trị nào set sau khi trang đã paint lần đầu đều tính là shift,
-// bất kể dùng effect nào. 80vh khớp đúng chiều cao sàn của chính section
-// (min-h-[80vh]); +520px đủ dư so với chiều cao nội dung thực tế đã đo được
-// ở mọi breakpoint đã test (mobile 375px với carousel 9 slide + link 2 cột
-// là trường hợp cao nhất) cộng khoảng đệm cuộn mong muốn — đổi lại kém
-// "chính xác từng px" hơn bản đo động, nhưng bằng 0 rủi ro CLS.
-const HERO_WRAPPER_MIN_HEIGHT = "min-h-[calc(80vh+520px)]";
-
 export default function Hero() {
   // Defaults to the first image so server and client render identically on
   // first paint (no hydration mismatch); the effect then swaps in a random
@@ -130,54 +111,62 @@ export default function Hero() {
     return () => clearTimeout(id);
   }, [activeSlide, prefersReducedMotion, slides.length]);
 
-  // --- Hiệu ứng cuộn "dính rồi co nhỏ/mờ dần" (tham khảo litespace.com.vn) ---
-  // KHÔNG đụng gì đến carousel/dot indicator/auto-advance ở trên — chỉ thêm
-  // phần scroll progress riêng cho hiệu ứng nền/khung Hero.
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  // offset "end end" (không phải "end start") — progress=1 phải đúng vào
-  // lúc mép DƯỚI wrapper chạm mép DƯỚI viewport (= đúng lúc sticky nhả ra,
-  // vì wrapper cao hơn section thật một khoảng đệm cố định — xem
-  // HERO_WRAPPER_MIN_HEIGHT), không phải lúc mép dưới wrapper chạm mép TRÊN
-  // viewport (progress=1 sẽ xảy ra quá muộn, gần hết cả chiều cao wrapper
-  // thay vì chỉ đúng khoảng đệm).
+  // --- Hiệu ứng cuộn "co nhỏ dần rồi biến mất" (tham khảo litespace.com.vn) ---
+  // KHÔNG đụng gì đến carousel/dot indicator/auto-advance ở trên.
+  //
+  // Bản đầu dùng kỹ thuật "dính" (position: sticky trong 1 wrapper cao hơn
+  // section thật) giống hệt litespace — nhưng bị báo 3 vấn đề thực tế: (1)
+  // wrapper cao hơn đẩy StatsFloat khuất hẳn dưới màn hình, phải cuộn nhiều
+  // mới thấy; (2) khoảng đệm hữu hạn (dù đã cố định bằng CSS để tránh CLS)
+  // quá dễ bị "cuộn hết veo" chỉ trong 1 lần lướt chuột/trackpad (đặc biệt
+  // với scroll-behavior:smooth toàn site), khiến hiệu ứng co nhỏ dồn hết vào
+  // ngay lần cuộn đầu tiên rồi phần còn lại chỉ trượt suông — không mượt
+  // theo đúng tốc độ cuộn như bên tham khảo; (3) mờ dần (opacity) làm mờ cả
+  // nội dung, không được yêu cầu.
+  //
+  // Đổi sang cơ chế ĐƠN GIẢN & CHẮC CHẮN hơn: KHÔNG sticky, KHÔNG wrapper
+  // nhân tạo — Hero vẫn nằm đúng vị trí tự nhiên trong luồng trang (StatsFloat
+  // hiện ngay lập tức như trước, không bị đẩy khuất), chỉ co nhỏ dần (scale)
+  // + bo góc trong khi TỰ NÓ cuộn khỏi màn hình theo tốc độ cuộn thật —
+  // progress đo trên toàn bộ chiều cao THẬT của chính section (từ lúc đỉnh
+  // section chạm đỉnh màn hình đến lúc đáy section chạm đỉnh màn hình), nên
+  // luôn tỉ lệ đúng 1:1 với quãng đường đã cuộn, không phụ thuộc đoán trước 1
+  // khoảng đệm cố định nào — cuộn tới đâu co nhỏ đến đó, không dồn cục.
+  // KHÔNG còn opacity — giữ nguyên nội dung rõ nét, chỉ co nhỏ rồi tự cuộn
+  // khuất khỏi màn hình (biến mất tự nhiên, không cần hiệu ứng mờ riêng).
+  const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
-    target: wrapperRef,
-    offset: ["start start", "end end"],
+    target: sectionRef,
+    offset: ["start start", "end start"],
   });
 
-  // Kỹ thuật 2 — co nhỏ + mờ dần TOÀN KHỐI Hero (bo góc nhẹ thêm, giống hiệu
-  // ứng "lùi vào trong màn hình" của trang tham khảo) khi cuộn qua.
-  const rawScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
-  const rawOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.4]);
-  const rawRadius = useTransform(scrollYProgress, [0, 1], [0, 28]);
-  // Kỹ thuật 1 — parallax: khối nội dung chữ dịch lên NHIỀU hơn (-24px) so
-  // với ảnh nền (-8px) khi cuộn, tạo cảm giác ảnh nền "chậm hơn"/ở xa hơn.
-  const rawContentY = useTransform(scrollYProgress, [0, 1], [0, -24]);
-  const rawBgY = useTransform(scrollYProgress, [0, 1], [0, -8]);
-  // Tắt hẳn dưới prefers-reduced-motion — Hero cuộn bình thường, không dính/
-  // không co/không mờ, giống cách carousel cũng tắt auto-advance ở trên.
+  // Co nhỏ rõ rệt hơn bản trước (0.94 -> 0.8) để hiệu ứng dễ nhận thấy hơn,
+  // theo đúng phản hồi "phần thu nhỏ còn rộng nên chưa thấy rõ". Bo góc dần
+  // theo, tạo cảm giác "khối card thu nhỏ về" khi cuộn qua.
+  const rawScale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  const rawRadius = useTransform(scrollYProgress, [0, 1], [0, 40]);
+  // Parallax: khối nội dung chữ dịch NHIỀU hơn ảnh nền khi cuộn — ảnh nền
+  // "chậm hơn"/ở xa hơn nội dung (tỉ lệ ~3 lần, giữ như bản trước).
+  const rawContentY = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  const rawBgY = useTransform(scrollYProgress, [0, 1], [0, -10]);
+  // Tắt hẳn dưới prefers-reduced-motion — Hero cuộn bình thường, không co,
+  // giống cách carousel cũng tắt auto-advance ở trên.
   const scrollStyle = prefersReducedMotion
     ? undefined
-    : { scale: rawScale, opacity: rawOpacity, borderRadius: rawRadius };
+    : { scale: rawScale, borderRadius: rawRadius };
   const bgParallaxStyle = prefersReducedMotion ? undefined : { y: rawBgY };
   const contentParallaxStyle = prefersReducedMotion ? undefined : { y: rawContentY };
 
   return (
-    <div ref={wrapperRef} className={`relative ${prefersReducedMotion ? "" : HERO_WRAPPER_MIN_HEIGHT}`}>
-      <motion.section
-        style={scrollStyle}
-        className={`relative flex min-h-[80vh] items-center overflow-hidden pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-28 lg:pb-32 ${
-          prefersReducedMotion ? "" : "sticky top-0"
-        }`}
-      >
-        {/* Không đặt will-change tĩnh (transform/opacity) ở đây — đo Lighthouse
-            trước/sau phát hiện will-change khai báo sẵn từ lúc tải trang buộc
-            trình duyệt tạo compositor layer SỚM cho các phần tử này dù chưa
-            hề cuộn, làm chậm LCP/FCP đáng kể (Performance 77->66, LCP +2.9s).
-            transform/opacity vẫn được tăng tốc GPU bình thường khi bắt đầu
-            animate mà không cần khai báo trước. */}
-        <motion.div className="absolute inset-x-0 -top-4 -bottom-4" style={bgParallaxStyle}>
+    <motion.section
+      ref={sectionRef}
+      style={scrollStyle}
+      // origin-top: co nhỏ hướng vào mép TRÊN (điểm neo là đỉnh section, nơi
+      // vừa chạm đỉnh màn hình) thay vì co đều 2 phía quanh tâm — tự nhiên
+      // hơn cho cảm giác "thu nhỏ dần về" khi cuộn qua.
+      className="relative flex min-h-[80vh] origin-top items-center overflow-hidden pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-28 lg:pb-32"
+    >
+        <motion.div className="absolute inset-x-0 -top-6 -bottom-6" style={bgParallaxStyle}>
           <Image
             src={heroImage}
             alt="Không gian văn phòng MAX OFFICE"
@@ -365,7 +354,6 @@ export default function Hero() {
           </motion.div>
         </div>
       </motion.div>
-      </motion.section>
-    </div>
+    </motion.section>
   );
 }
