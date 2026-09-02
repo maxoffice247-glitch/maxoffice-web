@@ -536,6 +536,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       "Sở hữu địa chỉ Quận 1 mang lại lợi thế lớn về mặt hình ảnh và uy tín khi giao dịch với đối tác, nhà đầu tư hoặc khách hàng — đặc biệt quan trọng với các ngành nghề như tư vấn, tài chính, pháp lý hay công nghệ, nơi địa chỉ trụ sở góp phần thể hiện quy mô và độ tin cậy của doanh nghiệp.",
       "Phường Tân Định là khu vực gắn liền với nhiều địa danh quen thuộc của Sài Gòn như Nhà thờ Tân Định, chợ Tân Định và khu Đa Kao — mang đến không gian vừa cổ kính vừa hiện đại, thuận tiện di chuyển đến các quận trung tâm lân cận như Quận 3, Bình Thạnh chỉ trong vài phút.",
       "Tại chi nhánh Điện Biên Phủ, MAX OFFICE cung cấp đầy đủ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — giúp doanh nghiệp vận hành trọn vẹn ngay tại một trong những địa chỉ uy tín nhất thành phố.",
+      "Chi nhánh cũng đang áp dụng chính sách ưu đãi cho khách ký hợp đồng dài hạn: tặng 2 tháng sử dụng miễn phí khi ký 12 tháng, tặng 6 tháng miễn phí kèm dịch vụ thành lập doanh nghiệp khi ký 24 tháng — áp dụng đến hết năm 2026.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Điện Biên Phủ Quận 1",
     benefits: [
@@ -545,6 +546,32 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Phù hợp nhiều loại hình", desc: "Lý tưởng cho công ty tư vấn, tài chính, công nghệ, thương mại." },
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Di chuyển nhanh đến Quận 3, Bình Thạnh và trung tâm Quận 1." },
       { icon: HeadsetIcon, title: "Dịch vụ trọn gói tại chỗ", desc: "Đầy đủ văn phòng, phòng họp và hỗ trợ pháp lý ngay tại chi nhánh." },
+    ],
+    // 2 giai đoạn khuyến mãi theo thời hạn — CÙNG cấu trúc/cơ chế đã dùng
+    // cho Sông Thao (xem TimedPromoVersion/resolveTimedPromotions() ở đầu
+    // file), áp dụng riêng cho Điện Biên Phủ Quận 1, không sửa lại dữ liệu
+    // của Sông Thao. Giai đoạn hiện tại (không khai báo effectiveFrom =
+    // phiên bản gốc) áp dụng đến hết 31/12/2026; từ 01/01/2027 tự động
+    // chuyển sang giai đoạn mới, không cần sửa code.
+    promotions: [
+      {
+        // Giai đoạn hiện tại, áp dụng đến hết 31/12/2026: 2 ưu đãi cùng lúc,
+        // không điều kiện GPKD.
+        promotions: [
+          "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+          "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí + tặng dịch vụ thành lập doanh nghiệp (GPKD)",
+        ],
+      },
+      {
+        // Giai đoạn mới, từ 01/01/2027: gói 24 tháng đổi thành 2 lựa chọn
+        // tuỳ tình trạng GPKD của khách (giống cấu trúc VUON_LAI_VO_PROMOS).
+        effectiveFrom: "2027-01-01",
+        promotions: [
+          "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+          "Ký hợp đồng 24 tháng — khách CHƯA có GPKD: tặng 3 tháng miễn phí + tặng dịch vụ thành lập doanh nghiệp (GPKD)",
+          "Ký hợp đồng 24 tháng — khách ĐÃ CÓ SẴN GPKD: tặng 6 tháng miễn phí (thay cho lựa chọn tặng 3 tháng + GPKD ở trên)",
+        ],
+      },
     ],
     nearbyItems: [
       { name: "Nhà thờ Tân Định", desc: "Địa danh nổi tiếng của Sài Gòn, nằm ngay trong khu vực Phường Tân Định." },
@@ -575,6 +602,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Vị trí này có phù hợp cho công ty tư vấn, tài chính không?", a: "Rất phù hợp. Địa chỉ Quận 1 thường được các ngành tư vấn, tài chính, pháp lý ưu tiên lựa chọn để tăng độ tin cậy với khách hàng." },
       { q: "Tôi có thể thuê phòng họp tại đây để tiếp đối tác quan trọng không?", a: "Có. Chi nhánh có phòng họp trang bị hiện đại, phù hợp tiếp đối tác, nhà đầu tư ngay tại trung tâm Quận 1." },
       { q: "Di chuyển đến chi nhánh này từ Quận 3, Bình Thạnh có xa không?", a: "Không xa. Vị trí trung tâm giúp di chuyển từ các quận lân cận chỉ mất vài phút." },
+      { q: "Ký hợp đồng dài hạn tại Điện Biên Phủ Quận 1 có ưu đãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí kèm dịch vụ thành lập doanh nghiệp (GPKD) — áp dụng đến hết 31/12/2026. Từ 01/01/2027, chính sách 24 tháng điều chỉnh theo tình trạng GPKD của khách: nếu chưa có GPKD, được tặng 3 tháng cộng thêm dịch vụ thành lập doanh nghiệp; nếu đã có sẵn GPKD, được tặng 6 tháng thay cho lựa chọn trên." },
       { q: "Tôi có thể đặt lịch tham quan văn phòng Điện Biên Phủ không?", a: "Có. Đội ngũ lễ tân tại chi nhánh Quận 1 sẽ sắp xếp lịch tham quan miễn phí ngay khi bạn để lại thông tin qua form hoặc gọi hotline 089 8082 188." },
       { q: "MAX OFFICE có hỗ trợ thành lập doanh nghiệp ngay tại chi nhánh này không?", a: "Có. Dịch vụ thành lập doanh nghiệp và kế toán thuế đều được cung cấp đầy đủ tại chi nhánh Điện Biên Phủ." },
     ],
@@ -615,7 +643,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       "Văn phòng Nguyễn Oanh nằm tại 238-240-242 Nguyễn Oanh, Phường Gò Vấp, toạ lạc trong một toà nhà hạng A — chất lượng xây dựng và tiện ích vượt trội so với mặt bằng chung khu vực. Đây là lựa chọn phù hợp cho doanh nghiệp đang tăng trưởng, cần địa chỉ uy tín cùng các tiện ích hỗ trợ vận hành thực chất như tư vấn tự động hoá AI, ưu tiên hỗ trợ 24/7 và phòng họp đi kèm.",
       "Khu vực Gò Vấp hiện có rất ít đơn vị khai thác văn phòng ảo đạt chuẩn hạng A — nguồn cung khan hiếm khiến mặt bằng giá chung tại đây thường từ 595.000đ/tháng trở lên. Văn phòng Nguyễn Oanh của MAX OFFICE cung cấp các gói ORIGIN, ORIGIN+ và RISE chỉ từ 499.000đ/tháng — thấp hơn mặt bằng chung khu vực, nhưng vẫn đi kèm nhiều đặc quyền mà các lựa chọn khác trong khu vực thường không có.",
       "Trục đường Nguyễn Oanh là một trong những tuyến đường chính của Gò Vấp, kết nối thuận tiện đến các khu vực lân cận như Phú Nhuận, Tân Bình và trung tâm thành phố. Giao thông khu vực khá thuận lợi với nhiều tuyến xe buýt và dễ dàng di chuyển bằng taxi, xe công nghệ.",
-      "Tại chi nhánh này, khách hàng có thể sử dụng đầy đủ dịch vụ từ văn phòng ảo, chỗ ngồi linh động, phòng họp theo giờ đến dịch vụ thành lập doanh nghiệp và kế toán thuế — phù hợp với doanh nghiệp tại khu vực Gò Vấp muốn vận hành từ một địa chỉ hạng A mà không phải di chuyển xa vào trung tâm.",
+      "Tại chi nhánh này, khách hàng có thể sử dụng đầy đủ dịch vụ từ văn phòng ảo, chỗ ngồi linh động, phòng họp theo giờ đến dịch vụ thành lập doanh nghiệp và kế toán thuế — phù hợp với doanh nghiệp tại khu vực Gò Vấp muốn vận hành từ một địa chỉ hạng A mà không phải di chuyển xa vào trung tâm. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn, mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn về đây hay thành lập công ty mới tại chi nhánh — xem chi tiết trong phần Câu hỏi thường gặp bên dưới.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Nguyễn Oanh Gò Vấp",
     benefits: [
@@ -625,6 +653,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế cho hộ kinh doanh và công ty." },
       { icon: WifiIcon, title: "Hạ tầng đầy đủ", desc: "Wifi tốc độ cao, không gian làm việc hiện đại." },
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ tư vấn hỗ trợ nhanh chóng cho khách hàng khu vực Gò Vấp." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Chợ Gò Vấp", desc: "Khu chợ truyền thống lớn, trung tâm sinh hoạt của khu vực." },
@@ -657,6 +689,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Chi nhánh có hỗ trợ kế toán thuế cho hộ kinh doanh không?", a: "Có. Dịch vụ kế toán thuế trọn gói từ 500.000đ/tháng được cung cấp đầy đủ tại đây." },
       { q: "Tôi có thể đặt lịch tham quan văn phòng Nguyễn Oanh không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ tại Gò Vấp sẽ liên hệ xác nhận lịch tham quan phù hợp." },
       { q: "Văn phòng có chỗ đỗ xe cho khách vãng lai không?", a: "Có. Khu vực giữ xe máy và hỗ trợ đỗ ô tô ngay tại toà nhà." },
+      { q: "Ký hợp đồng dài hạn tại Nguyễn Oanh có khuyến mãi gì không?", a: "Có, và mức ưu đãi khác nhau tuỳ tình trạng công ty của bạn. Nếu bạn ĐÃ CÓ công ty và chỉ cần chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng, và với hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn: ký 12 tháng được tặng 2 tháng, ký 24 tháng được tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần MAX OFFICE hỗ trợ luôn thủ tục thành lập." },
     ],
     testimonials: [
       { quote: "Toà nhà hạng A, cơ sở vật chất tốt hơn hẳn các văn phòng ảo mình từng xem qua ở Gò Vấp — xứng đáng với mức giá.", initial: "L", name: "Ngọc Lan", role: "Giám đốc, Lan's Beauty Group" },
@@ -715,7 +748,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       "Văn phòng Yên Thế toạ lạc tại số 92 Yên Thế, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ nối giữa hai trục lớn Trường Sơn và Cộng Hoà, chỉ cách cổng sân bay quốc tế Tân Sơn Nhất khoảng 5-10 phút di chuyển. Đây là một trong những chi nhánh có vị trí thuận lợi nhất cho các doanh nghiệp thường xuyên đón đối tác từ sân bay hoặc hoạt động trong lĩnh vực logistics, xuất nhập khẩu, du lịch — lữ hành.",
       "Khu vực Tân Sơn Hòa quanh Yên Thế là nơi giao thoa giữa không gian dân cư yên tĩnh và các trục giao thông sầm uất, gần vòng xoay Lăng Cha Cả — một trong những nút giao quan trọng bậc nhất cửa ngõ Tân Bình. Nhờ vậy, việc di chuyển từ văn phòng đến trung tâm Quận 1, Quận 3 hay sang Phú Nhuận đều khá thuận tiện, không phải đi vòng qua nhiều tuyến nhỏ.",
       `Chi nhánh Yên Thế là một trong số ít văn phòng của MAX OFFICE có phòng đào tạo & sự kiện riêng biệt, sức chứa 30-50 người — phù hợp cho doanh nghiệp cần tổ chức workshop, buổi đào tạo nội bộ hoặc ra mắt sản phẩm mà không phải thuê thêm địa điểm bên ngoài. Khách hàng có thể lựa chọn từ gói văn phòng ảo BASE (500.000đ/tháng) đến ORIGIN, ORIGIN+ và cả gói RISE cao cấp nhất — đầy đủ hơn hẳn nhiều chi nhánh khác trong hệ thống ${ACTIVE_BRANCH_COUNT} địa điểm.`,
-      "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao.",
+      "Ngoài văn phòng ảo, chi nhánh còn cung cấp văn phòng trọn gói, phòng họp theo giờ, chỗ ngồi linh động cùng dịch vụ thành lập doanh nghiệp và kế toán thuế — vận hành theo cùng tiêu chuẩn chất lượng như tại trụ sở chính Sông Thao. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn, mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn về đây hay thành lập công ty mới tại chi nhánh — xem chi tiết trong phần Câu hỏi thường gặp bên dưới.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Yên Thế",
     benefits: [
@@ -725,6 +758,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Gần vòng xoay Lăng Cha Cả", desc: "Kết nối nhanh đến Quận 1, Quận 3, Phú Nhuận qua trục Cộng Hoà — Trường Sơn." },
       { icon: UsersIcon, title: "Phù hợp ngành logistics, du lịch", desc: "Vị trí lý tưởng cho doanh nghiệp thường xuyên đón đối tác từ sân bay." },
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Chỉ 5-10 phút di chuyển, thuận tiện đón đối tác, khách hàng quốc tế." },
@@ -755,6 +792,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 92 Yên Thế có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý, phù hợp đăng ký kinh doanh, đăng ký thuế cho mọi loại hình doanh nghiệp, kể cả doanh nghiệp có yếu tố nước ngoài." },
       { q: "Từ văn phòng Yên Thế di chuyển đến trung tâm Quận 1 mất bao lâu?", a: "Khoảng 15-20 phút qua trục Cộng Hoà — Trường Sơn hoặc qua vòng xoay Lăng Cha Cả, tuỳ thời điểm giao thông." },
       { q: "Tôi có thể nâng cấp từ gói BASE lên RISE sau khi ký hợp đồng không?", a: "Có. Bạn có thể nâng cấp gói bất kỳ lúc nào trong quá trình sử dụng để phù hợp với nhu cầu phát triển của doanh nghiệp." },
+      { q: "Ký hợp đồng dài hạn tại Yên Thế có khuyến mãi gì không?", a: "Có, và mức ưu đãi khác nhau tuỳ tình trạng công ty của bạn. Nếu bạn ĐÃ CÓ công ty và chỉ cần chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng, và với hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn: ký 12 tháng được tặng 2 tháng, ký 24 tháng được tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần MAX OFFICE hỗ trợ luôn thủ tục thành lập." },
     ],
     testimonials: [
       { quote: "Chi nhánh Yên Thế gần sân bay nên mình hay hẹn đối tác nước ngoài ở đây, rất tiện.", initial: "T", name: "Anh Tuấn", role: "Giám đốc, công ty logistics" },
@@ -784,7 +822,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Cộng Hoà toạ lạc tại số 123 Cộng Hoà, Phường Bảy Hiền, Quận Tân Bình — ngay trên một trong những trục đường lớn và sầm uất bậc nhất khu vực Tân Bình. Bảy Hiền từ lâu được biết đến là khu vực gắn liền với nghề dệt may truyền thống của người Quảng Nam di cư vào Sài Gòn, nay đã phát triển thành khu dân cư — thương mại sôi động với mật độ doanh nghiệp vừa và nhỏ dày đặc.",
       "Giao lộ Bảy Hiền — nơi giao nhau giữa các trục Cách Mạng Tháng 8, Trường Chinh và Lý Thường Kiệt — là một trong những điểm trung chuyển giao thông quan trọng của cửa ngõ Tây Bắc thành phố, giúp việc di chuyển từ văn phòng đến Quận 10, Quận 11 hay sân bay Tân Sơn Nhất đều nhanh chóng, không mất nhiều thời gian.",
-      "Với vị trí mặt tiền đường Cộng Hoà, chi nhánh phù hợp cho các doanh nghiệp hoạt động trong lĩnh vực thương mại, may mặc, phân phối hoặc dịch vụ — những ngành vốn có truyền thống lâu đời tại khu vực này. MAX OFFICE cung cấp tại đây các gói văn phòng ảo BASE, ORIGIN và ORIGIN+ (từ 500.000đ/tháng), cùng đầy đủ dịch vụ văn phòng trọn gói, phòng họp theo giờ, thành lập doanh nghiệp và kế toán thuế.",
+      "Với vị trí mặt tiền đường Cộng Hoà, chi nhánh phù hợp cho các doanh nghiệp hoạt động trong lĩnh vực thương mại, may mặc, phân phối hoặc dịch vụ — những ngành vốn có truyền thống lâu đời tại khu vực này. MAX OFFICE cung cấp tại đây các gói văn phòng ảo BASE, ORIGIN và ORIGIN+ (từ 500.000đ/tháng), cùng đầy đủ dịch vụ văn phòng trọn gói, phòng họp theo giờ, thành lập doanh nghiệp và kế toán thuế. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn, mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn về đây hay thành lập công ty mới tại chi nhánh — xem chi tiết trong phần Câu hỏi thường gặp bên dưới.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Cộng Hoà",
     benefits: [
@@ -794,6 +832,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: BadgePercentIcon, title: "3 gói văn phòng ảo linh hoạt", desc: "BASE, ORIGIN, ORIGIN+ — từ 500.000đ/tháng, dễ nâng cấp theo nhu cầu." },
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Mặt tiền đường Cộng Hoà, dễ di chuyển vào giờ cao điểm." },
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Giao lộ Bảy Hiền", desc: "Nút giao thông quan trọng, kết nối Cách Mạng Tháng 8, Trường Chinh, Lý Thường Kiệt." },
@@ -824,6 +866,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Từ văn phòng Cộng Hoà đến sân bay Tân Sơn Nhất mất bao lâu?", a: "Khoảng 10-15 phút di chuyển qua trục Trường Chinh hoặc Cộng Hoà, tuỳ thời điểm giao thông." },
       { q: "Địa chỉ 123 Cộng Hoà có hợp lệ để đăng ký kinh doanh không?", a: "Có. Địa chỉ này đáp ứng đầy đủ điều kiện pháp lý tại Phường Bảy Hiền, Quận Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
       { q: "Tôi có thể thuê phòng họp theo giờ tại chi nhánh này không?", a: "Có. Chi nhánh Cộng Hoà cung cấp phòng họp theo giờ, phù hợp tiếp đối tác hoặc tổ chức họp nhóm nhỏ." },
+      { q: "Ký hợp đồng dài hạn tại Cộng Hoà có khuyến mãi gì không?", a: "Có, và mức ưu đãi khác nhau tuỳ tình trạng công ty của bạn. Nếu bạn ĐÃ CÓ công ty và chỉ cần chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng, và với hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn: ký 12 tháng được tặng 2 tháng, ký 24 tháng được tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần MAX OFFICE hỗ trợ luôn thủ tục thành lập." },
     ],
     testimonials: [
       { quote: "Vị trí mặt tiền Cộng Hoà rất dễ tìm, đối tác đến lần đầu cũng không bị lạc.", initial: "P", name: "Hoài Phương", role: "Chủ xưởng may gia công" },
@@ -851,7 +894,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Tân Thắng toạ lạc tại 121A-123-125 Tân Thắng, Phường Tân Sơn Nhì, Quận Tân Phú — khu vực phát triển nhanh trong những năm gần đây nhờ sự xuất hiện của các trung tâm thương mại và khu dân cư mới. Đây là lựa chọn phù hợp cho doanh nghiệp muốn có địa chỉ tại Tân Phú với môi trường xung quanh hiện đại, quy hoạch bài bản.",
       "Khu vực Tân Sơn Nhì nằm không xa Aeon Mall Tân Phú Celadon — một trong những trung tâm thương mại lớn phía Tây thành phố — cùng nhiều khu dân cư mới, trường học và tiện ích đi kèm. Nhờ vậy, nhân viên và đối tác đến làm việc tại chi nhánh có thể kết hợp mua sắm, ăn uống hoặc giải trí ngay sau giờ làm.",
-      "Đường Tân Thắng kết nối thuận tiện với trục Tân Sơn Nhì và các tuyến đường lớn của Tân Phú, giúp việc di chuyển sang khu vực Tân Bình hoặc trung tâm thành phố không quá xa. Chi nhánh cung cấp các gói văn phòng ảo BASE, ORIGIN, ORIGIN+ (từ 500.000đ/tháng), cùng văn phòng trọn gói, phòng họp theo giờ, không gian làm việc chung, thành lập doanh nghiệp và kế toán thuế.",
+      "Đường Tân Thắng kết nối thuận tiện với trục Tân Sơn Nhì và các tuyến đường lớn của Tân Phú, giúp việc di chuyển sang khu vực Tân Bình hoặc trung tâm thành phố không quá xa. Chi nhánh cung cấp các gói văn phòng ảo BASE, ORIGIN, ORIGIN+ (từ 500.000đ/tháng), cùng văn phòng trọn gói, phòng họp theo giờ, không gian làm việc chung, thành lập doanh nghiệp và kế toán thuế. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn, mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn về đây hay thành lập công ty mới tại chi nhánh — xem chi tiết trong phần Câu hỏi thường gặp bên dưới.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Tân Thắng",
     benefits: [
@@ -861,6 +904,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: BadgePercentIcon, title: "3 gói văn phòng ảo linh hoạt", desc: "BASE, ORIGIN, ORIGIN+ — từ 500.000đ/tháng." },
       { icon: UsersIcon, title: "Khu dân cư mới phát triển", desc: "Môi trường xung quanh hiện đại, an ninh tốt." },
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Aeon Mall Tân Phú Celadon", desc: "Trung tâm thương mại lớn, thuận tiện tiếp khách và giải trí sau giờ làm." },
@@ -891,6 +938,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Từ văn phòng Tân Thắng di chuyển sang Tân Bình có xa không?", a: "Không xa. Trục Tân Sơn Nhì kết nối trực tiếp sang khu vực Tân Bình, thời gian di chuyển khoảng 10-15 phút." },
       { q: "Chi nhánh có không gian làm việc chung (coworking) không?", a: "Có. Chi nhánh Tân Thắng có khu vực chỗ ngồi làm việc chung, phù hợp cho freelancer hoặc đội nhóm nhỏ." },
       { q: "Tôi có thể đặt lịch tham quan văn phòng Tân Thắng trước khi ký hợp đồng không?", a: "Có. Đội ngũ MAX OFFICE tại Tân Thắng sẵn sàng sắp xếp lịch tham quan miễn phí theo thời gian thuận tiện của bạn — chỉ cần để lại thông tin qua form hoặc gọi hotline 089 8082 188." },
+      { q: "Ký hợp đồng dài hạn tại Tân Thắng có khuyến mãi gì không?", a: "Có, và mức ưu đãi khác nhau tuỳ tình trạng công ty của bạn. Nếu bạn ĐÃ CÓ công ty và chỉ cần chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng, và với hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn: ký 12 tháng được tặng 2 tháng, ký 24 tháng được tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần MAX OFFICE hỗ trợ luôn thủ tục thành lập." },
     ],
     testimonials: [
       { quote: "Văn phòng gần Aeon Mall nên mình hay hẹn khách ăn trưa luôn, rất tiện.", initial: "H", name: "Thanh Hằng", role: "Chủ shop online" },
@@ -917,7 +965,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Cửu Long toạ lạc tại 06-08-10 Cửu Long, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ, yên tĩnh nằm gần Công viên Hoàng Văn Thụ, một trong những mảng xanh lớn hiếm hoi của khu vực Tân Bình. Đây là lựa chọn phù hợp cho doanh nghiệp muốn có địa chỉ đăng ký kinh doanh trong khu dân cư ổn định, tránh sự ồn ào của các trục đường lớn.",
       "Khác với một số chi nhánh khác trong khu vực Tân Sơn Hòa nằm sát các giao lộ lớn, Cửu Long mang không khí trầm lắng hơn, phù hợp cho các công ty tư vấn, thiết kế hoặc dịch vụ chuyên môn cần không gian làm việc tập trung. Từ đây di chuyển ra Công viên Hoàng Văn Thụ chỉ mất vài phút — nhiều khách hàng của MAX OFFICE tại chi nhánh này chọn nơi đây để hẹn gặp đối tác ngoài trời hoặc nghỉ ngơi giữa giờ làm việc.",
-      "Chi nhánh Cửu Long hiện tập trung vào gói văn phòng ảo BASE (500.000đ/tháng) — gói tiêu chuẩn bao gồm đầy đủ địa chỉ đăng ký kinh doanh, lễ tân, wifi, không gian tiếp khách (Guest Lounge), tư vấn pháp lý & thuế. Khách hàng có nhu cầu sử dụng các gói cao hơn (ORIGIN, ORIGIN+, RISE) có thể được tư vấn chuyển sang các chi nhánh lân cận như Yên Thế hoặc Sông Thao trong cùng khu vực Tân Bình.",
+      "Chi nhánh Cửu Long hiện tập trung vào gói văn phòng ảo BASE (500.000đ/tháng) — gói tiêu chuẩn bao gồm đầy đủ địa chỉ đăng ký kinh doanh, lễ tân, wifi, không gian tiếp khách (Guest Lounge), tư vấn pháp lý & thuế. Khách hàng có nhu cầu sử dụng các gói cao hơn (ORIGIN, ORIGIN+, RISE) có thể được tư vấn chuyển sang các chi nhánh lân cận như Yên Thế hoặc Sông Thao trong cùng khu vực Tân Bình. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn, mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn về đây hay thành lập công ty mới tại chi nhánh — xem chi tiết trong phần Câu hỏi thường gặp bên dưới.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Cửu Long",
     benefits: [
@@ -927,6 +975,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: BadgePercentIcon, title: "Gói BASE trọn vẹn tiện ích", desc: "Bao gồm Guest Lounge, tư vấn pháp lý & thuế, đánh giá sức khoẻ doanh nghiệp AI." },
       { icon: KeyIcon, title: "Dễ nâng cấp khi cần", desc: "Hỗ trợ chuyển sang chi nhánh khác nếu cần gói cao hơn BASE." },
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Công viên Hoàng Văn Thụ", desc: "Mảng xanh lớn của khu vực, chỉ vài phút di chuyển từ văn phòng." },
@@ -957,6 +1009,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 06-08-10 Cửu Long có hợp lệ để đăng ký kinh doanh không?", a: "Có. Địa chỉ này đáp ứng đầy đủ điều kiện pháp lý để đăng ký kinh doanh, đăng ký thuế theo quy định hiện hành." },
       { q: "Khu vực xung quanh văn phòng Cửu Long có ồn ào không?", a: "Không. Đây là khu dân cư tương đối yên tĩnh, tách biệt với các trục đường lớn, phù hợp cho công việc cần sự tập trung." },
       { q: "Tôi có thể đến tham quan văn phòng Cửu Long trước khi ký hợp đồng không?", a: "Có. Bạn chỉ cần để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ sẽ sắp xếp lịch tham quan phù hợp." },
+      { q: "Ký hợp đồng dài hạn tại Cửu Long có khuyến mãi gì không?", a: "Có, và mức ưu đãi khác nhau tuỳ tình trạng công ty của bạn. Nếu bạn ĐÃ CÓ công ty và chỉ cần chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng, và với hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn: ký 12 tháng được tặng 2 tháng, ký 24 tháng được tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần MAX OFFICE hỗ trợ luôn thủ tục thành lập." },
     ],
     testimonials: [
       { quote: "Khu vực yên tĩnh, gần công viên nên mình thích ra đó ngồi làm việc buổi sáng trước khi vào văn phòng.", initial: "N", name: "Bảo Ngọc", role: "Freelancer thiết kế đồ hoạ" },
@@ -983,7 +1036,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       `Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống ${ACTIVE_BRANCH_COUNT} chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.`,
       "Khu vực Phường Tân Sơn Nhất không chỉ gần sân bay mà còn cách Công viên Gia Định — một trong những công viên lớn của thành phố — chỉ vài phút di chuyển, mang lại không gian thoáng đãng hiếm có so với nhiều khu vực nội thành khác. Đường Hoàng Việt và các tuyến lân cận như Phan Thúc Duyện, Hồng Hà tạo thành mạng lưới giao thông thuận tiện, kết nối nhanh sang Phú Nhuận và trung tâm thành phố.",
-      "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu.",
+      "Chi nhánh Hoàng Việt cung cấp các gói văn phòng ảo giá tốt nhất trong hệ thống: LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho startup, hộ kinh doanh cá thể hoặc doanh nghiệp mới cần tối ưu chi phí vận hành trong giai đoạn đầu. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn — mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn hay thành lập công ty mới, và tuỳ gói LITE/START/BASE bạn chọn (xem chi tiết trong phần Câu hỏi thường gặp bên dưới).",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Hoàng Việt",
     benefits: [
@@ -994,6 +1047,11 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh sang Phú Nhuận và trung tâm thành phố." },
       { icon: HeadsetIcon, title: "Lễ tân trực tiếp tại quầy", desc: "Đội ngũ lễ tân MAX OFFICE tiếp nhận thư từ, bưu phẩm và đón tiếp khách ngay tại quầy khi đối tác ghé chi nhánh." },
       { icon: HeartHandshakeIcon, title: "Khu vực tiếp khách riêng", desc: "Không gian tiếp khách riêng biệt với sofa, bàn tiếp khách — phù hợp trao đổi công việc với đối tác ngay tại văn phòng." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Văn phòng nằm sát ranh giới sân bay, thuận tiện đón khách quốc tế." },
@@ -1024,6 +1082,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 1/12 Hoàng Việt có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Sơn Nhất, Quận Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế." },
       { q: "Chi nhánh có gần công viên để nghỉ ngơi giữa giờ làm không?", a: "Có. Công viên Gia Định nằm rất gần chi nhánh, phù hợp để nghỉ ngơi hoặc đi bộ giữa giờ làm việc." },
       { q: "Tôi có thể nâng cấp từ gói LITE lên START hoặc BASE sau này không?", a: "Có. Bạn có thể nâng cấp gói bất kỳ lúc nào để phù hợp với nhu cầu phát triển của doanh nghiệp." },
+      { q: "Ký hợp đồng dài hạn tại Hoàng Việt có khuyến mãi gì không?", a: "Có, và mức ưu đãi phụ thuộc cả tình trạng công ty lẫn gói bạn chọn. Nếu bạn ĐÃ CÓ công ty và chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD). Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn và khác nhau theo gói: gói LITE ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; gói START hoặc BASE ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần." },
     ],
     testimonials: [
       { quote: "Mình mới mở công ty nên chọn gói LITE ở đây, giá rẻ mà vẫn đủ điều kiện đăng ký kinh doanh.", initial: "V", name: "Anh Vinh", role: "Founder công ty mới thành lập" },
@@ -1050,7 +1109,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Bàu Cát 2 toạ lạc tại 24A Bàu Cát 2, Phường Tân Bình — khu vực từ lâu được biết đến như một trong những 'thủ phủ' may mặc, thời trang thiết kế của Sài Gòn, nơi tập trung hàng trăm xưởng may, showroom và cửa hàng thời trang nhỏ lẻ. Đây là lựa chọn phù hợp cho doanh nghiệp hoạt động trong ngành thời trang, may mặc, thương mại điện tử muốn có địa chỉ gần nguồn hàng.",
       "Khu Bàu Cát có mạng lưới hẻm nhỏ đan xen nhưng khá thuận tiện di chuyển nhờ hệ thống đường nội bộ kết nối trực tiếp ra các trục lớn như Đồng Đen, Trường Chinh. Chợ Bàu Cát ngay gần đó cũng là nơi giao thương sầm uất, phục vụ nhu cầu sinh hoạt hàng ngày cho cả khu vực.",
-      "Chi nhánh Bàu Cát 2 cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) cùng không gian làm việc chung (coworking) thoáng đãng — phù hợp cho các cá nhân kinh doanh online, xưởng may nhỏ hoặc startup thời trang cần địa chỉ đăng ký kinh doanh hợp lệ với chi phí tối ưu.",
+      "Chi nhánh Bàu Cát 2 cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) cùng không gian làm việc chung (coworking) thoáng đãng — phù hợp cho các cá nhân kinh doanh online, xưởng may nhỏ hoặc startup thời trang cần địa chỉ đăng ký kinh doanh hợp lệ với chi phí tối ưu. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn — mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn hay thành lập công ty mới, và tuỳ gói LITE/START/BASE bạn chọn (xem chi tiết trong phần Câu hỏi thường gặp bên dưới).",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Bàu Cát 2",
     benefits: [
@@ -1061,6 +1120,11 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: MapPinIcon, title: "Gần chợ Bàu Cát", desc: "Thuận tiện sinh hoạt, giao thương hàng ngày." },
       { icon: HeadsetIcon, title: "Lễ tân tiếp nhận thư từ, bưu phẩm", desc: "Quầy lễ tân MAX OFFICE hoạt động thường xuyên, hỗ trợ nhận thư, bưu phẩm và tiếp đón khách đến giao dịch trực tiếp." },
       { icon: HeartHandshakeIcon, title: "Khu vực tiếp khách riêng", desc: "Khu vực tiếp khách riêng biệt, có sofa và bàn tiếp khách — thuận tiện gặp gỡ khách hàng, đối tác ghé xem mẫu." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Khu thời trang, may mặc Bàu Cát", desc: "Tập trung nhiều xưởng may, showroom thời trang thiết kế nổi tiếng." },
@@ -1091,6 +1155,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ này có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
       { q: "Chi nhánh có không gian coworking không?", a: "Có. Chi nhánh Bàu Cát 2 có khu vực làm việc chung thoáng đãng, phù hợp cho freelancer hoặc đội nhóm nhỏ." },
       { q: "Tôi có thể đến tham quan văn phòng Bàu Cát 2 trước khi ký hợp đồng không?", a: "Có. Bạn có thể để lại thông tin qua form hoặc gọi trực tiếp hotline 089 8082 188 để được sắp xếp lịch tham quan miễn phí phù hợp." },
+      { q: "Ký hợp đồng dài hạn tại Bàu Cát 2 có khuyến mãi gì không?", a: "Có, và mức ưu đãi phụ thuộc cả tình trạng công ty lẫn gói bạn chọn. Nếu bạn ĐÃ CÓ công ty và chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD). Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn và khác nhau theo gói: gói LITE ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; gói START hoặc BASE ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần." },
     ],
     testimonials: [
       { quote: "Mình mở xưởng may nhỏ gần đây nên đặt địa chỉ công ty luôn ở Bàu Cát cho tiện quản lý.", initial: "T", name: "Chị Thảo", role: "Chủ xưởng may thời trang" },
@@ -1116,7 +1181,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Lam Sơn toạ lạc tại 2-2B Lam Sơn, Phường Tân Sơn Hòa, Quận Tân Bình — khu vực nằm gần trục đường Lê Văn Sỹ, một trong những tuyến phố ẩm thực và mua sắm sầm uất nối liền Tân Bình với Quận 3. Đây là lựa chọn thuận tiện cho doanh nghiệp cần địa chỉ vừa gần trung tâm vừa giữ được chi phí hợp lý.",
       "Khác với các chi nhánh khác trong cùng Phường Tân Sơn Hòa, Lam Sơn có lợi thế lớn về khả năng kết nối trực tiếp vào trục Lê Văn Sỹ — Cách Mạng Tháng 8, giúp việc di chuyển đến trung tâm Quận 3, Quận 1 nhanh hơn nhiều so với việc phải vòng qua các trục lớn khác của Tân Bình. Khu vực xung quanh có nhiều quán ăn, cà phê phục vụ dân văn phòng, phù hợp cho các buổi gặp gỡ đối tác không quá trang trọng.",
-      "Chi nhánh Lam Sơn cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho doanh nghiệp nhỏ, hộ kinh doanh hoặc văn phòng đại diện cần vị trí gần trung tâm với ngân sách tối ưu.",
+      "Chi nhánh Lam Sơn cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho doanh nghiệp nhỏ, hộ kinh doanh hoặc văn phòng đại diện cần vị trí gần trung tâm với ngân sách tối ưu. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn — mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn hay thành lập công ty mới, và tuỳ gói LITE/START/BASE bạn chọn (xem chi tiết trong phần Câu hỏi thường gặp bên dưới).",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Lam Sơn",
     benefits: [
@@ -1126,6 +1191,11 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: ClockIcon, title: "Di chuyển thuận tiện", desc: "Không phải vòng qua các trục lớn khác của Tân Bình." },
       { icon: UsersIcon, title: "Phù hợp văn phòng đại diện", desc: "Vị trí cân bằng giữa chi phí và khả năng tiếp cận trung tâm." },
       { icon: HeadsetIcon, title: "Hỗ trợ tiếp nhận thư từ", desc: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm hàng ngày; đội ngũ MAX OFFICE hỗ trợ vận hành và tư vấn từ xa qua điện thoại, Zalo." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Trục Lê Văn Sỹ", desc: "Tuyến phố ẩm thực, mua sắm sầm uất nối Tân Bình với Quận 3." },
@@ -1156,6 +1226,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Khu vực xung quanh văn phòng Lam Sơn có quán ăn tiếp khách không?", a: "Có. Khu vực gần trục Lê Văn Sỹ tập trung nhiều quán ăn, cà phê phù hợp cho các buổi gặp gỡ đối tác không quá trang trọng." },
       { q: "Lam Sơn khác gì so với các chi nhánh khác cùng Phường Tân Sơn Hòa?", a: "Lam Sơn có lợi thế kết nối trực tiếp vào trục Lê Văn Sỹ — Cách Mạng Tháng 8, giúp di chuyển đến Quận 3, Quận 1 nhanh hơn mà không cần vòng qua các trục lớn khác." },
       { q: "Tôi có thể nâng cấp gói dịch vụ sau khi ký hợp đồng tại Lam Sơn không?", a: "Có. Bạn có thể nâng cấp từ LITE lên START hoặc BASE bất kỳ lúc nào để phù hợp với nhu cầu phát triển của doanh nghiệp." },
+      { q: "Ký hợp đồng dài hạn tại Lam Sơn có khuyến mãi gì không?", a: "Có, và mức ưu đãi phụ thuộc cả tình trạng công ty lẫn gói bạn chọn. Nếu bạn ĐÃ CÓ công ty và chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD). Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn và khác nhau theo gói: gói LITE ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; gói START hoặc BASE ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần." },
     ],
     testimonials: [
       { quote: "Văn phòng gần Lê Văn Sỹ nên mình hay hẹn khách ở mấy quán cà phê gần đó, không khí thoải mái hơn phòng họp.", initial: "A", name: "Gia An", role: "Chủ agency marketing nhỏ" },
@@ -1187,7 +1258,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng Hoàng Kế Viêm toạ lạc tại 26 Hoàng Kế Viêm, Phường Bảy Hiền, Quận Tân Bình — nằm sâu về phía trục Trường Chinh, cửa ngõ Tây Bắc của thành phố nối liền với Quận 12, Hóc Môn. Đây là lựa chọn phù hợp cho doanh nghiệp có nhu cầu kết nối với khu vực ngoại thành phía Tây Bắc TP.HCM.",
       "Khu vực quanh đường Hoàng Kế Viêm chủ yếu là dân cư sinh sống lâu năm, xen kẽ một số trường học và cơ sở giáo dục nhỏ, tạo nên không khí ổn định, ít biến động. Từ đây di chuyển ra trục Trường Chinh chỉ mất vài phút, thuận tiện cho các doanh nghiệp thường xuyên di chuyển về hướng Quận 12, sân bay hoặc các khu công nghiệp phía Tây Bắc.",
-      "Chi nhánh Hoàng Kế Viêm cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho doanh nghiệp nhỏ, hộ kinh doanh cần địa chỉ hợp lệ với chi phí tiết kiệm nhất trong hệ thống MAX OFFICE.",
+      "Chi nhánh Hoàng Kế Viêm cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — phù hợp cho doanh nghiệp nhỏ, hộ kinh doanh cần địa chỉ hợp lệ với chi phí tiết kiệm nhất trong hệ thống MAX OFFICE. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn — mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn hay thành lập công ty mới, và tuỳ gói LITE/START/BASE bạn chọn (xem chi tiết trong phần Câu hỏi thường gặp bên dưới).",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Hoàng Kế Viêm",
     benefits: [
@@ -1198,6 +1269,11 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Dễ dàng di chuyển ra các trục lớn khi cần." },
       { icon: HeadsetIcon, title: "Hỗ trợ tiếp nhận thư từ", desc: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm hàng ngày; đội ngũ MAX OFFICE hỗ trợ tư vấn, xử lý thủ tục qua điện thoại." },
       { icon: HeartHandshakeIcon, title: "Khu vực tiếp khách riêng", desc: "Có khu vực tiếp khách riêng với sofa, bàn tiếp khách — phù hợp cho các buổi trao đổi ngắn với đối tác, khách hàng." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Trục đường Trường Chinh", desc: "Cửa ngõ Tây Bắc thành phố, kết nối Quận 12, Hóc Môn." },
@@ -1228,6 +1304,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Văn phòng Hoàng Kế Viêm phù hợp với loại hình doanh nghiệp nào?", a: "Phù hợp nhất với doanh nghiệp nhỏ, hộ kinh doanh cá thể cần địa chỉ đăng ký hợp lệ với chi phí tiết kiệm, đặc biệt là các đơn vị thường xuyên giao dịch hoặc vận chuyển hàng hoá về hướng Quận 12, Hóc Môn." },
       { q: "Khu vực xung quanh văn phòng có yên tĩnh không?", a: "Có. Đây là khu dân cư sinh sống lâu năm, khá ổn định và yên tĩnh, phù hợp cho công việc cần sự tập trung." },
       { q: "Tôi có thể đến tham quan văn phòng Hoàng Kế Viêm trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form hoặc liên hệ hotline 089 8082 188, đội ngũ MAX OFFICE sẽ sắp xếp lịch tham quan miễn phí cho bạn." },
+      { q: "Ký hợp đồng dài hạn tại Hoàng Kế Viêm có khuyến mãi gì không?", a: "Có, và mức ưu đãi phụ thuộc cả tình trạng công ty lẫn gói bạn chọn. Nếu bạn ĐÃ CÓ công ty và chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD). Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn và khác nhau theo gói: gói LITE ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; gói START hoặc BASE ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần." },
     ],
     testimonials: [
       { quote: "Công ty mình hay giao dịch với đối tác ở Quận 12 nên đặt văn phòng ở đây khá thuận tiện.", initial: "L", name: "Anh Lâm", role: "Giám đốc kinh doanh" },
@@ -1254,7 +1331,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     intro: [
       "Văn phòng CMT8 toạ lạc tại 283/26-28 Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10 — một trong những trục đường lớn và huyết mạch bậc nhất khu vực trung tâm TP.HCM, nối liền Quận 1, Quận 3 với Quận 10 và Quận Tân Bình. Đây là chi nhánh đầu tiên MAX OFFICE mở tại khu vực Quận 10 (cũ), phù hợp cho doanh nghiệp muốn có địa chỉ gần trung tâm với chi phí hợp lý hơn so với Quận 1.",
       "Khu vực Phường Hoà Hưng nằm gần Ga Sài Gòn — nhà ga đường sắt trung tâm của thành phố — cùng nhiều bệnh viện, trường đại học lớn như Bệnh viện Nhân dân 115, Đại học Bách Khoa lân cận, tạo nên mật độ dân cư và hoạt động kinh doanh sôi động suốt cả ngày. Trục Cách Mạng Tháng 8 cũng là tuyến đường được nhiều doanh nghiệp lựa chọn đặt văn phòng nhờ khả năng di chuyển thuận tiện đến hầu hết các quận trung tâm.",
-      "Chi nhánh CMT8 cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — là lựa chọn kinh tế cho doanh nghiệp cần địa chỉ Quận 10 gần trung tâm mà không phải trả mức phí cao như khu vực Quận 1.",
+      "Chi nhánh CMT8 cung cấp các gói văn phòng ảo LITE (299.000đ/tháng), START (350.000đ/tháng) và BASE (500.000đ/tháng) — là lựa chọn kinh tế cho doanh nghiệp cần địa chỉ Quận 10 gần trung tâm mà không phải trả mức phí cao như khu vực Quận 1. Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn — mức tặng khác nhau tuỳ bạn chuyển địa chỉ công ty đã có sẵn hay thành lập công ty mới, và tuỳ gói LITE/START/BASE bạn chọn (xem chi tiết trong phần Câu hỏi thường gặp bên dưới).",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng CMT8",
     benefits: [
@@ -1264,6 +1341,11 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Gần bệnh viện, trường đại học", desc: "Khu vực sôi động, phù hợp nhiều loại hình doanh nghiệp." },
       { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh đến Quận 1, Quận 3, Tân Bình qua trục CMT8." },
       { icon: HeadsetIcon, title: "Hỗ trợ tiếp nhận thư từ", desc: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm tại quầy chung; đội ngũ MAX OFFICE hỗ trợ tư vấn, xử lý hồ sơ qua điện thoại hoặc Zalo." },
+    ],
+    promotions: [
+      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
     ],
     nearbyItems: [
       { name: "Ga Sài Gòn", desc: "Nhà ga đường sắt trung tâm, chỉ cách chi nhánh vài phút di chuyển." },
@@ -1294,6 +1376,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Văn phòng CMT8 có gần Ga Sài Gòn không?", a: "Có. Chi nhánh nằm khá gần Ga Sài Gòn, thuận tiện nếu bạn hoặc đối tác di chuyển bằng đường sắt." },
       { q: "Từ văn phòng CMT8 đến trung tâm Quận 1 mất bao lâu?", a: "Khoảng 10-15 phút di chuyển qua trục Cách Mạng Tháng 8, tuỳ thời điểm giao thông." },
       { q: "Chi phí thuê văn phòng ảo tại CMT8 có rẻ hơn khu vực Quận 1 không?", a: "Có. Mức giá tại CMT8 áp dụng theo bảng giá chung của MAX OFFICE, không có phụ phí trung tâm như khu vực Quận 1, phù hợp cho doanh nghiệp muốn tối ưu chi phí mà vẫn gần trung tâm." },
+      { q: "Ký hợp đồng dài hạn tại CMT8 có khuyến mãi gì không?", a: "Có, và mức ưu đãi phụ thuộc cả tình trạng công ty lẫn gói bạn chọn. Nếu bạn ĐÃ CÓ công ty và chuyển địa chỉ đăng ký kinh doanh về chi nhánh này, ký hợp đồng 12 tháng được tặng 1 tháng sử dụng miễn phí, ký 24 tháng được tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng trở lên còn được tặng thêm dịch vụ làm thủ tục đổi giấy phép kinh doanh (GPKD). Nếu bạn THÀNH LẬP CÔNG TY MỚI tại đây, mức ưu đãi cao hơn và khác nhau theo gói: gói LITE ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; gói START hoặc BASE ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng — 4 tháng này cũng có thể quy đổi thành dịch vụ thành lập doanh nghiệp nếu bạn cần." },
     ],
     testimonials: [
       { quote: "Văn phòng ngay mặt tiền CMT8 nên khách hàng dễ tìm, công ty mình trông chuyên nghiệp hơn hẳn.", initial: "B", name: "Anh Bình", role: "Giám đốc công ty dịch vụ" },
@@ -1561,6 +1644,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Tiếp tân hành chính chuyên nghiệp", desc: "Tiếp nhận, chuyển tiếp thư từ, bưu phẩm; hỗ trợ đón khách khi ghé chi nhánh." },
       { icon: ClockIcon, title: "Gần kênh Nhiêu Lộc - Thị Nghè", desc: "Không gian thoáng đãng, thuận tiện di chuyển về trung tâm thành phố." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Kênh Nhiêu Lộc - Thị Nghè", desc: "Tuyến kênh cảnh quan chạy dọc khu vực, không gian đi bộ thoáng đãng." },
       { name: "Bệnh viện Da Liễu Thành phố Hồ Chí Minh", desc: "Nằm ngay trên trục đường Nguyễn Thông, cách chi nhánh vài phút đi bộ." },
@@ -1589,6 +1676,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Giá gói văn phòng ảo tại đây đã bao gồm VAT chưa?", a: "Chưa. Toàn bộ mức giá niêm yết (379.000đ - 990.000đ/tháng tuỳ gói) là giá chưa bao gồm VAT 10%, sẽ được thể hiện rõ trong báo giá chính thức trước khi ký hợp đồng." },
       { q: "Địa chỉ 60 Nguyễn Thông có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Nhiêu Lộc, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
       { q: "Nếu cần đổi địa chỉ đăng ký kinh doanh hoặc khắc dấu công ty thì tính phí thế nào?", a: "Đây là các dịch vụ bổ sung phát sinh riêng ngoài gói văn phòng ảo: thay đổi địa chỉ đăng ký kinh doanh 1.296.000đ (đã bao gồm VAT), khắc dấu tròn doanh nghiệp/dấu chi nhánh/VPĐD 480.000đ." },
+      { q: "Ký hợp đồng dài hạn tại 60 Nguyễn Thông có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Tôi có thể đến tham quan văn phòng 60 Nguyễn Thông trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp lịch tham quan miễn phí." },
     ],
     testimonials: [
@@ -1632,6 +1720,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Dễ tìm, dễ nhận diện", desc: "Mặt tiền đường lớn, không cần chỉ dẫn qua hẻm như nhiều văn phòng khác." },
       { icon: ClockIcon, title: "Gần giao lộ Nguyễn Thị Minh Khai", desc: "Kết nối nhanh về trung tâm Quận 1, Quận 3 (cũ) và hướng Quận 10, Tân Bình." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Trục Cách Mạng Tháng 8", desc: "Mặt tiền đường lớn, nhiều làn xe, dễ tìm và dễ nhận diện biển hiệu." },
       { name: "Giao lộ Nguyễn Thị Minh Khai", desc: "Kết nối nhanh về trung tâm Quận 1, Quận 3 (cũ)." },
@@ -1660,6 +1752,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 520 Cách Mạng Tháng 8 có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ hợp lệ tại Phường Nhiêu Lộc, đủ điều kiện đăng ký kinh doanh và đăng ký thuế theo quy định hiện hành, áp dụng cho mọi loại hình doanh nghiệp." },
       { q: "So với chi nhánh 60 Nguyễn Thông, nên chọn 520 Cách Mạng Tháng 8 khi nào?", a: "Nếu bạn ưu tiên địa chỉ dễ tìm, mặt tiền đường lớn, thuận tiện cho đối tác lần đầu ghé thăm mà không cần chỉ dẫn qua hẻm, 520 Cách Mạng Tháng 8 là lựa chọn phù hợp. Nếu ưu tiên không gian yên tĩnh hơn, có thể tham khảo thêm chi nhánh 60 Nguyễn Thông cùng khu vực." },
       { q: "Chi nhánh có hỗ trợ đổi địa chỉ ĐKKD hoặc khắc dấu công ty không, chi phí bao nhiêu?", a: "Có, đây là 2 dịch vụ bổ sung tính riêng ngoài gói văn phòng ảo hàng tháng: thay đổi địa chỉ đăng ký kinh doanh giá 1.296.000đ (đã bao gồm VAT); khắc dấu tròn doanh nghiệp, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 520 Cách Mạng Tháng 8 có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Tôi có thể đến tham quan văn phòng 520 Cách Mạng Tháng 8 trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp lịch tham quan miễn phí, đội ngũ sẽ hướng dẫn cụ thể để tránh nhầm với chi nhánh CMT8 Quận 10." },
     ],
     testimonials: [
@@ -1705,6 +1798,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Toà nhà nhiều doanh nghiệp tin chọn", desc: "Cao ốc văn phòng đã có nhiều công ty đặt trụ sở, môi trường kinh doanh sôi động." },
       { icon: ClockIcon, title: "Gần kênh Nhiêu Lộc - Thị Nghè", desc: "Không gian xanh dọc kênh, thuận tiện di chuyển sang nhiều khu vực lân cận." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Giao lộ Hàng Xanh", desc: "Nút giao trọng điểm của khu vực Bình Thạnh, thuận tiện di chuyển nhiều hướng trong thành phố." },
       { name: "Kênh Nhiêu Lộc - Thị Nghè", desc: "Không gian xanh dọc kênh, phù hợp đi bộ thư giãn ngoài giờ làm việc." },
@@ -1733,6 +1830,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 161 Ung Văn Khiêm có hợp lệ để mở công ty mới không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Thạnh Mỹ Tây, đủ điều kiện đăng ký kinh doanh và đăng ký thuế, áp dụng cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
       { q: "Gói SILVER, GOLD và PREMIUM tại chi nhánh này khác nhau ở điểm nào?", a: "Cả 3 gói đều có bảng tên vật lý và bảng tên điện tử tại toà nhà; điểm khác biệt nằm ở thời lượng miễn phí phòng họp, sảnh tiếp khách, cùng việc có hỗ trợ đổi địa chỉ trên giấy phép kinh doanh hay bộ hồ sơ pháp lý toà nhà hay không — xem chi tiết trong bảng giá phía trên." },
       { q: "Chi nhánh có hỗ trợ đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty không?", a: "Có. Đây là 2 dịch vụ phát sinh riêng, tính thêm ngoài phí gói văn phòng ảo hàng tháng: thay đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã gồm VAT), và khắc dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện với giá 480.000đ cho mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 161 Ung Văn Khiêm có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Làm sao để đặt lịch xem văn phòng tại 161 Ung Văn Khiêm trước khi ký hợp đồng?", a: "Bạn có thể để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí trong thời gian sớm nhất." },
     ],
     testimonials: [
@@ -1777,6 +1875,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Gần Landmark 81, Vinhomes Central Park", desc: "Khu vực phát triển hiện đại, phù hợp doanh nghiệp muốn định vị hình ảnh cao cấp." },
       { icon: ClockIcon, title: "Khác biệt rõ với 161 Ung Văn Khiêm", desc: "Cùng khu vực Bình Thạnh nhưng khác hẳn con đường, dễ chọn theo vị trí phù hợp." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Ga Metro Tân Cảng", desc: "Ga thuộc tuyến Metro số 1 (Bến Thành - Suối Tiên), cách toà nhà không xa." },
       { name: "Landmark 81", desc: "Toà tháp biểu tượng của thành phố, nằm trong khu phức hợp Vinhomes Central Park." },
@@ -1805,6 +1907,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Chi nhánh 23 Tân Cảng áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh dùng chung bảng giá với 161 Ung Văn Khiêm trong cùng khu vực Bình Thạnh, gồm 3 gói: SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%." },
       { q: "Địa chỉ 23 Tân Cảng có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Thạnh Mỹ Tây, đủ điều kiện đăng ký kinh doanh, đăng ký thuế cho công ty TNHH, công ty cổ phần và hộ kinh doanh cá thể." },
       { q: "Ngoài phí gói văn phòng ảo hàng tháng, chi nhánh còn dịch vụ phát sinh nào khác không?", a: "Có 2 khoản phát sinh tính riêng khi cần: đổi địa chỉ trên giấy phép kinh doanh, giá 1.296.000đ đã bao gồm VAT; và khắc con dấu — dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện — mỗi con dấu 480.000đ." },
+      { q: "Ký hợp đồng dài hạn tại 23 Tân Cảng có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Nên chọn 23 Tân Cảng hay 161 Ung Văn Khiêm khi cả hai cùng khu vực Bình Thạnh?", a: "Nếu bạn ưu tiên vị trí gần ga Metro và khu vực Landmark 81, Vinhomes Central Park, 23 Tân Cảng là lựa chọn phù hợp. Nếu ưu tiên gần giao lộ Hàng Xanh và trục Điện Biên Phủ, có thể tham khảo thêm chi nhánh 161 Ung Văn Khiêm — cả hai đều dùng chung một bảng giá nên bạn có thể chọn theo vị trí thuận tiện nhất." },
     ],
     testimonials: [
@@ -1849,6 +1952,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Không gian sàn rộng rãi", desc: "Có khu vực sàn trống thoáng đãng, phù hợp bố trí văn phòng theo nhu cầu." },
       { icon: ClockIcon, title: "Gần 2 chi nhánh Bình Thạnh khác", desc: "Thuận tiện tham khảo thêm 161 Ung Văn Khiêm hoặc 23 Tân Cảng cùng khu vực." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Trục Điện Biên Phủ (đoạn Bình Thạnh)", desc: "Mặt tiền đường lớn, khác hẳn đoạn Điện Biên Phủ tại Quận 1 hay Quận 10 (cũ)." },
       { name: "Giao lộ Hàng Xanh", desc: "Cách không xa, thuận tiện kết nối sang khu vực trung tâm và các trục đường lớn khác." },
@@ -1877,6 +1984,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ N1 Điện Biên Phủ có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Thạnh Mỹ Tây, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
       { q: "Nên chọn chi nhánh nào trong 3 chi nhánh Bình Thạnh — N1 Điện Biên Phủ, 161 Ung Văn Khiêm hay 23 Tân Cảng?", a: "Nếu ưu tiên mặt tiền đường lớn, dễ tìm ngay trên trục Điện Biên Phủ, chọn N1 Điện Biên Phủ. Nếu ưu tiên gần giao lộ Hàng Xanh, tham khảo 161 Ung Văn Khiêm. Nếu ưu tiên gần ga Metro và khu Landmark 81, chọn 23 Tân Cảng — cả 3 đều dùng chung một bảng giá nên bạn có thể chọn theo vị trí thuận tiện nhất." },
       { q: "Nếu cần đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty sau khi ký hợp đồng thì tính phí thế nào?", a: "Có. Ngoài phí gói văn phòng ảo hàng tháng, chi nhánh còn 2 dịch vụ tính riêng khi phát sinh: đổi địa chỉ trên giấy phép kinh doanh, giá 1.296.000đ đã bao gồm VAT; và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện, giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại N1 Điện Biên Phủ có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Làm sao để chắc chắn không đi nhầm sang chi nhánh Điện Biên Phủ Quận 1 khi đến tham quan?", a: "Khi để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, bạn nên ghi rõ 'N1 Điện Biên Phủ, Bình Thạnh' — đội ngũ MAX OFFICE sẽ xác nhận lại địa chỉ Phường Thạnh Mỹ Tây và hướng dẫn cụ thể trước khi sắp xếp lịch tham quan." },
     ],
     testimonials: [
@@ -1922,6 +2030,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Không gian sàn rộng rãi", desc: "Có khu vực sàn trống thoáng đãng, phù hợp bố trí văn phòng theo nhu cầu." },
       { icon: ClockIcon, title: "Gần cầu Sài Gòn", desc: "Kết nối nhanh sang khu vực Bình Thạnh và trung tâm Quận 1." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Khu Thảo Điền", desc: "Khu vực sầm uất, nhiều nhà hàng, quán cà phê phong cách quốc tế." },
       { name: "Cầu Sài Gòn", desc: "Kết nối nhanh sang khu vực Bình Thạnh và trung tâm Quận 1." },
@@ -1950,6 +2062,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Chi nhánh 27C Quốc Hương áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 3 gói: SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại các chi nhánh khu vực Bình Thạnh." },
       { q: "Địa chỉ 27C Quốc Hương có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường An Khánh, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
       { q: "Ngoài phí gói văn phòng ảo hàng tháng, chi nhánh còn khoản phí phát sinh nào khác không?", a: "Có 2 dịch vụ tính riêng khi phát sinh nhu cầu: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 27C Quốc Hương có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Tôi có thể đến tham quan văn phòng 27C Quốc Hương trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp lịch tham quan miễn phí, đội ngũ sẽ hướng dẫn cụ thể đường vào Bảo Thiện Building." },
     ],
     testimonials: [
@@ -1995,6 +2108,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Toà nhà nhiều doanh nghiệp thuê", desc: "Cao ốc văn phòng có nhiều công ty đặt trụ sở lâu dài." },
       { icon: ClockIcon, title: "Gần sân bay Tân Sơn Nhất", desc: "Thuận tiện đón đối tác, khách hàng từ tỉnh khác hoặc nước ngoài." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Chợ Phú Nhuận", desc: "Khu chợ truyền thống sầm uất, trung tâm sinh hoạt của khu vực." },
       { name: "Cầu Kiệu", desc: "Kết nối nhanh sang Quận 1, Quận 3 qua kênh Nhiêu Lộc - Thị Nghè." },
@@ -2023,6 +2140,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 89 Phan Đình Phùng có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Phú Nhuận, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
       { q: "Chi nhánh có gần sân bay Tân Sơn Nhất không?", a: "Có. Chi nhánh nằm không xa sân bay Tân Sơn Nhất, thuận tiện cho doanh nghiệp cần đón đối tác hoặc khách hàng từ tỉnh khác, nước ngoài." },
       { q: "Sau khi ký hợp đồng, đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty tính phí ra sao?", a: "Đây là 2 khoản phát sinh tính riêng ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 89 Phan Đình Phùng có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Tôi có thể đến tham quan văn phòng 89 Phan Đình Phùng trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp lịch tham quan miễn phí trong thời gian sớm nhất." },
     ],
     testimonials: [
@@ -2066,6 +2184,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Tầm nhìn thoáng đãng", desc: "Sàn văn phòng tầng cao, view hướng trung tâm thành phố." },
       { icon: ClockIcon, title: "Gần Bến Nhà Rồng", desc: "Khu vực giàu giá trị lịch sử, không xa bờ sông Sài Gòn." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Phố ẩm thực Vĩnh Khánh", desc: "Khu ẩm thực hải sản nổi tiếng, sầm uất về đêm." },
       { name: "Cầu Ông Lãnh", desc: "Kết nối nhanh sang trung tâm Quận 1." },
@@ -2094,6 +2216,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 84-86 Nguyễn Trường Tộ có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Xóm Chiếu, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
       { q: "Chi nhánh có gần trung tâm Quận 1 không?", a: "Có. Chi nhánh chỉ cách trung tâm Quận 1 một nhịp cầu qua cầu Ông Lãnh hoặc cầu Calmette, thuận tiện cho doanh nghiệp cần di chuyển thường xuyên vào khu trung tâm." },
       { q: "Đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty sau khi ký hợp đồng có tốn thêm phí không?", a: "Có. Đây là 2 dịch vụ tính riêng khi phát sinh, ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 84-86 Nguyễn Trường Tộ có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Tôi có thể đến tham quan văn phòng 84-86 Nguyễn Trường Tộ trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
     ],
     testimonials: [
@@ -2138,6 +2261,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Không gian trệt rộng rãi", desc: "Tầng trệt sảnh trống nhiều cửa kính, phù hợp tiếp khách hoặc bố trí không gian làm việc chung." },
       { icon: ClockIcon, title: "Gần chợ Xóm Chiếu", desc: "Khu vực dân cư, thương mại lâu đời của Quận 4, thuận tiện sinh hoạt hàng ngày." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Chợ Xóm Chiếu", desc: "Khu chợ truyền thống lâu đời của Quận 4, sầm uất hàng ngày." },
       { name: "Cầu Tân Thuận", desc: "Kết nối nhanh sang khu vực Quận 7, Phú Mỹ Hưng." },
@@ -2166,6 +2293,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Chi nhánh 54-56 Lê Quốc Hưng áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 3 gói: SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại các chi nhánh khu vực Bình Thạnh, Phú Nhuận, Thủ Đức và chi nhánh Nguyễn Trường Tộ." },
       { q: "Địa chỉ 54-56 Lê Quốc Hưng có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Xóm Chiếu, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
       { q: "Sau khi ký hợp đồng, đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty tính phí ra sao?", a: "Đây là 2 khoản phát sinh tính riêng ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 54-56 Lê Quốc Hưng có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Tôi có thể đến tham quan văn phòng 54-56 Lê Quốc Hưng trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
     ],
     testimonials: [
@@ -2210,6 +2338,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: UsersIcon, title: "Sảnh tiếp khách hiện đại", desc: "Không gian lễ tân, tiếp khách thiết kế chuyên nghiệp ngay từ lối vào." },
       { icon: ClockIcon, title: "Gần trung tâm hành chính Quận 1", desc: "Di chuyển nhanh vào khu trung tâm, thuận tiện giao dịch với đối tác." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Thảo Cầm Viên Sài Gòn", desc: "Công viên, sở thú lâu đời của thành phố, không gian xanh mát gần chi nhánh." },
       { name: "Khu vực lãnh sự quán", desc: "Tập trung nhiều lãnh sự quán, văn phòng đại diện nước ngoài." },
@@ -2238,6 +2370,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Chi nhánh 36 Mạc Đĩnh Chi áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 4 gói: SAVE (379.000đ/tháng), SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại 60 Nguyễn Thông và 520 Cách Mạng Tháng 8 (Quận 3 cũ)." },
       { q: "Địa chỉ 36 Mạc Đĩnh Chi có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Định, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
       { q: "Sau khi ký hợp đồng, đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty tính phí ra sao?", a: "Đây là 2 khoản phát sinh tính riêng ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 36 Mạc Đĩnh Chi có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Tôi có thể đến tham quan văn phòng 36 Mạc Đĩnh Chi trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
     ],
     testimonials: [
@@ -2283,6 +2416,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: ShieldCheckIcon, title: "Sảnh tiếp khách hiện đại", desc: "Không gian lễ tân, tiếp khách thiết kế chuyên nghiệp ngay lối vào." },
       { icon: ClockIcon, title: "Gần phố đi bộ Nguyễn Huệ", desc: "Thuận tiện tiếp đối tác, khách hàng tại khu trung tâm sầm uất nhất TP.HCM." },
     ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
     nearbyItems: [
       { name: "Chợ Bến Thành", desc: "Biểu tượng thương mại, du lịch nổi tiếng của Sài Gòn." },
       { name: "Phố đi bộ Nguyễn Huệ", desc: "Không gian đi bộ sầm uất, nhiều sự kiện thương mại, giải trí." },
@@ -2311,6 +2448,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Chi nhánh 28-34 Pasteur áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 4 gói: SAVE (379.000đ/tháng), SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại 60 Nguyễn Thông, 520 Cách Mạng Tháng 8 (Quận 3 cũ) và 36 Mạc Đĩnh Chi (Quận 1 cũ)." },
       { q: "Địa chỉ 28-34 Pasteur có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Sài Gòn, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
       { q: "Sau khi ký hợp đồng, đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty tính phí ra sao?", a: "Đây là 2 khoản phát sinh tính riêng ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 28-34 Pasteur có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
       { q: "Tôi có thể đến tham quan văn phòng 28-34 Pasteur trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
     ],
     testimonials: [

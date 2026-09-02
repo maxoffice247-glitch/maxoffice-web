@@ -17,6 +17,7 @@ import {
   SAVE_SILVER_GOLD_PREMIUM_VAT_NOTE,
   SAVE_SILVER_GOLD_PREMIUM_ADDONS,
 } from "@/lib/virtualOfficePlans";
+import { resolveTimedPromotions, type LocationData } from "@/lib/locationsData";
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
@@ -40,7 +41,19 @@ const OTHER_SERVICES = [
  * dụng hệ giá này (Quận 3 (cũ) và Quận 1 (cũ)) — cùng nguồn dữ liệu, chỉ
  * khác tên chi nhánh hiển thị.
  */
-export default function Quan3CuVOServices({ branchName }: { branchName: string }) {
+export default function Quan3CuVOServices({
+  branchName,
+  promotions,
+}: {
+  branchName: string;
+  /** Khuyến mãi riêng chi nhánh — xem LocationServicesList.tsx cho ý nghĩa
+      đầy đủ. Trước đây component này KHÔNG nhận/hiển thị promotions, nên
+      4 chi nhánh dùng bảng giá SAVE/SILVER/GOLD/PREMIUM (60 Nguyễn Thông,
+      520 Cách Mạng Tháng 8, 36 Mạc Đĩnh Chi, 28-34 Pasteur) không có khối
+      "Khuyến mãi riêng chi nhánh" trên trang, dù data đã khai báo. */
+  promotions?: LocationData["promotions"];
+}) {
+  const resolvedPromotions = resolveTimedPromotions(promotions);
   return (
     <section className="py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -155,6 +168,21 @@ export default function Quan3CuVOServices({ branchName }: { branchName: string }
             </RevealItem>
           ))}
         </RevealGroup>
+
+        {resolvedPromotions && resolvedPromotions.length > 0 && (
+          <Reveal className="mt-6 rounded-2xl bg-accent/8 p-6 sm:p-7">
+            <p className="mb-2 flex items-center gap-1.5 text-[14.5px] font-bold text-navy">
+              <span aria-hidden>🎁</span> Khuyến mãi riêng chi nhánh
+            </p>
+            <ul className="space-y-1.5">
+              {resolvedPromotions.map((note) => (
+                <li key={note} className="text-[13.5px] leading-relaxed text-body-text">
+                  • {note}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        )}
       </div>
     </section>
   );

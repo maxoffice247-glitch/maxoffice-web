@@ -38,6 +38,15 @@ function resolvePromoDisplay(locations: PlanGroup["locations"]) {
 
 export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
   const promoDisplay = resolvePromoDisplay(group.locations);
+  // Từ 6 tính năng trở lên chia 2 cột (giống PlanQuoteCard — báo giá 1 chi
+  // nhánh) — nhóm càng nhiều chi nhánh thì "Áp dụng tại N chi nhánh" bên
+  // dưới càng dài, nên rút ngắn khối "Tính năng đi kèm" theo chiều dọc để
+  // đỡ tràn quá dài. Dưới 6 tính năng giữ 1 cột (2 cột ở số lượng ít làm
+  // layout trống trải, đồng thời card vốn đã auto-height nên các gói ít
+  // chi nhánh + ít tính năng vẫn tự nhiên gọn, không có khoảng trắng thừa
+  // trước footer).
+  const useFeatureGrid = group.features.length >= 6;
+  const featureGridRows = Math.ceil(group.features.length / 2);
 
   return (
     <div style={{ width: 1080 }} className="flex flex-col bg-white">
@@ -101,7 +110,18 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
       {/* Danh sách tính năng */}
       <div className="mx-14 mt-9">
         <p className="mb-5 text-[20px] font-bold text-navy">Tính năng đi kèm</p>
-        <div className="flex flex-col gap-4">
+        <div
+          className={useFeatureGrid ? "grid gap-x-8 gap-y-4" : "flex flex-col gap-4"}
+          style={
+            useFeatureGrid
+              ? {
+                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateRows: `repeat(${featureGridRows}, auto)`,
+                  gridAutoFlow: "column",
+                }
+              : undefined
+          }
+        >
           {group.features.map((f) => (
             <div key={f} className="flex items-start gap-3.5">
               <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-tint text-primary">

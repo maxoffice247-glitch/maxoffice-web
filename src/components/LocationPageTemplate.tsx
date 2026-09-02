@@ -90,27 +90,27 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       ) : data.slug === "vuon-lai" ? (
         <VuonLaiServices />
       ) : data.slug === "nguyen-thong" ? (
-        <Quan3CuVOServices branchName="60 Nguyễn Thông" />
+        <Quan3CuVOServices branchName="60 Nguyễn Thông" promotions={data.promotions} />
       ) : data.slug === "cach-mang-thang-8" ? (
-        <Quan3CuVOServices branchName="520 Cách Mạng Tháng 8" />
+        <Quan3CuVOServices branchName="520 Cách Mạng Tháng 8" promotions={data.promotions} />
       ) : data.slug === "mac-dinh-chi" ? (
-        <Quan3CuVOServices branchName="36 Mạc Đĩnh Chi" />
+        <Quan3CuVOServices branchName="36 Mạc Đĩnh Chi" promotions={data.promotions} />
       ) : data.slug === "pasteur" ? (
-        <Quan3CuVOServices branchName="28-34 Pasteur" />
+        <Quan3CuVOServices branchName="28-34 Pasteur" promotions={data.promotions} />
       ) : data.slug === "ung-van-khiem" ? (
-        <SilverGoldPremiumServices branchName="161 Ung Văn Khiêm" />
+        <SilverGoldPremiumServices branchName="161 Ung Văn Khiêm" promotions={data.promotions} />
       ) : data.slug === "tan-cang" ? (
-        <SilverGoldPremiumServices branchName="23 Tân Cảng" />
+        <SilverGoldPremiumServices branchName="23 Tân Cảng" promotions={data.promotions} />
       ) : data.slug === "n1-dien-bien-phu" ? (
-        <SilverGoldPremiumServices branchName="N1 Điện Biên Phủ" />
+        <SilverGoldPremiumServices branchName="N1 Điện Biên Phủ" promotions={data.promotions} />
       ) : data.slug === "quoc-huong" ? (
-        <SilverGoldPremiumServices branchName="27C Quốc Hương" />
+        <SilverGoldPremiumServices branchName="27C Quốc Hương" promotions={data.promotions} />
       ) : data.slug === "phan-dinh-phung" ? (
-        <SilverGoldPremiumServices branchName="89 Phan Đình Phùng" />
+        <SilverGoldPremiumServices branchName="89 Phan Đình Phùng" promotions={data.promotions} />
       ) : data.slug === "nguyen-truong-to" ? (
-        <SilverGoldPremiumServices branchName="84-86 Nguyễn Trường Tộ" />
+        <SilverGoldPremiumServices branchName="84-86 Nguyễn Trường Tộ" promotions={data.promotions} />
       ) : data.slug === "le-quoc-hung" ? (
-        <SilverGoldPremiumServices branchName="54-56 Lê Quốc Hưng" />
+        <SilverGoldPremiumServices branchName="54-56 Lê Quốc Hưng" promotions={data.promotions} />
       ) : (
         <LocationServicesList name={data.name} slug={data.slug} promotions={data.promotions} />
       )}

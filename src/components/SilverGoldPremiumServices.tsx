@@ -17,6 +17,7 @@ import {
   SILVER_GOLD_PREMIUM_VAT_NOTE,
   SILVER_GOLD_PREMIUM_ADDONS,
 } from "@/lib/virtualOfficePlans";
+import { resolveTimedPromotions, type LocationData } from "@/lib/locationsData";
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
@@ -41,7 +42,20 @@ const OTHER_SERVICES = [
  * hiện dùng cho cả Bình Thạnh (cũ) và Thủ Đức (cũ). Cùng nguồn dữ liệu,
  * chỉ khác tên chi nhánh hiển thị qua prop branchName.
  */
-export default function SilverGoldPremiumServices({ branchName }: { branchName: string }) {
+export default function SilverGoldPremiumServices({
+  branchName,
+  promotions,
+}: {
+  branchName: string;
+  /** Khuyến mãi riêng chi nhánh — xem LocationServicesList.tsx cho ý nghĩa
+      đầy đủ. Trước đây component này KHÔNG nhận/hiển thị promotions, nên
+      7 chi nhánh dùng bảng giá SILVER/GOLD/PREMIUM (161 Ung Văn Khiêm, 23
+      Tân Cảng, N1 Điện Biên Phủ, 27C Quốc Hương, 89 Phan Đình Phùng, 84-86
+      Nguyễn Trường Tộ, 54-56 Lê Quốc Hưng) không có khối "Khuyến mãi riêng
+      chi nhánh" trên trang, dù data đã khai báo. */
+  promotions?: LocationData["promotions"];
+}) {
+  const resolvedPromotions = resolveTimedPromotions(promotions);
   return (
     <section className="py-9">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -156,6 +170,21 @@ export default function SilverGoldPremiumServices({ branchName }: { branchName: 
             </RevealItem>
           ))}
         </RevealGroup>
+
+        {resolvedPromotions && resolvedPromotions.length > 0 && (
+          <Reveal className="mt-6 rounded-2xl bg-accent/8 p-6 sm:p-7">
+            <p className="mb-2 flex items-center gap-1.5 text-[14.5px] font-bold text-navy">
+              <span aria-hidden>🎁</span> Khuyến mãi riêng chi nhánh
+            </p>
+            <ul className="space-y-1.5">
+              {resolvedPromotions.map((note) => (
+                <li key={note} className="text-[13.5px] leading-relaxed text-body-text">
+                  • {note}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        )}
       </div>
     </section>
   );
