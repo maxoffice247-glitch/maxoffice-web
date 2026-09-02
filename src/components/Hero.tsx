@@ -176,23 +176,32 @@ export default function Hero() {
                   style={{ pointerEvents: isActive ? "auto" : "none" }}
                 >
                   <div>
-                    {/* Quay lại tông xanh (không dùng đỏ nữa — đỏ giờ dành
-                        riêng cho phần tử bấm/tương tác: 6 link dịch vụ + nút
-                        CTA, xem SERVICE_KEYWORDS bên dưới), nhưng KHÔNG dùng
-                        lại #3B9EFF của H1 để tránh lặp vấn đề khó phân biệt
-                        giữa H1 tĩnh và câu hỏi carousel động đã từng gặp.
-                        Dùng --color-primary (#1565c0, text-primary) — biến
-                        xanh có sẵn trong hệ thống màu (globals.css), đậm và
-                        trầm hơn hẳn #3B9EFF (xanh da trời sáng, không phải
-                        token hệ thống, chỉ là hex rời rạc riêng của H1) nên
-                        đủ tách bạch khi nhìn thoáng qua dù cùng là "xanh".
-                        Giữ nguyên 3 lớp text-shadow outline tối (đo bằng
-                        pixel sampling thực tế trên ảnh nền, xem PlanFinder
-                        contrast note cũ) vì #1565c0 cũng có độ tương phản
-                        gốc thấp ở vùng sáng của ảnh (cửa kính, bầu trời),
-                        không chỉ riêng đỏ mới cần viền tối này. Cỡ chữ giữ
-                        nguyên text-lg/sm:text-xl từ lần tăng trước. */}
-                    <p className="text-lg font-bold text-primary [text-shadow:0_0_2px_rgba(0,0,0,0.95),0_0_6px_rgba(0,0,0,0.85),0_1px_14px_rgba(0,0,0,0.6)] sm:text-xl">
+                    {/* Quay lại tông xanh (đỏ giờ dành riêng cho phần tử
+                        bấm/tương tác: 6 link dịch vụ + nút CTA, xem
+                        SERVICE_KEYWORDS bên dưới), nhưng KHÔNG dùng lại
+                        #3B9EFF của H1 để tránh lặp vấn đề khó phân biệt giữa
+                        H1 tĩnh và câu hỏi carousel động.
+                        Bản đầu dùng --color-primary (#1565c0, text-primary)
+                        nhưng bị BÁO LÀ QUÁ TỐI, gần như không thấy — #1565c0
+                        vốn đã tối, cộng thêm viền text-shadow đen 3 lớp (cần
+                        để đọc được ở vùng sáng của ảnh) khiến chữ chìm hẳn
+                        vào nền tối navy (dải gradient wash rgba(9,15,28,…))
+                        vì cả chữ lẫn nền lẫn viền đều tối, không đủ chênh
+                        lệch độ sáng — khác với đỏ (accent) vốn nổi bật nhờ
+                        chênh lệch TÔNG MÀU (ấm/lạnh) chứ không cần chữ sáng.
+                        Đổi sang #38BDF8 (xanh sky/cyan, không phải token có
+                        sẵn — không có biến xanh SÁNG nào trong hệ thống màu,
+                        chỉ có primary/primary-dark đều tối hơn hoặc
+                        primary-tint gần trắng dễ lẫn với câu trả lời trắng
+                        bên dưới) — sáng và ngả cyan rõ hơn #3B9EFF (vốn ngả
+                        azure thuần) nên vừa đủ sáng để nổi trên nền tối, vừa
+                        đủ khác tông để không lẫn với H1 khi nhìn thoáng qua.
+                        Giữ nguyên 3 lớp text-shadow outline tối — với chữ đã
+                        đủ sáng, viền tối giờ có tác dụng đúng nghĩa "viền"
+                        (tăng độ nét trên nền sáng của ảnh) thay vì làm chữ
+                        chìm nghỉm như với #1565c0. Cỡ chữ giữ nguyên
+                        text-lg/sm:text-xl từ lần tăng trước. */}
+                    <p className="text-lg font-bold text-[#38BDF8] [text-shadow:0_0_2px_rgba(0,0,0,0.95),0_0_6px_rgba(0,0,0,0.85),0_1px_14px_rgba(0,0,0,0.6)] sm:text-xl">
                       {slide.question}
                     </p>
                     <p className="mt-1 text-base text-white/86 sm:text-lg">{slide.answer}</p>
