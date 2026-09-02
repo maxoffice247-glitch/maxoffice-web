@@ -253,9 +253,18 @@ export default function Hero() {
                         Giữ nguyên 3 lớp text-shadow outline tối — với chữ đã
                         đủ sáng, viền tối giờ có tác dụng đúng nghĩa "viền"
                         (tăng độ nét trên nền sáng của ảnh) thay vì làm chữ
-                        chìm nghỉm như với #1565c0. Cỡ chữ giữ nguyên
-                        text-lg/sm:text-xl từ lần tăng trước. */}
-                    <p className="text-lg font-bold text-[#38BDF8] [text-shadow:0_0_2px_rgba(0,0,0,0.95),0_0_6px_rgba(0,0,0,0.85),0_1px_14px_rgba(0,0,0,0.6)] sm:text-xl">
+                        chìm nghỉm như với #1565c0.
+                        Cỡ chữ tăng thêm 1 bước nữa (đợt trước: text-lg/
+                        sm:text-xl = 18px/20px, đã tăng 11-12.5% so với gốc
+                        16px/18px) — lần này 18px->21px (+16.7%), 20px->24px
+                        (+20%), đúng khoảng 15-20% so với MỨC HIỆN TẠI (không
+                        phải so với gốc ban đầu). Dùng giá trị px tuỳ ý thay
+                        vì bậc thang Tailwind có sẵn vì không bậc nào rơi đúng
+                        khoảng 15-20% mong muốn. Câu trả lời bên dưới giữ
+                        nguyên text-base/sm:text-lg (16px/18px) — câu hỏi giờ
+                        lớn hơn ~31-33%, đủ tách bạch làm điểm nhấn thứ 2 sau
+                        H1 (32-51px) mà không cạnh tranh với H1. */}
+                    <p className="text-[21px] font-bold text-[#38BDF8] [text-shadow:0_0_2px_rgba(0,0,0,0.95),0_0_6px_rgba(0,0,0,0.85),0_1px_14px_rgba(0,0,0,0.6)] sm:text-[24px]">
                       {slide.question}
                     </p>
                     <p className="mt-1 text-base text-white/86 sm:text-lg">{slide.answer}</p>
