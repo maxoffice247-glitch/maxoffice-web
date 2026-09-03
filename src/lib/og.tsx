@@ -45,11 +45,26 @@ export async function renderOgImage({
   backgroundImagePath,
   subtitle = DEFAULT_SUBTITLE,
   hotline = DEFAULT_HOTLINE,
+  backgroundFit = "cover",
 }: {
   title: string;
   backgroundImagePath: string;
   subtitle?: string;
   hotline?: string;
+  /**
+   * "cover" (mặc định) — ảnh phủ kín toàn khung 1200x630, cắt bớt nếu tỉ lệ
+   * khác 1.9:1. Đúng cho ảnh hero đã chọn/crop riêng cho mục đích OG.
+   *
+   * "contain" — hiển thị TOÀN BỘ ảnh, không cắt mất phần nào, đặt trong 1
+   * khung cố định bên phải (object-contain, giống kỹ thuật facadeAspectRatio
+   * + object-contain đã dùng cho ảnh mặt tiền trên trang chi nhánh và trong
+   * PlanQuoteCard) trên nền navy thương hiệu — dùng cho ẢNH MẶT TIỀN GỐC
+   * (chưa crop riêng cho OG, tỉ lệ dọc/ngang/vuông tuỳ chi nhánh). Vì đọc
+   * đúng ảnh gốc `/images/dia-diem-{slug}.jpg` thay vì 1 bản crop 1200x630
+   * dựng sẵn, chi nhánh MỚI thêm sau này tự động ra đúng kỹ thuật này,
+   * không cần chạy lại bước tạo ảnh OG riêng.
+   */
+  backgroundFit?: "cover" | "contain";
 }) {
   const title = stripBrandSuffix(rawTitle);
   if (!fontsPromise) fontsPromise = loadFonts();
@@ -65,6 +80,10 @@ export async function renderOgImage({
   // Longer titles wrap to 3 lines — step the font size down so they still
   // fit the fixed vertical slot above the subtitle without crowding it.
   const titleFontSize = title.length > 55 ? 42 : title.length > 40 ? 47 : 52;
+  // Ở chế độ "contain", khung ảnh chiếm dải bên phải rộng 460px (x=740-1200)
+  // — thu hẹp cột chữ bên trái để không đè lên ảnh, dù ảnh mặt tiền ngang,
+  // dọc hay vuông (contain luôn căn giữa trong khung 460x630 cố định).
+  const textWidth = backgroundFit === "contain" ? 620 : 740;
 
   return new ImageResponse(
     (
@@ -75,24 +94,41 @@ export async function renderOgImage({
           display: "flex",
           position: "relative",
           fontFamily: "Inter",
+          backgroundColor: "#0b1f3a",
         }}
       >
-        <img
-          src={bgSrc}
-          alt=""
-          width={1200}
-          height={630}
-          style={{ position: "absolute", top: 0, left: 0, objectFit: "cover" }}
-        />
+        {backgroundFit === "cover" ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={bgSrc}
+            alt=""
+            width={1200}
+            height={630}
+            style={{ position: "absolute", top: 0, left: 0, objectFit: "cover" }}
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={bgSrc}
+            alt=""
+            width={460}
+            height={630}
+            style={{ position: "absolute", top: 0, left: 740, objectFit: "contain" }}
+          />
+        )}
         {/* Same left-to-right wash recipe as the live Hero section, reused
-            here so the OG card and the on-site hero read as one brand. */}
+            here so the OG card and the on-site hero read as one brand. Ở
+            chế độ "contain", nền đã là navy đặc nên chỉ cần lớp phủ nhẹ hơn
+            (không cần tối dần che hết khung ảnh bên phải như ở chế độ cover). */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             display: "flex",
             backgroundImage:
-              "linear-gradient(to right, rgba(9,15,28,0.68) 0%, rgba(9,15,28,0.30) 45%, rgba(9,15,28,0) 65%)",
+              backgroundFit === "cover"
+                ? "linear-gradient(to right, rgba(9,15,28,0.68) 0%, rgba(9,15,28,0.30) 45%, rgba(9,15,28,0) 65%)"
+                : "linear-gradient(to right, rgba(11,31,58,0.5) 0%, rgba(11,31,58,0) 62%)",
           }}
         />
         {/* Every element below is absolutely positioned with fixed
@@ -112,7 +148,7 @@ export async function renderOgImage({
             position: "absolute",
             top: 210,
             left: 64,
-            width: "740px",
+            width: `${textWidth}px`,
             display: "flex",
             flexDirection: "column",
           }}
@@ -134,7 +170,7 @@ export async function renderOgImage({
             position: "absolute",
             bottom: 92,
             left: 64,
-            width: "740px",
+            width: `${textWidth}px`,
             display: "flex",
             fontSize: 26,
             fontWeight: 600,

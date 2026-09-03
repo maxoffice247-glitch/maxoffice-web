@@ -7,6 +7,7 @@ export default async function Image() {
   const data = LOCATIONS_DATA["cach-mang-thang-8"];
   return renderOgImage({
     title: data.metaTitle,
-    backgroundImagePath: `/images/og/dia-diem-${data.slug}.jpg`,
+    backgroundImagePath: `/images/dia-diem-${data.slug}.jpg`,
+    backgroundFit: "contain",
   });
 }
