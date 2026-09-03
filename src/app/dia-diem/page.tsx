@@ -7,7 +7,7 @@ import { RevealGroup } from "@/components/Reveal";
 import CtaBanner from "@/components/CtaBanner";
 import LocationCard from "@/components/LocationCard";
 import { SearchIcon, ArrowRightSmallIcon } from "@/components/icons";
-import { getGroupedLocations, ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
+import { getGroupedLocations, stripCuSuffix, ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/dia-diem" },
@@ -87,7 +87,7 @@ export default function DiaDiemPage() {
                         }`}
                       >
                         <div className="mb-3 flex items-center justify-between gap-2">
-                          <h4 className="text-[13.5px] font-bold text-navy">{sub.area.name}</h4>
+                          <h4 className="text-[13.5px] font-bold text-navy">{stripCuSuffix(sub.area.name)}</h4>
                           <span className="shrink-0 rounded-full bg-bg-tint px-2 py-0.5 text-[10.5px] font-bold whitespace-nowrap text-primary">
                             {sub.locations.length} chi nhánh
                           </span>
@@ -106,7 +106,7 @@ export default function DiaDiemPage() {
               ) : (
                 <>
                   <div className="mb-5 flex items-center justify-between gap-3">
-                    <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{group.area.name}</h3>
+                    <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{stripCuSuffix(group.area.name)}</h3>
                     <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
                       {group.locations.length} chi nhánh
                     </span>

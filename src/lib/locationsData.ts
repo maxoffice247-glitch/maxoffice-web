@@ -2566,6 +2566,20 @@ export function getLocationsForArea(areaSlug: string): LocationListItem[] {
   return LOCATIONS_LIST.filter((loc) => loc.area.slug === areaSlug);
 }
 
+/**
+ * Bỏ hậu tố "(cũ)"/"(Cũ)" ở cuối tên khu vực khi dùng làm TIÊU ĐỀ NHÓM
+ * (dropdown mega menu, /dia-diem) — tên riêng từng chi nhánh hiển thị
+ * ngay bên dưới đã tự ghi rõ "(cũ)" trong tên (VD "36 Mạc Đĩnh Chi, Quận
+ * 1 (cũ)"), lặp lại ở tiêu đề nhóm phía trên gây thừa 2 lần "(cũ)" liền
+ * nhau. CHỈ đổi cách HIỂN THỊ ở nơi gọi hàm này — KHÔNG đổi field
+ * `area.name`/`AreaInfo.name` gốc (vẫn dùng nguyên cho breadcrumb, meta
+ * title, URL /dia-diem/[area-slug] — những chỗ đó có lý do SEO riêng,
+ * không gọi hàm này).
+ */
+export function stripCuSuffix(name: string): string {
+  return name.replace(/\s*\((?:cũ|Cũ)\)\s*$/, "").trim();
+}
+
 export type GroupedLocations = {
   /** Khu vực có từ 2 chi nhánh trở lên — hiển thị thành khối riêng, lưới 3
       cột. Khu vực đúng 2 chi nhánh có thể đã được GHÉP thêm 1 chi nhánh từ

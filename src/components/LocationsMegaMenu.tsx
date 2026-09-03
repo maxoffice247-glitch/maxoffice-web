@@ -5,22 +5,9 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDownIcon, MapPinIcon, PhoneIcon, SearchIcon } from "./icons";
 import Button from "./Button";
-import { getGroupedLocations, ACTIVE_BRANCH_COUNT, type LocationListItem } from "@/lib/locationsData";
+import { getGroupedLocations, stripCuSuffix, ACTIVE_BRANCH_COUNT, type LocationListItem } from "@/lib/locationsData";
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
 import { useNavIndicator } from "./NavIndicator";
-
-/**
- * Bỏ hậu tố "(cũ)"/"(Cũ)" ở cuối tên khu vực khi dùng làm TIÊU ĐỀ NHÓM
- * trong dropdown này — tên riêng từng chi nhánh hiển thị ngay bên dưới
- * đã tự ghi rõ "(cũ)" trong tên (VD "36 Mạc Đĩnh Chi, Quận 1 (cũ)"), lặp
- * lại ở tiêu đề nhóm phía trên gây thừa 2 lần "(cũ)" liền nhau. CHỈ đổi
- * cách HIỂN THỊ tại đây — không đổi field `area.name` gốc (vẫn dùng
- * nguyên cho breadcrumb, meta title, URL /dia-diem/[area-slug] ở nơi
- * khác, xem getGroupedLocations()).
- */
-function stripCuSuffix(name: string): string {
-  return name.replace(/\s*\((?:cũ|Cũ)\)\s*$/, "").trim();
-}
 
 function MegaMenuLocationItem({ loc, areaBadge }: { loc: LocationListItem; areaBadge?: string }) {
   const price = getCheapestPriceForLocation(loc.slug);
