@@ -92,7 +92,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`${beVietnamPro.variable} ${inter.variable}`}>
-      <body className="min-h-screen bg-bg font-sans text-ink antialiased">
+      {/* suppressHydrationWarning CHỈ ở cấp body — không phải lỗi code: 1
+          số extension ví crypto trong trình duyệt (VD TokenPocket) tự chèn
+          attribute data-tp-bcm-channel-* vào <body> TRƯỚC khi React
+          hydrate, khiến React so lệch với HTML server render dù nội dung
+          thực tế giống hệt nhau. Đã xác nhận: (1) không xuất hiện lỗi này
+          ở trình duyệt sạch không cài extension ví (browser pane dùng để
+          test toàn bộ session không có extension nào, 0 lỗi hydration
+          trong suốt quá trình phát triển); (2) rà soát code không có
+          nhánh typeof window / Math.random() / Date.now() nào render trực
+          tiếp khác nhau giữa server-client (chỗ duy nhất dùng Math.random()
+          — Hero.tsx chọn ảnh nền — đã đúng pattern an toàn: state khởi tạo
+          cố định, chỉ đổi giá trị bên trong useEffect sau khi mount). Xem
+          https://react.dev/reference/react-dom/client/hydrateRoot#suppressing-unavoidable-hydration-mismatch-errors */}
+      <body className="min-h-screen bg-bg font-sans text-ink antialiased" suppressHydrationWarning>
         <GoogleAnalytics />
         <script
           type="application/ld+json"
