@@ -9,6 +9,19 @@ import { getGroupedLocations, ACTIVE_BRANCH_COUNT, type LocationListItem } from 
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
 import { useNavIndicator } from "./NavIndicator";
 
+/**
+ * Bỏ hậu tố "(cũ)"/"(Cũ)" ở cuối tên khu vực khi dùng làm TIÊU ĐỀ NHÓM
+ * trong dropdown này — tên riêng từng chi nhánh hiển thị ngay bên dưới
+ * đã tự ghi rõ "(cũ)" trong tên (VD "36 Mạc Đĩnh Chi, Quận 1 (cũ)"), lặp
+ * lại ở tiêu đề nhóm phía trên gây thừa 2 lần "(cũ)" liền nhau. CHỈ đổi
+ * cách HIỂN THỊ tại đây — không đổi field `area.name` gốc (vẫn dùng
+ * nguyên cho breadcrumb, meta title, URL /dia-diem/[area-slug] ở nơi
+ * khác, xem getGroupedLocations()).
+ */
+function stripCuSuffix(name: string): string {
+  return name.replace(/\s*\((?:cũ|Cũ)\)\s*$/, "").trim();
+}
+
 function MegaMenuLocationItem({ loc, areaBadge }: { loc: LocationListItem; areaBadge?: string }) {
   const price = getCheapestPriceForLocation(loc.slug);
   return (
@@ -113,7 +126,7 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                             }`}
                           >
                             <p className="mb-1 px-1 text-[10px] font-bold tracking-[0.06em] text-body-text/60 uppercase">
-                              {sub.area.name}
+                              {stripCuSuffix(sub.area.name)}
                             </p>
                             <div className={`grid gap-1 ${sub.locations.length >= 2 ? "grid-cols-2" : "grid-cols-1"}`}>
                               {sub.locations.map((loc) => (
@@ -126,7 +139,7 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                     ) : (
                       <>
                         <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
-                          {group.area.name}
+                          {stripCuSuffix(group.area.name)}
                         </p>
                         <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
                           {group.locations.map((loc) => (
@@ -156,7 +169,9 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                     <MapPinIcon className="h-4 w-4" />
                   </span>
                   <div>
-                    <p className="text-[13.5px] font-bold text-navy">{ACTIVE_BRANCH_COUNT} chi nhánh</p>
+                    <p className="text-[13.5px] font-bold text-navy">
+                      {ACTIVE_BRANCH_COUNT} chi nhánh - luôn có vị trí phù hợp cho bạn
+                    </p>
                     <p className="text-[10px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
                       Hệ thống văn phòng ảo phủ khắp Sài Gòn
                     </p>
