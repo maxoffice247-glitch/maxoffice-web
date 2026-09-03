@@ -38,6 +38,9 @@ export default function Footer() {
                 className="object-contain object-left"
               />
             </div>
+            <p className="mb-3 text-[13.5px] font-semibold text-[#8FC1F5]">
+              Hệ thống văn phòng ảo phủ khắp Sài Gòn
+            </p>
             <p className="text-[13.5px] leading-loose text-[#F5F7FA]">
               Công ty TNHH MAX Office
               <br />

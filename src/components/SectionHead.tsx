@@ -3,6 +3,11 @@ import Reveal from "./Reveal";
 type SectionHeadProps = {
   eyebrow: string;
   title: string;
+  /** Dòng ngắn, nhấn mạnh thông điệp — hiện NGAY DƯỚI title, phía trên
+      `description` (nếu có cả 2). Khác với description (thường dài, mang
+      tính thông tin), tagline ngắn gọn kiểu slogan, tô màu accent để nổi
+      bật. Optional — hầu hết chỗ dùng SectionHead không cần. */
+  tagline?: string;
   description?: string;
   align?: "center" | "left";
 };
@@ -10,6 +15,7 @@ type SectionHeadProps = {
 export default function SectionHead({
   eyebrow,
   title,
+  tagline,
   description,
   align = "center",
 }: SectionHeadProps) {
@@ -24,6 +30,9 @@ export default function SectionHead({
       <h2 className="mb-3.5 font-display text-[28px] leading-[1.2] font-extrabold text-navy sm:text-[34px] lg:text-[40px]">
         {title}
       </h2>
+      {tagline && (
+        <p className="mb-2.5 text-[15.5px] font-bold text-accent">{tagline}</p>
+      )}
       {description && (
         <p className="text-[16.5px] text-body-text">{description}</p>
       )}

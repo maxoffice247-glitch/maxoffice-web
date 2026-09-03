@@ -156,8 +156,9 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                     <MapPinIcon className="h-4 w-4" />
                   </span>
                   <div>
-                    <p className="text-[13.5px] font-bold text-navy">
-                      {ACTIVE_BRANCH_COUNT} chi nhánh - luôn có vị trí phù hợp cho bạn
+                    <p className="text-[13.5px] text-navy">
+                      <span className="font-bold">{ACTIVE_BRANCH_COUNT} chi nhánh</span> - luôn có vị trí
+                      phù hợp cho bạn
                     </p>
                     <p className="text-[10px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
                       Hệ thống văn phòng ảo phủ khắp Sài Gòn
