@@ -91,7 +91,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={`${beVietnamPro.variable} ${inter.variable}`}>
+    // data-scroll-behavior="smooth" — globals.css đặt scroll-behavior: smooth
+    // trên html (dùng cho các anchor link như #lead, #services); attribute
+    // này báo cho Next.js biết đó là chủ ý, để tắt việc Next tự vô hiệu hoá
+    // smooth-scroll trong lúc chuyển route — loại bỏ cảnh báo dev-only
+    // "missing-data-scroll-behavior".
+    <html
+      lang="vi"
+      data-scroll-behavior="smooth"
+      className={`${beVietnamPro.variable} ${inter.variable}`}
+    >
       {/* suppressHydrationWarning CHỈ ở cấp body — không phải lỗi code: 1
           số extension ví crypto trong trình duyệt (VD TokenPocket) tự chèn
           attribute data-tp-bcm-channel-* vào <body> TRƯỚC khi React

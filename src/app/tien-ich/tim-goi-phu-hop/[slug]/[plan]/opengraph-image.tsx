@@ -8,9 +8,16 @@ export { size, contentType };
 // GỐC của chi nhánh, một ảnh nền trơn không qua renderOgImage() nên share
 // link hiện ảnh trống, không logo/tiêu đề/overlay — dù ảnh mặt tiền theo
 // đúng chi nhánh (không sai chi nhánh, chỉ thiếu phần thương hiệu/tiêu
-// đề). Route này dùng lại ĐÚNG ảnh mặt tiền đó (đã có sẵn bản crop
-// /images/og/dia-diem-{slug}.jpg cho toàn bộ 25 chi nhánh) nhưng render
-// qua template chuẩn — tiêu đề tự sinh theo đúng gói + chi nhánh.
+// đề). Route này dùng lại ảnh mặt tiền GỐC /images/dia-diem-{slug}.jpg
+// (cùng file dùng cho /locations/{slug}/opengraph-image.tsx) với
+// backgroundFit "contain" — KHÔNG dùng bản crop riêng /images/og/
+// dia-diem-{slug}.jpg như trước đây, vì bản crop đó phải tạo thủ công
+// cho từng chi nhánh mới nên từng bị sót (chi nhánh Ba Tháng Hai thêm
+// sau này thiếu file, route trả lỗi 500) — đọc thẳng ảnh gốc thì chi
+// nhánh mới thêm sau tự động có OG image đúng, không cần bước thủ công
+// nào. Render qua template chuẩn — tiêu đề tự sinh theo đúng gói + chi
+// nhánh. Toàn bộ 26 chi nhánh đang hoạt động (+ vuon-lai đang ẩn) đã
+// xác nhận có sẵn file /images/dia-diem-{slug}.jpg.
 export default async function Image({
   params,
 }: {
@@ -23,6 +30,7 @@ export default async function Image({
     : "Chi tiết gói văn phòng ảo";
   return renderOgImage({
     title,
-    backgroundImagePath: `/images/og/dia-diem-${slug}.jpg`,
+    backgroundImagePath: `/images/dia-diem-${slug}.jpg`,
+    backgroundFit: "contain",
   });
 }
