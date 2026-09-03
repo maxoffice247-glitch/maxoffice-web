@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import Breadcrumb from "@/components/Breadcrumb";
 import SectionHead from "@/components/SectionHead";
 import { RevealGroup } from "@/components/Reveal";
 import CtaBanner from "@/components/CtaBanner";
 import LocationCard from "@/components/LocationCard";
+import { SearchIcon, ArrowRightSmallIcon } from "@/components/icons";
 import { getGroupedLocations, ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
 export const metadata: Metadata = {
@@ -37,6 +39,32 @@ export default function DiaDiemPage() {
             title={`Toàn bộ ${ACTIVE_BRANCH_COUNT} chi nhánh MAX OFFICE`}
             description="Mỗi địa điểm đều đủ điều kiện đăng ký kinh doanh, đăng ký thuế và sẵn sàng phục vụ văn phòng ảo, văn phòng trọn gói, phòng họp và chỗ ngồi linh động."
           />
+
+          {/* Lối tắt cho khách vào thẳng /dia-diem (không qua dropdown mega
+              menu) — khỏi phải tự kéo xem hết {ACTIVE_BRANCH_COUNT} chi
+              nhánh để tìm gói phù hợp. */}
+          <Link
+            href="/tien-ich/tim-goi-phu-hop"
+            className="group mb-10 flex flex-col items-start justify-between gap-4 rounded-2xl border border-primary/20 bg-primary-tint/60 p-5 transition-all duration-300 hover:border-primary/40 hover:shadow-card sm:flex-row sm:items-center sm:p-6"
+          >
+            <div className="flex items-center gap-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-primary">
+                <SearchIcon className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-[15.5px] font-bold text-navy">
+                  Chưa biết chọn chi nhánh hay gói nào phù hợp?
+                </p>
+                <p className="text-[13.5px] text-body-text">
+                  Dùng công cụ tìm gói phù hợp — trả lời vài câu hỏi, nhận gợi ý ngay.
+                </p>
+              </div>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-[13.5px] font-bold whitespace-nowrap text-white transition-colors duration-200 group-hover:bg-primary-dark">
+              Tìm nhanh VPA phù hợp
+              <ArrowRightSmallIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+            </span>
+          </Link>
 
           {multiBranchGroups.map((group) => (
             <div

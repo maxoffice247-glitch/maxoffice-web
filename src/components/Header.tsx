@@ -195,20 +195,37 @@ export default function Header() {
         <nav aria-label="Menu di động" className="flex flex-col gap-1 px-5 py-6 sm:px-8">
           {NAV_LINKS_MOBILE.map((link) => {
             const isActive = activeKey === link.key;
+            // "Chi nhánh" mang theo 1 lối tắt phụ đến công cụ tìm gói phù
+            // hợp ngay bên dưới — đường viền dưới chuyển xuống lối tắt đó
+            // thay vì đóng ngay sau "Chi nhánh", để 2 dòng đọc như 1 nhóm.
+            const isChiNhanh = link.key === "chi-nhanh";
             return (
-              <Link
-                key={link.key}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className={`flex items-center gap-2.5 border-b border-white/10 py-4 text-lg transition-colors ${
-                  isActive
-                    ? "-mx-5 bg-accent/15 px-5 font-bold text-accent sm:-mx-8 sm:px-8"
-                    : "font-semibold text-white/90 hover:text-accent"
-                }`}
-              >
-                {isActive && <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-accent" />}
-                {link.label}
-              </Link>
+              <div key={link.key}>
+                <Link
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`flex items-center gap-2.5 py-4 text-lg transition-colors ${
+                    isChiNhanh ? "" : "border-b border-white/10"
+                  } ${
+                    isActive
+                      ? "-mx-5 bg-accent/15 px-5 font-bold text-accent sm:-mx-8 sm:px-8"
+                      : "font-semibold text-white/90 hover:text-accent"
+                  }`}
+                >
+                  {isActive && <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-accent" />}
+                  {link.label}
+                </Link>
+                {isChiNhanh && (
+                  <Link
+                    href="/tien-ich/tim-goi-phu-hop"
+                    onClick={() => setMenuOpen(false)}
+                    className="mb-1 flex items-center gap-2 border-b border-white/10 pb-4 pl-0.5 text-[13.5px] font-semibold text-white/55 transition-colors hover:text-accent"
+                  >
+                    <SearchIcon className="h-3.5 w-3.5" />
+                    Tìm nhanh VPA phù hợp
+                  </Link>
+                )}
+              </div>
             );
           })}
           <a

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDownIcon, MapPinIcon, PhoneIcon } from "./icons";
+import { ChevronDownIcon, MapPinIcon, PhoneIcon, SearchIcon } from "./icons";
 import Button from "./Button";
 import { getGroupedLocations, ACTIVE_BRANCH_COUNT, type LocationListItem } from "@/lib/locationsData";
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
@@ -151,26 +151,43 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                 )}
               </div>
               <div className="flex flex-col items-start gap-3 border-t border-line bg-bg-tint px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-                <p className="flex items-center gap-2 text-[12.5px] text-body-text">
-                  <MapPinIcon className="h-4 w-4 shrink-0 text-primary" />
-                  {ACTIVE_BRANCH_COUNT} chi nhánh trung tâm TP.HCM — luôn có vị trí phù hợp nhu cầu của bạn
-                </p>
-                <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-primary">
+                    <MapPinIcon className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <p className="text-[13.5px] font-bold text-navy">{ACTIVE_BRANCH_COUNT} chi nhánh</p>
+                    <p className="text-[10px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
+                      Hệ thống văn phòng ảo phủ khắp Sài Gòn
+                    </p>
+                  </div>
+                </div>
+                <div className="flex w-full flex-wrap items-center gap-x-4 gap-y-2.5 sm:w-auto sm:flex-nowrap">
                   <Button
-                    href="tel:0898082188"
-                    variant="ghost"
-                    icon={<PhoneIcon className="h-3.5 w-3.5" />}
-                    className="flex-1 !px-4 !py-2 !text-[12.5px] sm:flex-none"
+                    href="/tien-ich/tim-goi-phu-hop"
+                    variant="link"
+                    icon={<SearchIcon className="h-3.5 w-3.5" />}
+                    className="!text-[12.5px] !text-primary hover:!text-primary-dark"
                   >
-                    Gọi ngay
+                    Tìm nhanh VPA phù hợp
                   </Button>
-                  <Button
-                    href="/#lead"
-                    variant="primary"
-                    className="flex-1 !px-4 !py-2 !text-[12.5px] sm:flex-none"
-                  >
-                    Đặt lịch tham quan
-                  </Button>
+                  <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
+                    <Button
+                      href="tel:0898082188"
+                      variant="ghost"
+                      icon={<PhoneIcon className="h-3.5 w-3.5" />}
+                      className="flex-1 !px-4 !py-2 !text-[12.5px] sm:flex-none"
+                    >
+                      Gọi ngay
+                    </Button>
+                    <Button
+                      href="/#lead"
+                      variant="primary"
+                      className="flex-1 !px-4 !py-2 !text-[12.5px] sm:flex-none"
+                    >
+                      Đặt lịch tham quan
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
