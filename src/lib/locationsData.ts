@@ -204,6 +204,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_QUAN_10,
   },
   {
+    slug: "ba-thang-hai",
+    name: "618 Ba Tháng Hai, Quận 10 (cũ)",
+    shortAddress: "614-616-618 Ba Tháng Hai, P. Diên Hồng",
+    area: AREA_QUAN_10,
+  },
+  {
     slug: "vuon-lai",
     name: "314/6 Điện Biên Phủ, Quận 10 (cũ)",
     shortAddress: "314/6 Điện Biên Phủ, P. Vườn Lài",
@@ -1381,6 +1387,90 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Văn phòng ngay mặt tiền CMT8 nên khách hàng dễ tìm, công ty mình trông chuyên nghiệp hơn hẳn.", initial: "B", name: "Anh Bình", role: "Giám đốc công ty dịch vụ" },
       { quote: "Gần Ga Sài Gòn nên đối tác ở tỉnh ra công tác ghé văn phòng mình rất tiện.", initial: "X", name: "Thanh Xuân", role: "Trưởng phòng kinh doanh" },
+    ],
+  },
+
+  /* ============== 614-616-618 BA THÁNG HAI (KHU VỰC QUẬN 10 MỚI) ============== */
+  "ba-thang-hai": {
+    slug: "ba-thang-hai",
+    name: "618 Ba Tháng Hai, Quận 10 (cũ)",
+    area: AREA_QUAN_10,
+    address: "614-616-618 Đường Ba Tháng Hai, Phường Diên Hồng, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 618 Ba Tháng Hai, Quận 10 (cũ)",
+    heroDescription:
+      "Chi nhánh mới của MAX OFFICE tại khu vực Quận 10 (cũ) — văn phòng ảo 3 gói riêng biệt từ 379.000đ/tháng, ngay gần vòng xoay Ngã Bảy và Đại học Bách Khoa TP.HCM.",
+    metaTitle: "Văn Phòng Ảo 618 Ba Tháng Hai, Quận 10 (cũ) | Từ 379K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 614-616-618 Ba Tháng Hai, Phường Diên Hồng — chi nhánh mới MAX OFFICE tại Quận 10 (cũ), 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần Đại học Bách Khoa TP.HCM.",
+    image: IMAGE,
+    // Ảnh mặt tiền gốc 1023x1537, không chỉnh sửa.
+    facadeAspectRatio: "1023 / 1537",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-ba-thang-hai-sanh.jpg", alt: "Sảnh chính văn phòng 614-616-618 Ba Tháng Hai", caption: "Sảnh chính toà nhà" },
+      {
+        src: "/images/dia-diem-ba-thang-hai-bang-ten.jpg",
+        alt: "Bảng tên công ty tại toà nhà văn phòng 614-616-618 Ba Tháng Hai",
+        caption: "Bảng tên công ty tại toà nhà",
+        // Ảnh gốc 1376x768 (~16:9), rộng hơn khung ô 4:3 — bảng tên chính
+        // nằm lệch trái, crop "left" để không cắt mất bảng tên chính.
+        objectPosition: "left",
+      },
+      { src: "/images/dia-diem-ba-thang-hai-wc.jpg", alt: "Tiện ích toà nhà văn phòng 614-616-618 Ba Tháng Hai", caption: "Tiện ích toà nhà" },
+    ],
+    intro: [
+      "Văn phòng 614-616-618 Ba Tháng Hai là chi nhánh mới nhất của MAX OFFICE, toạ lạc tại Phường Diên Hồng — trên trục đường Ba Tháng Hai, một trong những tuyến đường huyết mạch dài và sầm uất bậc nhất TP.HCM, nối từ khu vực Quận 5 qua Quận 10, Quận 11. Đây là chi nhánh thứ hai MAX OFFICE mở tại khu vực Quận 10 (cũ), bên cạnh chi nhánh CMT8 hiện có, mang đến thêm một lựa chọn địa chỉ đăng ký kinh doanh cho doanh nghiệp tại khu vực này.",
+      "Toà nhà nơi đặt chi nhánh là một cao ốc văn phòng nhiều tầng với mặt tiền kính xanh hiện đại, nổi bật trên trục đường Ba Tháng Hai. Sảnh chính được lát nền đá granite hoa văn trang trí công phu, dẫn lên khu vực lễ tân qua bậc thang đá rộng — tạo ấn tượng chuyên nghiệp ngay từ lối vào. Bảng tên công ty được bố trí ngay tại sảnh, giúp khách hàng và đối tác dễ dàng xác định đúng văn phòng khi đến làm việc.",
+      "Khu vực Phường Diên Hồng nằm gần vòng xoay Ngã Bảy — giao lộ giữa Ba Tháng Hai, Lý Thái Tổ và Nguyễn Tri Phương, một trong những nút giao thông quen thuộc bậc nhất Quận 10 (cũ). Xung quanh còn có Đại học Bách Khoa TP.HCM (cơ sở Lý Thường Kiệt), Bệnh viện Nhi Đồng 1 và chợ Nhật Tảo — khu chợ chuyên đồ điện tử nổi tiếng, tạo nên mật độ dân cư và hoạt động kinh doanh sôi động suốt cả ngày.",
+      "Chi nhánh 614-616-618 Ba Tháng Hai cung cấp 3 gói văn phòng ảo riêng biệt — SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10% — cùng bảng giá đang áp dụng tại các chi nhánh khu vực Bình Thạnh, Phú Nhuận, Quận 4 và Thủ Đức (cũ). Chi nhánh cũng đang áp dụng ưu đãi ký hợp đồng dài hạn: tặng 2 tháng miễn phí khi ký 12 tháng, tặng 6 tháng miễn phí khi ký 24 tháng — áp dụng cho mọi gói văn phòng ảo tại đây.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 618 Ba Tháng Hai",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh thứ 2 tại Quận 10 (cũ)", desc: "Mở rộng hệ thống MAX OFFICE tại khu vực Quận 10 (cũ), bên cạnh chi nhánh CMT8." },
+      { icon: MapPinIcon, title: "Gần vòng xoay Ngã Bảy", desc: "Giao lộ Ba Tháng Hai — Lý Thái Tổ — Nguyễn Tri Phương, kết nối nhanh nhiều hướng." },
+      { icon: BadgePercentIcon, title: "3 gói giá linh hoạt", desc: "SILVER, GOLD, PREMIUM — từ 379.000đ/tháng." },
+      { icon: UsersIcon, title: "Gần Đại học Bách Khoa TP.HCM", desc: "Thuận tiện tuyển dụng, hợp tác với sinh viên, giảng viên khu vực." },
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế cho mọi loại hình doanh nghiệp." },
+      { icon: ClockIcon, title: "Giao thông thuận tiện", desc: "Kết nối nhanh đến Quận 5, Quận 11 và trung tâm thành phố." },
+    ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
+    nearbyItems: [
+      { name: "Vòng xoay Ngã Bảy", desc: "Giao lộ Ba Tháng Hai — Lý Thái Tổ — Nguyễn Tri Phương, nút giao quen thuộc của Quận 10 (cũ)." },
+      { name: "Đại học Bách Khoa TP.HCM", desc: "Cơ sở Lý Thường Kiệt, tạo nguồn nhân lực trẻ dồi dào cho khu vực." },
+      { name: "Bệnh viện Nhi Đồng 1", desc: "Bệnh viện lớn gần khu vực, góp phần vào mật độ hoạt động sôi động." },
+      { name: "Chợ Nhật Tảo", desc: "Khu chợ chuyên đồ điện tử nổi tiếng, sầm uất bậc nhất thành phố." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua trục đường Ba Tháng Hai." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao tại khu vực mặt tiền đường lớn, dễ dàng đặt xe." },
+      { icon: CheckCircleIcon, title: "Trục Ba Tháng Hai — Lý Thái Tổ", desc: "Kết nối nhanh đến Quận 5, Quận 11 và trung tâm thành phố." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Đội ngũ MAX OFFICE hỗ trợ chỉ dẫn qua điện thoại nếu bạn chưa quen khu vực Ngã Bảy." },
+    ],
+    parkingInfo: [
+      "Khu vực giữ xe máy ngay tại toà nhà mặt tiền Ba Tháng Hai.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực vòng xoay Ngã Bảy.",
+      "Có nhân viên bảo vệ trực để đảm bảo an toàn cho xe trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán ăn khu chợ Nhật Tảo", desc: "Đa dạng lựa chọn ẩm thực phục vụ khu vực chợ sầm uất." },
+      { name: "Cà phê dọc Ba Tháng Hai", desc: "Nhiều quán cà phê phù hợp gặp gỡ đối tác hoặc làm việc ngoài giờ." },
+      { name: "Nhà hàng khu vực Diên Hồng", desc: "Đa dạng phong cách phục vụ, phù hợp cả bữa ăn nhanh lẫn buổi tiếp khách." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 614-616-618 Ba Tháng Hai có phải là chi nhánh mới nhất của MAX OFFICE tại Quận 10 (cũ) không?", a: "Đúng vậy. Đây là chi nhánh thứ hai MAX OFFICE mở tại khu vực Quận 10 (cũ), bên cạnh chi nhánh CMT8 hiện có, toạ lạc tại Phường Diên Hồng." },
+      { q: "Chi nhánh 618 Ba Tháng Hai áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 3 gói: SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại các chi nhánh khu vực Bình Thạnh, Phú Nhuận, Quận 4 và Thủ Đức (cũ)." },
+      { q: "Địa chỉ 614-616-618 Ba Tháng Hai có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Diên Hồng, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Chi nhánh có gần Đại học Bách Khoa hoặc Bệnh viện Nhi Đồng 1 không?", a: "Có. Chi nhánh nằm gần vòng xoay Ngã Bảy, không xa Đại học Bách Khoa TP.HCM (cơ sở Lý Thường Kiệt) và Bệnh viện Nhi Đồng 1." },
+      { q: "Sau khi ký hợp đồng, đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty tính phí ra sao?", a: "Đây là 2 khoản phát sinh tính riêng ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 618 Ba Tháng Hai có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
+    ],
+    testimonials: [
+      { quote: "Toà nhà mặt tiền Ba Tháng Hai khá nổi bật, khách hàng dễ nhận ra ngay từ xa.", initial: "T", name: "Anh Trung", role: "Giám đốc công ty thương mại" },
+      { quote: "Gần Đại học Bách Khoa nên công ty mình tuyển sinh viên thực tập khá thuận tiện.", initial: "L", name: "Chị Linh", role: "Trưởng phòng nhân sự" },
+      { quote: "Sảnh toà nhà đẹp, rộng rãi, lần đầu đối tác ghé thăm cũng khen không gian chuyên nghiệp.", initial: "D", name: "Anh Duy", role: "Founder công ty công nghệ" },
     ],
   },
 

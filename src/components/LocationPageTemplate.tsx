@@ -49,7 +49,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       {/* Banner dùng đúng ảnh mặt tiền riêng của chi nhánh (cùng file dùng
           trong LocationImagesSection/gallery bên dưới và OG image), thay
           vì data.image — ảnh dùng chung "khong-gian-lam-viec.jpg" cho MỌI
-          chi nhánh trước đây. Đã xác nhận đủ 25/25 chi nhánh đang hoạt
+          chi nhánh trước đây. Đã xác nhận đủ 26/26 chi nhánh đang hoạt
           động có sẵn file này trong /public/images. */}
       <PageHero
         image={`/images/dia-diem-${data.slug}.jpg`}
@@ -116,6 +116,8 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         <SilverGoldPremiumServices branchName="84-86 Nguyễn Trường Tộ" promotions={data.promotions} />
       ) : data.slug === "le-quoc-hung" ? (
         <SilverGoldPremiumServices branchName="54-56 Lê Quốc Hưng" promotions={data.promotions} />
+      ) : data.slug === "ba-thang-hai" ? (
+        <SilverGoldPremiumServices branchName="614-616-618 Ba Tháng Hai" promotions={data.promotions} />
       ) : (
         <LocationServicesList name={data.name} slug={data.slug} promotions={data.promotions} />
       )}

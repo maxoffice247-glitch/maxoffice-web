@@ -134,6 +134,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     href: "/locations/cmt8",
     desc: "283/26-28 CMT8, P. Hoà Hưng",
   },
+  {
+    title: "618 Ba Tháng Hai, Quận 10 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/ba-thang-hai",
+    desc: "614-616-618 Ba Tháng Hai, P. Diên Hồng",
+  },
   // TẠM ẨN — chi nhánh "vuon-lai" đang isActive: false trong locationsData.ts,
   // trang /locations/vuon-lai trả về 404. Bỏ comment khối bên dưới khi bật
   // lại chi nhánh (nhớ đặt lại isActive: true trước).
@@ -237,7 +243,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Quận 10 (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-10-cu",
-    desc: "Chi nhánh CMT8 — gần Ga Sài Gòn",
+    desc: "2 chi nhánh — CMT8 và 618 Ba Tháng Hai, gần Ga Sài Gòn và vòng xoay Ngã Bảy",
   },
   {
     title: "Tp. Thủ Đức (Cũ)",
