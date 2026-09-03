@@ -2567,28 +2567,90 @@ export function getLocationsForArea(areaSlug: string): LocationListItem[] {
 }
 
 export type GroupedLocations = {
-  /** Khu vực có từ 2 chi nhánh trở lên — hiển thị thành khối riêng. */
-  multiBranchGroups: { area: AreaInfo; locations: LocationListItem[] }[];
-  /** Chi nhánh thuộc các khu vực chỉ có 1 chi nhánh — gộp chung 1 danh sách. */
+  /** Khu vực có từ 2 chi nhánh trở lên — hiển thị thành khối riêng, lưới 3
+      cột. Khu vực đúng 2 chi nhánh có thể đã được GHÉP thêm 1 chi nhánh từ
+      1 khu vực khác chỉ có đúng 1 chi nhánh (xem MERGED_AREA_PAIRS) để lấp
+      đủ hàng — `area` khi đó là 1 tên gộp (VD "Quận 4 (cũ) & Quận 7
+      (cũ)"), KHÔNG đổi khu vực địa lý gốc của từng chi nhánh (vẫn đọc từ
+      `LOCATIONS_LIST`/`loc.area`), chỉ đổi cách TRÌNH BÀY. */
+  multiBranchGroups: { area: { slug: string; name: string }; locations: LocationListItem[] }[];
+  /** Chi nhánh thuộc các khu vực chỉ có 1 chi nhánh VÀ chưa được ghép vào
+      1 khu vực 2-chi-nhánh nào (xem MERGED_AREA_PAIRS) — gộp chung 1 danh
+      sách, mỗi thẻ tự hiện area riêng qua `areaBadge`. */
   singleBranchLocations: LocationListItem[];
 };
 
 /**
- * Nhóm các chi nhánh ĐANG HIỂN THỊ CÔNG KHAI (25/26, 1 chi nhánh đang tạm ẩn)
- * theo khu vực, tách khu vực nhiều chi nhánh (khối riêng)
- * và khu vực 1 chi nhánh (gộp chung) — dùng chung cho /dia-diem và mega menu
- * để 2 nơi luôn nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
+ * Khu vực ĐÚNG 2 chi nhánh (`twoSlug`) được ghép chung 1 hàng hiển thị (đủ
+ * 3 cột, tránh trống 1/3 cột) với 1 khu vực ĐÚNG 1 chi nhánh (`oneSlug`) —
+ * ưu tiên ghép các khu vực gần nhau về địa lý thực tế. Đây chỉ là cách
+ * TRÌNH BÀY (xem `GroupedLocations`), tên mỗi chi nhánh đã tự ghi rõ khu
+ * vực (VD "27C Quốc Hương, TP. Thủ Đức (cũ)") nên không gây hiểu lầm dù
+ * nằm chung hàng với khu vực khác. Một cặp chỉ thực sự được ghép khi ĐÚNG
+ * lúc đó `twoSlug` có đúng 2 chi nhánh và `oneSlug` có đúng 1 — nếu số
+ * chi nhánh 2 khu vực đó thay đổi (thêm/bớt chi nhánh), cặp tự động KHÔNG
+ * ghép nữa (getGroupedLocations() rơi về hiển thị tách riêng như cũ),
+ * không lỗi, nhưng nên rà soát lại danh sách cặp này khi đó.
+ */
+const MERGED_AREA_PAIRS: { twoSlug: string; oneSlug: string }[] = [
+  { twoSlug: "quan-4-cu", oneSlug: "quan-7-cu" }, // Quận 4 - Quận 7: liền kề địa lý thật
+  { twoSlug: "quan-3-cu", oneSlug: "phu-nhuan-cu" }, // Quận 3 - Phú Nhuận: liền kề địa lý thật
+  { twoSlug: "quan-10-cu", oneSlug: "quan-tan-phu-cu" }, // Quận 10 - Tân Phú: gần qua trục Quận 11
+  { twoSlug: "thu-duc-cu", oneSlug: "quan-go-vap-cu" }, // Thủ Đức - Gò Vấp: cặp còn lại duy nhất
+];
+
+/** Khu vực ưu tiên hiển thị lên đầu, theo đúng thứ tự — Quận 1 (cũ) trước
+    tiên, kế đến Tân Bình (cũ). Khu vực không có trong danh sách này giữ
+    nguyên thứ tự tương đối như khai báo trong `AREAS`. */
+const AREA_DISPLAY_PRIORITY = ["quan-1-cu", "quan-tan-binh-cu"];
+
+/**
+ * Nhóm các chi nhánh ĐANG HIỂN THỊ CÔNG KHAI (26/27, 1 chi nhánh đang tạm
+ * ẩn) theo khu vực, tách khu vực nhiều chi nhánh (khối riêng, có ghép cặp
+ * 2+1 theo MERGED_AREA_PAIRS) và khu vực 1 chi nhánh còn lại chưa ghép
+ * được (gộp chung) — dùng chung cho /dia-diem và mega menu để 2 nơi luôn
+ * nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
  */
 export function getGroupedLocations(): GroupedLocations {
   const areaGroups = AREAS.map((area) => ({
     area,
     locations: getLocationsForArea(area.slug),
   })).filter((g) => g.locations.length > 0);
+  const bySlug = new Map(areaGroups.map((g) => [g.area.slug, g]));
+  const areaOrderIndex = new Map(AREAS.map((a, i) => [a.slug, i]));
+
+  const consumedOneSlugs = new Set<string>();
+  const consumedTwoSlugs = new Set<string>();
+  const merged: { area: { slug: string; name: string }; locations: LocationListItem[]; sortSlug: string }[] = [];
+  for (const { twoSlug, oneSlug } of MERGED_AREA_PAIRS) {
+    const twoGroup = bySlug.get(twoSlug);
+    const oneGroup = bySlug.get(oneSlug);
+    if (twoGroup?.locations.length !== 2 || oneGroup?.locations.length !== 1) continue;
+    merged.push({
+      area: { slug: `${twoSlug}+${oneSlug}`, name: `${twoGroup.area.name} & ${oneGroup.area.name}` },
+      locations: [...twoGroup.locations, ...oneGroup.locations],
+      sortSlug: twoSlug,
+    });
+    consumedTwoSlugs.add(twoSlug);
+    consumedOneSlugs.add(oneSlug);
+  }
+
+  const unmergedMulti = areaGroups
+    .filter((g) => g.locations.length >= 2 && !consumedTwoSlugs.has(g.area.slug))
+    .map((g) => ({ area: g.area, locations: g.locations, sortSlug: g.area.slug }));
+
+  const multiBranchGroups = [...unmergedMulti, ...merged].sort((a, b) => {
+    const rank = (slug: string) => {
+      const priority = AREA_DISPLAY_PRIORITY.indexOf(slug);
+      return priority !== -1 ? priority - AREA_DISPLAY_PRIORITY.length : (areaOrderIndex.get(slug) ?? 0);
+    };
+    return rank(a.sortSlug) - rank(b.sortSlug);
+  });
 
   return {
-    multiBranchGroups: areaGroups.filter((g) => g.locations.length >= 2),
+    multiBranchGroups: multiBranchGroups.map(({ area, locations }) => ({ area, locations })),
     singleBranchLocations: areaGroups
-      .filter((g) => g.locations.length === 1)
+      .filter((g) => g.locations.length === 1 && !consumedOneSlugs.has(g.area.slug))
       .flatMap((g) => g.locations),
   };
 }
