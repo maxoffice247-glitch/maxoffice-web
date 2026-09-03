@@ -2570,10 +2570,18 @@ export type GroupedLocations = {
   /** Khu vực có từ 2 chi nhánh trở lên — hiển thị thành khối riêng, lưới 3
       cột. Khu vực đúng 2 chi nhánh có thể đã được GHÉP thêm 1 chi nhánh từ
       1 khu vực khác chỉ có đúng 1 chi nhánh (xem MERGED_AREA_PAIRS) để lấp
-      đủ hàng — `area` khi đó là 1 tên gộp (VD "Quận 4 (cũ) & Quận 7
-      (cũ)"), KHÔNG đổi khu vực địa lý gốc của từng chi nhánh (vẫn đọc từ
-      `LOCATIONS_LIST`/`loc.area`), chỉ đổi cách TRÌNH BÀY. */
-  multiBranchGroups: { area: { slug: string; name: string }; locations: LocationListItem[] }[];
+      đủ hàng — khi đó `subGroups` có 2 phần tử (khu vực 2 chi nhánh trước,
+      khu vực 1 chi nhánh sau), mỗi phần tử nên hiển thị trong 1 khung nhẹ
+      TÁCH BIỆT trong cùng hàng (không gộp chung 1 khối) để người xem phân
+      biệt rõ 2 khu vực khác nhau; `area`/`locations` ở cấp ngoài vẫn có đủ
+      (area là tên gộp, VD "Quận 4 (cũ) & Quận 7 (cũ)") cho nơi nào chưa
+      cần tách khung. KHÔNG đổi khu vực địa lý gốc của từng chi nhánh (vẫn
+      đọc từ `LOCATIONS_LIST`/`loc.area`), chỉ đổi cách TRÌNH BÀY. */
+  multiBranchGroups: {
+    area: { slug: string; name: string };
+    locations: LocationListItem[];
+    subGroups?: { area: { slug: string; name: string }; locations: LocationListItem[] }[];
+  }[];
   /** Chi nhánh thuộc các khu vực chỉ có 1 chi nhánh VÀ chưa được ghép vào
       1 khu vực 2-chi-nhánh nào (xem MERGED_AREA_PAIRS) — gộp chung 1 danh
       sách, mỗi thẻ tự hiện area riêng qua `areaBadge`. */
@@ -2621,7 +2629,13 @@ export function getGroupedLocations(): GroupedLocations {
 
   const consumedOneSlugs = new Set<string>();
   const consumedTwoSlugs = new Set<string>();
-  const merged: { area: { slug: string; name: string }; locations: LocationListItem[]; sortSlug: string }[] = [];
+  type Group = {
+    area: { slug: string; name: string };
+    locations: LocationListItem[];
+    subGroups?: { area: { slug: string; name: string }; locations: LocationListItem[] }[];
+    sortSlug: string;
+  };
+  const merged: Group[] = [];
   for (const { twoSlug, oneSlug } of MERGED_AREA_PAIRS) {
     const twoGroup = bySlug.get(twoSlug);
     const oneGroup = bySlug.get(oneSlug);
@@ -2629,13 +2643,18 @@ export function getGroupedLocations(): GroupedLocations {
     merged.push({
       area: { slug: `${twoSlug}+${oneSlug}`, name: `${twoGroup.area.name} & ${oneGroup.area.name}` },
       locations: [...twoGroup.locations, ...oneGroup.locations],
+      // Khung nhẹ TÁCH BIỆT 2 khu vực trong cùng hàng — xem GroupedLocations.
+      subGroups: [
+        { area: { slug: twoGroup.area.slug, name: twoGroup.area.name }, locations: twoGroup.locations },
+        { area: { slug: oneGroup.area.slug, name: oneGroup.area.name }, locations: oneGroup.locations },
+      ],
       sortSlug: twoSlug,
     });
     consumedTwoSlugs.add(twoSlug);
     consumedOneSlugs.add(oneSlug);
   }
 
-  const unmergedMulti = areaGroups
+  const unmergedMulti: Group[] = areaGroups
     .filter((g) => g.locations.length >= 2 && !consumedTwoSlugs.has(g.area.slug))
     .map((g) => ({ area: g.area, locations: g.locations, sortSlug: g.area.slug }));
 
@@ -2648,7 +2667,7 @@ export function getGroupedLocations(): GroupedLocations {
   });
 
   return {
-    multiBranchGroups: multiBranchGroups.map(({ area, locations }) => ({ area, locations })),
+    multiBranchGroups: multiBranchGroups.map(({ area, locations, subGroups }) => ({ area, locations, subGroups })),
     singleBranchLocations: areaGroups
       .filter((g) => g.locations.length === 1 && !consumedOneSlugs.has(g.area.slug))
       .flatMap((g) => g.locations),

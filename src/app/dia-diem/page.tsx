@@ -43,17 +43,53 @@ export default function DiaDiemPage() {
               key={group.area.slug}
               className="mb-10 rounded-3xl border border-primary/15 bg-primary-tint/40 p-5 sm:p-7"
             >
-              <div className="mb-5 flex items-center justify-between gap-3">
-                <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{group.area.name}</h3>
-                <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
-                  {group.locations.length} chi nhánh
-                </span>
-              </div>
-              <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {group.locations.map((loc, i) => (
-                  <LocationCard key={loc.slug} loc={loc} index={i} />
-                ))}
-              </RevealGroup>
+              {group.subGroups ? (
+                // Khu vực 2 chi nhánh ghép thêm 1 khu vực 1-chi-nhánh cho đủ
+                // hàng — mỗi khu vực con vẫn có khung riêng (viền + tên +
+                // số lượng) để không bị đọc nhầm là 1 khu vực duy nhất, thay
+                // vì gộp phẳng vào 1 lưới 3 cột như trước.
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  {group.subGroups.map((sub, subIndex) => {
+                    const startIndex = group.subGroups!.slice(0, subIndex).reduce((n, s) => n + s.locations.length, 0);
+                    return (
+                      <div
+                        key={sub.area.slug}
+                        className={`min-w-0 rounded-2xl border border-line bg-white/70 p-3.5 sm:p-4 ${
+                          sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"
+                        }`}
+                      >
+                        <div className="mb-3 flex items-center justify-between gap-2">
+                          <h4 className="text-[13.5px] font-bold text-navy">{sub.area.name}</h4>
+                          <span className="shrink-0 rounded-full bg-bg-tint px-2 py-0.5 text-[10.5px] font-bold whitespace-nowrap text-primary">
+                            {sub.locations.length} chi nhánh
+                          </span>
+                        </div>
+                        <RevealGroup
+                          className={`grid grid-cols-1 gap-3.5 ${sub.locations.length >= 2 ? "sm:grid-cols-2" : ""}`}
+                        >
+                          {sub.locations.map((loc, i) => (
+                            <LocationCard key={loc.slug} loc={loc} index={startIndex + i} />
+                          ))}
+                        </RevealGroup>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <>
+                  <div className="mb-5 flex items-center justify-between gap-3">
+                    <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{group.area.name}</h3>
+                    <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
+                      {group.locations.length} chi nhánh
+                    </span>
+                  </div>
+                  <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {group.locations.map((loc, i) => (
+                      <LocationCard key={loc.slug} loc={loc} index={i} />
+                    ))}
+                  </RevealGroup>
+                </>
+              )}
             </div>
           ))}
 

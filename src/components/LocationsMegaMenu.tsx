@@ -100,14 +100,41 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
               <div className="scrollbar-thin max-h-[60vh] overflow-y-auto p-5">
                 {multiBranchGroups.map((group) => (
                   <div key={group.area.slug} className="mb-3.5 last:mb-0">
-                    <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
-                      {group.area.name}
-                    </p>
-                    <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
-                      {group.locations.map((loc) => (
-                        <MegaMenuLocationItem key={loc.slug} loc={loc} />
-                      ))}
-                    </div>
+                    {group.subGroups ? (
+                      // Khu vực 2 chi nhánh ghép thêm 1 khu vực 1-chi-nhánh
+                      // cho đủ hàng — mỗi khu vực con có khung riêng để
+                      // không bị đọc nhầm là 1 khu vực duy nhất.
+                      <div className="flex flex-col gap-2 sm:flex-row">
+                        {group.subGroups.map((sub) => (
+                          <div
+                            key={sub.area.slug}
+                            className={`min-w-0 rounded-lg border border-line/70 p-1.5 ${
+                              sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"
+                            }`}
+                          >
+                            <p className="mb-1 px-1 text-[10px] font-bold tracking-[0.06em] text-body-text/60 uppercase">
+                              {sub.area.name}
+                            </p>
+                            <div className={`grid gap-1 ${sub.locations.length >= 2 ? "grid-cols-2" : "grid-cols-1"}`}>
+                              {sub.locations.map((loc) => (
+                                <MegaMenuLocationItem key={loc.slug} loc={loc} />
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <>
+                        <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
+                          {group.area.name}
+                        </p>
+                        <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
+                          {group.locations.map((loc) => (
+                            <MegaMenuLocationItem key={loc.slug} loc={loc} />
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
                 {singleBranchLocations.length > 0 && (
