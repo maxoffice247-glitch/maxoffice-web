@@ -26,7 +26,10 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: `MAX OFFICE - ${data.name}`,
-    image: `${SITE_URL}${data.image}`,
+    // Ảnh mặt tiền THẬT của chính chi nhánh này cho schema.org (khác với
+    // data.image — ảnh hero banner chọn riêng cho tính thẩm mỹ/đa dạng ở
+    // PageHero bên dưới, không phải ảnh thật của chi nhánh).
+    image: `${SITE_URL}/images/dia-diem-${data.slug}.jpg`,
     telephone: COMPANY_PHONE,
     email: COMPANY_EMAIL,
     address: {
@@ -46,13 +49,17 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
       />
 
-      {/* Banner dùng đúng ảnh mặt tiền riêng của chi nhánh (cùng file dùng
-          trong LocationImagesSection/gallery bên dưới và OG image), thay
-          vì data.image — ảnh dùng chung "khong-gian-lam-viec.jpg" cho MỌI
-          chi nhánh trước đây. Đã xác nhận đủ 26/26 chi nhánh đang hoạt
-          động có sẵn file này trong /public/images. */}
+      {/* Banner dùng data.image — ảnh hero wide-format (bối cảnh văn phòng/
+          skyline) chọn riêng cho từng chi nhánh từ pool ~12 ảnh hero đã
+          dùng chung trên site, KHÔNG phải ảnh mặt tiền dọc của chi nhánh.
+          Trước đây banner dùng thẳng /images/dia-diem-{slug}.jpg (ảnh mặt
+          tiền, tỉ lệ dọc) nên bị crop xấu khi ép vào khung banner ngang
+          full-width — đổi lại ảnh mặt tiền vẫn giữ nguyên ở gallery bên
+          dưới (LocationImagesSection) và card báo giá (PlanQuoteCard), chỉ
+          đổi phần banner đầu trang này. Xem bảng gán đầy đủ trong lịch sử
+          commit thêm trường "image" ở locationsData.ts. */}
       <PageHero
-        image={`/images/dia-diem-${data.slug}.jpg`}
+        image={data.image}
         eyebrow="Chi nhánh"
         title={data.heroTitle}
         description={data.heroDescription}
