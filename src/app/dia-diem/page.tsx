@@ -36,7 +36,10 @@ export default function DiaDiemPage() {
         <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
           <SectionHead
             eyebrow="Hệ thống chi nhánh"
-            title={`Toàn bộ ${ACTIVE_BRANCH_COUNT} chi nhánh MAX OFFICE`}
+            // "MAX OFFICE" dùng non-breaking space — tránh H1 xuống dòng
+            // tách rời "OFFICE" khỏi "MAX" (từng bị lẻ loi 1 mình ở dòng
+            // 2 tại các độ rộng container hẹp/H1 cỡ lớn của SectionHead).
+            title={`Toàn bộ ${ACTIVE_BRANCH_COUNT} chi nhánh MAX OFFICE`}
             tagline="Hệ thống văn phòng ảo phủ khắp Sài Gòn"
             description="Mỗi địa điểm đều đủ điều kiện đăng ký kinh doanh, đăng ký thuế và sẵn sàng phục vụ văn phòng ảo, văn phòng trọn gói, phòng họp và chỗ ngồi linh động."
           />
