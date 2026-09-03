@@ -14,30 +14,50 @@ import { formatVoPrice } from "@/lib/planFinder";
  * ảnh báo giá 1 chi nhánh — số chi nhánh mỗi nhóm chênh lệch quá lớn để dùng
  * chung 1 chiều cao cố định mà không bị trống hoặc tràn.
  */
+type PlanGroupLocation = PlanGroup["locations"][number];
+
+/** 1 nhóm chi nhánh có ĐÚNG cùng nội dung khuyến mãi (hoặc 1 chi nhánh lẻ
+    không có khuyến mãi nào — `promotions: null`, luôn đứng 1 mình). */
+type LocationGroup = {
+  locations: PlanGroupLocation[];
+  /** null = nhóm này không có khuyến mãi (không hiện khối gì cả). */
+  promotions: string[] | null;
+};
+
 /**
- * Xác định cách hiển thị khuyến mãi cho cả nhóm gói (nhiều chi nhánh):
- * - "none": không chi nhánh nào trong nhóm có khuyến mãi được ghi nhận
- *   -> ẩn hẳn khối này ở card.
- * - "shared": MỌI chi nhánh trong nhóm có ĐÚNG cùng 1 danh sách khuyến mãi
- *   -> hiển thị chung 1 lần ngay dưới "Gói + giá", đỡ lặp lại 7 lần giống
- *   hệt nhau khi cả nhóm dùng chung 1 chính sách.
- * - "per-location": các chi nhánh có khuyến mãi khác nhau (hoặc chỉ 1 vài
- *   chi nhánh có, số còn lại không) -> hiển thị riêng theo từng dòng chi
- *   nhánh trong "Danh sách chi nhánh áp dụng", bỏ qua chi nhánh không có.
+ * Gom các chi nhánh có ĐÚNG cùng 1 nội dung khuyến mãi thành 1 nhóm, thay vì
+ * lặp lại y hệt đoạn khuyến mãi dưới từng chi nhánh riêng lẻ — với gói bán
+ * ở nhiều chi nhánh (VD BASE 500K, 11 chi nhánh), phần lớn chi nhánh dùng
+ * chung 1-2 chính sách, lặp lại nguyên văn 11 lần vừa dài vừa khó đọc.
+ *
+ * Giữ ĐÚNG thứ tự xuất hiện gốc: 1 nhóm xuất hiện tại vị trí của chi nhánh
+ * ĐẦU TIÊN thuộc nhóm đó, các chi nhánh cùng nhóm xuất hiện sau chỉ được
+ * gộp thêm vào, không kéo nhóm lên vị trí khác. Chi nhánh không có khuyến
+ * mãi luôn là 1 nhóm riêng 1 thành viên (`promotions: null`) — "giống
+ * nhau ở chỗ đều không có gì" không phải là 1 nhóm khuyến mãi thực sự.
  */
-function resolvePromoDisplay(locations: PlanGroup["locations"]) {
-  const withPromo = locations.filter((l) => l.promotions && l.promotions.length > 0);
-  if (withPromo.length === 0) return { mode: "none" as const };
-  const allHavePromo = withPromo.length === locations.length;
-  const first = JSON.stringify(withPromo[0].promotions);
-  const allSame = allHavePromo && withPromo.every((l) => JSON.stringify(l.promotions) === first);
-  return allSame
-    ? { mode: "shared" as const, promotions: withPromo[0].promotions! }
-    : { mode: "per-location" as const };
+function buildLocationGroups(locations: PlanGroupLocation[]): LocationGroup[] {
+  const groups: LocationGroup[] = [];
+  const keyToGroupIndex = new Map<string, number>();
+  for (const loc of locations) {
+    if (!loc.promotions || loc.promotions.length === 0) {
+      groups.push({ locations: [loc], promotions: null });
+      continue;
+    }
+    const key = JSON.stringify(loc.promotions);
+    const existingIndex = keyToGroupIndex.get(key);
+    if (existingIndex !== undefined) {
+      groups[existingIndex].locations.push(loc);
+    } else {
+      keyToGroupIndex.set(key, groups.length);
+      groups.push({ locations: [loc], promotions: loc.promotions });
+    }
+  }
+  return groups;
 }
 
 export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
-  const promoDisplay = resolvePromoDisplay(group.locations);
+  const locationGroups = buildLocationGroups(group.locations);
   // Từ 6 tính năng trở lên chia 2 cột (giống PlanQuoteCard — báo giá 1 chi
   // nhánh) — nhóm càng nhiều chi nhánh thì "Áp dụng tại N chi nhánh" bên
   // dưới càng dài, nên rút ngắn khối "Tính năng đi kèm" theo chiều dọc để
@@ -86,27 +106,6 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
         )}
       </div>
 
-      {/* Khuyến mãi dùng CHUNG cho cả nhóm — chỉ hiện khi mọi chi nhánh
-          trong nhóm có ĐÚNG cùng 1 danh sách khuyến mãi (resolvePromoDisplay).
-          Nếu khuyến mãi khác nhau giữa các chi nhánh thì hiển thị riêng theo
-          từng dòng trong "Danh sách chi nhánh áp dụng" bên dưới thay vì ở
-          đây, để không gán nhầm ưu đãi của 1 chi nhánh cho cả nhóm. */}
-      {promoDisplay.mode === "shared" && (
-        <div className="mx-14 mt-6 rounded-2xl border border-accent/25 bg-accent/8 px-8 py-6">
-          <p className="mb-2 flex items-center gap-1.5 text-[16px] font-bold text-accent">
-            <span aria-hidden>🎁</span> Ưu đãi khi ký hợp đồng dài hạn
-          </p>
-          <ul className="space-y-1.5">
-            {promoDisplay.promotions.slice(0, 3).map((p) => (
-              <li key={p} className="flex items-start gap-2 text-[15px] leading-snug text-ink">
-                <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                {p}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {/* Danh sách tính năng */}
       <div className="mx-14 mt-9">
         <p className="mb-5 text-[20px] font-bold text-navy">Tính năng đi kèm</p>
@@ -133,44 +132,78 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
         </div>
       </div>
 
-      {/* Danh sách chi nhánh áp dụng */}
+      {/* Danh sách chi nhánh áp dụng — gom theo NHÓM khuyến mãi giống hệt
+          nhau (buildLocationGroups): nhóm >=2 chi nhánh chung 1 chính sách
+          hiện danh sách chi nhánh GỌN (bỏ text khuyến mãi lặp lại ở từng
+          dòng) rồi 1 khối "Ưu đãi chung" duy nhất ngay dưới; chi nhánh có
+          khuyến mãi RIÊNG (nhóm chỉ 1 thành viên) vẫn hiện khuyến mãi ngay
+          dưới tên/địa chỉ như trước; chi nhánh không có khuyến mãi thì
+          không có khối gì thêm. */}
       <div className="mx-14 mt-9">
         <p className="mb-5 text-[20px] font-bold text-navy">
           Áp dụng tại {group.locations.length} chi nhánh
         </p>
         <div className="flex flex-col gap-3">
-          {group.locations.map((loc) => (
-            <div key={loc.slug} className="flex items-center gap-4 rounded-2xl bg-bg-tint p-3">
-              <div className="relative aspect-[3/4] w-[64px] shrink-0 overflow-hidden rounded-xl bg-white">
-                {/* /images/quote/ — bản đã resize/nén riêng cho xuất ảnh báo
-                    giá (xem waitForImages.ts), không phải ảnh gốc full-res:
-                    hiển thị ở đây chỉ 64px, ảnh gốc vài trăm KB là dư thừa
-                    và làm chậm export trên mobile khi nhóm có nhiều chi
-                    nhánh. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`/images/quote/dia-diem-${loc.slug}.jpg`}
-                  alt={loc.name}
-                  className="h-full w-full object-contain"
-                />
+          {locationGroups.flatMap((grp, grpIndex) => {
+            const isSharedGroup = grp.promotions !== null && grp.locations.length >= 2;
+            const locationCards = grp.locations.map((loc) => (
+              <div key={loc.slug} className="flex items-center gap-4 rounded-2xl bg-bg-tint p-3">
+                <div className="relative aspect-[3/4] w-[64px] shrink-0 overflow-hidden rounded-xl bg-white">
+                  {/* /images/quote/ — bản đã resize/nén riêng cho xuất ảnh
+                      báo giá (xem waitForImages.ts), không phải ảnh gốc
+                      full-res: hiển thị ở đây chỉ 64px, ảnh gốc vài trăm KB
+                      là dư thừa và làm chậm export trên mobile khi nhóm có
+                      nhiều chi nhánh. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/images/quote/dia-diem-${loc.slug}.jpg`}
+                    alt={loc.name}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[19px] font-bold text-navy">{loc.name}</p>
+                  <p className="text-[15px] text-body-text">{loc.shortAddress}</p>
+                  {/* Khuyến mãi RIÊNG — chỉ hiện ngay dưới chi nhánh khi
+                      nhóm này chỉ có đúng 1 thành viên (không trùng với bất
+                      kỳ chi nhánh nào khác trong danh sách). Nhóm >=2 thành
+                      viên hiện khuyến mãi 1 lần duy nhất ở khối chung bên
+                      dưới thay vì lặp lại ở đây. */}
+                  {grp.promotions && grp.locations.length === 1 && (
+                    <p className="mt-1 flex items-start gap-1.5 text-[13px] leading-snug text-accent">
+                      <span aria-hidden>🎁</span>
+                      <span>{grp.promotions.slice(0, 2).join(" · ")}</span>
+                    </p>
+                  )}
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-[19px] font-bold text-navy">{loc.name}</p>
-                <p className="text-[15px] text-body-text">{loc.shortAddress}</p>
-                {/* Chế độ "per-location": mỗi chi nhánh có ưu đãi khác nhau
-                    (hoặc chỉ 1 vài chi nhánh có), nên gắn đúng vào dòng của
-                    chi nhánh đó thay vì 1 khối chung dễ gây hiểu nhầm là áp
-                    dụng cho tất cả. Bỏ qua hẳn dòng này nếu chi nhánh không
-                    có khuyến mãi nào được ghi nhận. */}
-                {promoDisplay.mode === "per-location" && loc.promotions && loc.promotions.length > 0 && (
-                  <p className="mt-1 flex items-start gap-1.5 text-[13px] leading-snug text-accent">
-                    <span aria-hidden>🎁</span>
-                    <span>{loc.promotions.slice(0, 2).join(" · ")}</span>
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
+            ));
+            if (!isSharedGroup) return locationCards;
+            return [
+              ...locationCards,
+              // Khung thu gọn hết mức (padding/khoảng cách tối thiểu) — đây
+              // là khối THAY THẾ cho N dòng khuyến mãi lặp lại y hệt nhau,
+              // nên phần "chi phí cố định" của khung (viền, nền, tiêu đề)
+              // cần nhỏ nhất có thể để phần tiết kiệm do gom nhóm không bị
+              // overhead của chính cái khung ăn hết.
+              <div
+                key={`shared-promo-${grpIndex}`}
+                className="rounded-xl border border-accent/25 bg-accent/8 px-5 py-3.5"
+              >
+                <p className="mb-1 flex items-center gap-1.5 text-[13.5px] font-bold text-accent">
+                  <span aria-hidden>🎁</span> Ưu đãi chung cho các chi nhánh trên
+                </p>
+                <ul className="space-y-1">
+                  {grp.promotions!.slice(0, 3).map((p) => (
+                    <li key={p} className="flex items-start gap-2 text-[13.5px] leading-snug text-ink">
+                      <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>,
+            ];
+          })}
         </div>
       </div>
 

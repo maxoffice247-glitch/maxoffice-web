@@ -655,8 +655,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ tư vấn hỗ trợ nhanh chóng cho khách hàng khu vực Gò Vấp." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
-      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Chợ Gò Vấp", desc: "Khu chợ truyền thống lớn, trung tâm sinh hoạt của khu vực." },
@@ -760,8 +760,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
-      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Chỉ 5-10 phút di chuyển, thuận tiện đón đối tác, khách hàng quốc tế." },
@@ -834,8 +834,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
-      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Giao lộ Bảy Hiền", desc: "Nút giao thông quan trọng, kết nối Cách Mạng Tháng 8, Trường Chinh, Lý Thường Kiệt." },
@@ -906,8 +906,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
-      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Aeon Mall Tân Phú Celadon", desc: "Trung tâm thương mại lớn, thuận tiện tiếp khách và giải trí sau giờ làm." },
@@ -977,8 +977,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD (hợp đồng từ 12 tháng)",
-      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng + tặng dịch vụ đổi GPKD",
+      "Thành lập công ty mới tại đây: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Công viên Hoàng Văn Thụ", desc: "Mảng xanh lớn của khu vực, chỉ vài phút di chuyển từ văn phòng." },
@@ -1049,9 +1049,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeartHandshakeIcon, title: "Khu vực tiếp khách riêng", desc: "Không gian tiếp khách riêng biệt với sofa, bàn tiếp khách — phù hợp trao đổi công việc với đối tác ngay tại văn phòng." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
       "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
-      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Văn phòng nằm sát ranh giới sân bay, thuận tiện đón khách quốc tế." },
@@ -1122,9 +1122,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeartHandshakeIcon, title: "Khu vực tiếp khách riêng", desc: "Khu vực tiếp khách riêng biệt, có sofa và bàn tiếp khách — thuận tiện gặp gỡ khách hàng, đối tác ghé xem mẫu." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
       "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
-      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Khu thời trang, may mặc Bàu Cát", desc: "Tập trung nhiều xưởng may, showroom thời trang thiết kế nổi tiếng." },
@@ -1193,9 +1193,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tiếp nhận thư từ", desc: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm hàng ngày; đội ngũ MAX OFFICE hỗ trợ vận hành và tư vấn từ xa qua điện thoại, Zalo." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
       "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
-      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Trục Lê Văn Sỹ", desc: "Tuyến phố ẩm thực, mua sắm sầm uất nối Tân Bình với Quận 3." },
@@ -1271,9 +1271,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeartHandshakeIcon, title: "Khu vực tiếp khách riêng", desc: "Có khu vực tiếp khách riêng với sofa, bàn tiếp khách — phù hợp cho các buổi trao đổi ngắn với đối tác, khách hàng." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
       "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
-      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Trục đường Trường Chinh", desc: "Cửa ngõ Tây Bắc thành phố, kết nối Quận 12, Hóc Môn." },
@@ -1343,9 +1343,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tiếp nhận thư từ", desc: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm tại quầy chung; đội ngũ MAX OFFICE hỗ trợ tư vấn, xử lý hồ sơ qua điện thoại hoặc Zalo." },
     ],
     promotions: [
-      "Chuyển địa chỉ ĐKKD về đây (đã có công ty): ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
+      "Khách đã có GPKD: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng; riêng gói BASE, hợp đồng từ 12 tháng tặng thêm dịch vụ đổi GPKD",
       "Thành lập công ty mới — gói LITE: ký 12 tháng tặng 1 tháng, ký 24 tháng tặng 2 tháng",
-      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng (có thể quy đổi thành dịch vụ Thành lập doanh nghiệp)",
+      "Thành lập công ty mới — gói START/BASE: ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng + tặng GPKD",
     ],
     nearbyItems: [
       { name: "Ga Sài Gòn", desc: "Nhà ga đường sắt trung tâm, chỉ cách chi nhánh vài phút di chuyển." },
