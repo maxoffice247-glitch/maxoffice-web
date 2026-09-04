@@ -15,6 +15,10 @@
  * - Tỷ lệ % thuế hộ kinh doanh theo nhóm ngành + ngưỡng miễn thuế 1 tỷ
  *   đồng/năm: Thông tư 69/2025/TT-BTC, Luật Thuế GTGT 2024, Nghị định
  *   68/2026/NĐ-CP.
+ * - Giảm 30% thuế TNCN/TNDN từ hoạt động kinh doanh, doanh thu ≤10 tỷ
+ *   đồng/năm, kỳ tính thuế 2026-2027 (tạm thời): Nghị quyết 43/2026/QH16
+ *   (Quốc hội ký ban hành 24/08/2026, hiệu lực ngay từ 24/08/2026) — xem
+ *   `TAX_REDUCTION_43_2026` bên dưới.
  *
  * LƯU Ý PHẠM VI ÁP DỤNG: phương pháp tính thuế hộ kinh doanh theo % doanh thu
  * (khoán) bên dưới chỉ áp dụng khi doanh thu hộ kinh doanh ≤ 3 tỷ đồng/năm.
@@ -108,3 +112,62 @@ export const HOUSEHOLD_TAX_EXEMPT_REVENUE_MONTHLY = HOUSEHOLD_TAX_EXEMPT_REVENUE
 
 /** Ngưỡng trên của phương pháp khoán (% doanh thu) — vượt mức này phải chuyển sang phương pháp tính trên lợi nhuận, ngoài phạm vi công cụ này. */
 export const HOUSEHOLD_FLAT_METHOD_MAX_REVENUE_YEARLY = 3_000_000_000;
+
+/**
+ * Nghị quyết 43/2026/QH16 (Quốc hội thông qua/ký ban hành 24/08/2026, có
+ * hiệu lực NGAY từ 24/08/2026) — giảm 30% SỐ THUẾ phải nộp (không phải
+ * giảm 30% thuế suất) đối với thu nhập từ HOẠT ĐỘNG KINH DOANH của cá nhân
+ * cư trú (hộ kinh doanh) và doanh nghiệp có doanh thu hằng năm ≤10 tỷ đồng
+ * — CHỈ áp dụng TẠM THỜI cho 2 kỳ tính thuế 2026 và 2027, không phải thay
+ * đổi vĩnh viễn. KHÔNG áp dụng cho thu nhập từ tiền lương/tiền công (Luật
+ * Thuế TNCN 2025) — đó là 1 sắc thuế khác, ngoài phạm vi nghị quyết này.
+ *
+ * Gom toàn bộ config vào 1 chỗ để dễ gỡ khi hết hiệu lực sau kỳ tính thuế
+ * 2027 — sang năm 2028 chỉ cần đổi `enabled: false` bên dưới (hoặc bỏ
+ * 2028 ra khỏi `applicableYears` nếu Quốc hội có thể gia hạn thêm 1-2 năm
+ * nữa) là toàn bộ nơi gọi `applyTaxReduction43()` tự động ngừng áp dụng,
+ * không cần sửa rải rác trong logic tính toán ở nơi khác.
+ */
+export const TAX_REDUCTION_43_2026 = {
+  enabled: true,
+  /** Tỷ lệ giảm trên SỐ THUẾ đã tính theo biểu/tỷ lệ gốc (0.3 = giảm 30%). */
+  rate: 0.3,
+  /** Ngưỡng doanh thu hằng năm đủ điều kiện — đ/năm. */
+  maxYearlyRevenue: 10_000_000_000,
+  /** Các kỳ tính thuế còn hiệu lực áp dụng. */
+  applicableYears: [2026, 2027] as number[],
+  sourceLabel: "Nghị quyết 43/2026/QH16",
+  effectiveDateLabel: "24/08/2026",
+} as const;
+
+/**
+ * Áp mức giảm của Nghị quyết 43/2026/QH16 lên 1 khoản thuế ĐÃ TÍNH theo
+ * biểu/tỷ lệ gốc — chỉ dùng cho thu nhập từ KINH DOANH (hộ kinh doanh,
+ * doanh nghiệp). KHÔNG gọi hàm này cho thuế TNCN từ tiền lương/tiền công.
+ *
+ * @param taxAmount Số thuế đã tính theo biểu/tỷ lệ gốc (chưa giảm), đơn vị đồng.
+ * @param yearlyRevenue Doanh thu hằng năm quy đổi, đơn vị đồng — điều kiện ≤10 tỷ.
+ * @param taxYear Kỳ tính thuế đang so sánh — mặc định năm hiện tại theo đồng hồ
+ *   trình duyệt, vì công cụ chưa có input chọn năm riêng (coi mọi phép tính là
+ *   cho kỳ tính thuế hiện tại).
+ */
+export function applyTaxReduction43(
+  taxAmount: number,
+  yearlyRevenue: number,
+  taxYear: number = new Date().getFullYear()
+): number {
+  if (!isEligibleForTaxReduction43(yearlyRevenue, taxYear)) return taxAmount;
+  return taxAmount * (1 - TAX_REDUCTION_43_2026.rate);
+}
+
+/** Kiểm tra điều kiện áp dụng Nghị quyết 43/2026/QH16 — dùng riêng khi cần hiển thị badge/ghi chú mà không cần tính lại số thuế. */
+export function isEligibleForTaxReduction43(
+  yearlyRevenue: number,
+  taxYear: number = new Date().getFullYear()
+): boolean {
+  const cfg = TAX_REDUCTION_43_2026;
+  if (!cfg.enabled) return false;
+  if (!cfg.applicableYears.includes(taxYear)) return false;
+  if (yearlyRevenue > cfg.maxYearlyRevenue) return false;
+  return true;
+}

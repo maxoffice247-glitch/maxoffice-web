@@ -16,6 +16,9 @@ import {
   HOUSEHOLD_INDUSTRY_ORDER,
   HOUSEHOLD_TAX_EXEMPT_REVENUE_YEARLY,
   HOUSEHOLD_FLAT_METHOD_MAX_REVENUE_YEARLY,
+  TAX_REDUCTION_43_2026,
+  applyTaxReduction43,
+  isEligibleForTaxReduction43,
   type HouseholdIndustryKey,
 } from "@/lib/taxConstants";
 
@@ -37,17 +40,27 @@ export default function TaxComparisonTool() {
 
   const result = useMemo(() => {
     // Phương án 1 — Thuế TNCN theo lương/tiền công (biểu luỹ tiến 5 bậc).
+    // LƯU Ý: Nghị quyết 43/2026/QH16 chỉ giảm thuế cho thu nhập từ HOẠT
+    // ĐỘNG KINH DOANH — tiền lương/tiền công KHÔNG thuộc phạm vi nghị
+    // quyết này, nên nhánh này KHÔNG gọi applyTaxReduction43().
     const deduction = PIT_PERSONAL_DEDUCTION + dependents * PIT_DEPENDENT_DEDUCTION;
     const taxableIncome = Math.max(0, monthlyIncome - deduction);
     const pitTaxMonthly = calculatePitProgressive(taxableIncome);
     const pitNetMonthly = monthlyIncome - pitTaxMonthly;
 
     // Phương án 2 — Thuế hộ kinh doanh theo % doanh thu (phương pháp khoán).
+    // Đây chính là "thu nhập từ hoạt động kinh doanh của cá nhân cư trú
+    // (hộ kinh doanh)" mà Nghị quyết 43/2026/QH16 giảm 30% SỐ THUẾ phải
+    // nộp, nếu doanh thu hằng năm ≤10 tỷ đồng và kỳ tính thuế là 2026/2027
+    // — xem TAX_REDUCTION_43_2026 trong taxConstants.ts.
     const yearlyRevenue = monthlyIncome * 12;
     const isExempt = yearlyRevenue <= HOUSEHOLD_TAX_EXEMPT_REVENUE_YEARLY;
     const industry = HOUSEHOLD_INDUSTRY_RATES[industryKey];
     const householdRate = industry.vatRate + industry.pitRate;
-    const householdTaxMonthly = isExempt ? 0 : monthlyIncome * householdRate;
+    const householdTaxBeforeReduction = isExempt ? 0 : monthlyIncome * householdRate;
+    const reduction43Eligible = !isExempt && isEligibleForTaxReduction43(yearlyRevenue);
+    const householdTaxMonthly = applyTaxReduction43(householdTaxBeforeReduction, yearlyRevenue);
+    const reduction43SavedMonthly = householdTaxBeforeReduction - householdTaxMonthly;
     const householdNetMonthly = monthlyIncome - householdTaxMonthly;
     const overFlatMethodCap = yearlyRevenue > HOUSEHOLD_FLAT_METHOD_MAX_REVENUE_YEARLY;
 
@@ -61,7 +74,10 @@ export default function TaxComparisonTool() {
       isExempt,
       industry,
       householdRate,
+      householdTaxBeforeReduction,
+      reduction43Eligible,
       householdTaxMonthly,
+      reduction43SavedMonthly,
       householdNetMonthly,
       overFlatMethodCap,
       diff,
@@ -188,6 +204,13 @@ export default function TaxComparisonTool() {
                     {formatVND(PIT_PERSONAL_DEDUCTION)} + {dependents} người phụ thuộc ×{" "}
                     {formatVND(PIT_DEPENDENT_DEDUCTION)}).
                   </p>
+                  {/* {TAX_REDUCTION_43_2026.sourceLabel} chỉ giảm thuế cho thu
+                      nhập từ KINH DOANH, không áp dụng cho lương/tiền công —
+                      nói rõ ở đây để không bị hiểu nhầm là quên áp dụng. */}
+                  <p className="mt-2 text-[11px] leading-relaxed text-body-text/70 italic">
+                    {TAX_REDUCTION_43_2026.sourceLabel} không áp dụng cho thu nhập từ tiền
+                    lương/tiền công.
+                  </p>
                 </div>
 
                 {/* Phương án 2 — Hộ kinh doanh */}
@@ -207,6 +230,20 @@ export default function TaxComparisonTool() {
                     </div>
                   ) : (
                     <div className="space-y-3">
+                      {/* Badge nổi bật — chỉ hiện khi thực sự đủ điều kiện
+                          (doanh thu ≤10 tỷ/năm, kỳ tính thuế 2026-2027) để
+                          không gây hiểu nhầm là áp dụng cho mọi trường hợp. */}
+                      {result.reduction43Eligible && (
+                        <div className="flex items-start gap-2 rounded-lg border border-accent/25 bg-accent/8 px-3 py-2.5">
+                          <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
+                          <p className="text-[12px] leading-snug font-semibold text-accent">
+                            Đã áp dụng ưu đãi giảm {(TAX_REDUCTION_43_2026.rate * 100).toLocaleString("vi-VN")}%
+                            thuế theo {TAX_REDUCTION_43_2026.sourceLabel} (hiệu lực từ{" "}
+                            {TAX_REDUCTION_43_2026.effectiveDateLabel}, áp dụng cho kỳ tính thuế
+                            2026-2027).
+                          </p>
+                        </div>
+                      )}
                       <div className="flex items-center justify-between border-b border-line pb-3">
                         <span className="text-[13.5px] text-body-text">Thuế phải nộp</span>
                         <div className="text-right">
@@ -217,6 +254,12 @@ export default function TaxComparisonTool() {
                           <div className="text-[11.5px] text-body-text">
                             {formatVND(result.householdTaxMonthly * 12)}/năm
                           </div>
+                          {result.reduction43Eligible && (
+                            <div className="mt-1 text-[11px] text-accent">
+                              Trước ưu đãi {formatVND(result.householdTaxBeforeReduction)} — tiết kiệm{" "}
+                              {formatVND(result.reduction43SavedMonthly)}/tháng
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -233,6 +276,19 @@ export default function TaxComparisonTool() {
                       {(result.industry.vatRate * 100).toLocaleString("vi-VN")}% + TNCN{" "}
                       {(result.industry.pitRate * 100).toLocaleString("vi-VN")}% ={" "}
                       {(result.householdRate * 100).toLocaleString("vi-VN")}% doanh thu.
+                    </p>
+                  )}
+                  {!result.isExempt && (
+                    <p className="mt-2 text-[11px] leading-relaxed text-body-text/70 italic">
+                      Mức giảm {(TAX_REDUCTION_43_2026.rate * 100).toLocaleString("vi-VN")}% chỉ áp
+                      dụng cho doanh thu hằng năm không quá{" "}
+                      {(TAX_REDUCTION_43_2026.maxYearlyRevenue / 1_000_000_000).toLocaleString(
+                        "vi-VN"
+                      )}{" "}
+                      tỷ đồng. Các trường hợp đặc biệt (doanh nghiệp mới thành lập, tách/chia doanh
+                      nghiệp...) nên tham khảo thêm hướng dẫn chi tiết từ cơ quan thuế hoặc chuyên
+                      viên tư vấn, vì Nghị định hướng dẫn chi tiết của Chính phủ có thể chưa ban
+                      hành đầy đủ tại thời điểm này.
                     </p>
                   )}
                   {result.overFlatMethodCap && (
