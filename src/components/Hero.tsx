@@ -167,15 +167,35 @@ export default function Hero() {
       className="relative flex min-h-[80vh] origin-top items-center overflow-hidden pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-28 lg:pb-32"
     >
         <motion.div className="absolute inset-x-0 -top-6 -bottom-6" style={bgParallaxStyle}>
-          <Image
-            src={heroImage}
-            alt="Không gian văn phòng MAX OFFICE"
-            fill
-            loading="eager"
-            fetchPriority="high"
-            sizes="100vw"
-            className="object-cover object-center"
-          />
+          {/* Render CẢ 2 ảnh candidate luôn (không chỉ ảnh đang chọn), chồng
+              lên nhau qua `fill`, chỉ đổi opacity theo `heroImage` — thay vì
+              trước đây chỉ render 1 <Image> và đổi `src` sau khi mount.
+              Lý do: Lighthouse LCP audit (lcp-discovery-insight) đo được
+              ảnh thứ 2 "requestDiscoverable: false" — vì state đổi TRONG
+              useEffect (đúng, tránh hydration mismatch) nên trình duyệt chỉ
+              biết cần tải ảnh đó SAU khi JS chạy, mất ~460ms "resource load
+              delay" mỗi khi ngẫu nhiên rơi vào ảnh thứ 2, kéo điểm
+              Performance trang chủ xuống 91 (dưới mức 94-99). Next.js tự
+              chèn <link rel="preload"> cho MỌI <Image> có loading="eager" —
+              render cả 2 ảnh nghĩa là CẢ 2 đều được preload từ đầu, ảnh nào
+              được chọn cũng đã có sẵn trong cache, không còn độ trễ khám
+              phá. Không đụng đến cơ chế useState/useEffect chọn ngẫu nhiên
+              (đã xác nhận an toàn, tránh hydration mismatch) — chỉ đổi CÁI
+              GÌ effect đó điều khiển (opacity hiển thị, thay vì src tải). */}
+          {HERO_IMAGES.map((src) => (
+            <Image
+              key={src}
+              src={src}
+              alt="Không gian văn phòng MAX OFFICE"
+              fill
+              loading="eager"
+              fetchPriority="high"
+              sizes="100vw"
+              className={`object-cover object-center transition-opacity duration-500 ${
+                heroImage === src ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ))}
           {/* Left-to-right wash — darkest (65%) at the left edge under the text,
               fading to clear by ~65% width where all 3 photos' busier detail
               (desks, skyline) sits. */}
