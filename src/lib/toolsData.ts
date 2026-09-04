@@ -42,8 +42,9 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
     title: "Công cụ tính toán",
     description: "Trả lời vài câu hỏi ngắn, nhận kết quả và gợi ý ngay lập tức.",
     tools: [
-      // "Tìm VPA theo nhu cầu" và "So sánh thuế" cố định 2 vị trí đầu (điểm
-      // nhấn, icon tô đỏ) — các mục còn lại giữ nguyên thứ tự tương đối sau đó.
+      // "Tìm VPA theo nhu cầu", "So sánh thuế" và "Soạn hồ sơ doanh nghiệp"
+      // cố định 3 vị trí đầu (điểm nhấn, icon tô đỏ) — các mục còn lại giữ
+      // nguyên thứ tự tương đối sau đó.
       {
         slug: "tim-goi-phu-hop",
         icon: TagIcon,
@@ -69,6 +70,7 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
         titleFull: "Soạn hồ sơ doanh nghiệp tự động",
         desc: "Điền thông tin, nhận ngay bộ hồ sơ soạn sẵn cho thành lập mới, mở chi nhánh, chuyển nhượng vốn, đổi địa chỉ GPKD và Mẫu số 12.",
         linkLabel: "Dùng công cụ ngay",
+        highlight: true,
       },
       {
         slug: "chon-goi-van-phong",
