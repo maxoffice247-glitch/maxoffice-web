@@ -9,6 +9,7 @@ import {
   ScaleIcon,
   RouteIcon,
   TagIcon,
+  WalletIcon,
 } from "@/components/icons";
 import { ACTIVE_BRANCH_COUNT } from "./locationsData";
 
@@ -71,6 +72,14 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
         desc: "Điền thông tin, nhận ngay bộ hồ sơ soạn sẵn cho thành lập mới, mở chi nhánh, chuyển nhượng vốn, đổi địa chỉ GPKD và Mẫu số 12.",
         linkLabel: "Dùng công cụ ngay",
         highlight: true,
+      },
+      {
+        slug: "tao-ma-qr-thanh-toan",
+        icon: WalletIcon,
+        title: "Tạo mã QR thanh toán",
+        titleFull: "Tạo mã QR thanh toán tự động",
+        desc: "Tạo mã QR VietQR để nhận thanh toán nhanh chóng, miễn phí — dùng được cho bất kỳ mục đích thanh toán nào.",
+        linkLabel: "Dùng công cụ ngay",
       },
       {
         slug: "chon-goi-van-phong",

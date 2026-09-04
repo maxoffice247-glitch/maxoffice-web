@@ -99,7 +99,7 @@ export default function ToolsMegaMenu({ solid, isActive }: { solid: boolean; isA
                     Cần tư vấn nhanh?
                   </span>
                   <p className="text-[13.5px] leading-relaxed text-white/75">
-                    12 công cụ miễn phí giúp bạn tự tra cứu — hoặc gọi ngay để
+                    13 công cụ miễn phí giúp bạn tự tra cứu — hoặc gọi ngay để
                     được chuyên viên hỗ trợ trực tiếp.
                   </p>
                 </div>
