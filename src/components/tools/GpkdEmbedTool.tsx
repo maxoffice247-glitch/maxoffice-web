@@ -16,6 +16,15 @@ import { SpinnerIcon } from "../icons";
  * nghề, vốn điều lệ...) — ưu tiên hiển thị đủ nội dung mà không cuộn kép;
  * nếu nội dung bên trong dài hơn nữa, trình duyệt sẽ tự thêm scrollbar
  * riêng cho iframe (chấp nhận được, không phải lỗi).
+ *
+ * src trỏ THẲNG vào URL Apps Script (script.google.com/.../exec), không
+ * qua wrapper gpkd.maxoffice.vn — đã kiểm tra thực tế: wrapper KHÔNG
+ * forward query string vào iframe con của nó (`gpkd.maxoffice.vn?embed=1`
+ * không có tác dụng gì), trong khi bản thân Apps Script LẠI đọc đúng
+ * `?embed=1` và tự ẩn top bar "← Quay lại | MAX WORKSPACE" + banner hero
+ * xanh của nó (xác nhận qua so sánh trực tiếp có/không tham số, lặp lại 2
+ * lần cho chắc). `?embed=1` phải nằm trên URL script.google.com này mới
+ * có tác dụng.
  */
 export default function GpkdEmbedTool() {
   const [loaded, setLoaded] = useState(false);
@@ -39,7 +48,7 @@ export default function GpkdEmbedTool() {
             </div>
           )}
           <iframe
-            src="https://gpkd.maxoffice.vn"
+            src="https://script.google.com/macros/s/AKfycbxPSzfvJ70-XLuLWcv6xXrOExB7YJ2D3SXHkEaRjkVV2ItnI-wfN30hfyMcdt9rrjMi/exec?embed=1"
             title="Soạn hồ sơ doanh nghiệp tự động"
             onLoad={() => setLoaded(true)}
             className="block w-full min-h-[650px] sm:min-h-[820px]"

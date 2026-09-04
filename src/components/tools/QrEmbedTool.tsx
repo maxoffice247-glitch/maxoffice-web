@@ -18,6 +18,15 @@ import { SpinnerIcon } from "../icons";
  * cụ tạo mã QR có form ngắn hơn (số tiền, nội dung chuyển khoản) nên hiếm
  * khi cần cuộn, nhưng vẫn giữ min-height rộng để không bị hụt khung khi
  * hiển thị mã QR kết quả.
+ *
+ * src trỏ THẲNG vào URL Apps Script (script.google.com/.../exec), không
+ * qua wrapper qr.maxoffice.vn — cùng phát hiện đã áp dụng cho
+ * GpkdEmbedTool.tsx: wrapper KHÔNG forward query string vào iframe con
+ * của nó (`qr.maxoffice.vn?embed=1` không có tác dụng gì), trong khi bản
+ * thân Apps Script LẠI đọc đúng `?embed=1` và tự ẩn top bar "← Quay lại |
+ * MAX WORKSPACE" của nó (xác nhận qua so sánh trực tiếp có/không tham
+ * số). `?embed=1` phải nằm trên URL script.google.com này mới có tác
+ * dụng.
  */
 export default function QrEmbedTool() {
   const [loaded, setLoaded] = useState(false);
@@ -41,7 +50,7 @@ export default function QrEmbedTool() {
             </div>
           )}
           <iframe
-            src="https://qr.maxoffice.vn"
+            src="https://script.google.com/macros/s/AKfycbzxu1M2jHCZx78WZIcFrVdqdHqyXvFh6QHl0WBZZevU5D1XUhpAMni3zgJoEMVXY-NI/exec?embed=1"
             title="Tạo mã QR thanh toán tự động"
             onLoad={() => setLoaded(true)}
             className="block w-full min-h-[650px] sm:min-h-[820px]"
