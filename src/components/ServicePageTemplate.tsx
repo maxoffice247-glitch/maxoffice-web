@@ -83,6 +83,34 @@ export default function ServicePageTemplate({ data }: { data: ServiceData }) {
         serviceName={serviceName}
       />
       {data.slug === "thanh-lap-doanh-nghiep" && <AmendmentPricingTable />}
+      {data.slug === "thanh-lap-doanh-nghiep" && (
+        <section className="py-9">
+          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+            <Link
+              href="/tien-ich/soan-ho-so-doanh-nghiep"
+              className="group flex flex-wrap items-center gap-5 rounded-2xl bg-gradient-to-br from-navy to-primary-dark p-7 text-white transition-transform duration-300 ease-out hover:-translate-y-1 sm:flex-nowrap"
+            >
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white">
+                <DocumentCheckIcon className="h-7 w-7" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <span className="mb-1.5 inline-block rounded-full bg-accent px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase">
+                  Công cụ miễn phí
+                </span>
+                <h3 className="text-[18px] font-bold">Soạn hồ sơ doanh nghiệp tự động</h3>
+                <p className="mt-1 text-[13.5px] text-white/75">
+                  Thành lập mới, mở chi nhánh, chuyển nhượng vốn, đổi địa chỉ GPKD, Mẫu số 12 —
+                  điền thông tin, nhận hồ sơ ngay, không cần chờ soạn thủ công.
+                </p>
+              </div>
+              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[13.5px] font-bold text-navy transition-transform duration-200 group-hover:translate-x-1">
+                Dùng ngay
+                <ArrowRightSmallIcon />
+              </span>
+            </Link>
+          </div>
+        </section>
+      )}
       <ServiceProcess
         title={`Quy trình sử dụng dịch vụ ${data.name}`}
         description="Chỉ 4 bước đơn giản để bắt đầu sử dụng dịch vụ."

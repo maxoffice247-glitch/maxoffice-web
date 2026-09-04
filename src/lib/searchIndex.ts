@@ -393,7 +393,13 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Tiện ích miễn phí",
     category: "Trang",
     href: "/tien-ich",
-    desc: "11 công cụ miễn phí hỗ trợ doanh nghiệp",
+    desc: "12 công cụ miễn phí hỗ trợ doanh nghiệp",
+  },
+  {
+    title: "Soạn hồ sơ doanh nghiệp tự động",
+    category: "Tiện ích",
+    href: "/tien-ich/soan-ho-so-doanh-nghiep",
+    desc: "Điền thông tin, nhận ngay hồ sơ soạn sẵn: thành lập mới, mở chi nhánh, chuyển nhượng vốn, đổi địa chỉ GPKD, Mẫu số 12",
   },
   {
     title: "Công cụ chọn gói văn phòng phù hợp",

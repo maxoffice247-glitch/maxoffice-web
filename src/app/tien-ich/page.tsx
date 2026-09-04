@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tien-ich" },
   title: "Tiện Ích Miễn Phí - Công Cụ, Checklist, So Sánh | MAX OFFICE",
   description:
-    "11 tiện ích miễn phí: công cụ tính toán, checklist tải PDF, bảng so sánh dịch vụ/loại hình doanh nghiệp và timeline quy trình thành lập — hỗ trợ ra quyết định nhanh chóng.",
+    "12 tiện ích miễn phí: công cụ tính toán, checklist tải PDF, bảng so sánh dịch vụ/loại hình doanh nghiệp và timeline quy trình thành lập — hỗ trợ ra quyết định nhanh chóng.",
   // KHÔNG khai báo openGraph.images ở đây — ảnh OG giờ đến từ
   // opengraph-image.tsx cùng thư mục (renderOgImage(), có logo+overlay).
   // Trước đây field này trỏ thẳng 1 ảnh nền thô, và vì metadata khai báo
@@ -28,7 +28,7 @@ export default function TienIchPage() {
         image="/images/hero-ve-chung-toi-2.png"
         eyebrow="Tiện ích"
         title="Công cụ miễn phí hỗ trợ doanh nghiệp"
-        description="11 tiện ích miễn phí giúp bạn ra quyết định nhanh chóng — từ công cụ tính toán, checklist tải PDF, đến bảng so sánh và lộ trình thành lập doanh nghiệp."
+        description="12 tiện ích miễn phí giúp bạn ra quyết định nhanh chóng — từ công cụ tính toán, checklist tải PDF, đến bảng so sánh và lộ trình thành lập doanh nghiệp."
       />
       <Breadcrumb items={[{ label: "Tiện ích" }]} />
 

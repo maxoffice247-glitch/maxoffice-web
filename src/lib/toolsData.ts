@@ -63,6 +63,14 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
         highlight: true,
       },
       {
+        slug: "soan-ho-so-doanh-nghiep",
+        icon: DocumentCheckIcon,
+        title: "Soạn hồ sơ doanh nghiệp",
+        titleFull: "Soạn hồ sơ doanh nghiệp tự động",
+        desc: "Điền thông tin, nhận ngay bộ hồ sơ soạn sẵn cho thành lập mới, mở chi nhánh, chuyển nhượng vốn, đổi địa chỉ GPKD và Mẫu số 12.",
+        linkLabel: "Dùng công cụ ngay",
+      },
+      {
         slug: "chon-goi-van-phong",
         icon: KeyIcon,
         title: "Chọn gói văn phòng",
