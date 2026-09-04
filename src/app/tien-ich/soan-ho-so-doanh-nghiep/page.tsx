@@ -53,7 +53,15 @@ const FAQS = [
 export default function SoanHoSoDoanhNghiepPage() {
   return (
     <ToolPageTemplate
-      heroImage="/images/ho-so-thanh-lap-cong-ty-tnhh.jpg"
+      // Ảnh riêng cho trang này (thay ảnh dùng chung "hồ sơ TNHH" tạm dùng
+      // lúc mới tạo trang) — tỉ lệ 1915×821 (~2.33:1) khớp tốt với khung
+      // PageHero (object-cover, section rộng-thấp). KHÔNG dùng ảnh này cho
+      // opengraph-image.jpg: tỉ lệ rộng hơn chuẩn OG 1200×630 (1.91:1) nên
+      // sẽ bị crop 2 bên khi nền tảng mạng xã hội hiển thị, và ảnh OG hiện
+      // tại (og-gpkd.jpg) đã có sẵn logo/tiêu đề MAX OFFICE — nhận diện tốt
+      // hơn khi hiện dạng thumbnail nhỏ trong link preview so với 1 ảnh
+      // chụp văn phòng không chữ.
+      heroImage="/images/Hero-soan-thao-gpkd.png"
       heroTitle="Soạn hồ sơ doanh nghiệp tự động"
       heroDescription="Điền thông tin theo hướng dẫn, nhận ngay bộ hồ sơ soạn sẵn cho thành lập mới, mở chi nhánh, chuyển nhượng vốn, đổi địa chỉ GPKD và Mẫu số 12 — miễn phí, không cần chờ soạn thủ công."
       breadcrumbLabel="Soạn hồ sơ doanh nghiệp"
