@@ -446,6 +446,27 @@ export const VUON_LAI_VO_PROMOS: VuonLaiPromo[] = [
 /* PREMIUM (3 gói) dùng chung cho Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức.    */
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Tính năng đi kèm dùng CHUNG cho MỌI gói của cả 2 hệ giá "4 gói SAVE/
+ * SILVER/GOLD/PREMIUM" (bên dưới) và "3 gói SILVER/GOLD/PREMIUM" ("các
+ * Quận còn lại", phía sau file) — trước đây khai báo thành 2 hằng số
+ * riêng biệt (SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES và SILVER_GOLD_
+ * PREMIUM_COMMON_FEATURES), từng bị LỆCH NHAU: bản của hệ "3 gói" có
+ * thêm dòng "Bảng tên vật lý (mica)" — trùng ý với field `nameplate`
+ * (đã hiển thị riêng ngay phía trên trong UI, xem Quan3CuVOServices.tsx/
+ * SilverGoldPremiumServices.tsx) nên hiện lặp lại 2 lần trên mỗi thẻ giá
+ * SILVER/GOLD/PREMIUM của 8 chi nhánh dùng hệ "3 gói". Đã gộp về 1 nguồn
+ * duy nhất để tránh lệch lại trong tương lai — sửa 1 chỗ, áp dụng cho cả
+ * 2 hệ ngay lập tức.
+ */
+const TIER_FAMILY_COMMON_FEATURES = [
+  "Địa chỉ đăng ký kinh doanh (ĐKKD) + đăng ký thuế",
+  "Bảng tên điện tử",
+  "Tiếp tân hành chính văn phòng",
+  "Tiếp nhận, chuyển tiếp thư từ, bưu phẩm",
+  "Tư vấn miễn phí thành lập doanh nghiệp & kế toán",
+];
+
 export type SaveSilverGoldPremiumPlan = {
   key: "save" | "silver" | "gold" | "premium";
   name: string;
@@ -459,14 +480,6 @@ export type SaveSilverGoldPremiumPlan = {
   features: string[];
 };
 
-const SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES = [
-  "Địa chỉ đăng ký kinh doanh (ĐKKD) + đăng ký thuế",
-  "Bảng tên điện tử",
-  "Tiếp tân hành chính văn phòng",
-  "Tiếp nhận, chuyển tiếp thư từ, bưu phẩm",
-  "Tư vấn miễn phí thành lập doanh nghiệp & kế toán",
-];
-
 /** 4 gói văn phòng ảo dùng chung cho các chi nhánh áp dụng bảng giá SAVE/SILVER/GOLD/PREMIUM — giá CHƯA bao gồm VAT 10%. */
 export const SAVE_SILVER_GOLD_PREMIUM_PLANS: SaveSilverGoldPremiumPlan[] = [
   {
@@ -479,7 +492,7 @@ export const SAVE_SILVER_GOLD_PREMIUM_PLANS: SaveSilverGoldPremiumPlan[] = [
     guestLounge: "Miễn phí 30 phút/ngày",
     addressChangeSupport: false,
     legalDossier: false,
-    features: SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES,
+    features: TIER_FAMILY_COMMON_FEATURES,
   },
   {
     key: "silver",
@@ -491,7 +504,7 @@ export const SAVE_SILVER_GOLD_PREMIUM_PLANS: SaveSilverGoldPremiumPlan[] = [
     guestLounge: "Miễn phí 30 phút/ngày",
     addressChangeSupport: false,
     legalDossier: false,
-    features: SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES,
+    features: TIER_FAMILY_COMMON_FEATURES,
   },
   {
     key: "gold",
@@ -503,7 +516,7 @@ export const SAVE_SILVER_GOLD_PREMIUM_PLANS: SaveSilverGoldPremiumPlan[] = [
     guestLounge: "Miễn phí 60 phút/ngày",
     addressChangeSupport: true,
     legalDossier: false,
-    features: SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES,
+    features: TIER_FAMILY_COMMON_FEATURES,
   },
   {
     key: "premium",
@@ -511,11 +524,17 @@ export const SAVE_SILVER_GOLD_PREMIUM_PLANS: SaveSilverGoldPremiumPlan[] = [
     price: 990000,
     duration: "/ tháng",
     nameplate: "Có bảng tên vật lý (mica)",
-    meetingRoom: "Miễn phí 120 phút/tháng",
+    // "(≤ 7 người)" thêm vào để khớp ĐÚNG với hệ "3 gói SILVER/GOLD/
+    // PREMIUM" (SILVER_GOLD_PREMIUM_VO_PLANS bên dưới) — trước đây thiếu
+    // ghi chú này (lệch dữ liệu khi 2 hệ được tạo ở 2 thời điểm khác
+    // nhau) khiến PREMIUM 990K của hệ này và hệ kia bị coi là 2 gói khác
+    // nhau trên /tien-ich/tim-goi-phu-hop dù thực chất là 1 gói giống hệt
+    // nhau — nay đã xác nhận giống nhau thật, gộp cho khớp.
+    meetingRoom: "Miễn phí 120 phút/tháng (≤ 7 người)",
     guestLounge: "Miễn phí 60 phút/ngày",
     addressChangeSupport: true,
     legalDossier: true,
-    features: SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES,
+    features: TIER_FAMILY_COMMON_FEATURES,
   },
 ];
 
@@ -566,15 +585,6 @@ export type SilverGoldPremiumPlan = {
   features: string[];
 };
 
-const SILVER_GOLD_PREMIUM_COMMON_FEATURES = [
-  "Địa chỉ đăng ký kinh doanh (ĐKKD) + đăng ký thuế",
-  "Bảng tên điện tử",
-  "Bảng tên vật lý (mica)",
-  "Tiếp tân hành chính văn phòng",
-  "Tiếp nhận, chuyển tiếp thư từ, bưu phẩm",
-  "Tư vấn miễn phí thành lập doanh nghiệp & kế toán",
-];
-
 /** 3 gói văn phòng ảo dùng chung cho các chi nhánh áp dụng bảng giá "các Quận còn lại" — giá CHƯA bao gồm VAT 10%. */
 export const SILVER_GOLD_PREMIUM_VO_PLANS: SilverGoldPremiumPlan[] = [
   {
@@ -587,7 +597,11 @@ export const SILVER_GOLD_PREMIUM_VO_PLANS: SilverGoldPremiumPlan[] = [
     guestLounge: "Miễn phí 30 phút/ngày",
     addressChangeSupport: false,
     legalDossier: false,
-    features: SILVER_GOLD_PREMIUM_COMMON_FEATURES,
+    // features KHÔNG lặp lại "Bảng tên vật lý (mica)" — thông tin đó đã
+    // hiển thị riêng qua field `nameplate` ngay phía trên trong UI (dòng
+    // "Bảng tên: ..."), thêm lại vào đây từng khiến 1 ý hiện lặp 2 lần
+    // trên mỗi thẻ giá (đã sửa — xem TIER_FAMILY_COMMON_FEATURES).
+    features: TIER_FAMILY_COMMON_FEATURES,
   },
   {
     key: "sgp-gold",
@@ -599,7 +613,7 @@ export const SILVER_GOLD_PREMIUM_VO_PLANS: SilverGoldPremiumPlan[] = [
     guestLounge: "Miễn phí 60 phút/ngày",
     addressChangeSupport: true,
     legalDossier: false,
-    features: SILVER_GOLD_PREMIUM_COMMON_FEATURES,
+    features: TIER_FAMILY_COMMON_FEATURES,
   },
   {
     key: "sgp-premium",
@@ -611,7 +625,16 @@ export const SILVER_GOLD_PREMIUM_VO_PLANS: SilverGoldPremiumPlan[] = [
     guestLounge: "Miễn phí 60 phút/ngày",
     addressChangeSupport: true,
     legalDossier: true,
-    features: SILVER_GOLD_PREMIUM_COMMON_FEATURES,
+    // Giống HỆT định nghĩa "premium" trong SAVE_SILVER_GOLD_PREMIUM_PLANS
+    // ở trên (cùng giá 990.000đ, cùng mọi field) sau khi đã chuẩn hoá —
+    // getGroupedPlans() (planFinder.ts) tự động gộp 2 nhóm chi nhánh
+    // thành 1 PlanGroup duy nhất (12 chi nhánh) nhờ groupSignature() so
+    // khớp planName+price+features, KHÔNG cần sửa gì thêm ở planFinder.ts
+    // hay UI. Vẫn giữ 2 entry PREMIUM riêng (ở đây và ở mảng kia) vì mỗi
+    // bên còn phục vụ bảng giá riêng của trang chi nhánh thuộc hệ đó
+    // (Quan3CuVOServices.tsx / SilverGoldPremiumServices.tsx) — xoá hẳn 1
+    // bên sẽ làm mất PREMIUM khỏi bảng giá 4 hoặc 8 chi nhánh còn lại.
+    features: TIER_FAMILY_COMMON_FEATURES,
   },
 ];
 

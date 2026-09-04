@@ -273,11 +273,15 @@ function slugifyVN(text: string): string {
 
 /**
  * Khoá gộp nhóm: CÙNG tên gói + CÙNG giá + CÙNG danh sách tính năng (nối
- * chuỗi để so sánh chính xác từng dòng). Chỉ trùng tên/giá KHÔNG đủ để gộp —
- * vd. "PREMIUM" 990.000đ tồn tại ở CẢ hệ Quận 3 (cũ) lẫn hệ SILVER/GOLD/
- * PREMIUM dùng chung, nhưng 2 hệ có nội dung tính năng khác nhau (phòng họp
- * ghi thêm "≤ 7 người", danh sách tính năng gốc khác nhau) nên đây LÀ 2
- * nhóm riêng biệt, không gộp nhầm dù tên và giá giống hệt.
+ * chuỗi để so sánh chính xác từng dòng). Chỉ trùng tên/giá KHÔNG đủ để gộp
+ * — vd. "SILVER" tồn tại ở CẢ hệ Quận 3 (cũ)/Quận 1 (cũ) (479.000đ) lẫn hệ
+ * "SILVER/GOLD/PREMIUM" dùng chung (379.000đ, xem SILVER_GOLD_PREMIUM_
+ * VO_PLANS ở virtualOfficePlans.ts), nhưng giá khác nhau nên đây LÀ 2
+ * nhóm riêng biệt — không gộp nhầm dù trùng tên "SILVER". Ngược lại,
+ * "PREMIUM" 990.000đ của cả 2 hệ đó CÙNG giá và CÙNG tính năng hệt nhau
+ * (đã chuẩn hoá — trước đây từng lệch dữ liệu nhỏ giữa 2 hệ khiến bị coi
+ * là 2 nhóm khác nhau dù đáng lẽ là 1 gói) nên TỰ ĐỘNG gộp thành 1
+ * PlanGroup duy nhất ở đây, không cần code riêng cho trường hợp này.
  */
 function groupSignature(p: OfferedPlan): string {
   return `${p.planName}__${p.price}__${p.features.join("|")}`;
