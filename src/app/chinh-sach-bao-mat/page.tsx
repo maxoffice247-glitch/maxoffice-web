@@ -9,12 +9,18 @@ export const metadata: Metadata = {
     "Chính sách bảo mật thông tin cá nhân của MAX OFFICE: mục đích thu thập, cách sử dụng, thời gian lưu trữ và quyền của khách hàng theo Nghị định 13/2023/NĐ-CP.",
 };
 
-const LAST_UPDATED = "10/07/2026";
+const LAST_UPDATED = "04/09/2026";
 
 type Section = {
   heading: string;
   paragraphs: string[];
   bullets?: string[];
+  /** Đoạn văn hiển thị SAU danh sách bullets (nếu có) — dùng khi 1 mục cần
+      cả bullet-list (nhóm dữ liệu chung) VÀ đoạn văn dài hơn nói riêng về
+      1 trường hợp cụ thể (vd. công cụ Soạn hồ sơ doanh nghiệp tự động ở
+      mục 2), tránh phải tách thành mục con riêng lệch với cấu trúc phẳng
+      hiện có của toàn trang. */
+  afterBullets?: string[];
 };
 
 const SECTIONS: Section[] = [
@@ -29,6 +35,10 @@ const SECTIONS: Section[] = [
     heading: "2. Loại dữ liệu thu thập",
     paragraphs: ["Khi bạn điền các biểu mẫu trên website, chúng tôi có thể thu thập:"],
     bullets: ["Họ và tên", "Số điện thoại", "Địa chỉ email", "Dịch vụ quan tâm", "Ghi chú / yêu cầu cụ thể (nếu có)"],
+    afterBullets: [
+      "Ngoài các biểu mẫu liên hệ nêu trên, MAX OFFICE cung cấp công cụ \"Soạn hồ sơ doanh nghiệp tự động\" (tại địa chỉ gpkd.maxoffice.vn, được nhúng trong website chính) để hỗ trợ khách hàng soạn thảo hồ sơ đăng ký doanh nghiệp. Khi sử dụng công cụ này, chúng tôi có thể thu thập thêm: họ tên, số CCCD/CMND, địa chỉ thường trú của người đại diện/thành viên góp vốn, và thông tin công ty (tên, vốn điều lệ, ngành nghề) để tạo ra hồ sơ đăng ký doanh nghiệp theo yêu cầu của bạn. Dữ liệu này được lưu trữ nội bộ, chỉ Công ty TNHH MAX Office có quyền truy cập, không chia sẻ cho bất kỳ bên thứ ba nào ngoài phạm vi xử lý hồ sơ.",
+      "Đối với các giao dịch thanh toán liên quan đến dịch vụ soạn hồ sơ (nếu có), quá trình thanh toán được thực hiện thông qua cổng thanh toán trung gian SePay. MAX OFFICE không lưu trữ bất kỳ thông tin thẻ/tài khoản ngân hàng nào của bạn — toàn bộ thông tin thanh toán được xử lý trực tiếp bởi SePay theo chính sách bảo mật riêng của đơn vị này.",
+    ],
   },
   {
     heading: "3. Cách sử dụng dữ liệu",
@@ -107,6 +117,15 @@ export default function PrivacyPolicyPage() {
                       </li>
                     ))}
                   </ul>
+                )}
+                {section.afterBullets && (
+                  <div className="mt-4">
+                    {section.afterBullets.map((p, i) => (
+                      <p key={i} className="mb-4 last:mb-0">
+                        {p}
+                      </p>
+                    ))}
+                  </div>
                 )}
               </section>
             ))}
