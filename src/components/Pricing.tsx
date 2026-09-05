@@ -1,13 +1,16 @@
+import Link from "next/link";
 import SectionHead from "./SectionHead";
 import { RevealGroup, RevealItem } from "./Reveal";
 import Button from "./Button";
 import LeadFormButton from "./LeadFormButton";
-import { CheckCircleIcon } from "./icons";
+import { CheckCircleIcon, SearchIcon, ArrowRightSmallIcon } from "./icons";
 import {
   VO_PROMO_NOTES,
   VO_PROMO_EFFECTIVE_DATE,
   VO_LONG_TERM_COMBO_NAME,
   VO_LONG_TERM_COMBO_DESC,
+  getLocationsForPlan,
+  type VirtualOfficePlanKey,
 } from "@/lib/virtualOfficePlans";
 
 type Plan = {
@@ -22,6 +25,12 @@ type Plan = {
   service: string;
   /** Link to the full service detail page for "Xem chi tiết". */
   detailHref: string;
+  /** Key trong VIRTUAL_OFFICE_PLANS (hệ LITE-RISE dùng chung 12 chi nhánh)
+      — CHỈ set cho 6 gói Văn phòng ảo, để tính số chi nhánh áp dụng qua
+      getLocationsForPlan() (dữ liệu có sẵn, không hardcode). Các nhóm gói
+      khác (Trọn gói, Thành lập DN, Kế toán) không có khái niệm "chi nhánh
+      áp dụng" theo nghĩa này nên không set field này. */
+  vpaKey?: VirtualOfficePlanKey;
 };
 
 const GROUPS: {
@@ -49,10 +58,11 @@ const GROUPS: {
         service: "Văn phòng ảo",
         price: "299.000đ",
         unit: "/ tháng",
-        desc: "Cạnh tranh nhất — chỉ áp dụng tại 5 chi nhánh. Bảng hiệu 500K tính riêng, thu 1 lần duy nhất.",
+        desc: "Cạnh tranh nhất — bảng hiệu 500K tính riêng, thu 1 lần duy nhất.",
         features: ["Địa chỉ đăng ký kinh doanh", "Lễ tân, Wifi", "Tham gia Workshop"],
         note: true,
         detailHref: "/van-phong-ao-gia-re",
+        vpaKey: "lite",
       },
       {
         name: "START",
@@ -62,6 +72,7 @@ const GROUPS: {
         desc: "Đầy đủ nhận diện cơ bản cho doanh nghiệp mới.",
         features: ["Bảng tên Mica & bảng hiệu công ty", "Lễ tân, Wifi", "Tham gia Workshop"],
         detailHref: "/services/van-phong-ao#bang-gia",
+        vpaKey: "start",
       },
       {
         name: "BASE",
@@ -72,6 +83,7 @@ const GROUPS: {
         features: ["Tất cả mục của START", "Guest Lounge, In-photo 100 tờ/năm", "Tư vấn Pháp lý & Thuế, AI Biz Health"],
         featured: true,
         detailHref: "/services/van-phong-ao#bang-gia",
+        vpaKey: "base",
       },
       {
         name: "ORIGIN",
@@ -81,6 +93,7 @@ const GROUPS: {
         desc: "Thêm tư vấn tự động hoá AI và hỗ trợ ưu tiên.",
         features: ["Tất cả mục của BASE", "Miễn phí tư vấn tự động hoá AI", "Ưu tiên hỗ trợ 24/7"],
         detailHref: "/services/van-phong-ao#bang-gia",
+        vpaKey: "origin",
       },
       {
         name: "ORIGIN+",
@@ -90,6 +103,7 @@ const GROUPS: {
         desc: "Có phòng họp nhỏ đi kèm hàng năm.",
         features: ["Tất cả mục của ORIGIN", "Phòng họp nhỏ 24h/năm", "Ưu tiên hỗ trợ 24/7"],
         detailHref: "/services/van-phong-ao#bang-gia",
+        vpaKey: "origin-plus",
       },
       {
         name: "RISE",
@@ -99,6 +113,7 @@ const GROUPS: {
         desc: "Cao cấp nhất — phòng họp lớn, chỗ ngồi linh hoạt hàng tháng.",
         features: ["Tất cả mục của ORIGIN+", "Phòng họp lớn 4h/năm, Flex Desk 4h/tháng", "Giảm 50% phí phòng họp VIP"],
         detailHref: "/services/van-phong-ao#bang-gia",
+        vpaKey: "rise",
       },
     ],
   },
@@ -213,6 +228,11 @@ const GROUPS: {
 ];
 
 function PricingCard({ plan }: { plan: Plan }) {
+  // Lấy động qua getLocationsForPlan() (LOCATION_VO_PLANS) — không hardcode
+  // — cùng nguồn dữ liệu + cùng công thức đếm mà GroupCard (chế độ "Xem
+  // theo gói" ở /tien-ich/tim-goi-phu-hop) đang dùng.
+  const branchCount = plan.vpaKey ? getLocationsForPlan(plan.vpaKey).length : undefined;
+
   return (
     <div
       className={`relative flex h-full flex-col rounded-2xl border p-7 text-left transition-all duration-400 ease-out hover:-translate-y-2 ${
@@ -226,8 +246,19 @@ function PricingCard({ plan }: { plan: Plan }) {
           Phổ biến nhất
         </span>
       )}
-      <div className={`mb-1.5 text-[15.5px] font-bold ${plan.featured ? "text-white" : "text-navy"}`}>
-        {plan.name}
+      <div className="mb-1.5 flex items-start justify-between gap-2">
+        <div className={`text-[15.5px] font-bold ${plan.featured ? "text-white" : "text-navy"}`}>
+          {plan.name}
+        </div>
+        {branchCount !== undefined && (
+          <span
+            className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold whitespace-nowrap ${
+              plan.featured ? "bg-white/15 text-[#8FC1F5]" : "bg-primary-tint text-primary"
+            }`}
+          >
+            {branchCount} chi nhánh
+          </span>
+        )}
       </div>
       <div className="flex items-baseline gap-1">
         <span className={`font-mono text-[28px] font-bold ${plan.featured ? "text-[#8FC1F5]" : "text-primary"}`}>
@@ -324,6 +355,40 @@ export default function Pricing() {
                     </p>
                   )}
                 </div>
+              )}
+              {/* CTA dẫn sang VPA finder — chỉ đặt sau nhóm Văn phòng ảo vì
+                  đây là nhóm có tình trạng "trùng giá khác nhóm chi nhánh"
+                  (VD SAVE 379K và SILVER 379K) mà 6 gói tiêu biểu ở đây
+                  KHÔNG thể hiện hết — 6-8 gói này chủ đích giữ gọn, không mở
+                  rộng đủ 15+ gói, nên cần lối tắt rõ ràng sang công cụ tra
+                  đúng gói theo khu vực thay vì đoán từ bảng giá rút gọn. */}
+              {group.title === "Văn phòng ảo — 6 gói dịch vụ" && (
+                <Link
+                  href="/tien-ich/tim-goi-phu-hop"
+                  className="group mt-8 flex flex-wrap items-center gap-5 rounded-2xl bg-gradient-to-br from-navy to-primary-dark p-7 text-white transition-transform duration-300 ease-out hover:-translate-y-1 sm:flex-nowrap"
+                >
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white">
+                    <SearchIcon className="h-7 w-7" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <span className="mb-1.5 inline-block rounded-full bg-accent px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase">
+                      Công cụ miễn phí
+                    </span>
+                    <h3 className="text-[18px] font-bold">
+                      Muốn biết chính xác gói nào áp dụng cho khu vực bạn quan tâm?
+                    </h3>
+                    <p className="mt-1 text-[13.5px] text-white/75">
+                      6 gói trên là bảng giá tiêu biểu — một số khu vực còn có gói cùng mức giá
+                      nhưng khác tên/tính năng (VD: SAVE và SILVER cùng 379.000đ nhưng áp dụng 2
+                      nhóm chi nhánh khác nhau). Dùng công cụ Tìm VPA theo nhu cầu để xem đúng gói
+                      theo khu vực bạn chọn.
+                    </p>
+                  </div>
+                  <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[13.5px] font-bold text-navy transition-transform duration-200 group-hover:translate-x-1">
+                    Tìm VPA theo nhu cầu
+                    <ArrowRightSmallIcon />
+                  </span>
+                </Link>
               )}
             </div>
           ))}
