@@ -8,6 +8,7 @@ import {
   ScreenIcon,
   DocumentCheckIcon,
   CalculatorIcon,
+  CheckCircleIcon,
   ArrowRightSmallIcon,
 } from "./icons";
 import { getPlansForLocation } from "@/lib/virtualOfficePlans";
@@ -61,8 +62,6 @@ export default function LocationServicesList({
   promotions?: LocationData["promotions"];
 }) {
   const voPlans = getPlansForLocation(slug);
-  const cheapest = voPlans.reduce((min, p) => (p.price < min.price ? p : min), voPlans[0]);
-  const voPlanNames = voPlans.map((p) => p.name).join(", ");
   const resolvedPromotions = resolveTimedPromotions(promotions);
 
   return (
@@ -73,28 +72,67 @@ export default function LocationServicesList({
           title={`Dịch vụ sẵn sàng tại văn phòng ${name}`}
           description="Toàn bộ 6 dịch vụ cốt lõi của MAX OFFICE đều được cung cấp tại chi nhánh này với mức giá minh bạch, không phát sinh."
         />
-        <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <RevealItem>
+
+        {/* Văn phòng ảo — hiện NGAY đủ card giá + checklist tính năng của
+            từng gói áp dụng tại ĐÚNG chi nhánh này (getPlansForLocation),
+            đồng bộ cách trình bày với Quan3CuVOServices.tsx/
+            SilverGoldPremiumServices.tsx (các hệ giá riêng) — trước đây chỉ
+            có 1 card link tóm tắt "Từ Xđ/tháng", phải bấm "Xem chi tiết"
+            sang /services/van-phong-ao mới thấy giá/tính năng từng gói.
+            KHÔNG thêm field breakdown "Bảng tên:/Phòng họp:..." — loại dữ
+            liệu đó không tồn tại cho VirtualOfficePlan (chỉ có
+            features: string[] phẳng), khác với 2 hệ giá kia. */}
+        <Reveal className="mb-6 rounded-2xl border border-line bg-white p-6 sm:p-7">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-tint text-primary">
+                <BuildingIcon className="h-5 w-5" />
+              </span>
+              <h3 className="text-[16px] font-bold text-navy">Văn phòng ảo</h3>
+            </div>
             <Link
               href="/services/van-phong-ao#bang-gia"
-              className="group flex h-full flex-col justify-between rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
+              className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-primary hover:gap-2.5"
             >
-              <div>
-                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
-                  <BuildingIcon className="h-5 w-5" />
-                </span>
-                <h3 className="mb-1.5 text-[15.5px] font-bold text-navy">Văn phòng ảo</h3>
-                <p className="font-mono text-[13.5px] font-bold text-primary">
-                  Từ {formatVND(cheapest.price)}/tháng
-                </p>
-                <p className="mt-1 text-[12px] text-body-text">Gói khả dụng: {voPlanNames}</p>
-              </div>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-bold text-accent">
-                Xem chi tiết
-                <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
-              </span>
+              Xem chi tiết
+              <ArrowRightSmallIcon className="transition-transform duration-200" />
             </Link>
-          </RevealItem>
+          </div>
+          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {voPlans.map((plan) => (
+              <RevealItem key={plan.key}>
+                <div className="flex h-full flex-col rounded-xl border border-line bg-bg-tint p-5">
+                  <div className="mb-1 text-[14.5px] font-bold text-navy">{plan.name}</div>
+                  <div className="mb-3 font-mono text-[20px] font-bold text-primary">
+                    {formatVND(plan.price)}
+                    <span className="ml-1 font-sans text-[12px] font-medium text-body-text">
+                      {plan.duration}
+                    </span>
+                  </div>
+                  <ul className="space-y-1.5">
+                    {plan.features.map((f) => (
+                      <li key={f} className="flex items-start gap-1.5 text-[12.5px] text-body-text">
+                        <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  {plan.addOn && (
+                    <p className="mt-3 text-[11px] leading-relaxed text-body-text">
+                      +{formatVND(plan.addOn.price)} {plan.addOn.label} ({plan.addOn.note})
+                    </p>
+                  )}
+                </div>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </Reveal>
+
+        {/* Các dịch vụ khác — vẫn dạng link card tóm tắt như cũ, vì các
+            dịch vụ này không có gói riêng theo chi nhánh (giá/tính năng
+            giống nhau ở mọi chi nhánh, xem chi tiết đầy đủ tại trang dịch
+            vụ tương ứng). */}
+        <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {OTHER_SERVICES.map((svc) => (
             <RevealItem key={svc.slug}>
               <Link
