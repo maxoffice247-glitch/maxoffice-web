@@ -10,6 +10,9 @@ import {
   VO_LONG_TERM_COMBO_NAME,
   VO_LONG_TERM_COMBO_DESC,
   getLocationsForPlan,
+  SAVE_SILVER_GOLD_PREMIUM_LOCATIONS,
+  SAVE_SILVER_GOLD_PREMIUM_VAT_NOTE,
+  SILVER_GOLD_PREMIUM_LOCATIONS,
   type VirtualOfficePlanKey,
 } from "@/lib/virtualOfficePlans";
 
@@ -31,6 +34,24 @@ type Plan = {
       khác (Trọn gói, Thành lập DN, Kế toán) không có khái niệm "chi nhánh
       áp dụng" theo nghĩa này nên không set field này. */
   vpaKey?: VirtualOfficePlanKey;
+  /** Số chi nhánh áp dụng — dùng cho hệ SAVE/SILVER/GOLD/PREMIUM (không có
+      key-per-plan như LITE-RISE, cả hệ dùng chung 1 danh sách chi nhánh cố
+      định) — lấy qua {SYSTEM}_LOCATIONS.length ngay tại nơi khai báo GROUPS
+      bên dưới (vẫn động theo mảng, không hardcode số). Ưu tiên hơn vpaKey
+      nếu cả 2 đều set. */
+  branchCount?: number;
+  /** Breakdown chi tiết — CHỈ tồn tại cho hệ SAVE/SILVER/GOLD/PREMIUM (2
+      type SaveSilverGoldPremiumPlan/SilverGoldPremiumPlan trong
+      virtualOfficePlans.ts), sao chép nguyên giá trị field gốc — 6 gói
+      LITE-RISE không có breakdown này nên không set field, PricingCard sẽ
+      tự bỏ qua khối này nếu không có dữ liệu. */
+  breakdown?: {
+    nameplate: string;
+    meetingRoom: string;
+    guestLounge: string;
+    addressChangeSupport: boolean;
+    legalDossier: boolean;
+  };
 };
 
 const GROUPS: {
@@ -114,6 +135,119 @@ const GROUPS: {
         features: ["Tất cả mục của ORIGIN+", "Phòng họp lớn 4h/năm, Flex Desk 4h/tháng", "Giảm 50% phí phòng họp VIP"],
         detailHref: "/services/van-phong-ao#bang-gia",
         vpaKey: "rise",
+      },
+    ],
+  },
+  {
+    title: "Văn phòng ảo — Khu vực trung tâm mở rộng",
+    cols: "sm:grid-cols-2 lg:grid-cols-3",
+    // Giống VAT_NOTE của cả 2 hệ dữ liệu (byte-identical, đã đối chiếu) +
+    // ghi chú riêng giải thích vì sao SILVER/GOLD xuất hiện 2 lần khác giá
+    // — tránh khách hiểu nhầm là lỗi trùng lặp.
+    footnote: `*${SAVE_SILVER_GOLD_PREMIUM_VAT_NOTE} SILVER và GOLD xuất hiện 2 lần vì thuộc 2 hệ giá riêng theo khu vực (ghi rõ khu vực áp dụng trong tên từng gói) — không phải trùng lặp dữ liệu. PREMIUM 990.000đ áp dụng chung cho cả 2 khu vực (12 chi nhánh) do đã xác nhận giống hệt nhau.`,
+    plans: [
+      {
+        name: "SAVE",
+        service: "Văn phòng ảo",
+        price: "379.000đ",
+        unit: "/ tháng",
+        desc: "Quận 1 & Quận 3 (cũ) — tiết kiệm nhất hệ này, không có bảng tên vật lý.",
+        features: ["Địa chỉ ĐKKD + đăng ký thuế", "Bảng tên điện tử", "Tiếp tân hành chính văn phòng"],
+        detailHref: "/services/van-phong-ao#bang-gia",
+        branchCount: SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.length,
+        breakdown: {
+          nameplate: "Không có bảng tên vật lý (mica)",
+          meetingRoom: "Miễn phí 60 phút/tháng",
+          guestLounge: "Miễn phí 30 phút/ngày",
+          addressChangeSupport: false,
+          legalDossier: false,
+        },
+      },
+      {
+        name: "SILVER — Quận 1 & Quận 3 (cũ)",
+        service: "Văn phòng ảo",
+        price: "479.000đ",
+        unit: "/ tháng",
+        desc: "Có bảng tên vật lý (mica) tại toà nhà, cùng thời lượng phòng họp/sảnh tiếp khách với SAVE.",
+        features: ["Địa chỉ ĐKKD + đăng ký thuế", "Bảng tên điện tử", "Tiếp tân hành chính văn phòng"],
+        detailHref: "/services/van-phong-ao#bang-gia",
+        branchCount: SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.length,
+        breakdown: {
+          nameplate: "Có bảng tên vật lý (mica)",
+          meetingRoom: "Miễn phí 60 phút/tháng",
+          guestLounge: "Miễn phí 30 phút/ngày",
+          addressChangeSupport: false,
+          legalDossier: false,
+        },
+      },
+      {
+        name: "SILVER — Các Quận còn lại",
+        service: "Văn phòng ảo",
+        price: "379.000đ",
+        unit: "/ tháng",
+        desc: "Bình Thạnh, Thủ Đức, Phú Nhuận, Quận 4, Quận 10 (cũ) — giá thấp hơn SILVER khu vực Quận 1/3.",
+        features: ["Địa chỉ ĐKKD + đăng ký thuế", "Bảng tên điện tử", "Tiếp tân hành chính văn phòng"],
+        detailHref: "/services/van-phong-ao#bang-gia",
+        branchCount: SILVER_GOLD_PREMIUM_LOCATIONS.length,
+        breakdown: {
+          nameplate: "Có bảng tên vật lý (mica)",
+          meetingRoom: "Miễn phí 60 phút/tháng (≤ 7 người)",
+          guestLounge: "Miễn phí 30 phút/ngày",
+          addressChangeSupport: false,
+          legalDossier: false,
+        },
+      },
+      {
+        name: "GOLD — Quận 1 & Quận 3 (cũ)",
+        service: "Văn phòng ảo",
+        price: "639.000đ",
+        unit: "/ tháng",
+        desc: "Thêm hỗ trợ đổi địa chỉ ĐKKD, phòng họp/sảnh tiếp khách nhiều hơn SILVER.",
+        features: ["Tất cả mục của SILVER", "Hỗ trợ đổi địa chỉ đăng ký kinh doanh", "Sảnh tiếp khách nhiều hơn"],
+        featured: true,
+        detailHref: "/services/van-phong-ao#bang-gia",
+        branchCount: SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.length,
+        breakdown: {
+          nameplate: "Có bảng tên vật lý (mica)",
+          meetingRoom: "Miễn phí 90 phút/tháng",
+          guestLounge: "Miễn phí 60 phút/ngày",
+          addressChangeSupport: true,
+          legalDossier: false,
+        },
+      },
+      {
+        name: "GOLD — Các Quận còn lại",
+        service: "Văn phòng ảo",
+        price: "490.000đ",
+        unit: "/ tháng",
+        desc: "Bình Thạnh, Thủ Đức, Phú Nhuận, Quận 4, Quận 10 (cũ) — giá thấp hơn GOLD khu vực Quận 1/3.",
+        features: ["Tất cả mục của SILVER", "Hỗ trợ đổi địa chỉ đăng ký kinh doanh", "Sảnh tiếp khách nhiều hơn"],
+        detailHref: "/services/van-phong-ao#bang-gia",
+        branchCount: SILVER_GOLD_PREMIUM_LOCATIONS.length,
+        breakdown: {
+          nameplate: "Có bảng tên vật lý (mica)",
+          meetingRoom: "Miễn phí 90 phút/tháng (≤ 7 người)",
+          guestLounge: "Miễn phí 60 phút/ngày",
+          addressChangeSupport: true,
+          legalDossier: false,
+        },
+      },
+      {
+        name: "PREMIUM",
+        service: "Văn phòng ảo",
+        price: "990.000đ",
+        unit: "/ tháng",
+        desc: "Cao cấp nhất hệ này — áp dụng chung cho cả 2 khu vực, đầy đủ hồ sơ pháp lý toà nhà.",
+        features: ["Tất cả mục của GOLD", "Hồ sơ pháp lý toà nhà đầy đủ", "Phòng họp/sảnh tiếp khách nhiều nhất hệ này"],
+        detailHref: "/services/van-phong-ao#bang-gia",
+        branchCount: SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.length + SILVER_GOLD_PREMIUM_LOCATIONS.length,
+        breakdown: {
+          nameplate: "Có bảng tên vật lý (mica)",
+          meetingRoom: "Miễn phí 120 phút/tháng (≤ 7 người)",
+          guestLounge: "Miễn phí 60 phút/ngày",
+          addressChangeSupport: true,
+          legalDossier: true,
+        },
       },
     ],
   },
@@ -228,10 +362,11 @@ const GROUPS: {
 ];
 
 function PricingCard({ plan }: { plan: Plan }) {
-  // Lấy động qua getLocationsForPlan() (LOCATION_VO_PLANS) — không hardcode
-  // — cùng nguồn dữ liệu + cùng công thức đếm mà GroupCard (chế độ "Xem
-  // theo gói" ở /tien-ich/tim-goi-phu-hop) đang dùng.
-  const branchCount = plan.vpaKey ? getLocationsForPlan(plan.vpaKey).length : undefined;
+  // Lấy động — LITE-RISE qua getLocationsForPlan() (cùng hàm GroupCard ở
+  // /tien-ich/tim-goi-phu-hop dùng); hệ SAVE/SILVER/GOLD/PREMIUM dùng
+  // branchCount (đã tính từ {SYSTEM}_LOCATIONS.length ngay tại GROUPS, xem
+  // comment ở field branchCount trong type Plan) — không hardcode ở đây.
+  const branchCount = plan.branchCount ?? (plan.vpaKey ? getLocationsForPlan(plan.vpaKey).length : undefined);
 
   return (
     <div
@@ -272,6 +407,40 @@ function PricingCard({ plan }: { plan: Plan }) {
       <p className={`mb-4 text-[13px] leading-relaxed ${plan.featured ? "text-white/70" : "text-body-text"}`}>
         {plan.desc}
       </p>
+      {/* Breakdown chi tiết — CHỈ hiện khi plan.breakdown có dữ liệu thật
+          (hệ SAVE/SILVER/GOLD/PREMIUM), sao chép nguyên field gốc, KHÔNG
+          bịa cho 6 gói LITE-RISE (không có field này). Đặt TRÊN checklist
+          "Tính năng đi kèm" — checklist bên dưới giữ nguyên không đổi. */}
+      {plan.breakdown && (
+        <ul
+          className={`mb-4 space-y-1.5 rounded-xl p-3.5 text-[12px] leading-snug ${
+            plan.featured ? "bg-white/10" : "bg-bg-tint"
+          }`}
+        >
+          <li className={plan.featured ? "text-white/80" : "text-body-text"}>
+            <span className={`font-semibold ${plan.featured ? "text-white" : "text-navy"}`}>Bảng tên:</span>{" "}
+            {plan.breakdown.nameplate}
+          </li>
+          <li className={plan.featured ? "text-white/80" : "text-body-text"}>
+            <span className={`font-semibold ${plan.featured ? "text-white" : "text-navy"}`}>Phòng họp:</span>{" "}
+            {plan.breakdown.meetingRoom}
+          </li>
+          <li className={plan.featured ? "text-white/80" : "text-body-text"}>
+            <span className={`font-semibold ${plan.featured ? "text-white" : "text-navy"}`}>Sảnh tiếp khách:</span>{" "}
+            {plan.breakdown.guestLounge}
+          </li>
+          <li className={plan.featured ? "text-white/80" : "text-body-text"}>
+            <span className={`font-semibold ${plan.featured ? "text-white" : "text-navy"}`}>Đổi địa chỉ GPKD:</span>{" "}
+            {plan.breakdown.addressChangeSupport ? "Có hỗ trợ" : "Không"}
+          </li>
+          <li className={plan.featured ? "text-white/80" : "text-body-text"}>
+            <span className={`font-semibold ${plan.featured ? "text-white" : "text-navy"}`}>
+              Hồ sơ pháp lý toà nhà:
+            </span>{" "}
+            {plan.breakdown.legalDossier ? "Có" : "Không"}
+          </li>
+        </ul>
+      )}
       <ul className="mb-6 flex-1 space-y-2.5">
         {plan.features.map((f) => (
           <li
