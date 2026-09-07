@@ -74,16 +74,20 @@ export default function LocationServicesList({
           description="Toàn bộ 6 dịch vụ cốt lõi của MAX OFFICE đều được cung cấp tại chi nhánh này với mức giá minh bạch, không phát sinh."
         />
 
-        {/* Văn phòng ảo — hiện NGAY đủ card giá + checklist tính năng của
-            từng gói áp dụng tại ĐÚNG chi nhánh này (getPlansForLocation),
-            đồng bộ cách trình bày với Quan3CuVOServices.tsx/
-            SilverGoldPremiumServices.tsx (các hệ giá riêng) — trước đây chỉ
-            có 1 card link tóm tắt "Từ Xđ/tháng", phải bấm "Xem chi tiết"
-            sang /services/van-phong-ao mới thấy giá/tính năng từng gói.
-            KHÔNG thêm field breakdown "Bảng tên:/Phòng họp:..." — loại dữ
-            liệu đó không tồn tại cho VirtualOfficePlan (chỉ có
-            features: string[] phẳng), khác với 2 hệ giá kia. */}
-        <Reveal className="mb-6 rounded-2xl border border-line bg-white p-6 sm:p-7">
+        {/* Văn phòng ảo + Dịch vụ khác — GỘP CHUNG vào 1 flex-wrap DUY NHẤT
+            (trước đây tách 2 khối riêng: lưới gói VPA rồi mới tới lưới
+            "Dịch vụ khác" bên dưới). getPlansForLocation() trả về SỐ LƯỢNG
+            KHÁC NHAU tuỳ chi nhánh (1-4 gói, xem LOCATION_VO_PLANS) — hàng
+            gói VPA lẻ (không chia hết cột) trước đây bị "cụt", để lại
+            khoảng trống cuối hàng. Gộp chung để 5 card "Dịch vụ khác" nối
+            tiếp NGAY sau gói VPA cuối cùng, tự động chảy vào lấp đúng phần
+            còn thiếu của hàng dở dang rồi mới xuống hàng mới — vd. chi
+            nhánh 2 gói (Song Thao) sẽ ra [START][BASE][Văn phòng trọn gói]
+            ở hàng 1. KHÔNG thêm field breakdown "Bảng tên:/Phòng họp:..."
+            cho card gói VPA — loại dữ liệu đó không tồn tại cho
+            VirtualOfficePlan (chỉ có features: string[] phẳng), khác với
+            2 hệ giá kia (Quan3CuVOServices/SilverGoldPremiumServices). */}
+        <Reveal className="rounded-2xl border border-line bg-white p-6 sm:p-7">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-tint text-primary">
@@ -99,15 +103,12 @@ export default function LocationServicesList({
               <ArrowRightSmallIcon className="transition-transform duration-200" />
             </Link>
           </div>
-          {/* flex-wrap thay vì grid cố định 3 cột — getPlansForLocation()
-              trả về SỐ LƯỢNG KHÁC NHAU tuỳ chi nhánh (1-4 gói, xem
-              LOCATION_VO_PLANS), nên grid-cols-3 cố định để lại Ô TRỐNG
-              (khoảng trắng thừa trong khung border của Reveal cha) khi số
-              gói không chia hết cho 3 (vd. Song Thao/Điện Biên Phủ chỉ 2
-              gói, Cửu Long chỉ 1 gói). flex-wrap để hàng cuối THIẾU quân số
-              tự nhiên chỉ chiếm đúng chỗ của nó, không bị grid kéo giãn.
-              Bề rộng từng card tính tay = công thức tương đương grid N cột
-              với gap-5 (20px): (100% - (N-1)*20px) / N. */}
+          {/* Bề rộng từng card tính tay = công thức tương đương grid N cột
+              với gap-5 (20px): (100% - (N-1)*20px) / N — ÁP DỤNG CHUNG cho
+              cả card gói VPA lẫn card "dịch vụ khác" (cùng 1 hàng, cùng 1
+              độ rộng cột) để 2 loại card thẳng hàng, chảy liên tục vào
+              nhau. Hàng cuối thiếu quân số tự nhiên chỉ chiếm đúng chỗ
+              thật, không bị grid kéo giãn. */}
           <RevealGroup className="flex flex-wrap gap-5">
             {voPlans.map((plan) => (
               <RevealItem
@@ -135,52 +136,65 @@ export default function LocationServicesList({
                       +{formatVND(plan.addOn.price)} {plan.addOn.label} ({plan.addOn.note})
                     </p>
                   )}
-                  {/* Link thẳng sang trang chi tiết gói (đã có sẵn preview +
-                      xuất PNG báo giá qua PlanDetailActions/PlanQuoteCard) —
-                      để khách/nhân viên tạo link báo giá ngay tại đây, không
-                      phải sang lại /tien-ich/tim-goi-phu-hop chọn lại chi
-                      nhánh + gói. Dùng variant "ghost" (viền nhạt, không nền
-                      màu) để không lấn át phần giá/tính năng phía trên. */}
-                  <Button
-                    href={`/tien-ich/tim-goi-phu-hop/${slug}/${plan.key}`}
-                    variant="ghost"
-                    size="sm"
-                    className="mt-4 w-full !px-3 text-center"
-                  >
-                    📄 Tạo báo giá
-                  </Button>
+                  {/* Spacer flex-grow đẩy nút xuống đáy — card trong CÙNG 1
+                      hàng flex-wrap cao bằng nhau (align-items: stretch mặc
+                      định), nhưng checklist tính năng dài/ngắn khác nhau
+                      tuỳ gói khiến nút lệch hàng nếu không có spacer này.
+                      pt-4 trên wrapper đảm bảo khoảng cách tối thiểu với
+                      nội dung phía trên dù mt-auto đã đẩy sát đáy. */}
+                  <div className="grow" />
+                  <div className="mt-auto pt-4">
+                    {/* Link thẳng sang trang chi tiết gói (đã có sẵn preview
+                        + xuất PNG báo giá qua PlanDetailActions/
+                        PlanQuoteCard) — để khách/nhân viên tạo link báo giá
+                        ngay tại đây, không phải sang lại
+                        /tien-ich/tim-goi-phu-hop chọn lại chi nhánh + gói.
+                        Dùng variant "ghost" (viền nhạt, không nền màu) để
+                        không lấn át phần giá/tính năng phía trên. */}
+                    <Button
+                      href={`/tien-ich/tim-goi-phu-hop/${slug}/${plan.key}`}
+                      variant="ghost"
+                      size="sm"
+                      className="w-full !px-3 text-center"
+                    >
+                      📄 Tạo báo giá
+                    </Button>
+                  </div>
                 </div>
+              </RevealItem>
+            ))}
+            {/* Dịch vụ khác — vẫn dạng link card tóm tắt như cũ, vì các
+                dịch vụ này không có gói riêng theo chi nhánh (giá/tính năng
+                giống nhau ở mọi chi nhánh, xem chi tiết đầy đủ tại trang
+                dịch vụ tương ứng). justify-center (thay vì justify-between
+                trước đây) để nội dung không bị kéo tách xa nhau, trống trải
+                giữa card khi lọt vào hàng có gói VPA cao hơn (h-full kế
+                thừa chiều cao stretch của hàng flex-wrap chung). */}
+            {OTHER_SERVICES.map((svc) => (
+              <RevealItem
+                key={svc.slug}
+                className="w-full shrink-0 sm:w-[calc(50%-10px)] lg:w-[calc(33.3333%-13.334px)]"
+              >
+                <Link
+                  href={`/services/${svc.slug}#bang-gia`}
+                  className="group flex h-full flex-col justify-center rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
+                >
+                  <div>
+                    <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
+                      <svc.icon className="h-5 w-5" />
+                    </span>
+                    <h3 className="mb-1.5 text-[15.5px] font-bold text-navy">{svc.title}</h3>
+                    <p className="font-mono text-[13.5px] font-bold text-primary">{svc.price}</p>
+                  </div>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-bold text-accent">
+                    Xem chi tiết
+                    <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
+                  </span>
+                </Link>
               </RevealItem>
             ))}
           </RevealGroup>
         </Reveal>
-
-        {/* Các dịch vụ khác — vẫn dạng link card tóm tắt như cũ, vì các
-            dịch vụ này không có gói riêng theo chi nhánh (giá/tính năng
-            giống nhau ở mọi chi nhánh, xem chi tiết đầy đủ tại trang dịch
-            vụ tương ứng). */}
-        <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {OTHER_SERVICES.map((svc) => (
-            <RevealItem key={svc.slug}>
-              <Link
-                href={`/services/${svc.slug}#bang-gia`}
-                className="group flex h-full flex-col justify-between rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
-              >
-                <div>
-                  <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
-                    <svc.icon className="h-5 w-5" />
-                  </span>
-                  <h3 className="mb-1.5 text-[15.5px] font-bold text-navy">{svc.title}</h3>
-                  <p className="font-mono text-[13.5px] font-bold text-primary">{svc.price}</p>
-                </div>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-bold text-accent">
-                  Xem chi tiết
-                  <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
-                </span>
-              </Link>
-            </RevealItem>
-          ))}
-        </RevealGroup>
         {/* Khuyến mãi riêng chi nhánh — chỉ hiện khi `promotions` có dữ liệu
             sau khi resolve theo thời gian (đồng bộ cách hiển thị với
             PhamVanDongServices.tsx). Đa số chi nhánh dùng component này

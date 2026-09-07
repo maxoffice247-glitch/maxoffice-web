@@ -71,8 +71,16 @@ export default function SilverGoldPremiumServices({
           description={`Chi nhánh ${branchName} áp dụng 3 gói văn phòng ảo RIÊNG BIỆT (SILVER, GOLD, PREMIUM), khác với hệ thống LITE–RISE chung của MAX OFFICE. Các dịch vụ khác vẫn theo bảng giá chung.`}
         />
 
-        {/* Văn phòng ảo — SILVER / GOLD / PREMIUM */}
-        <Reveal className="mb-6 rounded-2xl border border-line bg-white p-6 sm:p-7">
+        {/* Văn phòng ảo + Dịch vụ khác — GỘP CHUNG vào 1 flex-wrap DUY NHẤT
+            (xem lý do đầy đủ ở LocationServicesList.tsx). Hệ SILVER/GOLD/
+            PREMIUM luôn có đúng 3 gói nên hàng gói VPA không bao giờ "cụt"
+            — gộp chung chủ yếu để đồng bộ code + trải nghiệm với
+            LocationServicesList.tsx, an toàn nếu sau này số gói thay đổi.
+            Ghi chú VAT + khối "Dịch vụ bổ sung" chuyển xuống SAU toàn bộ
+            lưới gộp (trước đây nằm giữa lưới gói VPA và lưới Dịch vụ
+            khác) vì giờ 2 loại card nằm chung 1 lưới, không còn "giữa" để
+            chèn vào nữa. */}
+        <Reveal className="rounded-2xl border border-line bg-white p-6 sm:p-7">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-tint text-primary">
@@ -93,10 +101,6 @@ export default function SilverGoldPremiumServices({
               <ArrowRightSmallIcon className="transition-transform duration-200" />
             </Link>
           </div>
-          {/* flex-wrap thay vì grid cố định (xem lý do đầy đủ ở
-              LocationServicesList.tsx) — hệ SILVER/GOLD/PREMIUM luôn có
-              đúng 3 gói nên hiện tại KHÔNG bị ô trống, nhưng đổi đồng bộ để
-              nhất quán và an toàn nếu sau này số gói thay đổi. */}
           <RevealGroup className="flex flex-wrap gap-5">
             {SILVER_GOLD_PREMIUM_VO_PLANS.map((plan) => (
               <RevealItem
@@ -138,22 +142,51 @@ export default function SilverGoldPremiumServices({
                       </li>
                     ))}
                   </ul>
-                  {/* Link thẳng sang trang chi tiết gói (xem lý do ở
-                      LocationServicesList.tsx) — variant "ghost" để không
-                      lấn át phần giá/tính năng phía trên. */}
-                  <Button
-                    href={`/tien-ich/tim-goi-phu-hop/${slug}/${plan.key}`}
-                    variant="ghost"
-                    size="sm"
-                    className="mt-4 w-full !px-3 text-center"
-                  >
-                    📄 Tạo báo giá
-                  </Button>
+                  {/* Spacer flex-grow + wrapper mt-auto ghim nút xuống đáy —
+                      xem lý do đầy đủ ở LocationServicesList.tsx. */}
+                  <div className="grow" />
+                  <div className="mt-auto pt-4">
+                    <Button
+                      href={`/tien-ich/tim-goi-phu-hop/${slug}/${plan.key}`}
+                      variant="ghost"
+                      size="sm"
+                      className="w-full !px-3 text-center"
+                    >
+                      📄 Tạo báo giá
+                    </Button>
+                  </div>
                 </div>
               </RevealItem>
             ))}
+            {/* Dịch vụ khác — nối tiếp ngay sau gói VPA cuối cùng trong
+                CÙNG 1 flex-wrap (xem lý do ở LocationServicesList.tsx).
+                justify-center thay vì justify-between để không bị trống
+                trải giữa card khi lọt vào hàng có gói VPA cao hơn. */}
+            {OTHER_SERVICES.map((svc) => (
+              <RevealItem
+                key={svc.slug}
+                className="w-full shrink-0 sm:w-[calc(33.3333%-13.334px)]"
+              >
+                <Link
+                  href={`/services/${svc.slug}#bang-gia`}
+                  className="group flex h-full flex-col justify-center rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
+                >
+                  <div>
+                    <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
+                      <svc.icon className="h-5 w-5" />
+                    </span>
+                    <h3 className="mb-1.5 text-[15.5px] font-bold text-navy">{svc.title}</h3>
+                    <p className="font-mono text-[13.5px] font-bold text-primary">{svc.price}</p>
+                  </div>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-bold text-accent">
+                    Xem chi tiết
+                    <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              </RevealItem>
+            ))}
           </RevealGroup>
-          <p className="mt-4 text-[12px] text-body-text italic">{SILVER_GOLD_PREMIUM_VAT_NOTE}</p>
+          <p className="mt-6 text-[12px] text-body-text italic">{SILVER_GOLD_PREMIUM_VAT_NOTE}</p>
 
           <div className="mt-5 rounded-xl bg-accent/8 p-4">
             <p className="mb-3 text-[12.5px] font-bold text-navy">Dịch vụ bổ sung (phát sinh sau khi ký hợp đồng)</p>
@@ -170,30 +203,6 @@ export default function SilverGoldPremiumServices({
             </ul>
           </div>
         </Reveal>
-
-        {/* Các dịch vụ khác — áp dụng theo bảng giá chung của MAX OFFICE */}
-        <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {OTHER_SERVICES.map((svc) => (
-            <RevealItem key={svc.slug}>
-              <Link
-                href={`/services/${svc.slug}#bang-gia`}
-                className="group flex h-full flex-col justify-between rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
-              >
-                <div>
-                  <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary-tint text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-white">
-                    <svc.icon className="h-5 w-5" />
-                  </span>
-                  <h3 className="mb-1.5 text-[15.5px] font-bold text-navy">{svc.title}</h3>
-                  <p className="font-mono text-[13.5px] font-bold text-primary">{svc.price}</p>
-                </div>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-bold text-accent">
-                  Xem chi tiết
-                  <ArrowRightSmallIcon className="transition-transform duration-200 group-hover:translate-x-1" />
-                </span>
-              </Link>
-            </RevealItem>
-          ))}
-        </RevealGroup>
 
         {resolvedPromotions && resolvedPromotions.length > 0 && (
           <Reveal className="mt-6 rounded-2xl bg-accent/8 p-6 sm:p-7">
