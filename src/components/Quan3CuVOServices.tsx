@@ -1,5 +1,6 @@
 import Link from "next/link";
 import SectionHead from "./SectionHead";
+import Button from "./Button";
 import { RevealGroup, RevealItem } from "./Reveal";
 import Reveal from "./Reveal";
 import {
@@ -43,9 +44,14 @@ const OTHER_SERVICES = [
  */
 export default function Quan3CuVOServices({
   branchName,
+  slug,
   promotions,
 }: {
   branchName: string;
+  /** Slug chi nhánh — dùng để dựng link "Tạo báo giá" của từng gói, trỏ tới
+      /tien-ich/tim-goi-phu-hop/[slug]/[plan] (trang chi tiết gói đã có sẵn
+      preview + xuất PNG báo giá qua PlanDetailActions/PlanQuoteCard). */
+  slug: string;
   /** Khuyến mãi riêng chi nhánh — xem LocationServicesList.tsx cho ý nghĩa
       đầy đủ. Trước đây component này KHÔNG nhận/hiển thị promotions, nên
       4 chi nhánh dùng bảng giá SAVE/SILVER/GOLD/PREMIUM (60 Nguyễn Thông,
@@ -123,6 +129,17 @@ export default function Quan3CuVOServices({
                       </li>
                     ))}
                   </ul>
+                  {/* Link thẳng sang trang chi tiết gói (xem lý do ở
+                      LocationServicesList.tsx) — variant "ghost" để không
+                      lấn át phần giá/tính năng phía trên. */}
+                  <Button
+                    href={`/tien-ich/tim-goi-phu-hop/${slug}/${plan.key}`}
+                    variant="ghost"
+                    size="sm"
+                    className="mt-4 w-full !px-3 text-center"
+                  >
+                    📄 Tạo báo giá
+                  </Button>
                 </div>
               </RevealItem>
             ))}

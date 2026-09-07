@@ -6,7 +6,7 @@ import { DownloadIcon, PhoneIcon, SpinnerIcon } from "../icons";
 import PlanQuoteCard, { type QuoteBenefitTag } from "./PlanQuoteCard";
 import type { OfferedPlan } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
-import { waitForImages } from "@/lib/waitForImages";
+import { waitForImages, inlineImagesAsDataUrls } from "@/lib/waitForImages";
 
 export default function PlanDetailActions({
   plan,
@@ -38,6 +38,13 @@ export default function PlanDetailActions({
       // toPng() 2 lần liên tiếp (vẫn có thể trật trên mobile/mạng chậm,
       // đồng thời tốn gần gấp đôi thời gian xử lý một cách không cần thiết).
       await waitForImages(node);
+      // Chuyển thẳng <img> đã decode xong thành data: URL qua canvas — NGĂN
+      // html-to-image tự fetch() lại ảnh (bước embed nội bộ của nó), vốn là
+      // NGUYÊN NHÂN THẬT khiến ảnh mặt tiền biến mất trên mobile: fetch đó
+      // độc lập với <img> trên trang, không timeout/retry, và lỗi 1 lần là
+      // bị cache rỗng vĩnh viễn cho cả phiên trang (chi tiết đầy đủ xem
+      // comment tại inlineImagesAsDataUrls() trong waitForImages.ts).
+      await inlineImagesAsDataUrls(node);
       const { toBlob } = await import("html-to-image");
       // toBlob thay vì toPng (trả data: URL): Safari iOS xử lý thuộc tính
       // `download` trên <a> trỏ tới data: URL lớn không ổn định — thường mở

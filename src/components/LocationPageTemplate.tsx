@@ -86,15 +86,13 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         paragraphs={data.intro}
         interiorImages={data.interiorImages}
       />
-      <ServiceBenefits title={data.benefitsTitle} items={data.benefits} />
-      <LocationNearby name={data.name} items={data.nearbyItems} />
-      <LocationAccess
-        name={data.name}
-        transportItems={data.transportItems}
-        parkingInfo={data.parkingInfo}
-      />
-      <LocationDining name={data.name} items={data.diningItems} />
-      <LocationMap name={data.name} address={data.address} />
+      {/* "Dịch vụ tại chi nhánh" chuyển lên NGAY SAU gallery ảnh (trước đây
+          nằm sau Bản đồ) — khách xem xong ảnh thực tế chi nhánh là thấy
+          ngay giá/gói áp dụng, không phải cuộn qua Lợi ích/Khu vực lân
+          cận/Di chuyển/Ăn uống/Bản đồ mới tới phần quan trọng nhất. Khối
+          "Cần gói giá thấp hơn?" (lowerTierAlternatives) đi CÙNG vị trí
+          mới này (không tách rời xuống dưới Bản đồ) vì nó nói tiếp mạch
+          nội dung của lưới gói Văn phòng ảo ngay phía trên. */}
       {data.slug === "pham-van-dong" ? (
         <PhamVanDongServices />
       ) : data.slug === "quan-7" ? (
@@ -102,29 +100,29 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       ) : data.slug === "vuon-lai" ? (
         <VuonLaiServices />
       ) : data.slug === "nguyen-thong" ? (
-        <Quan3CuVOServices branchName="60 Nguyễn Thông" promotions={data.promotions} />
+        <Quan3CuVOServices branchName="60 Nguyễn Thông" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "cach-mang-thang-8" ? (
-        <Quan3CuVOServices branchName="520 Cách Mạng Tháng 8" promotions={data.promotions} />
+        <Quan3CuVOServices branchName="520 Cách Mạng Tháng 8" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "mac-dinh-chi" ? (
-        <Quan3CuVOServices branchName="36 Mạc Đĩnh Chi" promotions={data.promotions} />
+        <Quan3CuVOServices branchName="36 Mạc Đĩnh Chi" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "pasteur" ? (
-        <Quan3CuVOServices branchName="28-34 Pasteur" promotions={data.promotions} />
+        <Quan3CuVOServices branchName="28-34 Pasteur" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "ung-van-khiem" ? (
-        <SilverGoldPremiumServices branchName="161 Ung Văn Khiêm" promotions={data.promotions} />
+        <SilverGoldPremiumServices branchName="161 Ung Văn Khiêm" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "tan-cang" ? (
-        <SilverGoldPremiumServices branchName="23 Tân Cảng" promotions={data.promotions} />
+        <SilverGoldPremiumServices branchName="23 Tân Cảng" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "n1-dien-bien-phu" ? (
-        <SilverGoldPremiumServices branchName="N1 Điện Biên Phủ" promotions={data.promotions} />
+        <SilverGoldPremiumServices branchName="N1 Điện Biên Phủ" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "quoc-huong" ? (
-        <SilverGoldPremiumServices branchName="27C Quốc Hương" promotions={data.promotions} />
+        <SilverGoldPremiumServices branchName="27C Quốc Hương" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "phan-dinh-phung" ? (
-        <SilverGoldPremiumServices branchName="89 Phan Đình Phùng" promotions={data.promotions} />
+        <SilverGoldPremiumServices branchName="89 Phan Đình Phùng" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "nguyen-truong-to" ? (
-        <SilverGoldPremiumServices branchName="84-86 Nguyễn Trường Tộ" promotions={data.promotions} />
+        <SilverGoldPremiumServices branchName="84-86 Nguyễn Trường Tộ" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "le-quoc-hung" ? (
-        <SilverGoldPremiumServices branchName="54-56 Lê Quốc Hưng" promotions={data.promotions} />
+        <SilverGoldPremiumServices branchName="54-56 Lê Quốc Hưng" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "ba-thang-hai" ? (
-        <SilverGoldPremiumServices branchName="614-616-618 Ba Tháng Hai" promotions={data.promotions} />
+        <SilverGoldPremiumServices branchName="614-616-618 Ba Tháng Hai" slug={data.slug} promotions={data.promotions} />
       ) : (
         <LocationServicesList name={data.name} slug={data.slug} promotions={data.promotions} />
       )}
@@ -154,6 +152,15 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
           </div>
         </section>
       )}
+      <ServiceBenefits title={data.benefitsTitle} items={data.benefits} />
+      <LocationNearby name={data.name} items={data.nearbyItems} />
+      <LocationAccess
+        name={data.name}
+        transportItems={data.transportItems}
+        parkingInfo={data.parkingInfo}
+      />
+      <LocationDining name={data.name} items={data.diningItems} />
+      <LocationMap name={data.name} address={data.address} />
       <Testimonials
         eyebrow="Khách hàng nói gì"
         title="Khách hàng đánh giá gì về chi nhánh này"

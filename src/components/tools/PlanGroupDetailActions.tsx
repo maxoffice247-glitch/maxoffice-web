@@ -6,7 +6,7 @@ import { DownloadIcon, PhoneIcon, SpinnerIcon } from "../icons";
 import PlanGroupQuoteCard from "./PlanGroupQuoteCard";
 import type { PlanGroup } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
-import { waitForImages } from "@/lib/waitForImages";
+import { waitForImages, inlineImagesAsDataUrls } from "@/lib/waitForImages";
 
 export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) {
   const quoteRef = useRef<HTMLDivElement>(null);
@@ -21,6 +21,12 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
       // tấm) load + decode xong TRƯỚC khi chụp, xem chi tiết lý do trong
       // PlanDetailActions (component tương đương cho báo giá 1 chi nhánh).
       await waitForImages(node);
+      // Chuyển thẳng từng <img> thành data: URL để tránh html-to-image tự
+      // fetch() lại (nguyên nhân thật gây mất ảnh trên mobile — xem
+      // inlineImagesAsDataUrls() trong waitForImages.ts). Càng quan trọng ở
+      // đây vì báo giá nhóm có thể phải nhúng 7+ ảnh cùng lúc — càng nhiều
+      // ảnh, xác suất ít nhất 1 fetch bị lỗi trên mobile data càng cao.
+      await inlineImagesAsDataUrls(node);
       const { toBlob } = await import("html-to-image");
       const blob = await toBlob(node, { pixelRatio: 1, cacheBust: true });
       if (!blob) throw new Error("toBlob returned null");

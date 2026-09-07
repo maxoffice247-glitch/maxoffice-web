@@ -1,5 +1,6 @@
 import Link from "next/link";
 import SectionHead from "./SectionHead";
+import Button from "./Button";
 import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import {
   BuildingIcon,
@@ -122,6 +123,20 @@ export default function LocationServicesList({
                       +{formatVND(plan.addOn.price)} {plan.addOn.label} ({plan.addOn.note})
                     </p>
                   )}
+                  {/* Link thẳng sang trang chi tiết gói (đã có sẵn preview +
+                      xuất PNG báo giá qua PlanDetailActions/PlanQuoteCard) —
+                      để khách/nhân viên tạo link báo giá ngay tại đây, không
+                      phải sang lại /tien-ich/tim-goi-phu-hop chọn lại chi
+                      nhánh + gói. Dùng variant "ghost" (viền nhạt, không nền
+                      màu) để không lấn át phần giá/tính năng phía trên. */}
+                  <Button
+                    href={`/tien-ich/tim-goi-phu-hop/${slug}/${plan.key}`}
+                    variant="ghost"
+                    size="sm"
+                    className="mt-4 w-full !px-3 text-center"
+                  >
+                    📄 Tạo báo giá
+                  </Button>
                 </div>
               </RevealItem>
             ))}
