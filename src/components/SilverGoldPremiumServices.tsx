@@ -93,9 +93,16 @@ export default function SilverGoldPremiumServices({
               <ArrowRightSmallIcon className="transition-transform duration-200" />
             </Link>
           </div>
-          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+          {/* flex-wrap thay vì grid cố định (xem lý do đầy đủ ở
+              LocationServicesList.tsx) — hệ SILVER/GOLD/PREMIUM luôn có
+              đúng 3 gói nên hiện tại KHÔNG bị ô trống, nhưng đổi đồng bộ để
+              nhất quán và an toàn nếu sau này số gói thay đổi. */}
+          <RevealGroup className="flex flex-wrap gap-5">
             {SILVER_GOLD_PREMIUM_VO_PLANS.map((plan) => (
-              <RevealItem key={plan.key}>
+              <RevealItem
+                key={plan.key}
+                className="w-full shrink-0 sm:w-[calc(33.3333%-13.334px)]"
+              >
                 <div className="flex h-full flex-col rounded-xl border border-line bg-bg-tint p-5">
                   <div className="mb-1 text-[14.5px] font-bold text-navy">{plan.name}</div>
                   <div className="mb-3 font-mono text-[20px] font-bold text-primary">

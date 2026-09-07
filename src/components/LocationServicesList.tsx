@@ -99,9 +99,21 @@ export default function LocationServicesList({
               <ArrowRightSmallIcon className="transition-transform duration-200" />
             </Link>
           </div>
-          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {/* flex-wrap thay vì grid cố định 3 cột — getPlansForLocation()
+              trả về SỐ LƯỢNG KHÁC NHAU tuỳ chi nhánh (1-4 gói, xem
+              LOCATION_VO_PLANS), nên grid-cols-3 cố định để lại Ô TRỐNG
+              (khoảng trắng thừa trong khung border của Reveal cha) khi số
+              gói không chia hết cho 3 (vd. Song Thao/Điện Biên Phủ chỉ 2
+              gói, Cửu Long chỉ 1 gói). flex-wrap để hàng cuối THIẾU quân số
+              tự nhiên chỉ chiếm đúng chỗ của nó, không bị grid kéo giãn.
+              Bề rộng từng card tính tay = công thức tương đương grid N cột
+              với gap-5 (20px): (100% - (N-1)*20px) / N. */}
+          <RevealGroup className="flex flex-wrap gap-5">
             {voPlans.map((plan) => (
-              <RevealItem key={plan.key}>
+              <RevealItem
+                key={plan.key}
+                className="w-full shrink-0 sm:w-[calc(50%-10px)] lg:w-[calc(33.3333%-13.334px)]"
+              >
                 <div className="flex h-full flex-col rounded-xl border border-line bg-bg-tint p-5">
                   <div className="mb-1 text-[14.5px] font-bold text-navy">{plan.name}</div>
                   <div className="mb-3 font-mono text-[20px] font-bold text-primary">
