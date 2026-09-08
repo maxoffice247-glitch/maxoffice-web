@@ -85,13 +85,20 @@ export default async function PlanDetailPage({
         <div className="mx-auto grid max-w-[1240px] grid-cols-1 gap-10 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {/* Ảnh mặt tiền là ảnh DỌC — dùng đúng tỉ lệ thật của ảnh
-                  (facadeAspectRatio, giống cách /locations/[slug] tự làm) +
-                  object-contain thay vì ép vào khung 4:3 ngang như trước,
-                  để không còn cắt mất góc trên/dưới. */}
+              {/* Ảnh mặt tiền là ảnh DỌC — dùng đúng tỉ lệ THẬT của ảnh gốc
+                  (facadeTrueAspectRatio nếu có khai, không thì facadeAspectRatio
+                  đã sẵn là tỉ lệ thật — xem doc comment 2 field này ở
+                  LocationData) + object-contain thay vì ép vào khung 4:3
+                  ngang như trước, để không còn cắt mất góc trên/dưới. LƯU Ý:
+                  KHÔNG dùng thẳng `location.facadeAspectRatio` — với ảnh mặt
+                  tiền quá dọc, field đó đã bị đổi thành khung 3:4 cố định
+                  cho riêng LocationFacade.tsx (cân đối với cột text, chấp
+                  nhận crop nhẹ qua object-cover) — dùng nhầm ở ĐÂY (nơi cố
+                  tình muốn object-contain, không cắt) sẽ làm ảnh bị dồn hẹp
+                  lại (pillarbox) vì khung 3:4 rộng hơn tỉ lệ ảnh thật. */}
               <div
                 className="relative col-span-1 overflow-hidden rounded-2xl bg-bg-tint sm:col-span-2"
-                style={{ aspectRatio: location.facadeAspectRatio }}
+                style={{ aspectRatio: location.facadeTrueAspectRatio ?? location.facadeAspectRatio }}
               >
                 <Image
                   src={facadeSrc}
