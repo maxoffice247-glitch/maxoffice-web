@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 export default function DiaDiemPage() {
-  const { areaGroups } = getGroupedLocations();
+  const { areaGroups, rows } = getGroupedLocations();
 
   return (
     <main>
@@ -52,15 +52,18 @@ export default function DiaDiemPage() {
 
           <LocationsAreaBrowser
             areaGroups={areaGroups}
+            rows={rows}
             cta={
               // Lối tắt cho khách vào thẳng /dia-diem (không qua dropdown
               // mega menu) — khỏi phải tự kéo xem hết {ACTIVE_BRANCH_COUNT}
               // chi nhánh để tìm gói phù hợp. Đây là 1 trong 2 lối song song
               // với ô tìm kiếm nhanh theo khu vực phía trên — không thay thế
-              // nhau, giữ nguyên vị trí ngay dưới ô tìm kiếm.
+              // nhau. Không còn viền/nền riêng (rounded-2xl border...) vì giờ
+              // nằm CHUNG 1 khung với ô tìm kiếm (LocationsAreaBrowser.tsx tự
+              // dựng khung ngoài) — chỉ còn layout nội dung của chính CTA.
               <Link
                 href="/tien-ich/tim-goi-phu-hop"
-                className="group mb-10 flex flex-col items-start justify-between gap-4 rounded-2xl border border-primary/20 bg-primary-tint/60 p-5 transition-all duration-300 hover:border-primary/40 hover:shadow-card sm:flex-row sm:items-center sm:p-6"
+                className="group flex flex-col items-start justify-between gap-4 rounded-xl p-1 transition-colors duration-200 hover:bg-white/50 sm:flex-row sm:items-center"
               >
                 <div className="flex items-center gap-3.5">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-primary">

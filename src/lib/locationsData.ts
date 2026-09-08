@@ -2697,28 +2697,87 @@ export function stripCuSuffix(name: string): string {
 
 export type GroupedLocations = {
   /** MỌI khu vực đang có ≥1 chi nhánh công khai, mỗi khu vực LUÔN là 1 mục
-      riêng — kể cả khu vực chỉ có 1-2 chi nhánh. Trước đây khu vực 1-2 chi
-      nhánh bị GHÉP chung 1 hàng hiển thị với khu vực khác (xem lịch sử
-      commit "MERGED_AREA_PAIRS") để lấp đủ 3 cột, nhưng cách ghép đó gây
-      nhầm lẫn thật trên /dia-diem: nhiều hàng chứa chi nhánh của 2 khu vực
-      khác nhau mà ranh giới không đủ rõ. Bỏ hẳn cơ chế ghép — mỗi khu vực
-      giờ LUÔN có tiêu đề + badge "N chi nhánh" riêng, lưới của nó có thể
-      chỉ hiện 1-2 thẻ (hàng dở dang, không kéo giãn/không trộn với khu vực
-      khác) thay vì bị ẩn danh hoá vào 1 khối chung. */
+      riêng — dùng cho nơi cần liệt kê phẳng theo khu vực (dropdown mega
+      menu, và làm nguồn lọc cho ô tìm kiếm ở /dia-diem). Không tự ý ghép/
+      ẩn danh khu vực nào vào khu vực khác — xem `rows` bên dưới cho cách
+      /dia-diem trình bày GỘP HÀNG (có tô màu phân biệt) mà vẫn giữ tiêu đề
+      riêng từng khu vực. */
   areaGroups: { area: { slug: string; name: string }; locations: LocationListItem[] }[];
+  /** Cách trình bày cho lưới chính ở /dia-diem: khu vực >2 chi nhánh chiếm
+      trọn 1 hàng riêng ("full"); khu vực ≤2 chi nhánh được GHÉP tối đa 2
+      khu vực/hàng ("cluster") để trang đỡ dài (đợt trước tách mỗi khu vực
+      1 hàng khiến trang quá dài vì nhiều khu vực chỉ 1-2 chi nhánh chiếm
+      nguyên 1 hàng). Mỗi khu vực trong 1 cluster vẫn có tiêu đề + badge
+      riêng (không ẩn danh hoá như MERGED_AREA_PAIRS ngày xưa) — phân biệt
+      ranh giới bằng `colorIndex` (số tăng dần liên tục qua mọi cluster,
+      KHÔNG lấy mod tại đây — nơi hiển thị tự mod theo độ dài bảng màu đang
+      dùng) thay vì chỉ dựa vào khoảng cách. Vì 2 khu vực liền kề trong 1
+      cluster luôn có colorIndex liên tiếp (n, n+1) và n mod K ≠ (n+1) mod K
+      với mọi K ≥ 2, 2 khu vực NGAY CẠNH NHAU trong cùng 1 hàng luôn khác
+      màu bất kể bảng màu dài bao nhiêu. */
+  rows: LocationRow[];
 };
+
+export type LocationRow =
+  | { kind: "full"; area: { slug: string; name: string }; locations: LocationListItem[] }
+  | {
+      kind: "cluster";
+      groups: {
+        area: { slug: string; name: string };
+        locations: LocationListItem[];
+        colorIndex: number;
+      }[];
+    };
 
 /** Khu vực ưu tiên hiển thị lên đầu, theo đúng thứ tự — Quận 1 (cũ) trước
     tiên, kế đến Tân Bình (cũ). Khu vực không có trong danh sách này giữ
     nguyên thứ tự tương đối như khai báo trong `AREAS`. */
 const AREA_DISPLAY_PRIORITY = ["quan-1-cu", "quan-tan-binh-cu"];
 
+/** Khu vực có TỐI ĐA bằng ngần này chi nhánh mới đủ điều kiện ghép chung
+    hàng với khu vực khác — khu vực nhiều hơn luôn chiếm trọn 1 hàng. */
+const CLUSTER_MAX_LOCATIONS = 2;
+/** Tối đa bấy nhiêu khu vực nhỏ được ghép chung 1 hàng — 2 khu vực/hàng đã
+    đủ rút ngắn trang đáng kể mà mỗi khu vực vẫn còn đủ chỗ ngang cho tiêu
+    đề + card, không bị chật. */
+const CLUSTER_AREAS_PER_ROW = 2;
+
+/** Gộp danh sách khu vực đã sắp xếp thành các "hàng" hiển thị cho
+    /dia-diem — xem doc comment của `LocationRow`/`GroupedLocations.rows`. */
+function buildLocationRows(
+  sortedAreaGroups: { area: { slug: string; name: string }; locations: LocationListItem[] }[]
+): LocationRow[] {
+  const rows: LocationRow[] = [];
+  let pending: typeof sortedAreaGroups = [];
+  let colorCounter = 0;
+
+  const flushPending = () => {
+    if (pending.length === 0) return;
+    rows.push({
+      kind: "cluster",
+      groups: pending.map((g) => ({ ...g, colorIndex: colorCounter++ })),
+    });
+    pending = [];
+  };
+
+  for (const group of sortedAreaGroups) {
+    if (group.locations.length > CLUSTER_MAX_LOCATIONS) {
+      flushPending();
+      rows.push({ kind: "full", area: group.area, locations: group.locations });
+      continue;
+    }
+    pending.push(group);
+    if (pending.length >= CLUSTER_AREAS_PER_ROW) flushPending();
+  }
+  flushPending();
+
+  return rows;
+}
+
 /**
  * Nhóm các chi nhánh ĐANG HIỂN THỊ CÔNG KHAI (27/28, 1 chi nhánh đang tạm
  * ẩn) theo khu vực — dùng chung cho /dia-diem và mega menu để 2 nơi luôn
- * nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới. Mỗi khu vực
- * luôn là 1 mục độc lập (xem GroupedLocations) — không còn ghép/ẩn danh
- * khu vực ít chi nhánh vào khu vực khác như trước.
+ * nhất quán, không cần sửa tay khi thêm chi nhánh/khu vực mới.
  */
 export function getGroupedLocations(): GroupedLocations {
   const areaGroups = AREAS.map((area) => ({
@@ -2735,5 +2794,5 @@ export function getGroupedLocations(): GroupedLocations {
     return rank(a.area.slug) - rank(b.area.slug);
   });
 
-  return { areaGroups: sorted };
+  return { areaGroups: sorted, rows: buildLocationRows(sorted) };
 }
