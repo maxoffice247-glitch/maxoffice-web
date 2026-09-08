@@ -189,13 +189,71 @@ export const LOCATION_VO_PRICE_OVERRIDES: Record<string, Partial<Record<VirtualO
   "tran-hung-dao": { origin: 499_000 },
 };
 
+/**
+ * Ghi đè CHECKLIST TÍNH NĂNG riêng theo chi nhánh cho 1-2 gói cụ thể trong hệ
+ * LITE–RISE dùng chung — dùng khi MỘT chi nhánh áp dụng đúng gói/giá của hệ
+ * chung (vd. vẫn tên "ORIGIN", vẫn 499.000đ) nhưng danh sách tính năng thực
+ * tế bàn giao KHÁC với checklist mặc định của gói đó (vd. toà nhà chưa có
+ * phòng họp cho gói ORIGIN dù các chi nhánh ORIGIN khác có), mà KHÔNG ảnh
+ * hưởng đến các chi nhánh khác đang dùng chung gói đó ở checklist gốc. Cùng
+ * cơ chế và lý do tồn tại như LOCATION_VO_PRICE_OVERRIDES ở trên — thêm mới
+ * 2026-09 khi 380 Trần Hưng Đạo cần checklist ORIGIN/ORIGIN+/RISE ngắn hơn
+ * bản dùng chung (thiếu phòng họp/flex desk/ưu tiên 24/7 ở các bậc thấp).
+ * Không dùng cho trường hợp một chi nhánh có TOÀN BỘ bảng giá khác biệt —
+ * trường hợp đó nên tạo hệ giá riêng như Phạm Văn Đồng/Bùi Văn Ba thay vì
+ * override.
+ */
+export const LOCATION_VO_FEATURE_OVERRIDES: Record<string, Partial<Record<VirtualOfficePlanKey, string[]>>> = {
+  "tran-hung-dao": {
+    origin: [
+      "Địa chỉ đăng ký kinh doanh (ĐKKD)",
+      "Lễ tân",
+      "Wifi",
+      "Tham gia Workshop",
+      "Bảng hiệu công ty",
+      "In-photo 100 tờ/năm",
+      "Không gian tiếp khách (Guest Lounge)",
+    ],
+    "origin-plus": [
+      "Địa chỉ đăng ký kinh doanh (ĐKKD)",
+      "Lễ tân",
+      "Wifi",
+      "Tham gia Workshop",
+      "Bảng hiệu công ty",
+      "In-photo 100 tờ/năm",
+      "Không gian tiếp khách (Guest Lounge)",
+      "Phòng họp nhỏ 24h/năm",
+    ],
+    rise: [
+      "Địa chỉ đăng ký kinh doanh (ĐKKD)",
+      "Lễ tân",
+      "Wifi",
+      "Tham gia Workshop",
+      "Bảng hiệu công ty",
+      "In-photo 100 tờ/năm",
+      "Không gian tiếp khách (Guest Lounge)",
+      "Phòng họp nhỏ 24h/năm",
+      "Phòng họp lớn 4h/năm",
+      "Chỗ ngồi linh hoạt (Flex Desk) 4h/tháng",
+      "Ưu tiên hỗ trợ 24/7",
+      "Giảm 50% phí phòng họp VIP",
+    ],
+  },
+};
+
 export function getPlansForLocation(slug: string): VirtualOfficePlan[] {
   const keys = LOCATION_VO_PLANS[slug] ?? [];
-  const overrides = LOCATION_VO_PRICE_OVERRIDES[slug];
+  const priceOverrides = LOCATION_VO_PRICE_OVERRIDES[slug];
+  const featureOverrides = LOCATION_VO_FEATURE_OVERRIDES[slug];
   return keys.map((k) => {
     const plan = VIRTUAL_OFFICE_PLANS[k];
-    const overridePrice = overrides?.[k];
-    return overridePrice !== undefined ? { ...plan, price: overridePrice } : plan;
+    const overridePrice = priceOverrides?.[k];
+    const overrideFeatures = featureOverrides?.[k];
+    return {
+      ...plan,
+      ...(overridePrice !== undefined ? { price: overridePrice } : null),
+      ...(overrideFeatures !== undefined ? { features: overrideFeatures } : null),
+    };
   });
 }
 
