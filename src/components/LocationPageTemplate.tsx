@@ -22,6 +22,20 @@ import type { LocationData } from "@/lib/locationsData";
 import { SITE_URL, COMPANY_PHONE, COMPANY_EMAIL } from "@/lib/siteConfig";
 import { getPublicJpegDimensions } from "@/lib/imageDimensions";
 
+/** Ảnh mặt tiền tỉ lệ THẬT dưới ngưỡng này (quá dọc, gần 2:3) bị ép về
+    khung 3:4 cố định khi hiển thị trong LocationGallery — 1 cột Masonry
+    cao vọt hẳn so với 2 cột ảnh nội thất bên cạnh (thường ngang/vuông)
+    nhìn mất cân đối, dù không còn đứng cạnh văn bản như bố cục cũ (xem
+    LocationImagesSection.tsx). Tính theo NGƯỠNG SỐ trên tỉ lệ đọc THẬT từ
+    file — không phải danh sách slug cứng — để tự đúng nếu ảnh gốc được
+    thay bằng file khác tỉ lệ khác sau này mà không cần sửa code theo tay.
+    0.72 tách rõ 2 nhóm THẬT đang có trong ảnh mặt tiền của 28 chi nhánh:
+    nhóm quá dọc ~0.64-0.67 (Sông Thao, 618 Ba Tháng Hai, 314/6 Điện Biên
+    Phủ, 89 Phan Đình Phùng, 84-86 Nguyễn Trường Tộ, 28-34 Pasteur, 380
+    Trần Hưng Đạo) và nhóm còn lại ~0.75-1.4 (không cần ép, giữ tỉ lệ thật
+    tuyệt đối đúng nguyên tắc Masonry gốc). */
+const FACADE_TALL_RATIO_THRESHOLD = 0.72;
+
 export default function LocationPageTemplate({ data }: { data: LocationData }) {
   // Đọc W/H THẬT của từng ảnh gallery (đọc trực tiếp header file .jpg, xem
   // imageDimensions.ts) để LocationGallery.tsx dựng khung Masonry đúng tỉ lệ
@@ -30,24 +44,37 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
   // liệu thuần xuống LocationImagesSection/LocationGallery ("use client",
   // không gọi fs được) qua props — ảnh lỗi/không đọc được thì rơi về
   // fallback 4:3 ở chính LocationGallery.tsx, không chặn build.
+  const facadeSrc = `/images/dia-diem-${data.slug}.jpg`;
+  const facadeDims = getPublicJpegDimensions(facadeSrc);
+  const facadeRealRatio = facadeDims ? facadeDims.width / facadeDims.height : null;
+  // `undefined` (không ép) khi tỉ lệ thật đủ ngang/vuông — LocationGallery
+  // rơi về đúng tỉ lệ thật qua width/height (xem bên dưới), y hệt mọi ảnh
+  // khác, không có ngoại lệ nào cần nhớ theo tay.
+  const facadeAspectOverride =
+    facadeRealRatio !== null && facadeRealRatio < FACADE_TALL_RATIO_THRESHOLD ? "3 / 4" : undefined;
   const facadeImage = {
-    src: `/images/dia-diem-${data.slug}.jpg`,
+    src: facadeSrc,
     alt: `Mặt tiền văn phòng ${data.name}`,
     caption: `Mặt tiền toà nhà ${data.name}`,
-    // Chỉ dùng khi gallery rơi về bố cục "1 ảnh duy nhất" (chi nhánh không
-    // có interiorImages nào) — nhánh đó không đọc width/height, chỉ đọc
-    // field aspectRatio này. Hiện mọi chi nhánh đều có ít nhất 1 ảnh nội
-    // thất nên nhánh đó chưa xảy ra trong thực tế, nhưng khai sẵn cho đúng
-    // thay vì rơi về 3:4 mặc định sai tỉ lệ nếu sau này có chi nhánh thiếu
-    // ảnh nội thất.
-    aspectRatio: data.facadeAspectRatio,
+    // CHỈ set khi cần ÉP khung (7 chi nhánh quá dọc) — LocationGallery ưu
+    // tiên field này khi có; để undefined (21 chi nhánh còn lại) thì
+    // width/height thật bên dưới tự quyết định tỉ lệ hiển thị, ĐÚNG nguyên
+    // tắc Masonry gốc (không phải đọc từ `data.facadeAspectRatio` — field
+    // đó giờ chỉ còn phục vụ riêng trang xem trước báo giá, xem doc comment
+    // của nó ở locationsData.ts, không liên quan gallery này).
+    aspectRatio: facadeAspectOverride,
+    // Dự phòng cho trường hợp hiếm đọc file lỗi (facadeDims null, ratio
+    // không tính được nên facadeAspectOverride luôn undefined) — không có
+    // width/height thật để Masonry dùng, nên vẫn cần 1 tỉ lệ nào đó thay vì
+    // để trống hẳn; `data.facadeAspectRatio` (tỉ lệ thật khai tay) là lựa
+    // chọn tốt nhất còn lại lúc đó.
+    ...(facadeDims ? { width: facadeDims.width, height: facadeDims.height } : { aspectRatio: data.facadeAspectRatio }),
   };
-  const facadeDims = getPublicJpegDimensions(facadeImage.src);
   // Ảnh mặt tiền đứng ĐẦU gallery Masonry (trước đây tách riêng thành 1 cột
   // cạnh đoạn giới thiệu — xem doc comment LocationImagesSection.tsx) rồi
   // mới tới ảnh nội thất, đúng thứ tự xem: mặt tiền trước khi vào bên trong.
   const galleryImages = [
-    facadeDims ? { ...facadeImage, width: facadeDims.width, height: facadeDims.height } : facadeImage,
+    facadeImage,
     ...(data.interiorImages?.map((img) => {
       const dims = getPublicJpegDimensions(img.src);
       return dims ? { ...img, width: dims.width, height: dims.height } : img;

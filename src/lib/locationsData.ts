@@ -2546,10 +2546,12 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Thuê văn phòng ảo, văn phòng trọn gói tại 380 Trần Hưng Đạo, Phường Chợ Dừa — văn phòng ảo từ 499.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), có pantry cà phê/trà miễn phí trên tầng thượng, đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/hero.jpg",
-    // Ảnh mặt tiền thật (Wings Tower) đã resize/nén còn 666x1000 — tỉ lệ dọc
-    // gần 2:3, khớp đúng file thật thay vì làm tròn để tránh khung ảnh bị
-    // hở/méo nhẹ so với file gốc.
-    facadeAspectRatio: "666 / 1000",
+    // Ảnh mặt tiền thật (Wings Tower) 1024x1536 — đo lại bằng `sips` khi
+    // điều tra bug ảnh mặt tiền không bị crop trong gallery (2026-09); giá
+    // trị "666/1000" cũ lệch so với file thật hiện tại (ảnh đã được thay
+    // bằng bản khác từ lúc đó), tuy 2 tỉ lệ gần bằng nhau (0.666 vs 0.667)
+    // nên không lộ ra bằng mắt, chỉ sai khi so khớp số liệu.
+    facadeAspectRatio: "1024 / 1536",
     interiorImages: [
       {
         src: "/images/dia-diem-tran-hung-dao-mat-truoc.jpg",
