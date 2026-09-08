@@ -20,8 +20,21 @@ import Faq from "./Faq";
 import CtaBanner from "./CtaBanner";
 import type { LocationData } from "@/lib/locationsData";
 import { SITE_URL, COMPANY_PHONE, COMPANY_EMAIL } from "@/lib/siteConfig";
+import { getPublicJpegDimensions } from "@/lib/imageDimensions";
 
 export default function LocationPageTemplate({ data }: { data: LocationData }) {
+  // Đọc W/H THẬT của từng ảnh gallery (đọc trực tiếp header file .jpg, xem
+  // imageDimensions.ts) để LocationGallery.tsx dựng khung Masonry đúng tỉ lệ
+  // thật — không crop ảnh dọc (VD mặt tiền) như bố cục lưới 4:3 cố định
+  // trước đây. Tính ở đây (Server Component, dùng được fs) rồi truyền số
+  // liệu thuần xuống LocationImagesSection/LocationGallery ("use client",
+  // không gọi fs được) qua props — ảnh lỗi/không đọc được thì rơi về
+  // fallback 4:3 ở chính LocationGallery.tsx, không chặn build.
+  const interiorImagesWithDimensions = data.interiorImages?.map((img) => {
+    const dims = getPublicJpegDimensions(img.src);
+    return dims ? { ...img, width: dims.width, height: dims.height } : img;
+  });
+
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -84,7 +97,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         }}
         imageSide={data.facadeImageSide}
         paragraphs={data.intro}
-        interiorImages={data.interiorImages}
+        interiorImages={interiorImagesWithDimensions}
       />
       {/* "Dịch vụ tại chi nhánh" chuyển lên NGAY SAU gallery ảnh (trước đây
           nằm sau Bản đồ) — khách xem xong ảnh thực tế chi nhánh là thấy
