@@ -352,30 +352,16 @@ export type LocationData = {
       LocationImagesSection (gallery), PlanQuoteCard, và localBusinessSchema
       (xem LocationPageTemplate.tsx). */
   image: string;
-  /** Tỉ lệ khung hiển thị (W/H) cho ảnh mặt tiền ở LocationFacade (trang chi
-      nhánh) — mặc định khớp tỉ lệ thật của ảnh (không cắt), NHƯNG với ảnh
-      quá dọc (facadeFit "cover") đây là tỉ lệ khung CỐ ĐỊNH đã giới hạn
-      (vd. "3 / 4"), khác tỉ lệ ảnh gốc — xem `facadeTrueAspectRatio`. */
+  /** Tỉ lệ thật (W/H) của ảnh mặt tiền — dùng cho khung ảnh trong trang xem
+      trước báo giá (/tien-ich/tim-goi-phu-hop/[slug]/[plan], object-contain,
+      không cắt). KHÔNG còn dùng ở trang /locations/[slug] — ảnh mặt tiền ở
+      đó nay hiển thị trong LocationGallery (Masonry, tự đọc W/H thật qua
+      getPublicJpegDimensions() nên không cần field riêng cho tỉ lệ hiển thị
+      nữa — xem LocationPageTemplate.tsx). */
   facadeAspectRatio: string;
-  /** Bên đặt ảnh mặt tiền trong section 2 cột đầu trang — so le giữa các chi nhánh để tạo cảm giác đa dạng. */
-  facadeImageSide: "left" | "right";
-  /** "cover" thay vì mặc định "contain" — chỉ dùng khi cố ý giới hạn chiều cao khung và chấp nhận cắt bớt ảnh (vd. Yên Thế, và các ảnh mặt tiền quá dọc dùng khung 3:4 cố định). */
-  facadeFit?: "cover";
-  /** CSS object-position cho ảnh mặt tiền — chỉ cần khi dùng facadeFit "cover". */
-  facadeObjectPosition?: string;
-  /** Giới hạn chiều rộng khung ảnh mặt tiền — chỉ dùng khi tỉ lệ ảnh quá dọc khiến chiều cao render vượt hẳn cột text bên cạnh. */
-  facadeMaxWidth?: string;
-  /** Tỉ lệ THẬT (W/H) của file ảnh gốc — chỉ cần khai khi `facadeAspectRatio`
-      ở trên đã bị đổi thành 1 khung cố định khác tỉ lệ gốc (facadeFit
-      "cover" dùng để giới hạn chiều cao ảnh quá dọc). Trang xem trước báo
-      giá (/tien-ich/tim-goi-phu-hop/[slug]/[plan]) hiển thị CÙNG 1 ảnh mặt
-      tiền này nhưng với object-contain (chủ đích không cắt ảnh — xem trang
-      đó), nên PHẢI dùng đúng tỉ lệ thật này thay vì khung cố định, nếu
-      không ảnh sẽ bị dồn hẹp lại (pillarbox) do khung 3:4 rộng hơn tỉ lệ
-      ảnh thật ~2:3. Không khai (undefined) nghĩa là facadeAspectRatio đã
-      là tỉ lệ thật, dùng luôn không cần field riêng. */
-  facadeTrueAspectRatio?: string;
-  /** Ảnh nội thất (lễ tân, phòng họp, chỗ ngồi...) hiển thị dạng gallery cạnh ảnh mặt tiền — chỉ một số chi nhánh có sẵn. */
+  /** Ảnh nội thất (lễ tân, phòng họp, chỗ ngồi...) hiển thị chung 1 gallery
+      Masonry với ảnh mặt tiền (ảnh mặt tiền luôn đứng đầu) — chỉ một số chi
+      nhánh có sẵn. */
   interiorImages?: {
     src: string;
     alt: string;
@@ -450,21 +436,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Thuê văn phòng ảo, văn phòng trọn gói tại Sông Thao, Tân Bình — trụ sở chính MAX OFFICE, đầy đủ dịch vụ, văn phòng ảo từ 350.000đ/tháng (gói START, BASE), gần sân bay Tân Sơn Nhất.",
     image: "/images/hero.jpg",
-    // Ảnh gốc 905x1407 (tỉ lệ ~0,64 — rất dọc) từng "hug" đúng tỉ lệ thật
-    // (zero letterboxing) nhưng khiến khung ảnh cao gần gấp đôi khối đoạn
-    // văn giới thiệu bên cạnh, nhìn mất cân đối rõ rệt trên trang thật —
-    // đổi sang khung cố định 3:4 (facadeFit "cover", chấp nhận crop nhẹ
-    // ~14% chiều cao, chủ yếu là nền trời phía trên) để cân đối lại với
-    // cột text, giữ nguyên object-position mặc định "center" vì bố cục ảnh
-    // (bảng hiệu + lối vào đều nằm giữa/dưới khung, còn nhiều nền trời phía
-    // trên để crop) không cần neo lệch tâm.
-    facadeAspectRatio: "3 / 4",
-    facadeFit: "cover",
-    // Tỉ lệ thật của file gốc — xem doc comment facadeTrueAspectRatio ở
-    // type LocationData: trang xem trước báo giá dùng field này để hiện
-    // đúng tỉ lệ thật (object-contain, không cắt), không dùng khung 3:4.
-    facadeTrueAspectRatio: "905 / 1407",
-    facadeImageSide: "right",
+    // Cropped to 905x1407 (see /images/originals for the uncropped source).
+    facadeAspectRatio: "905 / 1407",
     interiorImages: [
       { src: "/images/dia-diem-song-thao-khong-gian-cowrorking.jpg", alt: "Khu vực làm việc chung văn phòng Sông Thao", caption: "Không gian làm việc chung" },
       { src: "/images/dia-diem-song-thao-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Sông Thao", caption: "Quầy lễ tân" },
@@ -566,7 +539,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-chi-nhanh.png",
     // Cropped to 934x1232 — bottom lands at the motorbike wheel touching the road (see /images/originals for the source).
     facadeAspectRatio: "934 / 1232",
-    facadeImageSide: "left",
     interiorImages: [
       {
         src: "/images/dia-diem-dien-bien-phu-coworking.jpg",
@@ -678,7 +650,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       "Văn phòng ảo tại Nguyễn Oanh, Gò Vấp — toà nhà hạng A, một trong số ít lựa chọn chất lượng cao tại khu vực. Từ 499.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), kèm tư vấn AI, ưu tiên hỗ trợ 24/7, phòng họp.",
     image: "/images/hero-dia-diem.jpg",
     facadeAspectRatio: "1254 / 1254",
-    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-nguyen-oanh-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Nguyễn Oanh", caption: "Quầy lễ tân" },
       {
@@ -769,14 +740,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Yên Thế Tân Bình | Từ 500K/Tháng",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Yên Thế, Phường Tân Sơn Hòa, Tân Bình — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/anh-hero-moi.jpg",
-    // Real facade shot is landscape (1484x1060), but the composition leaves a
-    // lot of foreground street/sidewalk at the bottom — cap the box to a more
-    // compact ratio and anchor to the top so the building itself fills more
-    // of the frame instead of the street.
-    facadeAspectRatio: "4 / 3",
-    facadeImageSide: "right",
-    facadeFit: "cover",
-    facadeObjectPosition: "top",
+    // Real facade shot, landscape 1484x1060 — full frame, no crop (gallery
+    // Masonry hiển thị đúng tỉ lệ thật, xem LocationPageTemplate.tsx).
+    facadeAspectRatio: "1484 / 1060",
     interiorImages: [
       { src: "/images/dia-diem-yen-the-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Yên Thế", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-yen-the-phong-hop.jpg", alt: "Phòng họp văn phòng Yên Thế", caption: "Phòng họp" },
@@ -865,7 +831,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     // (see /images/originals for the source). Ratio is balanced enough now
     // that no maxWidth cap is needed.
     facadeAspectRatio: "934 / 1074",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-cong-hoa-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cộng Hoà", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cong-hoa-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cộng Hoà", caption: "Bảng tên công ty tại toà nhà" },
@@ -935,7 +900,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Tân Thắng, Phường Tân Sơn Nhì, Tân Phú — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/coworking.jpg",
     facadeAspectRatio: "1484 / 1060",
-    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-tan-thang-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Tân Thắng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-tan-thang-phong-hop.jpg", alt: "Phòng họp văn phòng Tân Thắng", caption: "Phòng họp" },
@@ -1008,7 +972,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/anh-hero-trang-chu.jpg",
     // Cropped to 1085x1297 (see /images/originals for the uncropped source).
     facadeAspectRatio: "1085 / 1297",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-cuu-long-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cửu Long", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cuu-long-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cửu Long", caption: "Bảng tên công ty tại toà nhà" },
@@ -1079,7 +1042,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-bang-gia-2.png",
     // Cropped to 1122x1394 — bottom extended to the road (see /images/originals for the source).
     facadeAspectRatio: "1122 / 1394",
-    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-hoang-viet-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Hoàng Việt", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
@@ -1151,7 +1113,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Bàu Cát 2, Phường Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/hero-ve-chung-toi-2.png",
     facadeAspectRatio: "1448 / 1086",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-bau-cat-coworking.jpg", alt: "Khu vực làm việc chung văn phòng Bàu Cát 2", caption: "Không gian làm việc chung" },
       { src: "/images/dia-diem-bau-cat-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Bàu Cát 2", caption: "Quầy lễ tân" },
@@ -1224,7 +1185,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Lam Sơn, Phường Tân Sơn Hòa, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/hero-dich-vu.png",
     facadeAspectRatio: "1390 / 1132",
-    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-lam-son-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Lam Sơn", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-lam-son-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Lam Sơn", caption: "Bảng tên công ty tại toà nhà" },
@@ -1295,7 +1255,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Hoàng Kế Viêm, Phường Bảy Hiền, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/hero-lien-he-2.png",
     facadeAspectRatio: "1448 / 1086",
-    facadeImageSide: "left",
     interiorImages: [
       {
         src: "/images/dia-diem-hoang-ke-viem-bang-ten.jpg",
@@ -1374,7 +1333,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/anh-hero-trang-chu-1.jpg",
     // Cropped to 1086x1206 — bottom lands at the sidewalk/road curb line (see /images/originals for the source).
     facadeAspectRatio: "1086 / 1206",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-cmt8-le-tan.jpg", alt: "Khu vực lễ tân văn phòng CMT8", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cmt8-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng CMT8", caption: "Bảng tên công ty tại toà nhà" },
@@ -1448,16 +1406,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Thuê văn phòng ảo tại 614-616-618 Ba Tháng Hai, Phường Diên Hồng — chi nhánh mới MAX OFFICE tại Quận 10 (cũ), 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần Đại học Bách Khoa TP.HCM.",
     image: "/images/hero-chi-nhanh.png",
-    // Ảnh gốc 1023x1537 (tỉ lệ ~0,67 — rất dọc) từng hug đúng tỉ lệ thật,
-    // khiến khung ảnh cao vượt hẳn cột text bên cạnh, mất cân đối (cùng
-    // vấn đề với Sông Thao, xem comment đầy đủ ở đó) — đổi sang khung 3:4
-    // cố định (facadeFit "cover", crop nhẹ, object-position mặc định
-    // "center" vì nhiều nền trời phía trên để crop, không có chi tiết quan
-    // trọng sát viền).
-    facadeAspectRatio: "3 / 4",
-    facadeFit: "cover",
-    facadeTrueAspectRatio: "1023 / 1537",
-    facadeImageSide: "left",
+    // Ảnh mặt tiền gốc 1023x1537, không chỉnh sửa.
+    facadeAspectRatio: "1023 / 1537",
     interiorImages: [
       { src: "/images/dia-diem-ba-thang-hai-sanh.jpg", alt: "Sảnh chính văn phòng 614-616-618 Ba Tháng Hai", caption: "Sảnh chính toà nhà" },
       {
@@ -1541,14 +1491,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo 314/6 Điện Biên Phủ, Quận 10 (cũ) | Từ 380K/Tháng",
     metaDescription: "Thuê văn phòng ảo tại 314/6 Điện Biên Phủ, Phường Vườn Lài — gói V-START riêng biệt từ 380.000đ/tháng, toà nhà mặt tiền hiện đại, gần chi nhánh CMT8 cùng khu vực Quận 10 (cũ).",
     image: "/images/coworking.jpg",
-    // Ảnh gốc 1024x1535 (tỉ lệ ~0,67 — rất dọc), cùng vấn đề mất cân đối
-    // với Sông Thao (xem comment đầy đủ ở đó) — đổi sang khung 3:4 cố định
-    // dù chi nhánh đang tạm ẩn (isActive false), để nhất quán và sẵn sàng
-    // đúng ngay nếu bật lại sau này.
-    facadeAspectRatio: "3 / 4",
-    facadeFit: "cover",
-    facadeTrueAspectRatio: "1024 / 1535",
-    facadeImageSide: "left",
+    // Portrait street-front shot, không cắt — 1024x1535 gốc.
+    facadeAspectRatio: "1024 / 1535",
     interiorImages: [
       { src: "/images/dia-diem-vuon-lai-lam-viec.jpg", alt: "Không gian làm việc văn phòng 314/6 Điện Biên Phủ", caption: "Không gian làm việc" },
       { src: "/images/dia-diem-vuon-lai-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 314/6 Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
@@ -1621,7 +1565,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-dia-diem.jpg",
     // Full-frame villa facade shot, no crop needed — 1086x1448 native.
     facadeAspectRatio: "1086 / 1448",
-    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-pham-van-dong-le-tan.jpg", alt: "Quầy lễ tân văn phòng Phạm Văn Đồng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-pham-van-dong-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Phạm Văn Đồng", caption: "Bảng tên công ty tại toà nhà" },
@@ -1698,7 +1641,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/khong-gian-lam-viec.jpg",
     // Full-frame square render, no crop needed — 1254x1254 native.
     facadeAspectRatio: "1254 / 1254",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-quan-7-le-tan.jpg", alt: "Quầy lễ tân văn phòng Bùi Văn Ba", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-quan-7-khong-gian-lam-viec.jpg", alt: "Không gian làm việc văn phòng Bùi Văn Ba", caption: "Không gian làm việc" },
@@ -1769,7 +1711,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/coworking.jpg",
     // Cropped street-front shot, không chỉnh sửa — 1122x1402 gốc.
     facadeAspectRatio: "1122 / 1402",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-nguyen-thong-le-tan.jpg", alt: "Sảnh lễ tân và tiếp khách văn phòng 60 Nguyễn Thông", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-nguyen-thong-phong-hop.jpg", alt: "Phòng họp văn phòng 60 Nguyễn Thông", caption: "Phòng họp" },
@@ -1845,7 +1786,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/anh-hero-trang-chu.jpg",
     // Cropped street-front shot, không chỉnh sửa — 873x1122 gốc.
     facadeAspectRatio: "873 / 1122",
-    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-cach-mang-thang-8-le-tan.jpg", alt: "Quầy lễ tân văn phòng 520 Cách Mạng Tháng 8", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cach-mang-thang-8-tiep-khach.jpg", alt: "Khu vực tiếp khách văn phòng 520 Cách Mạng Tháng 8", caption: "Khu vực tiếp khách" },
@@ -1923,7 +1863,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-bang-gia-2.png",
     // Ảnh mặt tiền gốc 813x1086, không chỉnh sửa.
     facadeAspectRatio: "813 / 1086",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-ung-van-khiem-le-tan.jpg", alt: "Quầy lễ tân văn phòng 161 Ung Văn Khiêm", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-ung-van-khiem-tiep-khach.jpg", alt: "Sảnh tiếp khách văn phòng 161 Ung Văn Khiêm", caption: "Sảnh tiếp khách" },
@@ -2001,7 +1940,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-ve-chung-toi-2.png",
     // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
     facadeAspectRatio: "1086 / 1448",
-    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-tan-cang-le-tan.jpg", alt: "Sảnh lễ tân & tiếp khách văn phòng 23 Tân Cảng", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-tan-cang-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 23 Tân Cảng", caption: "Bảng tên công ty tại toà nhà" },
@@ -2078,7 +2016,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-dich-vu.png",
     // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
     facadeAspectRatio: "1086 / 1448",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-n1-dien-bien-phu-le-tan.jpg", alt: "Sảnh lễ tân & tiếp khách văn phòng N1 Điện Biên Phủ", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-n1-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng N1 Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
@@ -2155,7 +2092,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/anh-hero-moi.jpg",
     // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
     facadeAspectRatio: "1086 / 1448",
-    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-quoc-huong-le-tan.jpg", alt: "Sảnh lễ tân & tiếp khách văn phòng 27C Quốc Hương", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-quoc-huong-phong-hop.jpg", alt: "Phòng họp văn phòng 27C Quốc Hương", caption: "Phòng họp" },
@@ -2231,12 +2167,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Thuê văn phòng ảo tại 89 Phan Đình Phùng, Phường Phú Nhuận — chi nhánh đầu tiên MAX OFFICE tại khu vực này, 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần chợ Phú Nhuận.",
     image: "/images/hero-lien-he-2.png",
-    // Ảnh gốc 1024x1536 (tỉ lệ ~0,67 — rất dọc), cùng vấn đề mất cân đối
-    // với Sông Thao (xem comment đầy đủ ở đó) — đổi sang khung 3:4 cố định.
-    facadeAspectRatio: "3 / 4",
-    facadeFit: "cover",
-    facadeTrueAspectRatio: "1024 / 1536",
-    facadeImageSide: "right",
+    // Ảnh mặt tiền gốc 1024x1536, không chỉnh sửa.
+    facadeAspectRatio: "1024 / 1536",
     interiorImages: [
       { src: "/images/dia-diem-phan-dinh-phung-le-tan.jpg", alt: "Quầy lễ tân văn phòng 89 Phan Đình Phùng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-phan-dinh-phung-tiep-khach.jpg", alt: "Sảnh tiếp khách văn phòng 89 Phan Đình Phùng", caption: "Sảnh tiếp khách" },
@@ -2312,12 +2244,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Thuê văn phòng ảo tại 84-86 Nguyễn Trường Tộ, Phường Xóm Chiếu — chi nhánh đầu tiên MAX OFFICE tại Quận 4 (cũ), 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần trung tâm Quận 1.",
     image: "/images/anh-hero-trang-chu-1.jpg",
-    // Ảnh gốc 1023x1537 (tỉ lệ ~0,67 — rất dọc), cùng vấn đề mất cân đối
-    // với Sông Thao (xem comment đầy đủ ở đó) — đổi sang khung 3:4 cố định.
-    facadeAspectRatio: "3 / 4",
-    facadeFit: "cover",
-    facadeTrueAspectRatio: "1023 / 1537",
-    facadeImageSide: "left",
+    // Ảnh mặt tiền gốc 1023x1537, không chỉnh sửa.
+    facadeAspectRatio: "1023 / 1537",
     interiorImages: [
       { src: "/images/dia-diem-nguyen-truong-to-le-tan.jpg", alt: "Quầy lễ tân văn phòng 84-86 Nguyễn Trường Tộ", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-nguyen-truong-to-san-trong.jpg", alt: "Không gian trống văn phòng 84-86 Nguyễn Trường Tộ", caption: "Không gian trống" },
@@ -2393,7 +2321,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero.jpg",
     // Ảnh mặt tiền gốc 1448x1086, không chỉnh sửa.
     facadeAspectRatio: "1448 / 1086",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-le-quoc-hung-le-tan.jpg", alt: "Quầy lễ tân văn phòng 54-56 Lê Quốc Hưng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-le-quoc-hung-sanh-tiep-khach.jpg", alt: "Sảnh tiếp khách văn phòng 54-56 Lê Quốc Hưng", caption: "Sảnh tiếp khách" },
@@ -2470,7 +2397,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/khong-gian-lam-viec.jpg",
     // Ảnh mặt tiền gốc 1145x1374, không chỉnh sửa.
     facadeAspectRatio: "1145 / 1374",
-    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-mac-dinh-chi-le-tan.jpg", alt: "Quầy lễ tân văn phòng 36 Mạc Đĩnh Chi", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-mac-dinh-chi-tiep-khach.jpg", alt: "Khu vực tiếp khách văn phòng 36 Mạc Đĩnh Chi", caption: "Khu vực tiếp khách" },
@@ -2545,12 +2471,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Thuê văn phòng ảo tại 28-34 Pasteur, Phường Sài Gòn — chi nhánh thứ 3 MAX OFFICE tại Quận 1 (cũ), 4 gói SAVE/SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần chợ Bến Thành.",
     image: "/images/hero-dia-diem.jpg",
-    // Ảnh gốc 1024x1536 (tỉ lệ ~0,67 — rất dọc), cùng vấn đề mất cân đối
-    // với Sông Thao (xem comment đầy đủ ở đó) — đổi sang khung 3:4 cố định.
-    facadeAspectRatio: "3 / 4",
-    facadeFit: "cover",
-    facadeTrueAspectRatio: "1024 / 1536",
-    facadeImageSide: "left",
+    // Ảnh mặt tiền gốc 1024x1536, không chỉnh sửa.
+    facadeAspectRatio: "1024 / 1536",
     interiorImages: [
       { src: "/images/dia-diem-pasteur-le-tan-sanh-tiep-khach.jpg", alt: "Sảnh lễ tân và tiếp khách văn phòng 28-34 Pasteur", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-pasteur-ban-hop.jpg", alt: "Phòng họp văn phòng 28-34 Pasteur", caption: "Phòng họp" },
@@ -2624,13 +2546,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription:
       "Thuê văn phòng ảo, văn phòng trọn gói tại 380 Trần Hưng Đạo, Phường Chợ Dừa — văn phòng ảo từ 499.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), có pantry cà phê/trà miễn phí trên tầng thượng, đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/hero.jpg",
-    // Ảnh mặt tiền thật (Wings Tower) 666x1000 — tỉ lệ ~0,67, rất dọc, cùng
-    // vấn đề mất cân đối với Sông Thao (xem comment đầy đủ ở đó) — đổi
-    // sang khung 3:4 cố định.
-    facadeAspectRatio: "3 / 4",
-    facadeFit: "cover",
-    facadeTrueAspectRatio: "666 / 1000",
-    facadeImageSide: "left",
+    // Ảnh mặt tiền thật (Wings Tower) đã resize/nén còn 666x1000 — tỉ lệ dọc
+    // gần 2:3, khớp đúng file thật thay vì làm tròn để tránh khung ảnh bị
+    // hở/méo nhẹ so với file gốc.
+    facadeAspectRatio: "666 / 1000",
     interiorImages: [
       {
         src: "/images/dia-diem-tran-hung-dao-mat-truoc.jpg",

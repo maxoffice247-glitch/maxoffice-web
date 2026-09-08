@@ -30,10 +30,29 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
   // liệu thuần xuống LocationImagesSection/LocationGallery ("use client",
   // không gọi fs được) qua props — ảnh lỗi/không đọc được thì rơi về
   // fallback 4:3 ở chính LocationGallery.tsx, không chặn build.
-  const interiorImagesWithDimensions = data.interiorImages?.map((img) => {
-    const dims = getPublicJpegDimensions(img.src);
-    return dims ? { ...img, width: dims.width, height: dims.height } : img;
-  });
+  const facadeImage = {
+    src: `/images/dia-diem-${data.slug}.jpg`,
+    alt: `Mặt tiền văn phòng ${data.name}`,
+    caption: `Mặt tiền toà nhà ${data.name}`,
+    // Chỉ dùng khi gallery rơi về bố cục "1 ảnh duy nhất" (chi nhánh không
+    // có interiorImages nào) — nhánh đó không đọc width/height, chỉ đọc
+    // field aspectRatio này. Hiện mọi chi nhánh đều có ít nhất 1 ảnh nội
+    // thất nên nhánh đó chưa xảy ra trong thực tế, nhưng khai sẵn cho đúng
+    // thay vì rơi về 3:4 mặc định sai tỉ lệ nếu sau này có chi nhánh thiếu
+    // ảnh nội thất.
+    aspectRatio: data.facadeAspectRatio,
+  };
+  const facadeDims = getPublicJpegDimensions(facadeImage.src);
+  // Ảnh mặt tiền đứng ĐẦU gallery Masonry (trước đây tách riêng thành 1 cột
+  // cạnh đoạn giới thiệu — xem doc comment LocationImagesSection.tsx) rồi
+  // mới tới ảnh nội thất, đúng thứ tự xem: mặt tiền trước khi vào bên trong.
+  const galleryImages = [
+    facadeDims ? { ...facadeImage, width: facadeDims.width, height: facadeDims.height } : facadeImage,
+    ...(data.interiorImages?.map((img) => {
+      const dims = getPublicJpegDimensions(img.src);
+      return dims ? { ...img, width: dims.width, height: dims.height } : img;
+    }) ?? []),
+  ];
 
   const localBusinessSchema = {
     "@context": "https://schema.org",
@@ -85,20 +104,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         ]}
       />
 
-      <LocationImagesSection
-        name={data.name}
-        facadeImage={{
-          src: `/images/dia-diem-${data.slug}.jpg`,
-          alt: `Mặt tiền văn phòng ${data.name}`,
-          aspectRatio: data.facadeAspectRatio,
-          fit: data.facadeFit,
-          objectPosition: data.facadeObjectPosition,
-          maxWidth: data.facadeMaxWidth,
-        }}
-        imageSide={data.facadeImageSide}
-        paragraphs={data.intro}
-        interiorImages={interiorImagesWithDimensions}
-      />
+      <LocationImagesSection paragraphs={data.intro} images={galleryImages} />
       {/* "Dịch vụ tại chi nhánh" chuyển lên NGAY SAU gallery ảnh (trước đây
           nằm sau Bản đồ) — khách xem xong ảnh thực tế chi nhánh là thấy
           ngay giá/gói áp dụng, không phải cuộn qua Lợi ích/Khu vực lân
