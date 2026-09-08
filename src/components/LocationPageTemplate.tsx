@@ -8,6 +8,7 @@ import LocationAccess from "./LocationAccess";
 import LocationDining from "./LocationDining";
 import LocationMap from "./LocationMap";
 import LocationServicesList from "./LocationServicesList";
+import LocationScrollytelling from "./LocationScrollytelling";
 import PhamVanDongServices from "./PhamVanDongServices";
 import QuanBaServices from "./QuanBaServices";
 import VuonLaiServices from "./VuonLaiServices";
@@ -86,6 +87,47 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         paragraphs={data.intro}
         interiorImages={data.interiorImages}
       />
+      {/* THỬ NGHIỆM "scrollytelling" (pin-and-scrub khi cuộn) — CHỈ áp dụng
+          cho 380 Trần Hưng Đạo, bản pilot đánh giá trước khi nhân rộng.
+          Component nhận props nên sẵn sàng tái dùng cho chi nhánh khác nếu
+          quyết định áp dụng thêm — chỉ cần thêm 1 nhánh điều kiện tương tự
+          bên dưới, không cần sửa LocationScrollytelling.tsx. Đặt ngay sau
+          Gallery ảnh (LocationImagesSection) theo đúng yêu cầu — bổ sung
+          thêm, không thay thế Gallery. */}
+      {data.slug === "tran-hung-dao" && (
+        <LocationScrollytelling
+          eyebrow="Không gian thực tế"
+          title="Đi đủ một vòng không gian, trước khi bạn đặt chân đến"
+          description="Từ mặt tiền Wings Tower đến góc pantry trên tầng thượng — cuộn qua từng khung hình dưới đây để hình dung đúng không gian đang chờ bạn tại 380 Trần Hưng Đạo."
+          images={[
+            {
+              src: "/images/dia-diem-tran-hung-dao.jpg",
+              alt: "Mặt tiền toà nhà Wings Tower, văn phòng 380 Trần Hưng Đạo",
+              caption: "Mặt tiền Wings Tower",
+            },
+            {
+              src: "/images/dia-diem-tran-hung-dao-mat-truoc.jpg",
+              alt: "Mặt trước toà nhà Wings Tower, văn phòng 380 Trần Hưng Đạo",
+              caption: "Mặt trước tòa nhà",
+            },
+            {
+              src: "/images/dia-diem-tran-hung-dao-le-tan.jpg",
+              alt: "Quầy lễ tân và khu tiếp khách văn phòng 380 Trần Hưng Đạo",
+              caption: "Quầy lễ tân & khu tiếp khách",
+            },
+            {
+              src: "/images/dia-diem-tran-hung-dao-phong-hop.jpg",
+              alt: "Phòng họp văn phòng 380 Trần Hưng Đạo",
+              caption: "Phòng họp",
+            },
+            {
+              src: "/images/dia-diem-tran-hung-dao-pantry.jpg",
+              alt: "Khu pantry ngoài trời trên tầng thượng văn phòng 380 Trần Hưng Đạo",
+              caption: "Khu pantry trên tầng thượng",
+            },
+          ]}
+        />
+      )}
       {/* "Dịch vụ tại chi nhánh" chuyển lên NGAY SAU gallery ảnh (trước đây
           nằm sau Bản đồ) — khách xem xong ảnh thực tế chi nhánh là thấy
           ngay giá/gói áp dụng, không phải cuộn qua Lợi ích/Khu vực lân
