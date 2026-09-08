@@ -9,7 +9,7 @@ import { getGroupedLocations, stripCuSuffix, ACTIVE_BRANCH_COUNT, type LocationL
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
 import { useNavIndicator } from "./NavIndicator";
 
-function MegaMenuLocationItem({ loc, areaBadge }: { loc: LocationListItem; areaBadge?: string }) {
+function MegaMenuLocationItem({ loc }: { loc: LocationListItem }) {
   const price = getCheapestPriceForLocation(loc.slug);
   return (
     <Link
@@ -27,18 +27,13 @@ function MegaMenuLocationItem({ loc, areaBadge }: { loc: LocationListItem; areaB
             Từ <span className="text-accent font-bold italic">{formatVoPriceShort(price)}/tháng</span>
           </span>
         )}
-        <span className="mt-1 flex flex-wrap gap-1">
-          {loc.tag && (
+        {loc.tag && (
+          <span className="mt-1 flex flex-wrap gap-1">
             <span className="inline-block rounded-full bg-amber/12 px-2 py-0.5 text-[10px] font-bold text-amber-dark">
               {loc.tag}
             </span>
-          )}
-          {areaBadge && (
-            <span className="inline-block rounded-full bg-primary-tint px-2 py-0.5 text-[10px] font-bold text-primary">
-              {areaBadge}
-            </span>
-          )}
-        </span>
+          </span>
+        )}
       </span>
     </Link>
   );
@@ -48,7 +43,7 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { registerRef, setHoveredKey } = useNavIndicator();
-  const { multiBranchGroups, singleBranchLocations } = getGroupedLocations();
+  const { areaGroups } = getGroupedLocations();
 
   const handleEnter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -98,57 +93,19 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
           >
             <div className="overflow-hidden rounded-2xl border border-line bg-white shadow-[0_30px_70px_rgba(11,31,58,0.22)]">
               <div className="scrollbar-thin max-h-[60vh] overflow-y-auto p-5">
-                {multiBranchGroups.map((group) => (
+                {areaGroups.map((group) => (
                   <div key={group.area.slug} className="mb-3.5 last:mb-0">
-                    {group.subGroups ? (
-                      // Khu vực 2 chi nhánh ghép thêm 1 khu vực 1-chi-nhánh
-                      // cho đủ hàng — mỗi khu vực con có khung riêng để
-                      // không bị đọc nhầm là 1 khu vực duy nhất.
-                      <div className="flex flex-col gap-2 sm:flex-row">
-                        {group.subGroups.map((sub) => (
-                          <div
-                            key={sub.area.slug}
-                            className={`min-w-0 rounded-lg border border-line/70 p-1.5 ${
-                              sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"
-                            }`}
-                          >
-                            <p className="mb-1 px-1 text-[10px] font-bold tracking-[0.06em] text-body-text/60 uppercase">
-                              {stripCuSuffix(sub.area.name)}
-                            </p>
-                            <div className={`grid gap-1 ${sub.locations.length >= 2 ? "grid-cols-2" : "grid-cols-1"}`}>
-                              {sub.locations.map((loc) => (
-                                <MegaMenuLocationItem key={loc.slug} loc={loc} />
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <>
-                        <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
-                          {stripCuSuffix(group.area.name)}
-                        </p>
-                        <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
-                          {group.locations.map((loc) => (
-                            <MegaMenuLocationItem key={loc.slug} loc={loc} />
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                ))}
-                {singleBranchLocations.length > 0 && (
-                  <div className="mb-3.5 last:mb-0">
                     <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
-                      Các chi nhánh khu vực khác
+                      {stripCuSuffix(group.area.name)}
+                      <span className="ml-1.5 normal-case text-body-text/50">({group.locations.length})</span>
                     </p>
                     <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
-                      {singleBranchLocations.map((loc) => (
-                        <MegaMenuLocationItem key={loc.slug} loc={loc} areaBadge={loc.area.name} />
+                      {group.locations.map((loc) => (
+                        <MegaMenuLocationItem key={loc.slug} loc={loc} />
                       ))}
                     </div>
                   </div>
-                )}
+                ))}
               </div>
               <div className="flex flex-col items-start gap-3 border-t border-line bg-bg-tint px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2.5">
