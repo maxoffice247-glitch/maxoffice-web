@@ -6,6 +6,7 @@ import { RevealGroup } from "./Reveal";
 import LocationCard from "./LocationCard";
 import { SearchIcon } from "./icons";
 import { stripCuSuffix, type LocationListItem, type LocationRow } from "@/lib/locationsData";
+import { CLUSTER_COLORS, getClusterWidthShares, type ClusterWidthShare } from "@/lib/locationClusterColors";
 
 type AreaGroup = {
   area: { slug: string; name: string };
@@ -26,20 +27,6 @@ function normalizeVN(str: string): string {
     .replace(/đ/g, "d");
 }
 
-/** Bảng màu xoay vòng cho các khu vực ≤2 chi nhánh ghép chung hàng — 4 tông
-    (xanh dương/cam/tím/xanh lá) đủ khác nhau để nhận ra ngay cả khi lướt
-    nhanh, nhưng không quá chói (dùng bản "600-700" cho chữ, bản nhạt cho
-    nền badge). `colorIndex` do buildLocationRows() cấp TĂNG DẦN LIÊN TỤC
-    qua mọi cluster (không mod trước) — 2 khu vực liền kề trong 1 cluster
-    luôn có index liên tiếp (n, n+1), nên (n % 4) luôn khác (n+1) % 4 → 2
-    khu vực cạnh nhau trong cùng 1 hàng không bao giờ trùng màu. */
-const CLUSTER_COLORS = [
-  { border: "border-l-primary", text: "text-primary", badge: "bg-primary/10 text-primary" },
-  { border: "border-l-amber", text: "text-amber-dark", badge: "bg-amber/12 text-amber-dark" },
-  { border: "border-l-violet-500", text: "text-violet-700", badge: "bg-violet-500/10 text-violet-700" },
-  { border: "border-l-emerald-600", text: "text-emerald-700", badge: "bg-emerald-600/10 text-emerald-700" },
-];
-
 function AreaBlock({ area, locations }: AreaGroup) {
   return (
     <div className="mb-10 rounded-3xl border border-primary/15 bg-primary-tint/40 p-5 sm:p-7">
@@ -58,10 +45,13 @@ function AreaBlock({ area, locations }: AreaGroup) {
   );
 }
 
-/** 1 khu vực nhỏ (≤2 chi nhánh) bên trong 1 hàng ghép — border-left màu +
-    tiêu đề màu theo `colorIndex` để mắt vẫn nhận ra ranh giới dù chung
-    hàng với khu vực khác. `widthShare` quyết định bề ngang tương đối so
-    với (các) khu vực còn lại trong cùng hàng, tỉ lệ theo số chi nhánh của
+/** 1 khu vực nhỏ (≤2 chi nhánh) bên trong 1 hàng ghép — viền MẢNH (1px,
+    bằng đúng độ dày viền xám mặc định các khối khác trên site đang dùng,
+    chỉ đổi màu) bao quanh ĐỦ 4 CẠNH + tiêu đề màu theo `colorIndex`, viền
+    và chữ CÙNG lấy từ 1 tông màu (`color.border`/`color.text` trỏ chung 1
+    màu gốc — xem locationClusterColors.ts) nên không bao giờ lệch màu
+    giữa viền và chữ. `widthShare` quyết định bề ngang tương đối so với
+    (các) khu vực còn lại trong cùng hàng, tỉ lệ theo số chi nhánh của
     chính nó (khu vực 2 chi nhánh rộng gấp đôi khu vực 1 chi nhánh) — mobile
     luôn xếp full-width 1 cột bất kể tỉ lệ này (basis chỉ có hiệu lực từ
     sm: trở lên). */
@@ -74,7 +64,7 @@ function ClusterAreaCard({
   area: { slug: string; name: string };
   locations: LocationListItem[];
   colorIndex: number;
-  widthShare: "1/2" | "1/3" | "2/3" | "full";
+  widthShare: ClusterWidthShare;
 }) {
   const color = CLUSTER_COLORS[colorIndex % CLUSTER_COLORS.length];
   const basisClass =
@@ -87,7 +77,7 @@ function ClusterAreaCard({
           : "sm:basis-2/3";
 
   return (
-    <div className={`min-w-0 rounded-2xl border border-line border-l-4 ${color.border} bg-white p-4 sm:p-5 ${basisClass}`}>
+    <div className={`min-w-0 rounded-2xl border ${color.border} bg-white p-4 sm:p-5 ${basisClass}`}>
       <div className="mb-3.5 flex items-center justify-between gap-2">
         <h3 className={`text-[15px] font-bold ${color.text}`}>{stripCuSuffix(area.name)}</h3>
         <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold whitespace-nowrap ${color.badge}`}>
@@ -104,16 +94,7 @@ function ClusterAreaCard({
 }
 
 function ClusterRow({ groups }: { groups: Extract<LocationRow, { kind: "cluster" }>["groups"] }) {
-  // Chỉ 2 khu vực/hàng (xem CLUSTER_AREAS_PER_ROW) nên tỉ lệ bề ngang chỉ
-  // có 3 trường hợp: 1-1 chia đều, hoặc 1-2/2-1 lệch theo số chi nhánh.
-  const widthShares: Array<"1/2" | "1/3" | "2/3" | "full"> =
-    groups.length === 1
-      ? ["full"]
-      : groups[0].locations.length === groups[1].locations.length
-        ? ["1/2", "1/2"]
-        : groups[0].locations.length > groups[1].locations.length
-          ? ["2/3", "1/3"]
-          : ["1/3", "2/3"];
+  const widthShares = getClusterWidthShares(groups.map((g) => g.locations.length));
 
   return (
     <div className="mb-6 flex flex-col gap-4 sm:flex-row">

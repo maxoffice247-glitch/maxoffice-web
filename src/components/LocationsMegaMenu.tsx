@@ -5,7 +5,14 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDownIcon, MapPinIcon, PhoneIcon, SearchIcon } from "./icons";
 import Button from "./Button";
-import { getGroupedLocations, stripCuSuffix, ACTIVE_BRANCH_COUNT, type LocationListItem } from "@/lib/locationsData";
+import {
+  getGroupedLocations,
+  stripCuSuffix,
+  ACTIVE_BRANCH_COUNT,
+  type LocationListItem,
+  type LocationRow,
+} from "@/lib/locationsData";
+import { CLUSTER_COLORS, getClusterWidthShares } from "@/lib/locationClusterColors";
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
 import { useNavIndicator } from "./NavIndicator";
 
@@ -39,11 +46,90 @@ function MegaMenuLocationItem({ loc }: { loc: LocationListItem }) {
   );
 }
 
+/** 1 khu vực >2 chi nhánh — chiếm trọn 1 "hàng" riêng trong danh sách cuộn,
+    y hệt layout cũ (không đổi): tiêu đề nhỏ viết hoa + lưới 2-3 cột. */
+function MegaMenuAreaBlock({ area, locations }: { area: { slug: string; name: string }; locations: LocationListItem[] }) {
+  return (
+    <div className="mb-3.5 last:mb-0">
+      <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
+        {stripCuSuffix(area.name)}
+        <span className="ml-1.5 normal-case text-body-text/50">({locations.length})</span>
+      </p>
+      <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
+        {locations.map((loc) => (
+          <MegaMenuLocationItem key={loc.slug} loc={loc} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** 1 khu vực ≤2 chi nhánh bên trong 1 hàng ghép — ĐỒNG BỘ nguyên tắc màu
+    với /dia-diem: viền mảnh (1px, giống mọi khối viền khác trong dropdown
+    — border-line ở khối liên hệ cuối trang) bao quanh 4 cạnh + tiêu đề
+    màu, viền và chữ CÙNG 1 tông (xem locationClusterColors.ts) nên không
+    lệch màu. Dropdown hẹp hơn /dia-diem nhiều nên card gọn hơn: lưới 1
+    cột (thay vì 2-3 cột như khối "full") vì mỗi khu vực chỉ có 1-2 chi
+    nhánh, xếp ngang không cần thiết và dễ chật trong nửa hàng. */
+function MegaMenuClusterCard({
+  area,
+  locations,
+  colorIndex,
+  widthShare,
+}: {
+  area: { slug: string; name: string };
+  locations: LocationListItem[];
+  colorIndex: number;
+  widthShare: "1/2" | "1/3" | "2/3" | "full";
+}) {
+  const color = CLUSTER_COLORS[colorIndex % CLUSTER_COLORS.length];
+  const basisClass =
+    widthShare === "full"
+      ? ""
+      : widthShare === "1/2"
+        ? "basis-1/2"
+        : widthShare === "1/3"
+          ? "basis-1/3"
+          : "basis-2/3";
+
+  return (
+    <div className={`min-w-0 rounded-lg border ${color.border} p-1.5 ${basisClass}`}>
+      <p className={`mb-1 px-1 text-[11px] font-bold tracking-[0.06em] uppercase ${color.text}`}>
+        {stripCuSuffix(area.name)}
+        <span className="ml-1 normal-case text-body-text/50">({locations.length})</span>
+      </p>
+      <div className="grid grid-cols-1 gap-1">
+        {locations.map((loc) => (
+          <MegaMenuLocationItem key={loc.slug} loc={loc} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MegaMenuClusterRow({ groups }: { groups: Extract<LocationRow, { kind: "cluster" }>["groups"] }) {
+  const widthShares = getClusterWidthShares(groups.map((g) => g.locations.length));
+
+  return (
+    <div className="mb-3.5 flex gap-2 last:mb-0">
+      {groups.map((g, i) => (
+        <MegaMenuClusterCard
+          key={g.area.slug}
+          area={g.area}
+          locations={g.locations}
+          colorIndex={g.colorIndex}
+          widthShare={widthShares[i]}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean; isActive: boolean }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { registerRef, setHoveredKey } = useNavIndicator();
-  const { areaGroups } = getGroupedLocations();
+  const { rows } = getGroupedLocations();
 
   const handleEnter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -93,19 +179,13 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
           >
             <div className="overflow-hidden rounded-2xl border border-line bg-white shadow-[0_30px_70px_rgba(11,31,58,0.22)]">
               <div className="scrollbar-thin max-h-[60vh] overflow-y-auto p-5">
-                {areaGroups.map((group) => (
-                  <div key={group.area.slug} className="mb-3.5 last:mb-0">
-                    <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
-                      {stripCuSuffix(group.area.name)}
-                      <span className="ml-1.5 normal-case text-body-text/50">({group.locations.length})</span>
-                    </p>
-                    <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
-                      {group.locations.map((loc) => (
-                        <MegaMenuLocationItem key={loc.slug} loc={loc} />
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                {rows.map((row, i) =>
+                  row.kind === "full" ? (
+                    <MegaMenuAreaBlock key={row.area.slug} area={row.area} locations={row.locations} />
+                  ) : (
+                    <MegaMenuClusterRow key={`cluster-${i}`} groups={row.groups} />
+                  )
+                )}
               </div>
               <div className="flex flex-col items-start gap-3 border-t border-line bg-bg-tint px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2.5">
