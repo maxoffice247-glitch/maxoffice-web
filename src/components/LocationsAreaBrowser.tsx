@@ -5,8 +5,8 @@ import Link from "next/link";
 import { RevealGroup } from "./Reveal";
 import LocationCard from "./LocationCard";
 import { SearchIcon } from "./icons";
-import { stripCuSuffix, type LocationListItem, type LocationRow } from "@/lib/locationsData";
-import { CLUSTER_COLORS, getClusterWidthShares, type ClusterWidthShare } from "@/lib/locationClusterColors";
+import { stripCuSuffix, type LocationListItem, type GroupedLocations } from "@/lib/locationsData";
+import { CLUSTER_COLORS } from "@/lib/locationClusterColors";
 
 type AreaGroup = {
   area: { slug: string; name: string };
@@ -45,68 +45,73 @@ function AreaBlock({ area, locations }: AreaGroup) {
   );
 }
 
-/** 1 khu vực nhỏ (≤2 chi nhánh) bên trong 1 hàng ghép — viền MẢNH (1px,
-    bằng đúng độ dày viền xám mặc định các khối khác trên site đang dùng,
-    chỉ đổi màu) bao quanh ĐỦ 4 CẠNH + tiêu đề màu theo `colorIndex`, viền
-    và chữ CÙNG lấy từ 1 tông màu (`color.border`/`color.text` trỏ chung 1
-    màu gốc — xem locationClusterColors.ts) nên không bao giờ lệch màu
-    giữa viền và chữ. `widthShare` quyết định bề ngang tương đối so với
-    (các) khu vực còn lại trong cùng hàng, tỉ lệ theo số chi nhánh của
-    chính nó (khu vực 2 chi nhánh rộng gấp đôi khu vực 1 chi nhánh) — mobile
-    luôn xếp full-width 1 cột bất kể tỉ lệ này (basis chỉ có hiệu lực từ
-    sm: trở lên). */
-function ClusterAreaCard({
+type SubGroup = { area: { slug: string; name: string }; locations: LocationListItem[]; colorIndex: number };
+
+/**
+ * Khu vực >2 chi nhánh (đứng riêng 1 hàng) HOẶC khu vực 2-chi-nhánh ghép
+ * thêm 1 khu vực 1-chi-nhánh cho đủ hàng (MERGED_AREA_PAIRS, xem
+ * locationsData.ts) — bố cục y hệt bản gốc trước khi có ô tìm kiếm/tô màu
+ * (commit 0cbd8f4): khu vực ghép hiện 2 khung nhẹ TÁCH BIỆT trong cùng
+ * hàng thay vì gộp phẳng vào 1 lưới. CHỈ THÊM 2 THỨ so với bản gốc: viền
+ * (border-line → màu riêng) và chữ tiêu đề (text-navy → màu riêng) theo
+ * `colorIndex` — viền/chữ CÙNG 1 tông (locationClusterColors.ts) nên
+ * không lệch màu; 2 khu vực trong cùng hàng luôn có colorIndex liên tiếp
+ * nên không bao giờ trùng màu. Badge số lượng, layout, cỡ chữ khác GIỮ
+ * NGUYÊN như bản gốc, không đổi thêm gì khác.
+ */
+function MultiBranchGroup({
   area,
   locations,
-  colorIndex,
-  widthShare,
+  subGroups,
 }: {
   area: { slug: string; name: string };
   locations: LocationListItem[];
-  colorIndex: number;
-  widthShare: ClusterWidthShare;
+  subGroups?: SubGroup[];
 }) {
-  const color = CLUSTER_COLORS[colorIndex % CLUSTER_COLORS.length];
-  const basisClass =
-    widthShare === "full"
-      ? ""
-      : widthShare === "1/2"
-        ? "sm:basis-1/2"
-        : widthShare === "1/3"
-          ? "sm:basis-1/3"
-          : "sm:basis-2/3";
-
   return (
-    <div className={`min-w-0 rounded-2xl border ${color.border} bg-white p-4 sm:p-5 ${basisClass}`}>
-      <div className="mb-3.5 flex items-center justify-between gap-2">
-        <h3 className={`text-[15px] font-bold ${color.text}`}>{stripCuSuffix(area.name)}</h3>
-        <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold whitespace-nowrap ${color.badge}`}>
-          {locations.length} chi nhánh
-        </span>
-      </div>
-      <RevealGroup className={`grid grid-cols-1 gap-3.5 ${locations.length >= 2 ? "sm:grid-cols-2" : ""}`}>
-        {locations.map((loc, i) => (
-          <LocationCard key={loc.slug} loc={loc} index={i} />
-        ))}
-      </RevealGroup>
-    </div>
-  );
-}
-
-function ClusterRow({ groups }: { groups: Extract<LocationRow, { kind: "cluster" }>["groups"] }) {
-  const widthShares = getClusterWidthShares(groups.map((g) => g.locations.length));
-
-  return (
-    <div className="mb-6 flex flex-col gap-4 sm:flex-row">
-      {groups.map((g, i) => (
-        <ClusterAreaCard
-          key={g.area.slug}
-          area={g.area}
-          locations={g.locations}
-          colorIndex={g.colorIndex}
-          widthShare={widthShares[i]}
-        />
-      ))}
+    <div className="mb-10 rounded-3xl border border-primary/15 bg-primary-tint/40 p-5 sm:p-7">
+      {subGroups ? (
+        <div className="flex flex-col gap-4 sm:flex-row">
+          {subGroups.map((sub, subIndex) => {
+            const color = CLUSTER_COLORS[sub.colorIndex % CLUSTER_COLORS.length];
+            const startIndex = subGroups.slice(0, subIndex).reduce((n, s) => n + s.locations.length, 0);
+            return (
+              <div
+                key={sub.area.slug}
+                className={`min-w-0 rounded-2xl border bg-white/70 p-3.5 sm:p-4 ${color.border} ${
+                  sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"
+                }`}
+              >
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <h4 className={`text-[13.5px] font-bold ${color.text}`}>{stripCuSuffix(sub.area.name)}</h4>
+                  <span className="shrink-0 rounded-full bg-bg-tint px-2 py-0.5 text-[10.5px] font-bold whitespace-nowrap text-primary">
+                    {sub.locations.length} chi nhánh
+                  </span>
+                </div>
+                <RevealGroup className={`grid grid-cols-1 gap-3.5 ${sub.locations.length >= 2 ? "sm:grid-cols-2" : ""}`}>
+                  {sub.locations.map((loc, i) => (
+                    <LocationCard key={loc.slug} loc={loc} index={startIndex + i} />
+                  ))}
+                </RevealGroup>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <>
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{stripCuSuffix(area.name)}</h3>
+            <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
+              {locations.length} chi nhánh
+            </span>
+          </div>
+          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {locations.map((loc, i) => (
+              <LocationCard key={loc.slug} loc={loc} index={i} />
+            ))}
+          </RevealGroup>
+        </>
+      )}
     </div>
   );
 }
@@ -116,24 +121,26 @@ function ClusterRow({ groups }: { groups: Extract<LocationRow, { kind: "cluster"
  * nhánh nhóm theo khu vực bên dưới — gộp chung 1 Client Component vì input
  * cần lọc trực tiếp danh sách hiển thị (state chia sẻ). Khối CTA "Tìm nhanh
  * VPA phù hợp" do Server Component (page.tsx) dựng nội dung sẵn, truyền
- * vào qua prop `cta` rồi đặt CHUNG 1 khung viền/nền với ô tìm kiếm (không
- * còn 2 khung riêng xếp chồng) — chỉ phần lọc mới cần client-side.
+ * vào qua prop `cta` rồi đặt CHUNG 1 khung viền/nền với ô tìm kiếm — chỉ
+ * phần lọc mới cần client-side.
  *
  * Khớp theo: tên khu vực (quận cũ, VD "Quận 1") → hiện TRỌN khu vực đó;
  * hoặc tên/địa chỉ chi nhánh (chứa tên phường, VD "P. Tân Định") → chỉ hiện
- * đúng (các) chi nhánh khớp. Rỗng → hiện đủ toàn bộ, dùng bố cục `rows` đã
- * ghép hàng theo màu (xem locationsData.ts) thay vì 1 khu vực/hàng — lúc
- * ĐANG tìm kiếm thì bỏ qua bố cục ghép hàng, hiện phẳng từng khu vực khớp
- * theo đúng khu vực khớp (số kết quả thường ít, ghép hàng không cần thiết
- * và không ảnh hưởng gì tới logic lọc).
+ * đúng (các) chi nhánh khớp. Rỗng → hiện đủ toàn bộ theo bố cục gộp hàng
+ * gốc (multiBranchGroups + singleBranchLocations, xem locationsData.ts) —
+ * lúc ĐANG tìm kiếm thì bỏ qua bố cục ghép hàng, hiện phẳng từng khu vực
+ * khớp (số kết quả thường ít, ghép hàng không cần thiết và không ảnh
+ * hưởng gì tới logic lọc).
  */
 export default function LocationsAreaBrowser({
   areaGroups,
-  rows,
+  multiBranchGroups,
+  singleBranchLocations,
   cta,
 }: {
   areaGroups: AreaGroup[];
-  rows: LocationRow[];
+  multiBranchGroups: GroupedLocations["multiBranchGroups"];
+  singleBranchLocations: LocationListItem[];
   cta: ReactNode;
 }) {
   const [query, setQuery] = useState("");
@@ -214,13 +221,21 @@ export default function LocationsAreaBrowser({
           filteredGroups.map((group) => <AreaBlock key={group.area.slug} area={group.area} locations={group.locations} />)
         )
       ) : (
-        rows.map((row, i) =>
-          row.kind === "full" ? (
-            <AreaBlock key={row.area.slug} area={row.area} locations={row.locations} />
-          ) : (
-            <ClusterRow key={`cluster-${i}`} groups={row.groups} />
-          )
-        )
+        <>
+          {multiBranchGroups.map((group) => (
+            <MultiBranchGroup key={group.area.slug} area={group.area} locations={group.locations} subGroups={group.subGroups} />
+          ))}
+          {singleBranchLocations.length > 0 && (
+            <div>
+              <h3 className="mb-5 text-[18px] font-bold text-navy sm:text-[20px]">Các chi nhánh khu vực khác</h3>
+              <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {singleBranchLocations.map((loc, i) => (
+                  <LocationCard key={loc.slug} loc={loc} index={i} areaBadge={loc.area.name} />
+                ))}
+              </RevealGroup>
+            </div>
+          )}
+        </>
       )}
     </>
   );
