@@ -181,25 +181,35 @@ export default function LocationsAreaBrowser({
     <>
       {/* 1 khung chung: ô tìm kiếm (kiểu dáng đồng nhất với SearchOverlay.tsx
           ở header — viền bo tròn, icon kính lúp, viền chuyển primary khi
-          focus) phía trên, divider nhẹ, rồi tới khối CTA "Tìm nhanh VPA phù
-          hợp" — trước đây 2 khung viền riêng xếp chồng, giờ gộp làm 1. */}
+          focus) và khối CTA "Tìm nhanh VPA phù hợp" nằm CHUNG 1 hàng ngang
+          từ lg: (≥1024px) trở lên — divider dọc mỏng phân cách 2 chức năng.
+          Dưới lg: (mobile + tablet, ≤1023px) giữ xếp chồng dọc như cũ: đủ
+          chỗ ngang để xếp ngang cả input lẫn icon+text+nút CTA chỉ có ở màn
+          hình rộng ≥1024px trở lên — ép ngang sớm hơn sẽ làm 1 trong 2 phần
+          bị bóp chật (nút CTA dễ vỡ dòng khi cột quá hẹp). */}
       <div className="mb-10 rounded-2xl border border-primary/20 bg-primary-tint/60 p-5 sm:p-6">
-        <div className="flex items-center gap-3 rounded-xl border border-line bg-white px-5 py-3.5 transition-colors duration-200 focus-within:border-primary">
-          <SearchIcon className="h-5 w-5 shrink-0 text-body-text" />
-          <label htmlFor="dia-diem-search-input" className="sr-only">
-            Tìm chi nhánh theo quận cũ hoặc phường
-          </label>
-          <input
-            id="dia-diem-search-input"
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Tìm theo quận cũ hoặc phường (VD: Quận 1, Tân Định...)"
-            className="w-full min-w-0 bg-transparent text-[14.5px] text-ink placeholder:text-body-text/60 focus:outline-none"
-          />
+        <div className="flex flex-col lg:flex-row lg:items-stretch lg:gap-6">
+          <div className="flex items-center gap-3 rounded-xl border border-line bg-white px-5 py-3.5 transition-colors duration-200 focus-within:border-primary lg:flex-1">
+            <SearchIcon className="h-5 w-5 shrink-0 text-body-text" />
+            <label htmlFor="dia-diem-search-input" className="sr-only">
+              Tìm chi nhánh theo quận cũ hoặc phường
+            </label>
+            <input
+              id="dia-diem-search-input"
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Tìm theo quận cũ hoặc phường (VD: Quận 1, Tân Định...)"
+              className="w-full min-w-0 bg-transparent text-[14.5px] text-ink placeholder:text-body-text/60 focus:outline-none"
+            />
+          </div>
+          {/* Divider: nằm ngang (full-width, cao 1px) khi 2 phần xếp chồng
+              dọc; chuyển thành nằm dọc (cao hết hàng, rộng 1px) khi 2 phần
+              xếp ngang từ lg: trở lên — cùng 1 phần tử, đổi hướng theo
+              breakpoint để không phải render 2 divider ẩn/hiện riêng. */}
+          <div className="my-4 h-px shrink-0 bg-primary/15 lg:my-0 lg:h-auto lg:w-px lg:self-stretch" />
+          {cta}
         </div>
-        <div className="my-4 h-px bg-primary/15" />
-        {cta}
       </div>
 
       {isSearching ? (

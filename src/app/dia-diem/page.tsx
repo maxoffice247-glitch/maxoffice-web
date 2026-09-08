@@ -61,19 +61,23 @@ export default function DiaDiemPage() {
               // nhau. Không còn viền/nền riêng (rounded-2xl border...) vì giờ
               // nằm CHUNG 1 khung với ô tìm kiếm (LocationsAreaBrowser.tsx tự
               // dựng khung ngoài) — chỉ còn layout nội dung của chính CTA.
+              // `lg:flex-1` để chia đều chiều ngang với ô tìm kiếm khi 2 phần
+              // xếp chung 1 hàng từ lg: (≥1024px) trở lên; dòng mô tả phụ ẩn
+              // ở lg: (`lg:hidden`) để phần này gọn lại vừa đủ trong nửa hàng
+              // hẹp hơn — chỉ còn icon + tiêu đề + nút, không bị chật/vỡ dòng.
               <Link
                 href="/tien-ich/tim-goi-phu-hop"
-                className="group flex flex-col items-start justify-between gap-4 rounded-xl p-1 transition-colors duration-200 hover:bg-white/50 sm:flex-row sm:items-center"
+                className="group flex flex-col items-start justify-between gap-4 rounded-xl p-1 transition-colors duration-200 hover:bg-white/50 sm:flex-row sm:items-center lg:flex-1"
               >
-                <div className="flex items-center gap-3.5">
+                <div className="flex min-w-0 items-center gap-3.5">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-primary">
                     <SearchIcon className="h-5 w-5" />
                   </span>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-[15.5px] font-bold text-navy">
                       Chưa biết chọn chi nhánh hay gói nào phù hợp?
                     </p>
-                    <p className="text-[13.5px] text-body-text">
+                    <p className="text-[13.5px] text-body-text lg:hidden">
                       Dùng công cụ tìm gói phù hợp — trả lời vài câu hỏi, nhận gợi ý ngay.
                     </p>
                   </div>
