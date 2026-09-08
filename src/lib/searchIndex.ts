@@ -216,6 +216,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "54-56 Lê Quốc Hưng, P. Xóm Chiếu",
   },
   {
+    title: "380 Trần Hưng Đạo, Quận 5 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/tran-hung-dao",
+    desc: "380 Trần Hưng Đạo, P. Chợ Dừa",
+  },
+  {
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
@@ -280,6 +286,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Khu vực",
     href: "/dia-diem/quan-4-cu",
     desc: "2 chi nhánh — 84-86 Nguyễn Trường Tộ và 54-56 Lê Quốc Hưng, cùng Phường Xóm Chiếu",
+  },
+  {
+    title: "Quận 5 (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-5-cu",
+    desc: "Chi nhánh 380 Trần Hưng Đạo — gần khu Chợ Lớn, có pantry cà phê miễn phí trên tầng thượng",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",

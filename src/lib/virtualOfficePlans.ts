@@ -170,6 +170,7 @@ export const LOCATION_VO_PLANS: Record<string, VirtualOfficePlanKey[]> = {
   "lam-son": ["lite", "start", "base"],
   "hoang-ke-viem": ["lite", "start", "base"],
   cmt8: ["lite", "start", "base"],
+  "tran-hung-dao": ["origin", "origin-plus", "rise"],
 };
 
 /**
@@ -182,8 +183,10 @@ export const LOCATION_VO_PLANS: Record<string, VirtualOfficePlanKey[]> = {
  */
 export const LOCATION_VO_PRICE_OVERRIDES: Record<string, Partial<Record<VirtualOfficePlanKey, number>>> = {
   // Khuyến mãi riêng chi nhánh — ORIGIN giảm từ 595.000đ còn 499.000đ/tháng,
-  // chỉ áp dụng tại Nguyễn Oanh. Yên Thế/Cộng Hoà/Tân Thắng vẫn giữ 595.000đ.
+  // áp dụng tại Nguyễn Oanh và 380 Trần Hưng Đạo. Yên Thế/Cộng Hoà/Tân Thắng
+  // vẫn giữ 595.000đ.
   "nguyen-oanh": { origin: 499_000 },
+  "tran-hung-dao": { origin: 499_000 },
 };
 
 export function getPlansForLocation(slug: string): VirtualOfficePlan[] {

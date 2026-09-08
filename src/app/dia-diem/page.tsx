@@ -7,12 +7,19 @@ import { RevealGroup } from "@/components/Reveal";
 import CtaBanner from "@/components/CtaBanner";
 import LocationCard from "@/components/LocationCard";
 import { SearchIcon, ArrowRightSmallIcon } from "@/components/icons";
-import { getGroupedLocations, stripCuSuffix, ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
+import { getGroupedLocations, stripCuSuffix, ACTIVE_BRANCH_COUNT, AREAS } from "@/lib/locationsData";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/dia-diem" },
   title: `${ACTIVE_BRANCH_COUNT} Chi Nhánh Văn Phòng MAX OFFICE Tại TP.HCM`,
-  description: `Danh sách đầy đủ ${ACTIVE_BRANCH_COUNT} chi nhánh văn phòng ảo, văn phòng trọn gói và coworking của MAX OFFICE, nhóm theo 7 khu vực tại Tân Bình, Gò Vấp, Tân Phú, Quận 10, Quận 1, Quận 7 và Thủ Đức, TP.HCM.`,
+  // "nhóm theo N khu vực" đọc N từ AREAS.length thay vì liệt kê tên từng khu
+  // vực bằng tay — trước đây hardcode "7 khu vực tại Tân Bình, Gò Vấp, Tân
+  // Phú, Quận 10, Quận 1, Quận 7 và Thủ Đức" nhưng AREAS đã lên 11-12 khu
+  // vực từ lâu (thêm Quận 3, Bình Thạnh, Phú Nhuận, Quận 4, Quận 5...) mà
+  // câu mô tả này chưa được cập nhật theo — lặp lại đúng lỗi lệch số mà
+  // ACTIVE_BRANCH_COUNT được tạo ra để tránh, chỉ khác là ở khu vực thay vì
+  // chi nhánh. Dùng AREAS.length để không tái diễn khi thêm khu vực mới.
+  description: `Danh sách đầy đủ ${ACTIVE_BRANCH_COUNT} chi nhánh văn phòng ảo, văn phòng trọn gói và coworking của MAX OFFICE, nhóm theo ${AREAS.length} khu vực tại TP.HCM.`,
   // Ảnh OG giờ đến từ opengraph-image.tsx cùng thư mục (dùng renderOgImage()
   // — logo + overlay chuẩn hoá như mọi trang khác). Trước đây trỏ thẳng tới
   // 1 ảnh nền thô "/images/og/hero-dia-diem.jpg" không qua template, không

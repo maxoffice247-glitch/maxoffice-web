@@ -16,7 +16,7 @@ export { size, contentType };
 // sau này thiếu file, route trả lỗi 500) — đọc thẳng ảnh gốc thì chi
 // nhánh mới thêm sau tự động có OG image đúng, không cần bước thủ công
 // nào. Render qua template chuẩn — tiêu đề tự sinh theo đúng gói + chi
-// nhánh. Toàn bộ 26 chi nhánh đang hoạt động (+ vuon-lai đang ẩn) đã
+// nhánh. Toàn bộ 27 chi nhánh đang hoạt động (+ vuon-lai đang ẩn) đã
 // xác nhận có sẵn file /images/dia-diem-{slug}.jpg.
 export default async function Image({
   params,

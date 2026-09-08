@@ -11,6 +11,7 @@ import {
   WifiIcon,
   HeartHandshakeIcon,
   CarIcon,
+  CoffeeIcon,
 } from "@/components/icons";
 import type { BenefitItem } from "@/components/ServiceBenefits";
 import type { NearbyItem } from "@/components/LocationNearby";
@@ -99,6 +100,12 @@ export const AREAS: AreaInfo[] = [
     name: "Quận 4 (cũ)",
     description: "Khu vực chỉ cách trung tâm Quận 1 một nhịp cầu, nổi tiếng với phố ẩm thực Vĩnh Khánh và Bến Nhà Rồng lịch sử.",
   },
+  {
+    slug: "quan-5-cu",
+    name: "Quận 5 (cũ)",
+    description:
+      "Khu vực Chợ Lớn — trung tâm thương mại lâu đời của cộng đồng người Hoa, dọc trục Trần Hưng Đạo nối liền Quận 1 và Quận 5, gần chợ An Đông, Bệnh viện Chợ Rẫy và Đại học Y Dược TP.HCM.",
+  },
 ];
 
 export function getAreaBySlug(slug: string): AreaInfo | undefined {
@@ -116,6 +123,7 @@ const AREA_QUAN_3 = { slug: "quan-3-cu", name: "Quận 3 (cũ)" };
 const AREA_BINH_THANH = { slug: "binh-thanh-cu", name: "Bình Thạnh (cũ)" };
 const AREA_PHU_NHUAN = { slug: "phu-nhuan-cu", name: "Phú Nhuận (cũ)" };
 const AREA_QUAN_4 = { slug: "quan-4-cu", name: "Quận 4 (cũ)" };
+const AREA_QUAN_5 = { slug: "quan-5-cu", name: "Quận 5 (cũ)" };
 
 export type LocationListItem = {
   slug: string;
@@ -295,6 +303,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     name: "28-34 Pasteur, Quận 1 (cũ)",
     shortAddress: "28-34 Pasteur, P. Sài Gòn",
     area: AREA_QUAN_1,
+  },
+  {
+    slug: "tran-hung-dao",
+    name: "380 Trần Hưng Đạo, Quận 5 (cũ)",
+    shortAddress: "380 Trần Hưng Đạo, P. Chợ Dừa",
+    area: AREA_QUAN_5,
   },
 ];
 
@@ -2550,6 +2564,107 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Văn phòng gần chợ Bến Thành nên đối tác nước ngoài của mình rất dễ tìm, lại tiện ghé phố đi bộ sau giờ làm.", initial: "T", name: "Chị Thu", role: "Giám đốc công ty du lịch" },
       { quote: "Phòng họp riêng khá kín đáo, phù hợp những buổi trao đổi cần sự tập trung với khách hàng.", initial: "D", name: "Anh Duy", role: "Chủ doanh nghiệp dịch vụ" },
+    ],
+  },
+  "tran-hung-dao": {
+    slug: "tran-hung-dao",
+    name: "380 Trần Hưng Đạo, Quận 5 (cũ)",
+    area: AREA_QUAN_5,
+    address: "380 Trần Hưng Đạo, Phường Chợ Dừa, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê Trần Hưng Đạo Quận 5",
+    heroDescription:
+      "Chi nhánh MAX OFFICE tại 380 Trần Hưng Đạo, Quận 5 (cũ) — văn phòng ảo từ 499.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), có pantry cà phê/trà miễn phí trên tầng thượng.",
+    metaTitle: "Văn Phòng Ảo 380 Trần Hưng Đạo, Quận 5 | Từ 499K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo, văn phòng trọn gói tại 380 Trần Hưng Đạo, Phường Chợ Dừa — văn phòng ảo từ 499.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), có pantry cà phê/trà miễn phí trên tầng thượng, đầy đủ dịch vụ MAX OFFICE.",
+    image: "/images/hero.jpg",
+    // Ảnh mặt tiền thật (Wings Tower) đã resize/nén còn 666x1000 — tỉ lệ dọc
+    // gần 2:3, khớp đúng file thật thay vì làm tròn để tránh khung ảnh bị
+    // hở/méo nhẹ so với file gốc.
+    facadeAspectRatio: "666 / 1000",
+    facadeImageSide: "left",
+    interiorImages: [
+      {
+        src: "/images/dia-diem-tran-hung-dao-mat-truoc.jpg",
+        alt: "Mặt trước toà nhà Wings Tower, văn phòng 380 Trần Hưng Đạo",
+        caption: "Mặt trước tòa nhà",
+      },
+      {
+        src: "/images/dia-diem-tran-hung-dao-le-tan.jpg",
+        alt: "Quầy lễ tân và khu tiếp khách văn phòng 380 Trần Hưng Đạo",
+        caption: "Quầy lễ tân & khu tiếp khách",
+      },
+      {
+        src: "/images/dia-diem-tran-hung-dao-phong-hop.jpg",
+        alt: "Phòng họp văn phòng 380 Trần Hưng Đạo",
+        caption: "Phòng họp",
+      },
+      {
+        src: "/images/dia-diem-tran-hung-dao-pantry.jpg",
+        alt: "Khu pantry ngoài trời trên tầng thượng văn phòng 380 Trần Hưng Đạo",
+        caption: "Khu pantry trên tầng thượng",
+      },
+      {
+        src: "/images/dia-diem-tran-hung-dao-bang-ten.jpg",
+        alt: "Bảng tên công ty tại toà nhà Wings Tower",
+        caption: "Bảng tên công ty",
+      },
+    ],
+    intro: [
+      "Văn phòng 380 Trần Hưng Đạo đặt tại Wings Tower, một cao ốc văn phòng mới xây với mặt tiền kính hiện đại trên trục đường Trần Hưng Đạo, Phường Chợ Dừa — tuyến đường huyết mạch nối liền trung tâm Quận 1 với khu vực Quận 5 (cũ), nơi từ lâu được biết đến là Chợ Lớn, trung tâm thương mại lâu đời của cộng đồng người Hoa tại Sài Gòn, gần chợ An Đông, Bệnh viện Chợ Rẫy và Đại học Y Dược TP.HCM. Vị trí này phù hợp cho doanh nghiệp muốn có địa chỉ đăng ký kinh doanh thuận tiện di chuyển cả về phía trung tâm Quận 1 lẫn khu vực Quận 5, Quận 10 lân cận.",
+      "Sảnh lễ tân của Wings Tower được thiết kế theo phong cách hiện đại với đá marble sáng màu, mảng gỗ ốp tường ấm áp cùng khu vực ghế sofa tiếp khách ngay lối vào — đã quy tụ sẵn nhiều công ty trong lĩnh vực bảo hiểm, công nghệ và thương mại. Toà nhà có phòng họp trang bị màn hình lớn, đủ chỗ cho các buổi họp nhóm đông người hoặc thuyết trình với đối tác, cùng hệ thống điều hoà trung tâm và thang máy tốc độ cao phục vụ toàn bộ các tầng văn phòng.",
+      "Điểm khác biệt đáng chú ý nhất của chi nhánh này là khu pantry ngoài trời trên tầng thượng — không gian mở với mái che gỗ, bàn ghế hiện đại và tầm nhìn ra skyline thành phố, nơi khách hàng và đối tác được mời cà phê, trà miễn phí khi ghé thăm văn phòng. Đây là tiện ích hiếm gặp so với phần lớn chi nhánh khác trong hệ thống MAX OFFICE — vốn thường chỉ có sảnh tiếp khách thông thường trong nhà, không có khu vực ngoài trời riêng trên tầng thượng để tiếp đãi khách.",
+      "Chi nhánh cung cấp các gói văn phòng ảo ORIGIN (499.000đ/tháng, giá ưu đãi riêng tại đây), ORIGIN+ (699.000đ/tháng) và RISE (1.199.000đ/tháng cao cấp nhất hệ thống) — cùng hệ giá LITE-RISE chung của MAX OFFICE, không phải bảng giá riêng. Bên cạnh văn phòng ảo, khách thuê tại đây cũng có thể sử dụng thêm văn phòng trọn gói, chỗ ngồi linh động, phòng họp theo giờ, thành lập doanh nghiệp và kế toán thuế — cùng một quy trình, chất lượng phục vụ áp dụng đồng bộ ở mọi điểm giao dịch của MAX OFFICE.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 380 Trần Hưng Đạo",
+    benefits: [
+      { icon: CoffeeIcon, title: "Pantry miễn phí trên tầng thượng", desc: "Khu pantry ngoài trời riêng biệt, mời cà phê/trà miễn phí cho khách — hiếm có so với các chi nhánh khác." },
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ tại Wings Tower", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế tại cao ốc văn phòng mới xây." },
+      { icon: MapPinIcon, title: "Kết nối Quận 1 — Quận 5", desc: "Ngay trục Trần Hưng Đạo, thuận tiện di chuyển giữa trung tâm Quận 1 và khu vực Chợ Lớn." },
+      { icon: UsersIcon, title: "Phòng họp trang bị hiện đại", desc: "Màn hình lớn, đủ chỗ cho buổi họp nhóm đông người hoặc thuyết trình đối tác." },
+    ],
+    nearbyItems: [
+      { name: "Khu vực Chợ Lớn", desc: "Trung tâm thương mại lâu đời của cộng đồng người Hoa, gần chợ An Đông." },
+      { name: "Bệnh viện Chợ Rẫy & Đại học Y Dược", desc: "Hai địa danh y tế, giáo dục lâu đời gắn liền với khu vực Quận 5 (cũ)." },
+      { name: "Trục Trần Hưng Đạo", desc: "Tuyến đường huyết mạch nối liền trung tâm Quận 1 và khu vực Quận 5." },
+      { name: "Kết nối đa hướng", desc: "Từ chi nhánh dễ dàng di chuyển sang Quận 1, Quận 3, Quận 10 và khu vực Chợ Lớn." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt trung tâm hoạt động dọc trục Trần Hưng Đạo." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mật độ xe cao trên trục đường lớn, thời gian chờ ngắn." },
+      { icon: CheckCircleIcon, title: "Trục Trần Hưng Đạo", desc: "Kết nối trực tiếp trung tâm Quận 1 với khu vực Quận 5, Quận 10." },
+      { icon: HeadsetIcon, title: "Hỗ trợ đón tiếp đối tác", desc: "Lễ tân hỗ trợ hướng dẫn đường đi và mời khách dùng pantry tầng thượng khi ghé thăm." },
+    ],
+    parkingInfo: [
+      "Khu vực giữ xe máy riêng ngay tại toà nhà Wings Tower, thuận tiện cho nhân viên và khách đến làm việc.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực Trần Hưng Đạo khi cần tiếp đối tác bằng xe hơi.",
+      "Có nhân viên bảo vệ toà nhà hỗ trợ hướng dẫn xe ra vào trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Ẩm thực Chợ Lớn", desc: "Khu vực nổi tiếng với ẩm thực người Hoa lâu đời, đa dạng món ăn đặc trưng." },
+      { name: "Quán cà phê trục Trần Hưng Đạo", desc: "Nhiều lựa chọn quán cà phê phù hợp tiếp khách hoặc làm việc ngoài giờ." },
+      { name: "Cơm văn phòng khu vực Quận 5", desc: "Đa dạng quán ăn phục vụ bữa trưa nhanh gọn cho nhân viên." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 380 Trần Hưng Đạo có những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp 3 gói: ORIGIN (499.000đ/tháng, giá ưu đãi riêng tại đây), ORIGIN+ (699.000đ/tháng) và RISE (1.199.000đ/tháng) — thuộc hệ giá LITE-RISE chung của MAX OFFICE, không phải bảng giá riêng." },
+      { q: "Khu pantry trên tầng thượng có gì đặc biệt?", a: "Đây là khu vực ngoài trời riêng biệt trên tầng thượng Wings Tower, có mái che gỗ, bàn ghế hiện đại và tầm nhìn ra skyline thành phố — khách hàng, đối tác ghé thăm văn phòng được mời cà phê hoặc trà miễn phí tại đây, thay vì chỉ tiếp khách trong sảnh lễ tân thông thường như phần lớn chi nhánh khác." },
+      { q: "Vì sao chi nhánh này không có gói LITE, START, BASE?", a: "Wings Tower là toà nhà văn phòng mới xây với chi phí vận hành cao hơn mặt bằng chung, nên chi nhánh chỉ triển khai từ gói ORIGIN trở lên. Trường hợp ngân sách của bạn phù hợp hơn với gói LITE/START, hệ thống MAX OFFICE vẫn có các lựa chọn đó tại nhiều chi nhánh khác như Hoàng Việt, Bàu Cát 2, Lam Sơn, Hoàng Kế Viêm, CMT8, Sông Thao hoặc Điện Biên Phủ — bạn có thể xem chi tiết từng chi nhánh tại trang Chi nhánh." },
+      { q: "Địa chỉ 380 Trần Hưng Đạo có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Chợ Dừa, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Từ văn phòng di chuyển sang trung tâm Quận 1 mất bao lâu?", a: "Khá nhanh vì chi nhánh nằm ngay trên trục Trần Hưng Đạo — tuyến đường nối thẳng vào trung tâm Quận 1, thời gian di chuyển tuỳ thời điểm giao thông." },
+      { q: "Chi nhánh có phòng họp không, sức chứa bao nhiêu người?", a: "Có. Phòng họp tại Wings Tower trang bị màn hình lớn, bàn họp dài đủ chỗ cho khoảng 10-12 người, phù hợp họp nhóm hoặc thuyết trình với đối tác." },
+    ],
+    testimonials: [
+      { quote: "Lần đầu ghé văn phòng được mời lên tầng thượng uống cà phê nhìn ra thành phố, ấn tượng hơn hẳn kiểu tiếp khách ở sảnh thông thường.", initial: "H", name: "Chị Hạnh", role: "Giám đốc công ty xuất nhập khẩu" },
+      { quote: "Toà nhà Wings Tower mới, phòng họp có màn hình lớn nên buổi thuyết trình với đối tác của mình rất chuyên nghiệp.", initial: "K", name: "Anh Khoa", role: "Trưởng phòng kinh doanh" },
+    ],
+    lowerTierAlternatives: [
+      { slug: "hoang-viet", name: "Hoàng Việt, Tân Bình" },
+      { slug: "bau-cat", name: "Bàu Cát 2, Tân Bình" },
+      { slug: "lam-son", name: "Lam Sơn, Tân Bình" },
+      { slug: "hoang-ke-viem", name: "Hoàng Kế Viêm, Tân Bình" },
+      { slug: "cmt8", name: "CMT8, Quận 10" },
+      { slug: "song-thao", name: "Sông Thao, Tân Bình" },
+      { slug: "dien-bien-phu", name: "Điện Biên Phủ, Quận 1" },
     ],
   },
 };
