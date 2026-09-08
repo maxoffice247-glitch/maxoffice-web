@@ -19,6 +19,45 @@ function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
 }
 
+/**
+ * Row-span (CSS Grid) cho card gói VPA, tính theo SỐ TÍNH NĂNG thật của
+ * từng gói — LITE(4) tới RISE(16) chênh lệch tới 4 lần, nên 1 con số
+ * row-span cố định cho MỌI gói (như đã thử ở đợt trước) không ổn: card
+ * dịch vụ khác kế bên bị kéo giãn (align-items: stretch mặc định) để lại
+ * khoảng trắng rất lớn khi lọt cạnh gói nhiều tính năng.
+ *
+ * Công thức hồi quy tuyến tính từ ĐO DOM THẬT (getBoundingClientRect) trên
+ * nhiều chi nhánh, đo phần nội dung TRƯỚC spacer flex-grow (không bị ảnh
+ * hưởng bởi việc card có đang bị stretch hay không — xem inner div "grow"
+ * trong card bên dưới):
+ *   naturalHeight(N tính năng) ≈ 25×N + 164 (px)
+ *   — khớp cả 4 điểm đo: BASE(10)=414, ORIGIN(12)=464, ORIGIN+(13)=489,
+ *     RISE(16)=564 (Yên Thế), và START(6)/BASE(10) ở Sông Thao.
+ * Card "dịch vụ khác" (nội dung cố định, không đổi theo chi nhánh) cao tự
+ * nhiên ~195px ở layout 3 cột (lg) — dùng làm 1 đơn vị hàng grid-auto-rows.
+ * row-span = làm tròn naturalHeight/195, giới hạn 1-4 (đủ cho dải N=4..16
+ * hiện có, dư chỗ nếu sau này thêm gói nhiều tính năng hơn RISE).
+ *
+ * Trả về CHUỖI LITERAL đầy đủ (không dùng template nối chuỗi động) vì
+ * Tailwind quét class theo dạng chữ nguyên văn trong source — class dựng
+ * kiểu `row-span-${n}` sẽ KHÔNG được Tailwind nhận diện, class tồn tại
+ * trong DOM nhưng không có CSS nào áp dụng.
+ */
+function voRowSpanClass(featureCount: number): string {
+  const naturalHeight = 25 * featureCount + 164;
+  const span = Math.max(1, Math.min(4, Math.round(naturalHeight / 195)));
+  switch (span) {
+    case 1:
+      return "sm:row-span-1";
+    case 2:
+      return "sm:row-span-2";
+    case 3:
+      return "sm:row-span-3";
+    default:
+      return "sm:row-span-4";
+  }
+}
+
 const OTHER_SERVICES = [
   {
     slug: "van-phong-tron-goi",
@@ -103,18 +142,34 @@ export default function LocationServicesList({
               <ArrowRightSmallIcon className="transition-transform duration-200" />
             </Link>
           </div>
-          {/* Bề rộng từng card tính tay = công thức tương đương grid N cột
-              với gap-5 (20px): (100% - (N-1)*20px) / N — ÁP DỤNG CHUNG cho
-              cả card gói VPA lẫn card "dịch vụ khác" (cùng 1 hàng, cùng 1
-              độ rộng cột) để 2 loại card thẳng hàng, chảy liên tục vào
-              nhau. Hàng cuối thiếu quân số tự nhiên chỉ chiếm đúng chỗ
-              thật, không bị grid kéo giãn. */}
-          <RevealGroup className="flex flex-wrap gap-5">
+          {/* CSS Grid + grid-flow-row-dense (từ sm: trở lên) thay vì
+              flex-wrap (đợt trước) — flex-wrap khiến card "dịch vụ khác"
+              đứng LẺ cạnh 1 card VPA cao bị stretch kéo giãn theo, để lại
+              khoảng trắng rất lớn phía dưới (vd. "Văn phòng trọn gói" cạnh
+              START/BASE). Grid dense tự động lấp NHIỀU card "dịch vụ
+              khác" (row-span mặc định = 1) chồng dọc vào đúng phần trống
+              bên cạnh 1 card VPA row-span cao hơn (voRowSpanClass, xem
+              hàm trên) — vd. Sông Thao 2 gói: cột 3 sẽ có 2 card dịch vụ
+              khác xếp chồng thay vì 1 card bị kéo giãn trống rỗng. GIỮ
+              align-items mặc định (stretch, không đặt items-center) — vẫn
+              cần stretch để card VPA trong CÙNG 1 hàng cao bằng nhau, nút
+              "Tạo báo giá" thẳng hàng ở đáy (đã làm ở đợt trước, xem
+              spacer "grow" + wrapper "mt-auto" bên trong card). Vì đã có
+              row-span/dense lấp đúng chỗ, phần "thừa" do stretch giờ CHỈ
+              còn lệch nhỏ vài chục px (row-span là số nguyên làm tròn từ
+              voRowSpanClass, không tuyệt đối khớp 100%) — card dịch vụ
+              khác xử lý phần lệch nhỏ này bằng justify-center (bên dưới),
+              không còn là khoảng trắng cả trăm px như bản flex-wrap cũ.
+              auto-rows dùng minmax(195px,auto) — 195px là chiều cao tự
+              nhiên của card "dịch vụ khác" (không đổi theo chi nhánh);
+              "auto" ở max đảm bảo hàng luôn tự giãn đủ cho card VPA thật
+              sự cần, không bao giờ bị cắt hình dù công thức đo có sai lệch
+              nhỏ. grid-cols-1 ở mobile (không đổi) — dense chỉ bật từ sm:
+              trở lên, mobile giữ nguyên xếp dọc tuần tự đơn giản, không
+              áp dụng row-span. */}
+          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:auto-rows-[minmax(195px,auto)] sm:grid-flow-row-dense lg:grid-cols-3">
             {voPlans.map((plan) => (
-              <RevealItem
-                key={plan.key}
-                className="w-full shrink-0 sm:w-[calc(50%-10px)] lg:w-[calc(33.3333%-13.334px)]"
-              >
+              <RevealItem key={plan.key} className={voRowSpanClass(plan.features.length)}>
                 <div className="flex h-full flex-col rounded-xl border border-line bg-bg-tint p-5">
                   <div className="mb-1 text-[14.5px] font-bold text-navy">{plan.name}</div>
                   <div className="mb-3 font-mono text-[20px] font-bold text-primary">
@@ -166,15 +221,16 @@ export default function LocationServicesList({
             {/* Dịch vụ khác — vẫn dạng link card tóm tắt như cũ, vì các
                 dịch vụ này không có gói riêng theo chi nhánh (giá/tính năng
                 giống nhau ở mọi chi nhánh, xem chi tiết đầy đủ tại trang
-                dịch vụ tương ứng). justify-center (thay vì justify-between
-                trước đây) để nội dung không bị kéo tách xa nhau, trống trải
-                giữa card khi lọt vào hàng có gói VPA cao hơn (h-full kế
-                thừa chiều cao stretch của hàng flex-wrap chung). */}
+                dịch vụ tương ứng). row-span mặc định = 1 (không set gì
+                thêm) — grid-flow-row-dense tự lấp nhiều card này chồng dọc
+                vào phần trống bên cạnh 1 card VPA row-span cao hơn.
+                justify-center (giữ từ đợt trước) để phần lệch nhỏ do
+                stretch (row-span làm tròn, không tuyệt đối khớp) chia đều
+                trên/dưới thay vì dồn 1 phía — giờ phần lệch này chỉ còn
+                vài chục px (do đã lấp đúng SỐ HÀNG bằng row-span/dense),
+                không còn cả trăm px như bản flex-wrap 1-card-lẻ trước. */}
             {OTHER_SERVICES.map((svc) => (
-              <RevealItem
-                key={svc.slug}
-                className="w-full shrink-0 sm:w-[calc(50%-10px)] lg:w-[calc(33.3333%-13.334px)]"
-              >
+              <RevealItem key={svc.slug}>
                 <Link
                   href={`/services/${svc.slug}#bang-gia`}
                   className="group flex h-full flex-col justify-center rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"

@@ -69,15 +69,24 @@ export default function Quan3CuVOServices({
           description={`Chi nhánh ${branchName} áp dụng 4 gói văn phòng ảo RIÊNG BIỆT (SAVE, SILVER, GOLD, PREMIUM), khác với hệ thống LITE–RISE chung của MAX OFFICE. Các dịch vụ khác vẫn theo bảng giá chung.`}
         />
 
-        {/* Văn phòng ảo + Dịch vụ khác — GỘP CHUNG vào 1 flex-wrap DUY NHẤT
-            (xem lý do đầy đủ ở LocationServicesList.tsx). Hệ SAVE/SILVER/
-            GOLD/PREMIUM luôn có đúng 4 gói nên hàng gói VPA không bao giờ
-            "cụt" — gộp chung chủ yếu để đồng bộ code + trải nghiệm với
-            LocationServicesList.tsx, an toàn nếu sau này số gói thay đổi.
-            Ghi chú VAT + khối "Dịch vụ bổ sung" (đặc thù riêng hệ giá này)
-            chuyển xuống SAU toàn bộ lưới gộp (trước đây nằm giữa lưới gói
-            VPA và lưới Dịch vụ khác) vì giờ 2 loại card nằm chung 1 lưới,
-            không còn "giữa" để chèn vào nữa. */}
+        {/* Văn phòng ảo + Dịch vụ khác — GỘP CHUNG vào 1 lưới CSS Grid +
+            grid-flow-row-dense DUY NHẤT (xem lý do/cơ chế đầy đủ ở
+            LocationServicesList.tsx — đợt trước dùng flex-wrap, nhưng
+            flex-wrap khiến 1 card "dịch vụ khác" đứng lẻ cạnh card VPA cao
+            bị stretch kéo giãn để lại khoảng trắng lớn; grid dense lấp
+            NHIỀU card dịch vụ khác chồng dọc vào đúng chỗ thay vì 1 card
+            bị kéo giãn). Hệ SAVE/SILVER/GOLD/PREMIUM CẢ 4 GÓI dùng chung
+            đúng 1 danh sách features (TIER_FAMILY_COMMON_FEATURES) nên
+            luôn cao BẰNG NHAU — không cần công thức row-span theo từng gói
+            như LocationServicesList.tsx, dùng 1 hằng số row-span=2 áp dụng
+            đều cho cả 4 gói (đo DOM thật: card cao ~518px, card "dịch vụ
+            khác" ở layout 4 cột cao tự nhiên ~215px, 518/215≈2.41 → 2 là
+            hợp lý nhất). 4 gói luôn khớp đúng 4 cột nên hàng gói VPA không
+            bao giờ "cụt" — gộp lưới ở đây chủ yếu để đồng bộ code + trải
+            nghiệm với LocationServicesList.tsx, an toàn nếu sau này số gói
+            thay đổi. Ghi chú VAT + khối "Dịch vụ bổ sung" (đặc thù riêng
+            hệ giá này) nằm SAU toàn bộ lưới gộp vì không còn "giữa" lưới
+            gói VPA/lưới Dịch vụ khác để chèn vào nữa. */}
         <Reveal className="rounded-2xl border border-line bg-white p-6 sm:p-7">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -99,12 +108,9 @@ export default function Quan3CuVOServices({
               <ArrowRightSmallIcon className="transition-transform duration-200" />
             </Link>
           </div>
-          <RevealGroup className="flex flex-wrap gap-5">
+          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:auto-rows-[minmax(215px,auto)] sm:grid-flow-row-dense lg:grid-cols-4">
             {SAVE_SILVER_GOLD_PREMIUM_PLANS.map((plan) => (
-              <RevealItem
-                key={plan.key}
-                className="w-full shrink-0 sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]"
-              >
+              <RevealItem key={plan.key} className="sm:row-span-2">
                 <div className="flex h-full flex-col rounded-xl border border-line bg-bg-tint p-5">
                   <div className="mb-1 text-[14.5px] font-bold text-navy">{plan.name}</div>
                   <div className="mb-3 font-mono text-[20px] font-bold text-primary">
@@ -156,15 +162,12 @@ export default function Quan3CuVOServices({
                 </div>
               </RevealItem>
             ))}
-            {/* Dịch vụ khác — nối tiếp ngay sau gói VPA cuối cùng trong
-                CÙNG 1 flex-wrap (xem lý do ở LocationServicesList.tsx).
-                justify-center thay vì justify-between để không bị trống
-                trải giữa card khi lọt vào hàng có gói VPA cao hơn. */}
+            {/* Dịch vụ khác — nối tiếp ngay sau gói VPA cuối cùng, row-span
+                mặc định = 1, grid-flow-row-dense tự lấp chồng dọc vào chỗ
+                trống bên cạnh gói VPA (xem lý do ở LocationServicesList.tsx).
+                justify-center để phần lệch nhỏ (nếu có) chia đều trên/dưới. */}
             {OTHER_SERVICES.map((svc) => (
-              <RevealItem
-                key={svc.slug}
-                className="w-full shrink-0 sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]"
-              >
+              <RevealItem key={svc.slug}>
                 <Link
                   href={`/services/${svc.slug}#bang-gia`}
                   className="group flex h-full flex-col justify-center rounded-2xl border border-line bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
