@@ -23,63 +23,82 @@ import { SITE_URL, COMPANY_PHONE, COMPANY_EMAIL } from "@/lib/siteConfig";
 import { getPublicJpegDimensions } from "@/lib/imageDimensions";
 
 /** Ảnh mặt tiền tỉ lệ THẬT dưới ngưỡng này (quá dọc, gần 2:3) bị ép về
-    khung 3:4 cố định khi hiển thị trong LocationGallery — 1 cột Masonry
-    cao vọt hẳn so với 2 cột ảnh nội thất bên cạnh (thường ngang/vuông)
-    nhìn mất cân đối, dù không còn đứng cạnh văn bản như bố cục cũ (xem
-    LocationImagesSection.tsx). Tính theo NGƯỠNG SỐ trên tỉ lệ đọc THẬT từ
-    file — không phải danh sách slug cứng — để tự đúng nếu ảnh gốc được
-    thay bằng file khác tỉ lệ khác sau này mà không cần sửa code theo tay.
-    0.72 tách rõ 2 nhóm THẬT đang có trong ảnh mặt tiền của 28 chi nhánh:
-    nhóm quá dọc ~0.64-0.67 (Sông Thao, 618 Ba Tháng Hai, 314/6 Điện Biên
-    Phủ, 89 Phan Đình Phùng, 84-86 Nguyễn Trường Tộ, 28-34 Pasteur, 380
-    Trần Hưng Đạo) và nhóm còn lại ~0.75-1.4 (không cần ép, giữ tỉ lệ thật
-    tuyệt đối đúng nguyên tắc Masonry gốc). */
+    khung 3:4 cố định — đứng 1 mình cạnh đoạn giới thiệu (LocationFacade.tsx)
+    ảnh quá dọc vẫn cao vọt hẳn so với cột văn bản dù đã có khối "Điểm nổi
+    bật khu vực" lấp bớt (xem LocationFacade.tsx), crop nhẹ về 3:4 giúp
+    giảm hẳn phần chênh lệch cần lấp. Tính theo NGƯỠNG SỐ trên tỉ lệ đọc
+    THẬT từ file — không phải danh sách slug cứng — để tự đúng nếu ảnh gốc
+    được thay bằng file khác tỉ lệ khác sau này mà không cần sửa code theo
+    tay. 0.72 tách rõ 2 nhóm THẬT đang có trong ảnh mặt tiền của 28 chi
+    nhánh: nhóm quá dọc ~0.64-0.67 (Sông Thao, 618 Ba Tháng Hai, 314/6 Điện
+    Biên Phủ, 89 Phan Đình Phùng, 84-86 Nguyễn Trường Tộ, 28-34 Pasteur,
+    380 Trần Hưng Đạo) và nhóm còn lại ~0.75-1.4 (không cần ép, giữ tỉ lệ
+    thật tuyệt đối trong khung 2 cột). */
 const FACADE_TALL_RATIO_THRESHOLD = 0.72;
+/** Số mục benefits tối đa hiện trong khối "Điểm nổi bật khu vực" lấp chỗ
+    trống cạnh ảnh mặt tiền — đủ để giảm đáng kể khoảng trắng ở phần lớn
+    trường hợp mà không đẩy khối lấp phình quá to (khối benefits ĐẦY ĐỦ đã
+    có sẵn riêng ở section "Lợi ích" phía dưới trang, xem ServiceBenefits). */
+const MAX_FACADE_FILLER_ITEMS = 4;
 
 export default function LocationPageTemplate({ data }: { data: LocationData }) {
-  // Đọc W/H THẬT của từng ảnh gallery (đọc trực tiếp header file .jpg, xem
-  // imageDimensions.ts) để LocationGallery.tsx dựng khung Masonry đúng tỉ lệ
-  // thật — không crop ảnh dọc (VD mặt tiền) như bố cục lưới 4:3 cố định
-  // trước đây. Tính ở đây (Server Component, dùng được fs) rồi truyền số
-  // liệu thuần xuống LocationImagesSection/LocationGallery ("use client",
-  // không gọi fs được) qua props — ảnh lỗi/không đọc được thì rơi về
-  // fallback 4:3 ở chính LocationGallery.tsx, không chặn build.
+  // Đọc W/H THẬT của ảnh mặt tiền + từng ảnh nội thất (đọc trực tiếp header
+  // file .jpg, xem imageDimensions.ts) — ảnh mặt tiền dùng để tính tỉ lệ
+  // khung ở LocationFacade.tsx (2 cột, xem bên dưới); ảnh nội thất dùng để
+  // LocationGallery.tsx dựng khung Masonry đúng tỉ lệ thật, không crop.
+  // Tính ở đây (Server Component, dùng được fs) rồi truyền số liệu thuần
+  // xuống LocationImagesSection ("use client", không gọi fs được) qua
+  // props — ảnh lỗi/không đọc được thì rơi về fallback, không chặn build.
   const facadeSrc = `/images/dia-diem-${data.slug}.jpg`;
   const facadeDims = getPublicJpegDimensions(facadeSrc);
   const facadeRealRatio = facadeDims ? facadeDims.width / facadeDims.height : null;
-  // `undefined` (không ép) khi tỉ lệ thật đủ ngang/vuông — LocationGallery
-  // rơi về đúng tỉ lệ thật qua width/height (xem bên dưới), y hệt mọi ảnh
-  // khác, không có ngoại lệ nào cần nhớ theo tay.
-  const facadeAspectOverride =
-    facadeRealRatio !== null && facadeRealRatio < FACADE_TALL_RATIO_THRESHOLD ? "3 / 4" : undefined;
   const facadeImage = {
     src: facadeSrc,
     alt: `Mặt tiền văn phòng ${data.name}`,
-    caption: `Mặt tiền toà nhà ${data.name}`,
-    // CHỈ set khi cần ÉP khung (7 chi nhánh quá dọc) — LocationGallery ưu
-    // tiên field này khi có; để undefined (21 chi nhánh còn lại) thì
-    // width/height thật bên dưới tự quyết định tỉ lệ hiển thị, ĐÚNG nguyên
-    // tắc Masonry gốc (không phải đọc từ `data.facadeAspectRatio` — field
-    // đó giờ chỉ còn phục vụ riêng trang xem trước báo giá, xem doc comment
-    // của nó ở locationsData.ts, không liên quan gallery này).
-    aspectRatio: facadeAspectOverride,
-    // Dự phòng cho trường hợp hiếm đọc file lỗi (facadeDims null, ratio
-    // không tính được nên facadeAspectOverride luôn undefined) — không có
-    // width/height thật để Masonry dùng, nên vẫn cần 1 tỉ lệ nào đó thay vì
-    // để trống hẳn; `data.facadeAspectRatio` (tỉ lệ thật khai tay) là lựa
-    // chọn tốt nhất còn lại lúc đó.
-    ...(facadeDims ? { width: facadeDims.width, height: facadeDims.height } : { aspectRatio: data.facadeAspectRatio }),
+    // Quá dọc (< ngưỡng) → ép "3 / 4"; còn lại → tỉ lệ thật từ width/height
+    // đọc được, hoặc `data.facadeAspectRatio` (khai tay) nếu hiếm khi đọc
+    // file lỗi. LUÔN có giá trị cụ thể (không optional) — LocationFacade.tsx
+    // chỉ dùng lại, không tự tính thêm lần nữa.
+    aspectRatio:
+      facadeRealRatio !== null && facadeRealRatio < FACADE_TALL_RATIO_THRESHOLD
+        ? "3 / 4"
+        : facadeDims
+          ? `${facadeDims.width} / ${facadeDims.height}`
+          : data.facadeAspectRatio,
   };
-  // Ảnh mặt tiền đứng ĐẦU gallery Masonry (trước đây tách riêng thành 1 cột
-  // cạnh đoạn giới thiệu — xem doc comment LocationImagesSection.tsx) rồi
-  // mới tới ảnh nội thất, đúng thứ tự xem: mặt tiền trước khi vào bên trong.
-  const galleryImages = [
-    facadeImage,
-    ...(data.interiorImages?.map((img) => {
-      const dims = getPublicJpegDimensions(img.src);
-      return dims ? { ...img, width: dims.width, height: dims.height } : img;
-    }) ?? []),
-  ];
+  const interiorImagesWithDimensions = data.interiorImages?.map((img) => {
+    const dims = getPublicJpegDimensions(img.src);
+    return dims ? { ...img, width: dims.width, height: dims.height } : img;
+  });
+
+  // Render SẴN ở đây (Server Component, icon đã resolve thành phần tử JSX
+  // cụ thể) rồi truyền xuống LocationImagesSection dạng ReactNode — không
+  // truyền thẳng `data.benefits` (BenefitItem[], mỗi phần tử có `icon` là
+  // THAM CHIẾU COMPONENT) xuống LocationFacade.tsx ("use client") được,
+  // Next.js chặn truyền function/component qua ranh giới Server→Client
+  // Component. LocationFacade.tsx chỉ quyết định HIỆN/ẨN khối này (đo
+  // chiều cao thật, xem doc comment ở đó), không tự render nội dung.
+  const facadeBenefitsFiller =
+    data.benefits.length > 0 ? (
+      <div className="mt-6 rounded-2xl border border-line bg-bg-tint p-5 sm:p-6">
+        <p className="mb-4 text-[11.5px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
+          Điểm nổi bật khu vực
+        </p>
+        <ul className="space-y-3.5">
+          {data.benefits.slice(0, MAX_FACADE_FILLER_ITEMS).map((b) => (
+            <li key={b.title} className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-primary">
+                <b.icon className="h-4 w-4" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-[13.5px] font-bold text-navy">{b.title}</p>
+                <p className="text-[12.5px] leading-snug text-body-text">{b.desc}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : null;
 
   const localBusinessSchema = {
     "@context": "https://schema.org",
@@ -131,7 +150,13 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         ]}
       />
 
-      <LocationImagesSection paragraphs={data.intro} images={galleryImages} />
+      <LocationImagesSection
+        name={data.name}
+        facadeImage={facadeImage}
+        paragraphs={data.intro}
+        benefitsFiller={facadeBenefitsFiller}
+        interiorImages={interiorImagesWithDimensions}
+      />
       {/* "Dịch vụ tại chi nhánh" chuyển lên NGAY SAU gallery ảnh (trước đây
           nằm sau Bản đồ) — khách xem xong ảnh thực tế chi nhánh là thấy
           ngay giá/gói áp dụng, không phải cuộn qua Lợi ích/Khu vực lân
