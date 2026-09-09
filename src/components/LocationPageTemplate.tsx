@@ -41,15 +41,16 @@ const FACADE_TALL_RATIO_THRESHOLD = 0.72;
 const MAX_FACADE_FILLER_ITEMS = 4;
 
 export default function LocationPageTemplate({ data }: { data: LocationData }) {
-  // Đọc W/H THẬT của ảnh mặt tiền + từng ảnh nội thất (đọc trực tiếp header
-  // file .jpg, xem imageDimensions.ts) — ảnh mặt tiền dùng để tính tỉ lệ
-  // khung ở LocationFacade.tsx (2 cột, xem bên dưới); ảnh nội thất dùng để
-  // LocationGallery.tsx phát hiện đúng 3 ảnh "bảng tên" outlier tỉ lệ quá
-  // cực đoan cần ép khung riêng (xem GALLERY_TALL/WIDE_CLAMP_THRESHOLD ở
-  // đó) — còn lại dùng chung khung 4:3 cố định, không cần tỉ lệ thật.
-  // Tính ở đây (Server Component, dùng được fs) rồi truyền số liệu thuần
-  // xuống LocationImagesSection ("use client", không gọi fs được) qua
-  // props — ảnh lỗi/không đọc được thì rơi về fallback, không chặn build.
+  // Đọc W/H THẬT của ảnh mặt tiền (đọc trực tiếp header file .jpg, xem
+  // imageDimensions.ts) để tính tỉ lệ khung ở LocationFacade.tsx (2 cột,
+  // xem bên dưới). Tính ở đây (Server Component, dùng được fs) rồi truyền
+  // số liệu thuần xuống LocationImagesSection ("use client", không gọi fs
+  // được) qua props — ảnh lỗi/không đọc được thì rơi về fallback, không
+  // chặn build. Ảnh NỘI THẤT (LocationGallery.tsx) KHÔNG cần đọc W/H nữa —
+  // mọi ảnh dùng chung khung 4:3 cố định (object-cover), không còn dựng
+  // khung theo tỉ lệ thật cho ảnh nào trong gallery này (kể cả 3 ảnh "bảng
+  // tên" tỉ lệ cực đoan — nay chỉ khác nhau ở `objectPosition`, xem
+  // locationsData.ts).
   const facadeSrc = `/images/dia-diem-${data.slug}.jpg`;
   const facadeDims = getPublicJpegDimensions(facadeSrc);
   const facadeRealRatio = facadeDims ? facadeDims.width / facadeDims.height : null;
@@ -67,11 +68,6 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
           ? `${facadeDims.width} / ${facadeDims.height}`
           : data.facadeAspectRatio,
   };
-  const interiorImagesWithDimensions = data.interiorImages?.map((img) => {
-    const dims = getPublicJpegDimensions(img.src);
-    return dims ? { ...img, width: dims.width, height: dims.height } : img;
-  });
-
   // Render SẴN ở đây (Server Component, icon đã resolve thành phần tử JSX
   // cụ thể) rồi truyền xuống LocationImagesSection dạng ReactNode — không
   // truyền thẳng `data.benefits` (BenefitItem[], mỗi phần tử có `icon` là
@@ -157,7 +153,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         imageSide={data.facadeImageSide}
         paragraphs={data.intro}
         benefitsFiller={facadeBenefitsFiller}
-        interiorImages={interiorImagesWithDimensions}
+        interiorImages={data.interiorImages}
       />
       {/* "Dịch vụ tại chi nhánh" chuyển lên NGAY SAU gallery ảnh (trước đây
           nằm sau Bản đồ) — khách xem xong ảnh thực tế chi nhánh là thấy

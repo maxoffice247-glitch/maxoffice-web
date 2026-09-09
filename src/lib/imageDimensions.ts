@@ -6,12 +6,16 @@ import path from "node:path";
  * marker SOF (Start Of Frame) trong header — không decode toàn bộ ảnh, chỉ
  * đọc vài chục byte đầu file, không cần thêm thư viện ngoài (mọi ảnh gallery
  * chi nhánh trên site đều là .jpg, không có .png/.webp nào lọt qua). Dùng
- * cho bố cục Masonry (LocationGallery.tsx) — mỗi ảnh cần biết đúng tỉ lệ
- * thật của nó để dựng khung `aspect-ratio` khớp chính xác, tránh crop.
+ * cho ẢNH MẶT TIỀN ở LocationFacade.tsx (bố cục 2 cột) — cần biết đúng tỉ lệ
+ * thật để dựng khung `aspect-ratio` khớp chính xác, tránh crop (trừ 7 chi
+ * nhánh ảnh quá dọc bị ép riêng "3 / 4", xem FACADE_TALL_RATIO_THRESHOLD ở
+ * LocationPageTemplate.tsx). KHÔNG còn dùng cho ảnh nội thất (LocationGallery.tsx)
+ * — gallery đó nay dùng chung khung 4:3 cố định cho mọi ảnh, không cần đọc
+ * tỉ lệ thật nữa (đã bỏ khi gộp về lưới đồng nhất, xem lịch sử commit).
  *
  * CHỈ được gọi từ Server Component (dùng fs.readFileSync, không chạy được
  * trong trình duyệt) — gọi ở LocationPageTemplate.tsx rồi truyền kết quả
- * (số thuần, serialize được) xuống LocationImagesSection/LocationGallery
+ * (số thuần, serialize được) xuống LocationImagesSection/LocationFacade
  * (2 component "use client") qua props, không import trực tiếp file này ở
  * bất kỳ file "use client" nào.
  */

@@ -7,58 +7,20 @@ export type InteriorImage = {
   src: string;
   alt: string;
   caption?: string;
+  /** Điểm neo crop khi `object-fit: cover` (VD "center top", "right",
+      "top") — MỌI ảnh trong lưới (kể cả 3 ảnh "bảng tên" tỉ lệ cực đoan)
+      đều dùng CHUNG khung 4:3 cố định (xem `galleryClass`/JSX bên dưới),
+      không còn ngoại lệ khung riêng — chỉ khác nhau ở field này để giữ
+      đúng phần nội dung quan trọng khi bị crop. Mặc định "center" khi
+      không khai. */
   objectPosition?: string;
-  /** Khung hiển thị CỐ ĐỊNH ("W / H") ép riêng — ƯU TIÊN HƠN width/height
-      thật bên dưới. Dùng cho ảnh có tỉ lệ CHỦ ĐỘNG cần giữ nguyên hình dạng
-      (hiếm — khai tay từng ảnh cụ thể). KHÔNG khai (undefined) — trường hợp
-      bình thường, tuyệt đại đa số ảnh — nghĩa là ô lưới dùng khung CỐ ĐỊNH
-      4:3 chung (object-cover) như mọi ảnh khác trong cùng gallery, TRỪ khi
-      width/height thật rơi vào 1 trong 2 ngưỡng outlier bên dưới. */
+  /** Khung hiển thị CỐ ĐỊNH ("W / H") — CHỈ dùng cho box "1 ảnh duy nhất"
+      (xem nhánh `isSolo` bên dưới, hiếm — chi nhánh chỉ có đúng 1 ảnh nội
+      thất) khi ảnh không phải tỉ lệ dọc thông thường (VD ảnh vuông 1:1,
+      xem Hoàng Kế Viêm). KHÔNG áp dụng cho lưới nhiều ảnh — lưới nhiều
+      ảnh LUÔN dùng khung 4:3 chung, xem doc comment `objectPosition`. */
   aspectRatio?: string;
-  /** Kích thước pixel THẬT của ảnh — đọc từ file qua getPublicJpegDimensions()
-      (xem LocationPageTemplate.tsx). CHỈ dùng để phát hiện 3 ảnh "bảng tên"
-      outlier tỉ lệ quá cực đoan (xem GALLERY_TALL/WIDE_CLAMP_THRESHOLD bên
-      dưới) — KHÔNG dùng để dựng khung Masonry theo tỉ lệ thật cho mọi ảnh
-      như trước đây (đã bỏ, xem doc comment gallery bên dưới lý do). */
-  width?: number;
-  height?: number;
 };
-
-/**
- * 3 ảnh "bảng tên" duy nhất trong toàn bộ 28 chi nhánh có tỉ lệ THẬT quá
- * cực đoan (đo qua `sips`, xem lịch sử commit) — ép cứng vào khung 4:3
- * chung như mọi ảnh khác sẽ crop mất phần lớn nội dung (VD ảnh dọc 0.562
- * ép vào khung ngang 4:3 chỉ còn thấy 1 dải nhỏ ở giữa). 2 ngưỡng này lấy
- * ĐÚNG bằng ngưỡng đã dùng khi gallery còn ở dạng Masonry (xem lịch sử
- * commit) — vẫn còn đúng vì dữ liệu đo không đổi, chỉ đổi CÁCH ÁP DỤNG:
- * trước đây áp dụng cho MỌI ảnh (mỗi ảnh 1 tỉ lệ riêng, layout Masonry rời
- * rạc, thiếu nhất quán khi 1 chi nhánh chỉ có 3-5 ảnh) — nay CHỈ áp dụng
- * làm ngoại lệ cho đúng 3 ảnh outlier này, còn lại dùng chung khung 4:3 cố
- * định để lưới đồng nhất, nhất quán giữa các trang chi nhánh:
- *   - Dưới 0.72 (quá dọc/hẹp): yên-thế bảng-tên (0.562), nguyễn-oanh
- *     bảng-tên (0.694) — điểm đo BÌNH THƯỜNG gần nhất là 0.75.
- *   - Trên 2.0 (quá ngang/dẹt): mạc-đĩnh-chi bảng-tên (2.223) — điểm đo
- *     bình thường gần nhất là 1.79-1.80.
- */
-const GALLERY_TALL_CLAMP_THRESHOLD = 0.72;
-const GALLERY_TALL_CLAMP_RATIO = "3 / 4";
-const GALLERY_WIDE_CLAMP_THRESHOLD = 2;
-const GALLERY_WIDE_CLAMP_RATIO = "16 / 9";
-
-/** Trả về khung ("W / H") ÉP RIÊNG cho ảnh cần ngoại lệ — `undefined` nghĩa
-    là ảnh BÌNH THƯỜNG, dùng khung 4:3 chung qua class `aspect-[4/3]` (không
-    set style riêng). `aspectRatio` khai tay (nếu có) luôn thắng; nếu không,
-    kiểm tra width/height thật có rơi vào 1 trong 2 ngưỡng outlier ở trên
-    không — chỉ đúng 3 ảnh "bảng tên" hiện có rơi vào đây. */
-function resolveAspectRatioOverride(img: InteriorImage): string | undefined {
-  if (img.aspectRatio) return img.aspectRatio;
-  if (img.width && img.height) {
-    const realRatio = img.width / img.height;
-    if (realRatio < GALLERY_TALL_CLAMP_THRESHOLD) return GALLERY_TALL_CLAMP_RATIO;
-    if (realRatio > GALLERY_WIDE_CLAMP_THRESHOLD) return GALLERY_WIDE_CLAMP_RATIO;
-  }
-  return undefined;
-}
 
 /**
  * Số cột lưới desktop/tablet (`sm:grid-cols-N`) tuỳ số ảnh — Y HỆT logic
@@ -113,21 +75,19 @@ export default function LocationGallery({
             // 1 ảnh duy nhất (hiếm — VD chi nhánh chỉ có 1 ảnh bảng tên) —
             // box dọc căn giữa + object-contain, không crop (ảnh dạng này
             // thường là bảng tên/tài liệu dọc, không phải ảnh chụp cảnh).
+            // Nhánh riêng biệt, KHÔNG liên quan tới khung 4:3 chung của
+            // lưới nhiều ảnh bên dưới.
             const isSolo = count === 1;
-            const override = resolveAspectRatioOverride(img);
-            const cellClass = isSolo
-              ? `bg-bg-tint ${override ? "" : "aspect-[3/4]"}`
-              : override
-                ? ""
-                : "aspect-[4/3]";
             return (
               <div key={img.src} className={itemClass(count)}>
                 <button
                   type="button"
                   onClick={() => onImageClick?.(i)}
                   aria-label={img.caption ?? img.alt}
-                  className={`relative block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-card ${cellClass}`}
-                  style={override ? { aspectRatio: override } : undefined}
+                  className={`relative block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-card ${
+                    isSolo ? `bg-bg-tint ${img.aspectRatio ? "" : "aspect-[3/4]"}` : "aspect-[4/3]"
+                  }`}
+                  style={isSolo && img.aspectRatio ? { aspectRatio: img.aspectRatio } : undefined}
                 >
                   <Image
                     src={img.src}

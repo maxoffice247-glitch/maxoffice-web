@@ -670,8 +670,12 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
         src: "/images/dia-diem-nguyen-oanh-bang-ten.jpg",
         alt: "Bảng tên công ty tại toà nhà văn phòng Nguyễn Oanh",
         caption: "Bảng tên công ty tại toà nhà",
-        // Tall board (852x1227) in a 4:3 cell — a center crop cuts off the
-        // building name at the top, so anchor to the top instead.
+        // Ảnh thật 852x1227 (rất dọc) crop vào khung 4:3 chung chỉ còn giữ
+        // được ~52% chiều cao. Toàn ảnh dày đặc nội dung từ trên xuống
+        // (header "TOÀ NHÀ NGUYỄN OANH" + 10 hàng bảng tên), KHÔNG có
+        // khoảng trống nào để tận dụng — dù crop kiểu gì cũng mất nội
+        // dung, "top" giữ được phần quan trọng nhất (header định danh toà
+        // nhà) + khoảng 4/10 hàng đầu, thay vì "center" sẽ mất luôn header.
         objectPosition: "top",
       },
     ],
@@ -770,12 +774,15 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
         src: "/images/dia-diem-yen-the-bang-ten.jpg",
         alt: "Bảng tên công ty tại toà nhà văn phòng Yên Thế",
         caption: "Bảng tên công ty tại toà nhà",
-        // Ảnh thật 941x1672 (tỉ lệ 0.562, bị GALLERY_TALL_CLAMP_RATIO ở
-        // LocationGallery.tsx kẹp về khung "3 / 4") — phần nội dung thật
-        // (logo + 5 hàng bảng tên công ty) chỉ chiếm ~60% chiều cao ảnh,
-        // ~40% còn lại phía DƯỚI là các ô xám TRỐNG. Crop từ "top" nên
-        // giữ đủ 100% nội dung thật, chỉ cắt đúng phần trống — mặc định
-        // "center" sẽ cắt hụt mất hàng bảng tên cuối cùng.
+        // Ảnh thật 941x1672 (rất dọc) crop vào khung 4:3 chung chỉ còn giữ
+        // được ~42% chiều cao — header (logo + "TOÀ NHÀ YÊN THẾ") chiếm
+        // ~21%, 5 hàng bảng tên chiếm tiếp ~42%, ~37% cuối cùng là các ô
+        // xám TRỐNG. "top" giữ trọn header + khoảng 2-3 hàng bảng tên đầu
+        // (mất 2-3 hàng cuối), thay vì "center" sẽ mất luôn header và rơi
+        // vào giữa các hàng bảng tên — không có lựa chọn nào giữ 100% nội
+        // dung với khung 4:3 chặt hơn hẳn tỉ lệ thật, nhưng "top" là
+        // phương án mất ít giá trị nhất (ảnh đầy đủ vẫn xem được qua
+        // Lightbox — object-contain, không crop).
         objectPosition: "center top",
       },
     ],
@@ -2440,7 +2447,22 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     interiorImages: [
       { src: "/images/dia-diem-mac-dinh-chi-le-tan.jpg", alt: "Quầy lễ tân văn phòng 36 Mạc Đĩnh Chi", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-mac-dinh-chi-tiep-khach.jpg", alt: "Khu vực tiếp khách văn phòng 36 Mạc Đĩnh Chi", caption: "Khu vực tiếp khách" },
-      { src: "/images/dia-diem-mac-dinh-chi-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 36 Mạc Đĩnh Chi", caption: "Bảng tên công ty tại toà nhà" },
+      {
+        src: "/images/dia-diem-mac-dinh-chi-bang-ten.jpg",
+        alt: "Bảng tên công ty tại toà nhà văn phòng 36 Mạc Đĩnh Chi",
+        caption: "Bảng tên công ty tại toà nhà",
+        // Ảnh thật 1870x841 (rất ngang) crop vào khung 4:3 chung của lưới
+        // chỉ còn giữ được ~60% chiều rộng — xem trực tiếp ảnh: bên TRÁI
+        // (~x=65-545) là 5 bảng logo công ty (KingBee, PAC E&C, Đ1407,
+        // chemarome, Liberal Leadership), khoảng giữa là tường trống, bên
+        // PHẢI (~x=955-1870) là lưới 4 cột ĐẦY ĐỦ ~32 bảng tên công ty nhỏ —
+        // đúng nội dung chính khớp caption "Bảng tên công ty tại toà nhà".
+        // Không đủ chỗ giữ cả 2 bên (crop giữa sẽ cắt dở logo bên trái LẪN
+        // cụt cột lưới bên phải) nên chọn "right" giữ TRỌN VẸN lưới bảng
+        // tên bên phải, đánh đổi mất hẳn 5 logo bên trái (vẫn xem đầy đủ
+        // qua Lightbox — object-contain, không crop).
+        objectPosition: "right",
+      },
     ],
     intro: [
       "Văn phòng 36 Mạc Đĩnh Chi là chi nhánh thứ 2 của MAX OFFICE tại khu vực Quận 1 (cũ), cùng thuộc Phường Tân Định với chi nhánh Điện Biên Phủ nhưng nằm trên một trục đường khác — gần Thảo Cầm Viên Sài Gòn và khu vực tập trung nhiều lãnh sự quán, văn phòng đại diện nước ngoài. Sự xuất hiện của chi nhánh thứ 2 giúp doanh nghiệp tại Quận 1 có thêm lựa chọn địa chỉ đăng ký kinh doanh mà không phải phụ thuộc vào một địa điểm duy nhất.",
