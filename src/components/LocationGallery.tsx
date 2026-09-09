@@ -24,12 +24,46 @@ export type InteriorImage = {
   height?: number;
 };
 
+/**
+ * Ảnh gallery tỉ lệ THẬT dưới ngưỡng này (quá dọc/hẹp) hoặc trên ngưỡng
+ * kia (quá ngang/dẹt) được KẸP về 1 khung ổn định hơn — 1 ô Masonry cao
+ * vọt hoặc dẹt lép hẳn so với các ô lân cận (đa số 0.7-1.8) nhìn lệch hẳn
+ * trong lưới, dù không sai kỹ thuật (Masonry vẫn đang giữ đúng tỉ lệ thật
+ * của nó). Xác định qua ĐO THẬT (không đoán) toàn bộ 95 ảnh gallery của cả
+ * 28 chi nhánh (script đo qua `sips`, xem lịch sử commit) — không phải cứ
+ * ảnh "bảng tên" là quá cực đoan (VD ảnh bảng tên ở Sông Thao chỉ 1.333,
+ * hoàn toàn bình thường; vấn đề khó đọc ở đó là do NỘI DUNG dày đặc chữ
+ * nhỏ chứ không phải do tỉ lệ khung — xem doc comment ở nơi gọi hàm này
+ * kèm bằng chứng đo đạc, không cố kẹp/fix qua tỉ lệ vì tỉ lệ vốn không có
+ * gì bất thường):
+ *   - 2 outlier DUY NHẤT dưới 0.72: yên-thế bảng-tên (0.562), nguyễn-oanh
+ *     bảng-tên (0.694) — điểm đo BÌNH THƯỜNG gần nhất là đúng 0.75 (1 cụm
+ *     nhiều ảnh), ngưỡng 0.72 nằm giữa khoảng trống thật đó.
+ *   - 1 outlier DUY NHẤT trên 2.0: mạc-đĩnh-chi bảng-tên (2.223) — điểm đo
+ *     bình thường gần nhất là 1.79-1.80 (vài ảnh landscape 16:9), ngưỡng
+ *     2.0 nằm giữa khoảng trống thật đó.
+ * CHỈ áp dụng khi KHÔNG có `aspectRatio` ép riêng (giữ nguyên override chủ
+ * động có sẵn, VD ảnh mặt tiền quá dọc đã ép "3 / 4" ở LocationPageTemplate.tsx
+ * — không kẹp chồng thêm lần nữa lên 1 giá trị đã cố ý chọn sẵn).
+ */
+const GALLERY_TALL_CLAMP_THRESHOLD = 0.72;
+const GALLERY_TALL_CLAMP_RATIO = "3 / 4";
+const GALLERY_WIDE_CLAMP_THRESHOLD = 2;
+const GALLERY_WIDE_CLAMP_RATIO = "16 / 9";
+
 /** `aspectRatio` ép riêng (nếu có) LUÔN thắng width/height thật — xem doc
     comment InteriorImage.aspectRatio. Dùng chung cho cả 2 bố cục (1 ảnh
-    và Masonry 2+ ảnh) để không lệch quy tắc ưu tiên giữa 2 nơi. */
+    và Masonry 2+ ảnh) để không lệch quy tắc ưu tiên giữa 2 nơi. Tỉ lệ THẬT
+    (không có override) bị kẹp về khung ổn định nếu quá cực đoan — xem doc
+    comment các hằng số CLAMP ở trên. */
 function resolveAspectRatio(img: InteriorImage, fallback: string): string {
   if (img.aspectRatio) return img.aspectRatio;
-  if (img.width && img.height) return `${img.width} / ${img.height}`;
+  if (img.width && img.height) {
+    const realRatio = img.width / img.height;
+    if (realRatio < GALLERY_TALL_CLAMP_THRESHOLD) return GALLERY_TALL_CLAMP_RATIO;
+    if (realRatio > GALLERY_WIDE_CLAMP_THRESHOLD) return GALLERY_WIDE_CLAMP_RATIO;
+    return `${img.width} / ${img.height}`;
+  }
   return fallback;
 }
 

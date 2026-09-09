@@ -17,7 +17,6 @@ import LocationCrossLinks from "./LocationCrossLinks";
 import LocationLeadForm from "./LocationLeadForm";
 import Testimonials from "./Testimonials";
 import Faq from "./Faq";
-import CtaBanner from "./CtaBanner";
 import type { LocationData } from "@/lib/locationsData";
 import { SITE_URL, COMPANY_PHONE, COMPANY_EMAIL } from "@/lib/siteConfig";
 import { getPublicJpegDimensions } from "@/lib/imageDimensions";
@@ -245,13 +244,13 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         tint
       />
       <LocationCrossLinks currentSlug={data.slug} />
+      {/* CtaBanner (chung, dùng ở nhiều trang khác — xem CtaBanner.tsx) ĐÃ
+          BỎ riêng ở trang chi nhánh: ngay phía trên là LocationLeadForm —
+          1 form đặt lịch tham quan ĐẦY ĐỦ, RIÊNG cho chi nhánh này — nên
+          banner chung lặp lại y hệt thông điệp "đặt lịch tham quan" ngay
+          sau đó là dư thừa. Các trang khác (trang chủ, dịch vụ, blog,...)
+          không có form riêng như vậy nên vẫn giữ nguyên CtaBanner. */}
       <LocationLeadForm name={data.name} slug={data.slug} />
-      <CtaBanner
-        eyebrow="Đặt lịch tham quan"
-        title="Đặt lịch tham quan miễn phí ngay hôm nay"
-        description={`Ghé thăm trực tiếp văn phòng ${data.name} — đội ngũ MAX OFFICE sẽ đón tiếp và tư vấn giải pháp phù hợp với bạn.`}
-        secondaryLabel="Đặt lịch tham quan miễn phí"
-      />
     </main>
   );
 }

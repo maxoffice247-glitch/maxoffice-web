@@ -755,9 +755,12 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
         src: "/images/dia-diem-yen-the-bang-ten.jpg",
         alt: "Bảng tên công ty tại toà nhà văn phòng Yên Thế",
         caption: "Bảng tên công ty tại toà nhà",
-        // Tall board photo — the MAX OFFICE header and top rows of company
-        // plates are what identify it; the lower third is blank panel, so
-        // anchor the crop to the top instead of centering.
+        // Ảnh thật 941x1672 (tỉ lệ 0.562, bị GALLERY_TALL_CLAMP_RATIO ở
+        // LocationGallery.tsx kẹp về khung "3 / 4") — phần nội dung thật
+        // (logo + 5 hàng bảng tên công ty) chỉ chiếm ~60% chiều cao ảnh,
+        // ~40% còn lại phía DƯỚI là các ô xám TRỐNG. Crop từ "top" nên
+        // giữ đủ 100% nội dung thật, chỉ cắt đúng phần trống — mặc định
+        // "center" sẽ cắt hụt mất hàng bảng tên cuối cùng.
         objectPosition: "center top",
       },
     ],
