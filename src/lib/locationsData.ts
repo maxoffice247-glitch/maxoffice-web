@@ -2815,6 +2815,28 @@ export function getLocationsForArea(areaSlug: string): LocationListItem[] {
 // xem AREA_* ở trên) thay vì tự viết lại/cắt bớt theo từng nơi — chấp
 // nhận đánh đổi lặp "(cũ)" 1 lần để đổi lấy nhất quán tuyệt đối.
 
+/**
+ * Cắt hậu tố "(cũ)"/"(Cũ)" cuối TÊN CHI NHÁNH (LocationListItem.name) khi
+ * hiển thị trong danh sách card — CHỈ dùng ở 2 nơi hiện thẻ chi nhánh dạng
+ * danh sách (dropdown mega menu: MegaMenuLocationItem trong
+ * LocationsMegaMenu.tsx; `/dia-diem`: LocationCard.tsx) — KHÔNG đổi field
+ * `name` gốc (vẫn dùng nguyên cho breadcrumb, page title, meta description,
+ * card báo giá... những nơi đó cần tên đầy đủ, không gọi hàm này).
+ *
+ * KHÁC với việc thống nhất tên KHU VỰC (area.name, đã xử lý ở trên bằng
+ * cách bỏ hẳn stripCuSuffix cũ) — đây là vấn đề khác: dữ liệu TÊN CHI NHÁNH
+ * (`ALL_LOCATIONS_LIST[].name`) vốn không nhất quán ngay từ đầu vì cách baked
+ * "(cũ)" vào tên khác nhau theo TỪNG ĐỢT thêm chi nhánh — 11 chi nhánh thêm
+ * sớm không có hậu tố này (VD "Điện Biên Phủ, Quận 1"), 17 chi nhánh thêm
+ * sau lại baked thẳng vào tên (VD "36 Mạc Đĩnh Chi, Quận 1 (cũ)") — khiến
+ * card trong cùng 1 lưới cái xuống 1 dòng, cái xuống 2 dòng, lệch hẳn nhau.
+ * Cắt hiển thị ở đúng 2 nơi liệt kê card thay vì sửa lại 28 tên gốc (rủi ro
+ * đổi nhầm chỗ khác đang cần đúng tên đầy đủ, VD breadcrumb/meta title).
+ */
+export function stripLocationNameCuSuffix(name: string): string {
+  return name.replace(/\s*\((?:cũ|Cũ)\)\s*$/, "").trim();
+}
+
 export type GroupedLocations = {
   /** MỌI khu vực đang có ≥1 chi nhánh công khai, mỗi khu vực liệt kê phẳng
       — nguồn lọc cho ô tìm kiếm theo khu vực/phường ở /dia-diem

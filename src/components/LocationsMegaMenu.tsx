@@ -5,7 +5,12 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDownIcon, MapPinIcon, PhoneIcon, SearchIcon } from "./icons";
 import Button from "./Button";
-import { getGroupedLocations, ACTIVE_BRANCH_COUNT, type LocationListItem } from "@/lib/locationsData";
+import {
+  getGroupedLocations,
+  stripLocationNameCuSuffix,
+  ACTIVE_BRANCH_COUNT,
+  type LocationListItem,
+} from "@/lib/locationsData";
 import { CLUSTER_COLORS } from "@/lib/locationClusterColors";
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
 import { useNavIndicator } from "./NavIndicator";
@@ -21,7 +26,7 @@ function MegaMenuLocationItem({ loc, areaBadge }: { loc: LocationListItem; areaB
         <MapPinIcon className="h-4 w-4" />
       </span>
       <span className="min-w-0">
-        <span className="block text-[13px] leading-snug font-bold text-navy">{loc.name}</span>
+        <span className="block text-[13px] leading-snug font-bold text-navy">{stripLocationNameCuSuffix(loc.name)}</span>
         <span className="block truncate text-[11.5px] text-body-text">{loc.shortAddress}</span>
         {price !== undefined && (
           <span className="mt-0.5 block text-[11px] text-body-text">

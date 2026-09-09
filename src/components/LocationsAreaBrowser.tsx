@@ -4,9 +4,28 @@ import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { RevealGroup } from "./Reveal";
 import LocationCard from "./LocationCard";
-import { SearchIcon } from "./icons";
+import { SearchIcon, ArrowRightSmallIcon } from "./icons";
 import type { LocationListItem, GroupedLocations } from "@/lib/locationsData";
 import { CLUSTER_COLORS } from "@/lib/locationClusterColors";
+
+/** Link "Xem tất cả chi nhánh khu vực này" đặt cạnh MỖI tiêu đề khu vực —
+    trỏ tới đúng /dia-diem/{area-slug} (route theo khu vực ĐÃ có sẵn, xem
+    AreaPageTemplate.tsx + getLocationsForArea() — chỉ thêm link cho DỄ TÌM/
+    DỄ GỬI hơn, không phải route mới). Trước đây route này chỉ tình cờ lộ ra
+    qua breadcrumb ở trang chi tiết chi nhánh, không có lối vào trực tiếp từ
+    /dia-diem — nhân viên tư vấn muốn gửi link "khu vực X có chi nhánh nào"
+    phải tự gõ URL bằng tay. */
+function AreaLink({ slug, compact }: { slug: string; compact?: boolean }) {
+  return (
+    <Link
+      href={`/dia-diem/${slug}`}
+      className="inline-flex shrink-0 items-center gap-1 text-[12px] font-bold text-primary hover:gap-1.5"
+    >
+      {compact ? "Xem tất cả" : "Xem tất cả chi nhánh khu vực này"}
+      <ArrowRightSmallIcon className="h-3 w-3 transition-transform duration-200" />
+    </Link>
+  );
+}
 
 type AreaGroup = {
   area: { slug: string; name: string };
@@ -30,11 +49,14 @@ function normalizeVN(str: string): string {
 function AreaBlock({ area, locations }: AreaGroup) {
   return (
     <div className="mb-10 rounded-3xl border border-primary/15 bg-primary-tint/40 p-5 sm:p-7">
-      <div className="mb-5 flex items-center justify-between gap-3">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{area.name}</h3>
-        <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
-          {locations.length} chi nhánh
-        </span>
+        <div className="flex shrink-0 items-center gap-3">
+          <AreaLink slug={area.slug} />
+          <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
+            {locations.length} chi nhánh
+          </span>
+        </div>
       </div>
       <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {locations.map((loc, i) => (
@@ -82,11 +104,14 @@ function MultiBranchGroup({
                   sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"
                 }`}
               >
-                <div className="mb-3 flex items-center justify-between gap-2">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <h4 className={`text-[13.5px] font-bold ${color.text}`}>{sub.area.name}</h4>
-                  <span className="shrink-0 rounded-full bg-bg-tint px-2 py-0.5 text-[10.5px] font-bold whitespace-nowrap text-primary">
-                    {sub.locations.length} chi nhánh
-                  </span>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <AreaLink slug={sub.area.slug} compact />
+                    <span className="shrink-0 rounded-full bg-bg-tint px-2 py-0.5 text-[10.5px] font-bold whitespace-nowrap text-primary">
+                      {sub.locations.length} chi nhánh
+                    </span>
+                  </div>
                 </div>
                 <RevealGroup className={`grid grid-cols-1 gap-3.5 ${sub.locations.length >= 2 ? "sm:grid-cols-2" : ""}`}>
                   {sub.locations.map((loc, i) => (
@@ -99,11 +124,14 @@ function MultiBranchGroup({
         </div>
       ) : (
         <>
-          <div className="mb-5 flex items-center justify-between gap-3">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{area.name}</h3>
-            <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
-              {locations.length} chi nhánh
-            </span>
+            <div className="flex shrink-0 items-center gap-3">
+              <AreaLink slug={area.slug} />
+              <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
+                {locations.length} chi nhánh
+              </span>
+            </div>
           </div>
           <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {locations.map((loc, i) => (

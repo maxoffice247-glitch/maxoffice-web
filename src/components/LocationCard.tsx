@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { RevealItem } from "./Reveal";
 import { ArrowRightSmallIcon } from "./icons";
-import type { LocationListItem } from "@/lib/locationsData";
+import { stripLocationNameCuSuffix, type LocationListItem } from "@/lib/locationsData";
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
 
 export default function LocationCard({
@@ -35,7 +35,7 @@ export default function LocationCard({
           </div>
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
-              <h3 className="text-[15.5px] font-bold text-navy">{loc.name}</h3>
+              <h3 className="text-[15.5px] font-bold text-navy">{stripLocationNameCuSuffix(loc.name)}</h3>
               {loc.tag && (
                 <span className="shrink-0 rounded-full bg-amber/12 px-2 py-0.5 text-[10px] font-bold whitespace-nowrap text-amber-dark">
                   {loc.tag}
