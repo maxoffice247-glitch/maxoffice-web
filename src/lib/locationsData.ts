@@ -208,6 +208,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_TAN_BINH,
   },
   {
+    slug: "ut-tich",
+    name: "40A-40B Út Tịch, Tân Bình (cũ)",
+    shortAddress: "40A-40B Út Tịch, P. Tân Sơn Nhất",
+    area: AREA_TAN_BINH,
+  },
+  {
     slug: "cmt8",
     name: "CMT8, Quận 10",
     shortAddress: "283/26-28 CMT8, P. Hoà Hưng",
@@ -1353,6 +1359,93 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Khu vực yên tĩnh, giá thuê hợp lý, phù hợp với ngân sách công ty nhỏ của mình.", initial: "H", name: "Ngọc Hiếu", role: "Chủ hộ kinh doanh cá thể" },
     ],
   },
+
+  /* =============== 40A-40B ÚT TỊCH (CHI NHÁNH SGP ĐẦU TIÊN TẠI TÂN BÌNH) =============== */
+  "ut-tich": {
+    slug: "ut-tich",
+    name: "40A-40B Út Tịch, Tân Bình (cũ)",
+    area: AREA_TAN_BINH,
+    address: "40A-40B Út Tịch, Phường Tân Sơn Nhất, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 40A-40B Út Tịch, Tân Bình (cũ)",
+    heroDescription:
+      "Chi nhánh thứ 9 của MAX OFFICE tại khu vực Tân Bình (cũ), đầu tiên áp dụng bảng giá SILVER/GOLD/PREMIUM — văn phòng ảo 3 gói riêng biệt từ 379.000đ/tháng, có khu vực nghỉ ngơi riêng cho nhân viên, gần sân bay Tân Sơn Nhất.",
+    metaTitle: "Văn Phòng Ảo 40A-40B Út Tịch, Tân Bình (cũ) | Từ 379K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 40A-40B Út Tịch, Phường Tân Sơn Nhất (Tân Bình cũ) — 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), có khu vực nghỉ ngơi riêng cho nhân viên, gần sân bay Tân Sơn Nhất.",
+    image: "/images/hero-chi-nhanh.png",
+    // Ảnh mặt tiền gốc 1024x1536, không chỉnh sửa.
+    facadeAspectRatio: "1024 / 1536",
+    facadeImageSide: "right",
+    interiorImages: [
+      {
+        src: "/images/dia-diem-ut-tich-le-tan-sanh-tiep-khach.jpg",
+        alt: "Quầy lễ tân & sảnh tiếp khách văn phòng 40A-40B Út Tịch",
+        caption: "Quầy lễ tân & sảnh tiếp khách",
+      },
+      {
+        src: "/images/dia-diem-ut-tich-phong-hop.jpg",
+        alt: "Phòng họp văn phòng 40A-40B Út Tịch",
+        caption: "Phòng họp",
+      },
+      {
+        src: "/images/dia-diem-ut-tich-nhan-vien-nghi-ngoi.jpg",
+        alt: "Khu vực nhân viên nghỉ ngơi văn phòng 40A-40B Út Tịch",
+        caption: "Khu vực nhân viên nghỉ ngơi",
+      },
+    ],
+    intro: [
+      "Văn phòng 40A-40B Út Tịch là chi nhánh thứ 9 MAX OFFICE mở tại khu vực Tân Bình (cũ), toạ lạc trên đường Út Tịch, Phường Tân Sơn Nhất — con đường nhỏ nằm gần trục Cộng Hoà sầm uất, chỉ cách sân bay quốc tế Tân Sơn Nhất một quãng ngắn. Đây cũng là chi nhánh ĐẦU TIÊN tại khu vực Tân Bình áp dụng bảng giá văn phòng ảo SILVER/GOLD/PREMIUM, khác hẳn hệ thống LITE-RISE đang dùng chung ở 8 chi nhánh Tân Bình còn lại.",
+      "Toà nhà nơi đặt chi nhánh có sảnh lễ tân kết hợp khu vực tiếp khách ngay lối vào cùng phòng họp riêng biệt phục vụ nhu cầu trao đổi công việc. Điểm khác biệt đáng chú ý nhất là khu vực nghỉ ngơi RIÊNG dành cho nhân viên — không gian tách biệt để nhân viên của khách thuê có thể nghỉ giải lao giữa giờ làm việc, điều mà phần lớn chi nhánh văn phòng ảo khác không có (thường chỉ dừng ở sảnh tiếp khách phục vụ đối tác).",
+      "Chi nhánh cung cấp 3 gói văn phòng ảo riêng biệt — SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10%. Đây là bảng giá dùng CHUNG với các chi nhánh MAX OFFICE tại khu vực Bình Thạnh, Phú Nhuận, Quận 4 và Thủ Đức (cũ) — hoàn toàn tách biệt với hệ LITE-RISE của 8 chi nhánh Tân Bình khác, nên khách hàng cần lưu ý khi so sánh giá giữa các chi nhánh trong cùng khu vực.",
+      "Với vị trí gần trục Cộng Hoà — Trường Chinh và không xa sân bay Tân Sơn Nhất, doanh nghiệp đặt văn phòng tại 40A-40B Út Tịch có thể di chuyển thuận tiện về trung tâm thành phố hoặc ra hướng Quận 12, Hóc Môn. Đây là lựa chọn phù hợp cho doanh nghiệp thương mại, dịch vụ, logistics thường xuyên đón đối tác từ sân bay, hoặc các công ty muốn mang lại trải nghiệm thoải mái hơn cho đội ngũ nhân sự nhờ khu vực nghỉ ngơi riêng biệt hiếm có này.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 40A-40B Út Tịch",
+    benefits: [
+      { icon: CoffeeIcon, title: "Khu vực nghỉ ngơi riêng cho nhân viên", desc: "Không gian tách biệt để nhân viên khách thuê nghỉ giải lao giữa giờ — điểm hiếm gặp so với đa số chi nhánh chỉ có sảnh tiếp khách." },
+      { icon: MapPinIcon, title: "Gần sân bay Tân Sơn Nhất", desc: "Thuộc Phường Tân Sơn Nhất, thuận tiện đón đối tác, khách hàng từ sân bay hoặc tỉnh khác." },
+      { icon: BadgePercentIcon, title: "3 gói giá linh hoạt", desc: "SILVER, GOLD, PREMIUM từ 379.000đ/tháng — chi nhánh đầu tiên tại Tân Bình áp dụng bảng giá này." },
+      { icon: HeartHandshakeIcon, title: "Sảnh tiếp khách & phòng họp riêng", desc: "Không gian tiếp đối tác chuyên nghiệp, phòng họp trang bị đầy đủ ngay trong toà nhà." },
+    ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
+    nearbyItems: [
+      { name: "Trục đường Cộng Hoà", desc: "Tuyến thương mại sầm uất của Tân Bình, tập trung nhiều toà nhà văn phòng và cửa hàng dịch vụ." },
+      { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Cách chi nhánh không xa, thuận tiện cho doanh nghiệp thường xuyên đón khách từ tỉnh khác hoặc nước ngoài." },
+      { name: "Công viên Hoàng Văn Thụ", desc: "Không gian xanh lớn của khu vực, phù hợp đi bộ thư giãn ngoài giờ làm việc." },
+      { name: "Khu dân cư Phường Tân Sơn Nhất", desc: "Khu dân cư ổn định lâu năm, nhiều tiện ích sinh hoạt xung quanh văn phòng." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Gần trục Cộng Hoà — Trường Chinh", desc: "Kết nối nhanh về trung tâm thành phố hoặc ra hướng Quận 12, Hóc Môn." },
+      { icon: ClockIcon, title: "Taxi & Grab thuận tiện", desc: "Vị trí gần sân bay giúp việc gọi xe công nghệ hoặc taxi truyền thống luôn sẵn có." },
+      { icon: CheckCircleIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt chạy ngang khu vực Tân Sơn Nhất, điểm dừng gần đường Út Tịch." },
+      { icon: HeadsetIcon, title: "Tiếp tân hỗ trợ đón khách", desc: "Lễ tân tại toà nhà hướng dẫn khách tận nơi ngay khi vừa đến." },
+    ],
+    parkingInfo: [
+      "Khu vực để xe máy nằm ngay trong khuôn viên toà nhà, thuận tiện cho khách ra vào làm việc mỗi ngày.",
+      "Sảnh trước toà nhà đủ rộng để tài xế dừng đỗ ngắn hạn khi đưa đón đối tác.",
+      "Có bảo vệ toà nhà theo dõi an ninh khu vực để xe trong suốt giờ hành chính.",
+    ],
+    diningItems: [
+      { name: "Quán ăn khu vực Út Tịch", desc: "Nhiều quán cơm, quán ăn trưa phục vụ nhanh cho dân văn phòng trong bán kính đi bộ." },
+      { name: "Cà phê trục Cộng Hoà", desc: "Không gian cà phê phù hợp trao đổi công việc hoặc gặp gỡ khách hàng ngoài giờ họp chính thức." },
+      { name: "Nhà hàng khu Tân Sơn Nhất", desc: "Có các nhà hàng quy mô vừa, thích hợp cho bữa tiếp đối tác cần không gian trang trọng hơn quán ăn thường." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 40A-40B Út Tịch có phải là chi nhánh mới nhất của MAX OFFICE tại khu vực Tân Bình không?", a: "Đúng vậy. Đây là chi nhánh thứ 9 MAX OFFICE mở tại khu vực Tân Bình (cũ), toạ lạc tại Phường Tân Sơn Nhất, gần trục Cộng Hoà và sân bay quốc tế Tân Sơn Nhất." },
+      { q: "Chi nhánh này áp dụng bảng giá văn phòng ảo nào? Có khác gì so với các chi nhánh Tân Bình khác không?", a: "Có. Chi nhánh áp dụng 3 gói SILVER (379.000đ/tháng), GOLD (490.000đ/tháng) và PREMIUM (990.000đ/tháng) — đây là bảng giá dùng chung với các chi nhánh tại Bình Thạnh, Phú Nhuận, Quận 4 và Thủ Đức (cũ), HOÀN TOÀN KHÁC với hệ thống LITE-RISE đang áp dụng tại 8 chi nhánh còn lại trong khu vực Tân Bình." },
+      { q: "Khu vực nghỉ ngơi riêng cho nhân viên tại chi nhánh có gì đặc biệt?", a: "Đây là không gian TÁCH BIỆT với sảnh tiếp khách, dành riêng để nhân viên của khách thuê nghỉ giải lao giữa giờ làm việc — hầu hết chi nhánh văn phòng ảo khác chỉ có sảnh tiếp khách phục vụ đối tác, không có khu nghỉ ngơi riêng cho nhân viên như tại đây." },
+      { q: "Địa chỉ 40A-40B Út Tịch có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Sơn Nhất, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Chi nhánh có hỗ trợ đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty không?", a: "Có. Đây là 2 dịch vụ phát sinh riêng, tính thêm ngoài phí gói văn phòng ảo hàng tháng: thay đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã gồm VAT), và khắc dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện với giá 480.000đ cho mỗi con dấu." },
+      { q: "Làm sao để đặt lịch xem văn phòng tại 40A-40B Út Tịch trước khi ký hợp đồng?", a: "Bạn có thể để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí trong thời gian sớm nhất." },
+    ],
+    testimonials: [
+      { quote: "Nhân viên mình rất thích khu nghỉ ngơi riêng ở đây, giữa giờ có chỗ ngồi thư giãn thay vì phải ra ngoài quán cà phê.", initial: "H", name: "Chị Hằng", role: "Trưởng phòng nhân sự" },
+      { quote: "Gần sân bay nên đối tác nước ngoài ghé văn phòng rất tiện, không mất nhiều thời gian di chuyển.", initial: "K", name: "Anh Khoa", role: "Giám đốc công ty xuất nhập khẩu" },
+    ],
+  },
+
   cmt8: {
     slug: "cmt8",
     name: "CMT8, Quận 10",

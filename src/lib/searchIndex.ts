@@ -129,6 +129,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "26 Hoàng Kế Viêm, P. Bảy Hiền",
   },
   {
+    title: "40A-40B Út Tịch, Tân Bình (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/ut-tich",
+    desc: "40A-40B Út Tịch, P. Tân Sơn Nhất",
+  },
+  {
     title: "CMT8, Quận 10",
     category: "Chi nhánh",
     href: "/locations/cmt8",
@@ -225,7 +231,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Quận Tân Bình (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-tan-binh-cu",
-    desc: "8 chi nhánh MAX OFFICE quanh khu vực sân bay Tân Sơn Nhất",
+    desc: "9 chi nhánh MAX OFFICE quanh khu vực sân bay Tân Sơn Nhất",
   },
   {
     title: "Quận 1 (cũ)",
@@ -252,7 +258,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "2 chi nhánh — CMT8 và 618 Ba Tháng Hai, gần Ga Sài Gòn và vòng xoay Ngã Bảy",
   },
   {
-    title: "Tp. Thủ Đức (Cũ)",
+    title: "Thành phố Thủ Đức (cũ)",
     category: "Khu vực",
     href: "/dia-diem/thu-duc-cu",
     desc: "2 chi nhánh — Phạm Văn Đồng và 27C Quốc Hương, gần khu Thảo Điền",
@@ -270,13 +276,13 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "2 chi nhánh — 60 Nguyễn Thông và 520 Cách Mạng Tháng 8, gần Quận 1 (cũ)",
   },
   {
-    title: "Bình Thạnh (cũ)",
+    title: "Quận Bình Thạnh (cũ)",
     category: "Khu vực",
     href: "/dia-diem/binh-thanh-cu",
     desc: "3 chi nhánh — 161 Ung Văn Khiêm, 23 Tân Cảng và N1 Điện Biên Phủ",
   },
   {
-    title: "Phú Nhuận (cũ)",
+    title: "Quận Phú Nhuận (cũ)",
     category: "Khu vực",
     href: "/dia-diem/phu-nhuan-cu",
     desc: "Chi nhánh 89 Phan Đình Phùng — gần chợ Phú Nhuận",

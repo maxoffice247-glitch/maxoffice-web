@@ -688,13 +688,15 @@ export const SILVER_GOLD_PREMIUM_VO_PLANS: SilverGoldPremiumPlan[] = [
     legalDossier: true,
     // Giống HỆT định nghĩa "premium" trong SAVE_SILVER_GOLD_PREMIUM_PLANS
     // ở trên (cùng giá 990.000đ, cùng mọi field) sau khi đã chuẩn hoá —
-    // getGroupedPlans() (planFinder.ts) tự động gộp 2 nhóm chi nhánh
-    // thành 1 PlanGroup duy nhất (12 chi nhánh) nhờ groupSignature() so
-    // khớp planName+price+features, KHÔNG cần sửa gì thêm ở planFinder.ts
-    // hay UI. Vẫn giữ 2 entry PREMIUM riêng (ở đây và ở mảng kia) vì mỗi
+    // getGroupedPlans() (planFinder.ts) tự động gộp 2 nhóm chi nhánh thành
+    // 1 PlanGroup duy nhất (13 chi nhánh — 4 hệ SAVE-tier + 9 hệ SGP-tier,
+    // xem SAVE_SILVER_GOLD_PREMIUM_LOCATIONS/SILVER_GOLD_PREMIUM_LOCATIONS)
+    // nhờ groupSignature() so khớp planName+price+features, KHÔNG cần sửa
+    // gì thêm ở planFinder.ts hay UI khi số chi nhánh trong 1 trong 2 nhóm
+    // thay đổi. Vẫn giữ 2 entry PREMIUM riêng (ở đây và ở mảng kia) vì mỗi
     // bên còn phục vụ bảng giá riêng của trang chi nhánh thuộc hệ đó
     // (Quan3CuVOServices.tsx / SilverGoldPremiumServices.tsx) — xoá hẳn 1
-    // bên sẽ làm mất PREMIUM khỏi bảng giá 4 hoặc 8 chi nhánh còn lại.
+    // bên sẽ làm mất PREMIUM khỏi bảng giá của nhóm chi nhánh còn lại.
     features: TIER_FAMILY_COMMON_FEATURES,
   },
 ];
@@ -727,4 +729,7 @@ export const SILVER_GOLD_PREMIUM_LOCATIONS: string[] = [
   "nguyen-truong-to",
   "le-quoc-hung",
   "ba-thang-hai",
+  // Chi nhánh SGP đầu tiên tại khu vực Tân Bình (cũ) — 8 chi nhánh Tân Bình
+  // còn lại dùng hệ LITE-RISE, KHÔNG cùng bảng giá này.
+  "ut-tich",
 ];
