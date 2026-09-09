@@ -103,21 +103,19 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                   <div key={group.area.slug} className="mb-3.5 last:mb-0">
                     {group.subGroups ? (
                       // Khu vực 2 chi nhánh ghép thêm 1 khu vực 1-chi-nhánh
-                      // cho đủ hàng — mỗi khu vực con có khung riêng để
-                      // không bị đọc nhầm là 1 khu vực duy nhất. CHỈ THÊM
-                      // so với bản gốc: viền + chữ tiêu đề màu riêng theo
-                      // colorIndex (color.border/color.text cùng 1 tông —
-                      // xem locationClusterColors.ts) để 2 khu vực trong
-                      // cùng hàng không lẫn vào nhau — không đổi gì khác.
+                      // cho đủ hàng. KHÔNG viền quanh khối (khác /dia-diem —
+                      // /dia-diem giữ nguyên viền màu, không đổi) — dropdown
+                      // đồng nhất mọi khu vực (1, 2 hay nhiều chi nhánh) đều
+                      // không viền, CHỈ dùng màu chữ tiêu đề (colorIndex →
+                      // color.text, xem locationClusterColors.ts) làm dấu
+                      // hiệu phân biệt 2 khu vực trong cùng hàng.
                       <div className="flex flex-col gap-2 sm:flex-row">
                         {group.subGroups.map((sub) => {
                           const color = CLUSTER_COLORS[sub.colorIndex % CLUSTER_COLORS.length];
                           return (
                             <div
                               key={sub.area.slug}
-                              className={`min-w-0 rounded-lg border p-1.5 ${color.border} ${
-                                sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"
-                              }`}
+                              className={`min-w-0 p-1.5 ${sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"}`}
                             >
                               <p className={`mb-1 px-1 text-[10px] font-bold tracking-[0.06em] uppercase ${color.text}`}>
                                 {stripCuSuffix(sub.area.name)}
