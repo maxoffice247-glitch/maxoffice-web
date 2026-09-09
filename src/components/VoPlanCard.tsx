@@ -1,7 +1,6 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import Button from "./Button";
 import { RevealItem } from "./Reveal";
 import { CheckCircleIcon } from "./icons";
 import type { VirtualOfficePlan } from "@/lib/virtualOfficePlans";
@@ -71,14 +70,12 @@ function rowSpanClass(n: RowSpan): string {
  * lẫn sau này (thêm gói/chi nhánh mới, đổi text tính năng) mà không cần
  * hiệu chỉnh lại công thức mỗi lần.
  *
- * Đo phần "content" (tên gói + giá + checklist + addOn) và phần "footer"
- * (nút "Tạo báo giá") TÁCH RIÊNG, không đo cả card — 2 khối này nằm 2 bên
- * spacer flex-grow (`div.grow` ở giữa) nên chiều cao của chúng KHÔNG bị
- * ảnh hưởng bởi việc card có đang bị CSS Grid stretch cao hơn giá trị thật
- * hay không (spacer hấp thụ hết phần chênh lệch) — phản ánh đúng chiều cao
- * tự nhiên bất kể row-span hiện tại (kể cả lúc còn đang set sai) là bao
- * nhiêu, nên phép đo không bị vòng lặp phụ thuộc ngược vào chính kết quả
- * nó tạo ra.
+ * CHỈ đo phần "content" (tên gói + giá + checklist + addOn) — trước đây có
+ * thêm nút "Tạo báo giá" riêng ở footer mỗi card, đo tách riêng khỏi
+ * content qua 1 spacer flex-grow ở giữa; nút đó đã gộp thành 1 nút DUY
+ * NHẤT ở đầu section (QuotePlanMenu, xem LocationServicesList.tsx) nên
+ * card giờ không còn phần "footer" nào để đo/ghim xuống đáy nữa — bỏ luôn
+ * spacer + footerRef, đo thẳng toàn bộ nội dung card.
  *
  * `useLayoutEffect` (không phải `useEffect`) để đo VÀ set state TRƯỚC khi
  * trình duyệt vẽ khung hình đầu tiên — tránh nháy layout sai (mặc định
@@ -94,18 +91,16 @@ function rowSpanClass(n: RowSpan): string {
  * đo ban đầu sai, rồi bị kẹt mãi ở giá trị sai vì ResizeObserver không bắn
  * lại dù nội dung đã đổi kích thước thật khi hiện lại).
  */
-export default function VoPlanCard({ plan, slug }: { plan: VirtualOfficePlan; slug: string }) {
+export default function VoPlanCard({ plan }: { plan: VirtualOfficePlan }) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const footerRef = useRef<HTMLDivElement>(null);
   const [span, setSpan] = useState<RowSpan>(1);
 
   useLayoutEffect(() => {
     const contentEl = contentRef.current;
-    const footerEl = footerRef.current;
-    if (!contentEl || !footerEl) return;
+    if (!contentEl) return;
 
     const measure = () => {
-      const naturalHeight = CARD_PADDING_Y_PX + contentEl.offsetHeight + footerEl.offsetHeight;
+      const naturalHeight = CARD_PADDING_Y_PX + contentEl.offsetHeight;
       const next = spanForHeight(naturalHeight);
       setSpan((prev) => (prev === next ? prev : next));
     };
@@ -113,7 +108,6 @@ export default function VoPlanCard({ plan, slug }: { plan: VirtualOfficePlan; sl
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(contentEl);
-    ro.observe(footerEl);
 
     // Phòng trường hợp trang được render/mount trong lúc tab/khung xem
     // đang ẩn (vd. mở link ở tab nền, hoặc cửa sổ trình duyệt bị thu nhỏ) —
@@ -156,26 +150,6 @@ export default function VoPlanCard({ plan, slug }: { plan: VirtualOfficePlan; sl
               +{formatVND(plan.addOn.price)} {plan.addOn.label} ({plan.addOn.note})
             </p>
           )}
-        </div>
-        {/* Spacer flex-grow đẩy nút xuống đáy — xem doc comment trên đầu
-            file: đây chính là ranh giới giữ cho phép đo content/footer ở
-            trên luôn đúng bất kể row-span hiện tại là bao nhiêu. */}
-        <div className="grow" />
-        <div ref={footerRef} className="mt-auto pt-4">
-          {/* Link thẳng sang trang chi tiết gói (đã có sẵn preview + xuất
-              PNG báo giá qua PlanDetailActions/PlanQuoteCard) — để khách/
-              nhân viên tạo link báo giá ngay tại đây, không phải sang lại
-              /tien-ich/tim-goi-phu-hop chọn lại chi nhánh + gói. Dùng
-              variant "ghost" (viền nhạt, không nền màu) để không lấn át
-              phần giá/tính năng phía trên. */}
-          <Button
-            href={`/tien-ich/tim-goi-phu-hop/${slug}/${plan.key}`}
-            variant="ghost"
-            size="sm"
-            className="w-full !px-3 text-center"
-          >
-            📄 Tạo báo giá
-          </Button>
         </div>
       </div>
     </RevealItem>

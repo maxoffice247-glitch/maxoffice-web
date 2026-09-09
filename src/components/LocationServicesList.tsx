@@ -2,6 +2,7 @@ import Link from "next/link";
 import SectionHead from "./SectionHead";
 import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import VoPlanCard from "./VoPlanCard";
+import QuotePlanMenu from "./QuotePlanMenu";
 import { BuildingIcon, KeyIcon, UsersIcon, ScreenIcon, DocumentCheckIcon, CalculatorIcon, ArrowRightSmallIcon } from "./icons";
 import { getPlansForLocation } from "@/lib/virtualOfficePlans";
 import { resolveTimedPromotions, type LocationData } from "@/lib/locationsData";
@@ -82,13 +83,19 @@ export default function LocationServicesList({
               </span>
               <h3 className="text-[16px] font-bold text-navy">Văn phòng ảo</h3>
             </div>
-            <Link
-              href="/services/van-phong-ao#bang-gia"
-              className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-primary hover:gap-2.5"
-            >
-              Xem chi tiết
-              <ArrowRightSmallIcon className="transition-transform duration-200" />
-            </Link>
+            {/* Nút "Tạo báo giá" DUY NHẤT thay cho nút lặp lại dưới từng
+                card gói (xem doc comment QuotePlanMenu.tsx) — đặt bên trái
+                "Xem chi tiết", cùng hàng tiêu đề section. */}
+            <div className="flex shrink-0 items-center gap-3">
+              <QuotePlanMenu slug={slug} plans={voPlans} />
+              <Link
+                href="/services/van-phong-ao#bang-gia"
+                className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-primary hover:gap-2.5"
+              >
+                Xem chi tiết
+                <ArrowRightSmallIcon className="transition-transform duration-200" />
+              </Link>
+            </div>
           </div>
           {/* CSS Grid + grid-flow-row-dense (từ sm: trở lên) thay vì
               flex-wrap (đợt trước) — flex-wrap khiến card "dịch vụ khác"
@@ -100,10 +107,9 @@ export default function LocationServicesList({
               hàm trên) — vd. Sông Thao 2 gói: cột 3 sẽ có 2 card dịch vụ
               khác xếp chồng thay vì 1 card bị kéo giãn trống rỗng. GIỮ
               align-items mặc định (stretch, không đặt items-center) — vẫn
-              cần stretch để card VPA trong CÙNG 1 hàng cao bằng nhau, nút
-              "Tạo báo giá" thẳng hàng ở đáy (xem spacer "grow" + wrapper
-              "mt-auto" trong VoPlanCard.tsx). Vì row-span giờ tính từ chiều
-              cao DOM đo thật (VoPlanCard.tsx tự đo + ResizeObserver, không
+              cần stretch để card VPA trong CÙNG 1 hàng cao bằng nhau. Vì
+              row-span giờ tính từ chiều cao DOM đo thật (VoPlanCard.tsx tự
+              đo + ResizeObserver, không
               còn công thức ước lượng theo N tính năng — xem doc comment ở
               đó để biết vì sao đổi), phần "thừa" do stretch chỉ còn lệch
               rất nhỏ do row-span vẫn là số nguyên hàng (không tuyệt đối
@@ -118,7 +124,7 @@ export default function LocationServicesList({
               row-span. */}
           <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:auto-rows-[minmax(195px,auto)] sm:grid-flow-row-dense lg:grid-cols-3">
             {voPlans.map((plan) => (
-              <VoPlanCard key={plan.key} plan={plan} slug={slug} />
+              <VoPlanCard key={plan.key} plan={plan} />
             ))}
             {/* Dịch vụ khác — vẫn dạng link card tóm tắt như cũ, vì các
                 dịch vụ này không có gói riêng theo chi nhánh (giá/tính năng

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import SectionHead from "./SectionHead";
-import Button from "./Button";
 import { RevealGroup, RevealItem } from "./Reveal";
 import Reveal from "./Reveal";
+import QuotePlanMenu from "./QuotePlanMenu";
 import {
   BuildingIcon,
   KeyIcon,
@@ -79,9 +79,11 @@ export default function Quan3CuVOServices({
             đúng 1 danh sách features (TIER_FAMILY_COMMON_FEATURES) nên
             luôn cao BẰNG NHAU — không cần công thức row-span theo từng gói
             như LocationServicesList.tsx, dùng 1 hằng số row-span=2 áp dụng
-            đều cho cả 4 gói (đo DOM thật: card cao ~518px, card "dịch vụ
-            khác" ở layout 4 cột cao tự nhiên ~215px, 518/215≈2.41 → 2 là
-            hợp lý nhất). 4 gói luôn khớp đúng 4 cột nên hàng gói VPA không
+            đều cho cả 4 gói (đo DOM thật SAU KHI bỏ nút "Tạo báo giá" riêng
+            từng card — gộp về 1 nút chung ở đầu section, xem QuotePlanMenu:
+            card cao tự nhiên ~454px, card "dịch vụ khác" ở layout 4 cột cao
+            tự nhiên ~215px, 454/215≈2.11 → 2 vẫn là hợp lý nhất). 4 gói luôn
+            khớp đúng 4 cột nên hàng gói VPA không
             bao giờ "cụt" — gộp lưới ở đây chủ yếu để đồng bộ code + trải
             nghiệm với LocationServicesList.tsx, an toàn nếu sau này số gói
             thay đổi. Ghi chú VAT + khối "Dịch vụ bổ sung" (đặc thù riêng
@@ -100,13 +102,19 @@ export default function Quan3CuVOServices({
                 </span>
               </div>
             </div>
-            <Link
-              href="/services/van-phong-ao#bang-gia"
-              className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-primary hover:gap-2.5"
-            >
-              Xem chi tiết
-              <ArrowRightSmallIcon className="transition-transform duration-200" />
-            </Link>
+            {/* Nút "Tạo báo giá" DUY NHẤT thay cho nút lặp lại dưới từng
+                card gói (xem doc comment QuotePlanMenu.tsx) — đặt bên trái
+                "Xem chi tiết", cùng hàng tiêu đề section. */}
+            <div className="flex shrink-0 items-center gap-3">
+              <QuotePlanMenu slug={slug} plans={SAVE_SILVER_GOLD_PREMIUM_PLANS} />
+              <Link
+                href="/services/van-phong-ao#bang-gia"
+                className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-primary hover:gap-2.5"
+              >
+                Xem chi tiết
+                <ArrowRightSmallIcon className="transition-transform duration-200" />
+              </Link>
+            </div>
           </div>
           <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:auto-rows-[minmax(215px,auto)] sm:grid-flow-row-dense lg:grid-cols-4">
             {SAVE_SILVER_GOLD_PREMIUM_PLANS.map((plan) => (
@@ -146,19 +154,6 @@ export default function Quan3CuVOServices({
                       </li>
                     ))}
                   </ul>
-                  {/* Spacer flex-grow + wrapper mt-auto ghim nút xuống đáy —
-                      xem lý do đầy đủ ở LocationServicesList.tsx. */}
-                  <div className="grow" />
-                  <div className="mt-auto pt-4">
-                    <Button
-                      href={`/tien-ich/tim-goi-phu-hop/${slug}/${plan.key}`}
-                      variant="ghost"
-                      size="sm"
-                      className="w-full !px-3 text-center"
-                    >
-                      📄 Tạo báo giá
-                    </Button>
-                  </div>
                 </div>
               </RevealItem>
             ))}
