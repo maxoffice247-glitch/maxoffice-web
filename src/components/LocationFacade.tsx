@@ -57,16 +57,26 @@ const TWO_COLUMN_MIN_WIDTH = 1024;
 export default function LocationFacade({
   name,
   image,
+  imageSide = "right",
   paragraphs,
   benefitsFiller,
   onImageClick,
 }: {
   name: string;
   image: FacadeImage;
+  /** Bên đặt ảnh mặt tiền — SO LE thủ công theo từng chi nhánh (data.facadeImageSide
+      ở locationsData.ts) để khách xem lần lượt nhiều trang chi nhánh không
+      thấy đơn điệu 1 bên cố định. Y HỆT logic gốc trước khi component này bị
+      xoá rồi dựng lại (xem git show 7ca6b39:src/components/LocationFacade.tsx)
+      — mobile LUÔN hiện ảnh trước bất kể `imageSide` (order-1 cả 2 trường
+      hợp), chỉ đổi bên ở desktop (lg:order-1/2) khi `imageSide === "left"`. */
+  imageSide?: "left" | "right";
   paragraphs: string[];
   benefitsFiller?: ReactNode;
   onImageClick?: () => void;
 }) {
+  const imageOrderClass = imageSide === "left" ? "order-1" : "order-1 lg:order-2";
+  const textOrderClass = imageSide === "left" ? "order-2" : "order-2 lg:order-1";
   const textRef = useRef<HTMLDivElement>(null);
   const imageBoxRef = useRef<HTMLButtonElement>(null);
   const [showFiller, setShowFiller] = useState(false);
@@ -110,7 +120,7 @@ export default function LocationFacade({
     <section className="pt-9 pb-3">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 lg:gap-14">
-          <Reveal className="order-2 lg:order-1">
+          <Reveal className={textOrderClass}>
             <div ref={textRef} className="space-y-5">
               {paragraphs.map((p, i) => (
                 <p
@@ -127,7 +137,7 @@ export default function LocationFacade({
             </div>
             {showFiller && benefitsFiller}
           </Reveal>
-          <Reveal delay={0.1} className="order-1 lg:order-2">
+          <Reveal delay={0.1} className={imageOrderClass}>
             <button
               ref={imageBoxRef}
               type="button"

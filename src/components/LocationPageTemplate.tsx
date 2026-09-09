@@ -44,7 +44,9 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
   // Đọc W/H THẬT của ảnh mặt tiền + từng ảnh nội thất (đọc trực tiếp header
   // file .jpg, xem imageDimensions.ts) — ảnh mặt tiền dùng để tính tỉ lệ
   // khung ở LocationFacade.tsx (2 cột, xem bên dưới); ảnh nội thất dùng để
-  // LocationGallery.tsx dựng khung Masonry đúng tỉ lệ thật, không crop.
+  // LocationGallery.tsx phát hiện đúng 3 ảnh "bảng tên" outlier tỉ lệ quá
+  // cực đoan cần ép khung riêng (xem GALLERY_TALL/WIDE_CLAMP_THRESHOLD ở
+  // đó) — còn lại dùng chung khung 4:3 cố định, không cần tỉ lệ thật.
   // Tính ở đây (Server Component, dùng được fs) rồi truyền số liệu thuần
   // xuống LocationImagesSection ("use client", không gọi fs được) qua
   // props — ảnh lỗi/không đọc được thì rơi về fallback, không chặn build.
@@ -152,6 +154,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
       <LocationImagesSection
         name={data.name}
         facadeImage={facadeImage}
+        imageSide={data.facadeImageSide}
         paragraphs={data.intro}
         benefitsFiller={facadeBenefitsFiller}
         interiorImages={interiorImagesWithDimensions}

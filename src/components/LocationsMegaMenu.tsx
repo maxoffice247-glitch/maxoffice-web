@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDownIcon, MapPinIcon, PhoneIcon, SearchIcon } from "./icons";
 import Button from "./Button";
-import { getGroupedLocations, stripCuSuffix, ACTIVE_BRANCH_COUNT, type LocationListItem } from "@/lib/locationsData";
+import { getGroupedLocations, ACTIVE_BRANCH_COUNT, type LocationListItem } from "@/lib/locationsData";
 import { CLUSTER_COLORS } from "@/lib/locationClusterColors";
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
 import { useNavIndicator } from "./NavIndicator";
@@ -118,7 +118,7 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                               className={`min-w-0 p-1.5 ${sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"}`}
                             >
                               <p className={`mb-1 px-1 text-[10px] font-bold tracking-[0.06em] uppercase ${color.text}`}>
-                                {stripCuSuffix(sub.area.name)}
+                                {sub.area.name}
                               </p>
                               <div className={`grid gap-1 ${sub.locations.length >= 2 ? "grid-cols-2" : "grid-cols-1"}`}>
                                 {sub.locations.map((loc) => (
@@ -132,7 +132,7 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                     ) : (
                       <>
                         <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
-                          {stripCuSuffix(group.area.name)}
+                          {group.area.name}
                         </p>
                         <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
                           {group.locations.map((loc) => (

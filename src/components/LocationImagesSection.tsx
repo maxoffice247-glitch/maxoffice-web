@@ -10,29 +10,33 @@ import LocationGallery, { type InteriorImage } from "./LocationGallery";
 const Lightbox = dynamic(() => import("./Lightbox"), { ssr: false });
 
 /**
- * Ảnh mặt tiền + đoạn giới thiệu (bố cục 2 cột, LocationFacade.tsx) rồi
- * tới gallery Masonry ảnh NỘI THẤT còn lại (LocationGallery.tsx) — bố cục
- * 2 cột từng bị bỏ hẳn (chuyển ảnh mặt tiền vào chung Masonry) vì gây
- * khoảng trắng lớn khi văn bản ngắn hơn nhiều so với ảnh dọc; khôi phục
- * lại theo đúng yêu cầu, nhưng lần này XỬ LÝ TẬN GỐC khoảng trắng bằng
- * cách LẤP nó (khối "Điểm nổi bật khu vực" tự chèn khi cần — xem doc
- * comment LocationFacade.tsx) thay vì né tránh bằng cách bỏ hẳn bố cục.
+ * Ảnh mặt tiền + đoạn giới thiệu (bố cục 2 cột SO LE trái/phải theo từng
+ * chi nhánh, LocationFacade.tsx) rồi tới lưới ảnh NỘI THẤT còn lại (lưới cố
+ * định + carousel mobile, LocationGallery.tsx) — bố cục 2 cột từng bị bỏ
+ * hẳn (dồn ảnh mặt tiền vào chung 1 gallery) vì gây khoảng trắng lớn khi
+ * văn bản ngắn hơn nhiều so với ảnh dọc; khôi phục lại theo đúng yêu cầu,
+ * nhưng lần này XỬ LÝ TẬN GỐC khoảng trắng bằng cách LẤP nó (khối "Điểm
+ * nổi bật khu vực" tự chèn khi cần — xem doc comment LocationFacade.tsx)
+ * thay vì né tránh bằng cách bỏ hẳn bố cục.
  *
  * Ảnh mặt tiền KHÔNG còn nằm trong mảng truyền cho LocationGallery nữa
  * (đã hiện riêng ở LocationFacade) — tránh hiện trùng 2 lần. `allImages`
  * cho Lightbox vẫn gộp đủ CẢ 2 (mặt tiền index 0, nội thất index 1+) để
- * điều hướng prev/next liền mạch qua toàn bộ ảnh của chi nhánh, giống hệt
- * hành vi trước khi có Masonry.
+ * điều hướng prev/next liền mạch qua toàn bộ ảnh của chi nhánh.
  */
 export default function LocationImagesSection({
   name,
   facadeImage,
+  imageSide,
   paragraphs,
   benefitsFiller,
   interiorImages,
 }: {
   name: string;
   facadeImage: FacadeImage;
+  /** So le trái/phải ảnh mặt tiền theo từng chi nhánh — xem doc comment
+      `imageSide` ở LocationFacade.tsx. */
+  imageSide?: "left" | "right";
   paragraphs: string[];
   /** Khối "Điểm nổi bật khu vực" ĐÃ RENDER SẴN (Server Component, icon đã
       resolve) — xem doc comment LocationFacade.tsx vì sao không truyền
@@ -52,6 +56,7 @@ export default function LocationImagesSection({
       <LocationFacade
         name={name}
         image={facadeImage}
+        imageSide={imageSide}
         paragraphs={paragraphs}
         benefitsFiller={benefitsFiller}
         onImageClick={() => setOpenIndex(0)}

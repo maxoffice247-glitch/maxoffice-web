@@ -42,67 +42,82 @@ export type AreaInfo = {
   description: string;
 };
 
+// NGUỒN DUY NHẤT cho slug/name từng khu vực — dùng bởi breadcrumb (field
+// `area` khai trực tiếp trên mỗi chi nhánh, tham chiếu thẳng các hằng số
+// này) VÀ mảng `AREAS` ngay dưới (dropdown "Chi nhánh" + /dia-diem, spread
+// lại đúng slug/name rồi thêm `description` riêng cho từng khu vực).
+//
+// TRƯỚC ĐÂY 2 nơi này viết tay 2 bản slug/name RIÊNG BIỆT không liên kết gì
+// nhau — khi có đợt chuẩn hoá tên qua "Quận Bình Thạnh (cũ)"/"Quận Phú
+// Nhuận (cũ)"/"Thành phố Thủ Đức (cũ)" (thay vì thiếu chữ "Quận" hoặc viết
+// tắt "Tp."/"(Cũ)" hoa không nhất quán) chỉ sửa được ở phía breadcrumb, bỏ
+// sót mảng `AREAS` — kết quả: breadcrumb hiện đúng "Quận Bình Thạnh (cũ)"
+// nhưng dropdown/`/dia-diem` vẫn hiện "Bình Thạnh (cũ)" (đã xác nhận bằng
+// cách đọc thẳng HTML server trả về, không đoán). Nay `AREAS` LẤY LẠI
+// slug/name từ đúng các hằng số này thay vì viết tay riêng — không thể
+// lệch nhau lần nữa vì chỉ còn 1 chỗ giữ giá trị.
+const AREA_TAN_BINH = { slug: "quan-tan-binh-cu", name: "Quận Tân Bình (cũ)" };
+const AREA_QUAN_1 = { slug: "quan-1-cu", name: "Quận 1 (cũ)" };
+const AREA_GO_VAP = { slug: "quan-go-vap-cu", name: "Quận Gò Vấp (cũ)" };
+const AREA_TAN_PHU = { slug: "quan-tan-phu-cu", name: "Quận Tân Phú (cũ)" };
+const AREA_QUAN_10 = { slug: "quan-10-cu", name: "Quận 10 (cũ)" };
+const AREA_THU_DUC = { slug: "thu-duc-cu", name: "Thành phố Thủ Đức (cũ)" };
+const AREA_QUAN_7 = { slug: "quan-7-cu", name: "Quận 7 (cũ)" };
+const AREA_QUAN_3 = { slug: "quan-3-cu", name: "Quận 3 (cũ)" };
+const AREA_BINH_THANH = { slug: "binh-thanh-cu", name: "Quận Bình Thạnh (cũ)" };
+const AREA_PHU_NHUAN = { slug: "phu-nhuan-cu", name: "Quận Phú Nhuận (cũ)" };
+const AREA_QUAN_4 = { slug: "quan-4-cu", name: "Quận 4 (cũ)" };
+const AREA_QUAN_5 = { slug: "quan-5-cu", name: "Quận 5 (cũ)" };
+
 export const AREAS: AreaInfo[] = [
   {
-    slug: "quan-tan-binh-cu",
-    name: "Quận Tân Bình (cũ)",
+    ...AREA_TAN_BINH,
     description:
       "Khu vực tập trung nhiều chi nhánh MAX OFFICE nhất, gần sân bay Tân Sơn Nhất, trải khắp các phường Tân Sơn Hoà, Tân Sơn Nhất, Bảy Hiền và Tân Bình.",
   },
   {
-    slug: "quan-1-cu",
-    name: "Quận 1 (cũ)",
+    ...AREA_QUAN_1,
     description:
       "Khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM, thuộc phường Tân Định.",
   },
   {
-    slug: "quan-go-vap-cu",
-    name: "Quận Gò Vấp (cũ)",
+    ...AREA_GO_VAP,
     description: "Khu vực dân cư đông đúc phía Bắc thành phố, không xa sân bay Tân Sơn Nhất.",
   },
   {
-    slug: "quan-tan-phu-cu",
-    name: "Quận Tân Phú (cũ)",
+    ...AREA_TAN_PHU,
     description: "Khu vực phát triển nhanh phía Tây thành phố, gần Aeon Mall Tân Phú Celadon.",
   },
   {
-    slug: "quan-10-cu",
-    name: "Quận 10 (cũ)",
+    ...AREA_QUAN_10,
     description: "Khu vực gần Ga Sài Gòn, kết nối thuận tiện đến Quận 1 và Quận 3.",
   },
   {
-    slug: "thu-duc-cu",
-    name: "Tp. Thủ Đức (Cũ)",
+    ...AREA_THU_DUC,
     description: "Khu vực cửa ngõ Đông Bắc thành phố, gần các trường đại học lớn và sông Sài Gòn.",
   },
   {
-    slug: "quan-7-cu",
-    name: "Quận 7 (cũ)",
+    ...AREA_QUAN_7,
     description: "Khu vực Nam Sài Gòn, gần Khu chế xuất Tân Thuận và khu đô thị Phú Mỹ Hưng.",
   },
   {
-    slug: "quan-3-cu",
-    name: "Quận 3 (cũ)",
+    ...AREA_QUAN_3,
     description: "Khu vực trung tâm, gần Quận 1, nổi tiếng với các tuyến phố yên tĩnh và nhiều toà nhà văn phòng lâu năm.",
   },
   {
-    slug: "binh-thanh-cu",
-    name: "Bình Thạnh (cũ)",
+    ...AREA_BINH_THANH,
     description: "Khu vực cửa ngõ Đông Bắc trung tâm thành phố, gần cầu Sài Gòn, kênh Nhiêu Lộc - Thị Nghè và nhiều toà nhà văn phòng dọc trục Ung Văn Khiêm.",
   },
   {
-    slug: "phu-nhuan-cu",
-    name: "Phú Nhuận (cũ)",
+    ...AREA_PHU_NHUAN,
     description: "Khu vực trung tâm giáp Quận 1, Quận 3, Tân Bình và Bình Thạnh, gần chợ Phú Nhuận và sân bay Tân Sơn Nhất.",
   },
   {
-    slug: "quan-4-cu",
-    name: "Quận 4 (cũ)",
+    ...AREA_QUAN_4,
     description: "Khu vực chỉ cách trung tâm Quận 1 một nhịp cầu, nổi tiếng với phố ẩm thực Vĩnh Khánh và Bến Nhà Rồng lịch sử.",
   },
   {
-    slug: "quan-5-cu",
-    name: "Quận 5 (cũ)",
+    ...AREA_QUAN_5,
     description:
       "Khu vực Chợ Lớn — trung tâm thương mại lâu đời của cộng đồng người Hoa, dọc trục Trần Hưng Đạo nối liền Quận 1 và Quận 5, gần chợ An Đông, Bệnh viện Chợ Rẫy và Đại học Y Dược TP.HCM.",
   },
@@ -111,19 +126,6 @@ export const AREAS: AreaInfo[] = [
 export function getAreaBySlug(slug: string): AreaInfo | undefined {
   return AREAS.find((a) => a.slug === slug);
 }
-
-const AREA_TAN_BINH = { slug: "quan-tan-binh-cu", name: "Quận Tân Bình (cũ)" };
-const AREA_QUAN_1 = { slug: "quan-1-cu", name: "Quận 1 (cũ)" };
-const AREA_GO_VAP = { slug: "quan-go-vap-cu", name: "Quận Gò Vấp (cũ)" };
-const AREA_TAN_PHU = { slug: "quan-tan-phu-cu", name: "Quận Tân Phú (cũ)" };
-const AREA_QUAN_10 = { slug: "quan-10-cu", name: "Quận 10 (cũ)" };
-const AREA_THU_DUC = { slug: "thu-duc-cu", name: "Tp. Thủ Đức (Cũ)" };
-const AREA_QUAN_7 = { slug: "quan-7-cu", name: "Quận 7 (cũ)" };
-const AREA_QUAN_3 = { slug: "quan-3-cu", name: "Quận 3 (cũ)" };
-const AREA_BINH_THANH = { slug: "binh-thanh-cu", name: "Bình Thạnh (cũ)" };
-const AREA_PHU_NHUAN = { slug: "phu-nhuan-cu", name: "Phú Nhuận (cũ)" };
-const AREA_QUAN_4 = { slug: "quan-4-cu", name: "Quận 4 (cũ)" };
-const AREA_QUAN_5 = { slug: "quan-5-cu", name: "Quận 5 (cũ)" };
 
 export type LocationListItem = {
   slug: string;
@@ -359,6 +361,15 @@ export type LocationData = {
       getPublicJpegDimensions() nên không cần field riêng cho tỉ lệ hiển thị
       nữa — xem LocationPageTemplate.tsx). */
   facadeAspectRatio: string;
+  /** Bên đặt ảnh mặt tiền trong bố cục 2 cột (LocationFacade.tsx) — SO LE
+      thủ công giữa các chi nhánh (không phải chẵn/lẻ theo thứ tự) để khách
+      xem lần lượt nhiều trang chi nhánh không thấy đơn điệu 1 bên cố định.
+      Field này từng bị XOÁ khi bố cục 2 cột bị gỡ hẳn (commit 6d3b44b, lúc
+      đó tưởng hết dùng vì mọi ảnh dồn vào 1 gallery Masonry duy nhất) —
+      khôi phục lại NGUYÊN VẸN giá trị gốc của từng chi nhánh (đọc từ
+      commit 7ca6b39, ngay trước khi bị xoá — `git show 7ca6b39:src/lib/locationsData.ts`)
+      vì LocationFacade.tsx (bố cục 2 cột) sau đó được dựng lại. */
+  facadeImageSide: "left" | "right";
   /** Ảnh nội thất (lễ tân, phòng họp, chỗ ngồi...) hiển thị chung 1 gallery
       Masonry với ảnh mặt tiền (ảnh mặt tiền luôn đứng đầu) — chỉ một số chi
       nhánh có sẵn. */
@@ -438,6 +449,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero.jpg",
     // Cropped to 905x1407 (see /images/originals for the uncropped source).
     facadeAspectRatio: "905 / 1407",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-song-thao-khong-gian-cowrorking.jpg", alt: "Khu vực làm việc chung văn phòng Sông Thao", caption: "Không gian làm việc chung" },
       { src: "/images/dia-diem-song-thao-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Sông Thao", caption: "Quầy lễ tân" },
@@ -539,6 +551,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-chi-nhanh.png",
     // Cropped to 934x1232 — bottom lands at the motorbike wheel touching the road (see /images/originals for the source).
     facadeAspectRatio: "934 / 1232",
+    facadeImageSide: "left",
     interiorImages: [
       {
         src: "/images/dia-diem-dien-bien-phu-coworking.jpg",
@@ -650,6 +663,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       "Văn phòng ảo tại Nguyễn Oanh, Gò Vấp — toà nhà hạng A, một trong số ít lựa chọn chất lượng cao tại khu vực. Từ 499.000đ/tháng (gói ORIGIN, ORIGIN+, RISE), kèm tư vấn AI, ưu tiên hỗ trợ 24/7, phòng họp.",
     image: "/images/hero-dia-diem.jpg",
     facadeAspectRatio: "1254 / 1254",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-nguyen-oanh-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Nguyễn Oanh", caption: "Quầy lễ tân" },
       {
@@ -743,6 +757,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     // Real facade shot, landscape 1484x1060 — full frame, no crop (gallery
     // Masonry hiển thị đúng tỉ lệ thật, xem LocationPageTemplate.tsx).
     facadeAspectRatio: "1484 / 1060",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-yen-the-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Yên Thế", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-yen-the-phong-hop.jpg", alt: "Phòng họp văn phòng Yên Thế", caption: "Phòng họp" },
@@ -834,6 +849,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     // (see /images/originals for the source). Ratio is balanced enough now
     // that no maxWidth cap is needed.
     facadeAspectRatio: "934 / 1074",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-cong-hoa-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cộng Hoà", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cong-hoa-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cộng Hoà", caption: "Bảng tên công ty tại toà nhà" },
@@ -903,6 +919,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Tân Thắng, Phường Tân Sơn Nhì, Tân Phú — văn phòng ảo từ 500.000đ/tháng (gói BASE, ORIGIN, ORIGIN+), đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/coworking.jpg",
     facadeAspectRatio: "1484 / 1060",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-tan-thang-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Tân Thắng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-tan-thang-phong-hop.jpg", alt: "Phòng họp văn phòng Tân Thắng", caption: "Phòng họp" },
@@ -975,6 +992,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/anh-hero-trang-chu.jpg",
     // Cropped to 1085x1297 (see /images/originals for the uncropped source).
     facadeAspectRatio: "1085 / 1297",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-cuu-long-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cửu Long", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cuu-long-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cửu Long", caption: "Bảng tên công ty tại toà nhà" },
@@ -1045,6 +1063,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-bang-gia-2.png",
     // Cropped to 1122x1394 — bottom extended to the road (see /images/originals for the source).
     facadeAspectRatio: "1122 / 1394",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-hoang-viet-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Hoàng Việt", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
@@ -1116,6 +1135,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Bàu Cát 2, Phường Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/hero-ve-chung-toi-2.png",
     facadeAspectRatio: "1448 / 1086",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-bau-cat-coworking.jpg", alt: "Khu vực làm việc chung văn phòng Bàu Cát 2", caption: "Không gian làm việc chung" },
       { src: "/images/dia-diem-bau-cat-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Bàu Cát 2", caption: "Quầy lễ tân" },
@@ -1188,6 +1208,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Lam Sơn, Phường Tân Sơn Hòa, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/hero-dich-vu.png",
     facadeAspectRatio: "1390 / 1132",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-lam-son-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Lam Sơn", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-lam-son-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Lam Sơn", caption: "Bảng tên công ty tại toà nhà" },
@@ -1258,6 +1279,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Hoàng Kế Viêm, Phường Bảy Hiền, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
     image: "/images/hero-lien-he-2.png",
     facadeAspectRatio: "1448 / 1086",
+    facadeImageSide: "left",
     interiorImages: [
       {
         src: "/images/dia-diem-hoang-ke-viem-bang-ten.jpg",
@@ -1336,6 +1358,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/anh-hero-trang-chu-1.jpg",
     // Cropped to 1086x1206 — bottom lands at the sidewalk/road curb line (see /images/originals for the source).
     facadeAspectRatio: "1086 / 1206",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-cmt8-le-tan.jpg", alt: "Khu vực lễ tân văn phòng CMT8", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cmt8-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng CMT8", caption: "Bảng tên công ty tại toà nhà" },
@@ -1411,6 +1434,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-chi-nhanh.png",
     // Ảnh mặt tiền gốc 1023x1537, không chỉnh sửa.
     facadeAspectRatio: "1023 / 1537",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-ba-thang-hai-sanh.jpg", alt: "Sảnh chính văn phòng 614-616-618 Ba Tháng Hai", caption: "Sảnh chính toà nhà" },
       {
@@ -1496,6 +1520,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/coworking.jpg",
     // Portrait street-front shot, không cắt — 1024x1535 gốc.
     facadeAspectRatio: "1024 / 1535",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-vuon-lai-lam-viec.jpg", alt: "Không gian làm việc văn phòng 314/6 Điện Biên Phủ", caption: "Không gian làm việc" },
       { src: "/images/dia-diem-vuon-lai-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 314/6 Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
@@ -1568,6 +1593,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-dia-diem.jpg",
     // Full-frame villa facade shot, no crop needed — 1086x1448 native.
     facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-pham-van-dong-le-tan.jpg", alt: "Quầy lễ tân văn phòng Phạm Văn Đồng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-pham-van-dong-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Phạm Văn Đồng", caption: "Bảng tên công ty tại toà nhà" },
@@ -1644,6 +1670,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/khong-gian-lam-viec.jpg",
     // Full-frame square render, no crop needed — 1254x1254 native.
     facadeAspectRatio: "1254 / 1254",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-quan-7-le-tan.jpg", alt: "Quầy lễ tân văn phòng Bùi Văn Ba", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-quan-7-khong-gian-lam-viec.jpg", alt: "Không gian làm việc văn phòng Bùi Văn Ba", caption: "Không gian làm việc" },
@@ -1714,6 +1741,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/coworking.jpg",
     // Cropped street-front shot, không chỉnh sửa — 1122x1402 gốc.
     facadeAspectRatio: "1122 / 1402",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-nguyen-thong-le-tan.jpg", alt: "Sảnh lễ tân và tiếp khách văn phòng 60 Nguyễn Thông", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-nguyen-thong-phong-hop.jpg", alt: "Phòng họp văn phòng 60 Nguyễn Thông", caption: "Phòng họp" },
@@ -1789,6 +1817,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/anh-hero-trang-chu.jpg",
     // Cropped street-front shot, không chỉnh sửa — 873x1122 gốc.
     facadeAspectRatio: "873 / 1122",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-cach-mang-thang-8-le-tan.jpg", alt: "Quầy lễ tân văn phòng 520 Cách Mạng Tháng 8", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cach-mang-thang-8-tiep-khach.jpg", alt: "Khu vực tiếp khách văn phòng 520 Cách Mạng Tháng 8", caption: "Khu vực tiếp khách" },
@@ -1866,6 +1895,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-bang-gia-2.png",
     // Ảnh mặt tiền gốc 813x1086, không chỉnh sửa.
     facadeAspectRatio: "813 / 1086",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-ung-van-khiem-le-tan.jpg", alt: "Quầy lễ tân văn phòng 161 Ung Văn Khiêm", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-ung-van-khiem-tiep-khach.jpg", alt: "Sảnh tiếp khách văn phòng 161 Ung Văn Khiêm", caption: "Sảnh tiếp khách" },
@@ -1943,6 +1973,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-ve-chung-toi-2.png",
     // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
     facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-tan-cang-le-tan.jpg", alt: "Sảnh lễ tân & tiếp khách văn phòng 23 Tân Cảng", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-tan-cang-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 23 Tân Cảng", caption: "Bảng tên công ty tại toà nhà" },
@@ -2019,6 +2050,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-dich-vu.png",
     // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
     facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-n1-dien-bien-phu-le-tan.jpg", alt: "Sảnh lễ tân & tiếp khách văn phòng N1 Điện Biên Phủ", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-n1-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng N1 Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
@@ -2095,6 +2127,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/anh-hero-moi.jpg",
     // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
     facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-quoc-huong-le-tan.jpg", alt: "Sảnh lễ tân & tiếp khách văn phòng 27C Quốc Hương", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-quoc-huong-phong-hop.jpg", alt: "Phòng họp văn phòng 27C Quốc Hương", caption: "Phòng họp" },
@@ -2172,6 +2205,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-lien-he-2.png",
     // Ảnh mặt tiền gốc 1024x1536, không chỉnh sửa.
     facadeAspectRatio: "1024 / 1536",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-phan-dinh-phung-le-tan.jpg", alt: "Quầy lễ tân văn phòng 89 Phan Đình Phùng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-phan-dinh-phung-tiep-khach.jpg", alt: "Sảnh tiếp khách văn phòng 89 Phan Đình Phùng", caption: "Sảnh tiếp khách" },
@@ -2249,6 +2283,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/anh-hero-trang-chu-1.jpg",
     // Ảnh mặt tiền gốc 1023x1537, không chỉnh sửa.
     facadeAspectRatio: "1023 / 1537",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-nguyen-truong-to-le-tan.jpg", alt: "Quầy lễ tân văn phòng 84-86 Nguyễn Trường Tộ", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-nguyen-truong-to-san-trong.jpg", alt: "Không gian trống văn phòng 84-86 Nguyễn Trường Tộ", caption: "Không gian trống" },
@@ -2324,6 +2359,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero.jpg",
     // Ảnh mặt tiền gốc 1448x1086, không chỉnh sửa.
     facadeAspectRatio: "1448 / 1086",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-le-quoc-hung-le-tan.jpg", alt: "Quầy lễ tân văn phòng 54-56 Lê Quốc Hưng", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-le-quoc-hung-sanh-tiep-khach.jpg", alt: "Sảnh tiếp khách văn phòng 54-56 Lê Quốc Hưng", caption: "Sảnh tiếp khách" },
@@ -2400,6 +2436,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/khong-gian-lam-viec.jpg",
     // Ảnh mặt tiền gốc 1145x1374, không chỉnh sửa.
     facadeAspectRatio: "1145 / 1374",
+    facadeImageSide: "right",
     interiorImages: [
       { src: "/images/dia-diem-mac-dinh-chi-le-tan.jpg", alt: "Quầy lễ tân văn phòng 36 Mạc Đĩnh Chi", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-mac-dinh-chi-tiep-khach.jpg", alt: "Khu vực tiếp khách văn phòng 36 Mạc Đĩnh Chi", caption: "Khu vực tiếp khách" },
@@ -2476,6 +2513,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     image: "/images/hero-dia-diem.jpg",
     // Ảnh mặt tiền gốc 1024x1536, không chỉnh sửa.
     facadeAspectRatio: "1024 / 1536",
+    facadeImageSide: "left",
     interiorImages: [
       { src: "/images/dia-diem-pasteur-le-tan-sanh-tiep-khach.jpg", alt: "Sảnh lễ tân và tiếp khách văn phòng 28-34 Pasteur", caption: "Sảnh lễ tân & tiếp khách" },
       { src: "/images/dia-diem-pasteur-ban-hop.jpg", alt: "Phòng họp văn phòng 28-34 Pasteur", caption: "Phòng họp" },
@@ -2555,6 +2593,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     // bằng bản khác từ lúc đó), tuy 2 tỉ lệ gần bằng nhau (0.666 vs 0.667)
     // nên không lộ ra bằng mắt, chỉ sai khi so khớp số liệu.
     facadeAspectRatio: "1024 / 1536",
+    facadeImageSide: "left",
     interiorImages: [
       {
         src: "/images/dia-diem-tran-hung-dao-mat-truoc.jpg",
@@ -2653,19 +2692,13 @@ export function getLocationsForArea(areaSlug: string): LocationListItem[] {
   return LOCATIONS_LIST.filter((loc) => loc.area.slug === areaSlug);
 }
 
-/**
- * Bỏ hậu tố "(cũ)"/"(Cũ)" ở cuối tên khu vực khi dùng làm TIÊU ĐỀ NHÓM
- * (dropdown mega menu, /dia-diem) — tên riêng từng chi nhánh hiển thị
- * ngay bên dưới đã tự ghi rõ "(cũ)" trong tên (VD "36 Mạc Đĩnh Chi, Quận
- * 1 (cũ)"), lặp lại ở tiêu đề nhóm phía trên gây thừa 2 lần "(cũ)" liền
- * nhau. CHỈ đổi cách HIỂN THỊ ở nơi gọi hàm này — KHÔNG đổi field
- * `area.name`/`AreaInfo.name` gốc (vẫn dùng nguyên cho breadcrumb, meta
- * title, URL /dia-diem/[area-slug] — những chỗ đó có lý do SEO riêng,
- * không gọi hàm này).
- */
-export function stripCuSuffix(name: string): string {
-  return name.replace(/\s*\((?:cũ|Cũ)\)\s*$/, "").trim();
-}
+// Trước đây có `stripCuSuffix()` bỏ hậu tố "(cũ)" khi hiển thị tiêu đề
+// nhóm khu vực ở dropdown/`/dia-diem` (tránh lặp "(cũ)" 2 lần vì tên từng
+// chi nhánh bên dưới cũng đã ghi rõ, VD "36 Mạc Đĩnh Chi, Quận 1 (cũ)") —
+// ĐÃ BỎ HẲN theo yêu cầu thống nhất: dropdown/`/dia-diem` giờ hiển thị
+// ĐÚNG NGUYÊN `area.name` giống hệt breadcrumb (nguồn dữ liệu DUY NHẤT,
+// xem AREA_* ở trên) thay vì tự viết lại/cắt bớt theo từng nơi — chấp
+// nhận đánh đổi lặp "(cũ)" 1 lần để đổi lấy nhất quán tuyệt đối.
 
 export type GroupedLocations = {
   /** MỌI khu vực đang có ≥1 chi nhánh công khai, mỗi khu vực liệt kê phẳng

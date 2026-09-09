@@ -5,7 +5,7 @@ import Link from "next/link";
 import { RevealGroup } from "./Reveal";
 import LocationCard from "./LocationCard";
 import { SearchIcon } from "./icons";
-import { stripCuSuffix, type LocationListItem, type GroupedLocations } from "@/lib/locationsData";
+import type { LocationListItem, GroupedLocations } from "@/lib/locationsData";
 import { CLUSTER_COLORS } from "@/lib/locationClusterColors";
 
 type AreaGroup = {
@@ -31,7 +31,7 @@ function AreaBlock({ area, locations }: AreaGroup) {
   return (
     <div className="mb-10 rounded-3xl border border-primary/15 bg-primary-tint/40 p-5 sm:p-7">
       <div className="mb-5 flex items-center justify-between gap-3">
-        <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{stripCuSuffix(area.name)}</h3>
+        <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{area.name}</h3>
         <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
           {locations.length} chi nhánh
         </span>
@@ -83,7 +83,7 @@ function MultiBranchGroup({
                 }`}
               >
                 <div className="mb-3 flex items-center justify-between gap-2">
-                  <h4 className={`text-[13.5px] font-bold ${color.text}`}>{stripCuSuffix(sub.area.name)}</h4>
+                  <h4 className={`text-[13.5px] font-bold ${color.text}`}>{sub.area.name}</h4>
                   <span className="shrink-0 rounded-full bg-bg-tint px-2 py-0.5 text-[10.5px] font-bold whitespace-nowrap text-primary">
                     {sub.locations.length} chi nhánh
                   </span>
@@ -100,7 +100,7 @@ function MultiBranchGroup({
       ) : (
         <>
           <div className="mb-5 flex items-center justify-between gap-3">
-            <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{stripCuSuffix(area.name)}</h3>
+            <h3 className="text-[18px] font-bold text-navy sm:text-[20px]">{area.name}</h3>
             <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-bold whitespace-nowrap text-primary">
               {locations.length} chi nhánh
             </span>
