@@ -786,4 +786,5 @@ export const LITESPACE_PLANS: LitespacePlan[] = [
  */
 export const LITESPACE_LOCATIONS: string[] = [
   "mai-chi-tho", // Địa chỉ hợp tác LiteSpace đầu tiên (28 Mai Chí Thọ, Thủ Đức).
+  "phan-dang-luu", // 68 Phan Đăng Lưu (toà L'MAK 68), khu Phú Nhuận (cũ).
 ];

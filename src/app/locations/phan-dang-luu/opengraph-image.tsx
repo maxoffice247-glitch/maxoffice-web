@@ -1,0 +1,13 @@
+import { renderOgImage, size, contentType } from "@/lib/og";
+import { LOCATIONS_DATA } from "@/lib/locationsData";
+
+export { size, contentType };
+
+export default async function Image() {
+  const data = LOCATIONS_DATA["phan-dang-luu"];
+  return renderOgImage({
+    title: data.metaTitle,
+    backgroundImagePath: `/images/facade/dia-diem-${data.slug}.jpg`,
+    backgroundFit: "contain",
+  });
+}

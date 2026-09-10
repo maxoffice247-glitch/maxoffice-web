@@ -286,6 +286,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_PHU_NHUAN,
   },
   {
+    slug: "phan-dang-luu",
+    name: "68 Phan Đăng Lưu, Phú Nhuận (cũ)",
+    shortAddress: "68 Phan Đăng Lưu, P. Đức Nhuận",
+    area: AREA_PHU_NHUAN,
+  },
+  {
     slug: "nguyen-truong-to",
     name: "84-86 Nguyễn Trường Tộ, Quận 4 (cũ)",
     shortAddress: "84-86 Nguyễn Trường Tộ, P. Xóm Chiếu",
@@ -2340,8 +2346,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     nearbyItems: [
       { name: "Chợ Phú Nhuận", desc: "Khu chợ truyền thống sầm uất, trung tâm sinh hoạt của khu vực." },
       { name: "Cầu Kiệu", desc: "Kết nối nhanh sang Quận 1, Quận 3 qua kênh Nhiêu Lộc - Thị Nghè." },
+      { name: "Chi nhánh 68 Phan Đăng Lưu", desc: "Chi nhánh MAX OFFICE khác cùng khu Phú Nhuận (cũ), toà nhà hạng A L'MAK 68 — áp dụng hệ giá CORE/PLUS/PRO riêng." },
       { name: "Sân bay Tân Sơn Nhất", desc: "Cách không xa, thuận tiện đón đối tác từ tỉnh khác hoặc nước ngoài." },
-      { name: "Khu dân cư Phường Phú Nhuận", desc: "Khu vực dân cư lâu đời, nhiều tiện ích sinh hoạt xung quanh." },
     ],
     transportItems: [
       { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua khu vực Phú Nhuận." },
@@ -2371,6 +2377,81 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Văn phòng nằm ngay khu chợ Phú Nhuận nên khách hàng lớn tuổi của công ty mình cũng dễ tìm.", initial: "H", name: "Chị Hoa", role: "Chủ hộ kinh doanh" },
       { quote: "Gần sân bay nên đối tác nước ngoài ghé văn phòng khá thuận tiện, không mất nhiều thời gian di chuyển.", initial: "T", name: "Anh Tài", role: "Giám đốc công ty xuất nhập khẩu" },
+    ],
+  },
+
+  /* =========== 68 PHAN ĐĂNG LƯU (KHU PHÚ NHUẬN — HỆ GIÁ LITESPACE) =========== */
+  "phan-dang-luu": {
+    slug: "phan-dang-luu",
+    name: "68 Phan Đăng Lưu, Phú Nhuận (cũ)",
+    area: AREA_PHU_NHUAN,
+    address: "68 Phan Đăng Lưu, Phường Đức Nhuận, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 68 Phan Đăng Lưu, Phú Nhuận (cũ)",
+    heroDescription:
+      "Chi nhánh thứ hai của MAX OFFICE tại khu vực Phú Nhuận (cũ) — toà nhà hạng A L'MAK 68 ngay trục Phan Đăng Lưu, 3 gói văn phòng ảo CORE/PLUS/PRO từ 499.000đ/tháng (hệ đối tác LiteSpace, chưa VAT), gần ngã tư Phú Nhuận và Cầu Kiệu.",
+    metaTitle: "Văn Phòng Ảo 68 Phan Đăng Lưu, Phú Nhuận (cũ) | Từ 499K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 68 Phan Đăng Lưu, Phường Đức Nhuận (khu Phú Nhuận cũ) — toà nhà hạng A L'MAK 68, 3 gói CORE/PLUS/PRO từ 499.000đ/tháng (chưa VAT, hệ đối tác LiteSpace), khác hệ giá SILVER/GOLD/PREMIUM của 89 Phan Đình Phùng cùng khu vực.",
+    image: "/images/hero-ve-chung-toi.jpg",
+    // Ảnh mặt tiền gốc 1024x1536 (tỉ lệ ~0.667, dọc — dưới ngưỡng
+    // FACADE_TALL_RATIO_THRESHOLD 0.72 nên LocationPageTemplate tự ép về
+    // khung "3 / 4"). facadeAspectRatio dưới đây chỉ là dự phòng khi đọc
+    // file lỗi.
+    facadeAspectRatio: "1024 / 1536",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-phan-dang-luu-le-tan.jpg", alt: "Quầy lễ tân sảnh toà nhà L'MAK 68, văn phòng 68 Phan Đăng Lưu", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-phan-dang-luu-mat-truoc.jpg", alt: "Mặt trước toà nhà L'MAK 68 tại 68 Phan Đăng Lưu", caption: "Mặt trước tòa nhà" },
+      { src: "/images/dia-diem-phan-dang-luu-san-trong.jpg", alt: "Không gian trống sẵn sàng bàn giao tại toà nhà 68 Phan Đăng Lưu", caption: "Không gian trống" },
+    ],
+    intro: [
+      "Văn phòng 68 Phan Đăng Lưu là chi nhánh thứ hai của MAX OFFICE tại khu vực Phú Nhuận (cũ), sau 89 Phan Đình Phùng. Chi nhánh toạ lạc tại Phường Đức Nhuận, ngay trên trục Phan Đăng Lưu — tuyến đường xương sống nối khu vực Bình Thạnh với Phú Nhuận: một đầu là ngã tư Phú Nhuận (nơi Phan Đăng Lưu giao với Phan Đình Phùng và Hoàng Văn Thụ), đầu còn lại dẫn về khu chợ Bà Chiểu. Dù cùng thuộc khu vực Phú Nhuận (cũ) với chi nhánh 89 Phan Đình Phùng, đây là hai địa chỉ nằm trên hai tuyến phố khác nhau và áp dụng hai bảng giá hoàn toàn khác — khách hàng cần phân biệt rõ khi tra cứu hoặc đặt lịch tham quan.",
+      "Chi nhánh đặt tại toà nhà L'MAK 68 — một cao ốc văn phòng hạng A với mặt tiền kính nguyên khối, hệ lam đứng và mảng kính khối đế tạo hình nhánh cây đặc trưng, nổi bật trên trục Phan Đăng Lưu. Sảnh lễ tân ốp đá marble sáng màu, quầy tiếp tân cong đặt giữa sảnh dưới đèn chùm lớn, cùng bảng chỉ dẫn điện tử phân tầng chức năng từ khu vực làm việc chung, văn phòng, trung tâm đào tạo đến phòng họp và khu dịch vụ. Toà nhà do đơn vị ESTA Property Management vận hành và quản lý chuyên nghiệp — một yếu tố khác biệt so với nhiều địa chỉ đăng ký kinh doanh giá rẻ khác trong hệ thống MAX OFFICE, phù hợp với doanh nghiệp coi trọng hình ảnh và trải nghiệm khi đón tiếp đối tác.",
+      "Bảng giá tại chi nhánh này gồm 3 gói CORE, PLUS và PRO thuộc hệ đối tác không gian LiteSpace — khác hoàn toàn hệ thống LITE–RISE chung của MAX OFFICE và cũng khác hệ SILVER/GOLD/PREMIUM đang áp dụng tại 89 Phan Đình Phùng cùng khu vực Phú Nhuận. CORE 499.000đ/tháng (ưu đãi ra mắt, giá gốc 599.000đ) tập trung vào địa điểm đặt trụ sở và lộ trình chuyển từ cá nhân/hộ kinh doanh lên doanh nghiệp; PLUS 499.000đ/tháng bổ sung pháp lý chuẩn văn phòng cùng hỗ trợ thay đổi giấy phép kinh doanh cơ bản; PRO 899.000đ/tháng (giá gốc 999.000đ) thêm hỗ trợ đăng ký doanh nghiệp 2 lần/năm, số hotline chuyển tiếp, hỗ trợ mở tài khoản ngân hàng và kế toán cơ bản miễn phí. Toàn bộ mức giá trên chưa bao gồm thuế VAT 10%.",
+      "Vị trí trên trục Phan Đăng Lưu giúp doanh nghiệp kết nối nhanh về nhiều hướng trung tâm: qua ngã tư Phú Nhuận sang Tân Bình và hướng sân bay Tân Sơn Nhất, qua Cầu Kiệu sang Quận 1 và Quận 3, hoặc theo Phan Đăng Lưu về khu Bình Thạnh. Đây là lựa chọn phù hợp cho doanh nghiệp mới thành lập hoặc vừa chuyển từ hộ kinh doanh lên công ty, cần một địa chỉ đăng ký kinh doanh ở vị trí trung chuyển thuận tiện và mang hình ảnh của một toà nhà văn phòng hạng A, mà không phải gánh chi phí thuê một sàn văn phòng thật.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 68 Phan Đăng Lưu",
+    benefits: [
+      { icon: BuildingIcon, title: "Toà nhà hạng A L'MAK 68", desc: "Cao ốc kính nguyên khối, sảnh lễ tân ốp đá marble, bảng chỉ dẫn điện tử — do ESTA Property Management vận hành chuyên nghiệp." },
+      { icon: MapPinIcon, title: "Mặt tiền trục Phan Đăng Lưu", desc: "Tuyến đường lớn nối Bình Thạnh và Phú Nhuận, dễ tìm, dễ chỉ đường cho đối tác và khách hàng." },
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ khu Đức Nhuận", desc: "Đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, cổ phần lẫn hộ kinh doanh cá thể." },
+      { icon: BadgePercentIcon, title: "3 gói CORE / PLUS / PRO", desc: "Hệ giá đối tác LiteSpace, ưu đãi ra mắt từ 499.000đ/tháng — giá gốc các gói đều cao hơn." },
+      { icon: HeartHandshakeIcon, title: "Combo cho người chưa có công ty", desc: "Gói CORE kèm tuỳ chọn combo 'Đăng ký lo hết' — MAX OFFICE lo trọn gói thủ tục đăng ký cá nhân/hộ kinh doanh." },
+      { icon: CarIcon, title: "Kết nối nhiều hướng trung tâm", desc: "Gần ngã tư Phú Nhuận và Cầu Kiệu — đi Quận 1, Quận 3, Tân Bình và sân bay Tân Sơn Nhất đều thuận tiện." },
+    ],
+    nearbyItems: [
+      { name: "Ngã tư Phú Nhuận", desc: "Nút giao Phan Đăng Lưu - Phan Đình Phùng - Hoàng Văn Thụ, kết nối Phú Nhuận, Bình Thạnh và Tân Bình." },
+      { name: "Chi nhánh 89 Phan Đình Phùng", desc: "Chi nhánh MAX OFFICE khác cùng khu Phú Nhuận (cũ), cách một đoạn qua ngã tư — áp dụng hệ giá SILVER/GOLD/PREMIUM riêng." },
+      { name: "Chợ Bà Chiểu & khu Bình Thạnh", desc: "Đầu còn lại của trục Phan Đăng Lưu, khu dân cư - thương mại sầm uất, nhiều dịch vụ tiện ích." },
+      { name: "Cầu Kiệu & kênh Nhiêu Lộc - Thị Nghè", desc: "Kết nối nhanh sang Quận 1 và Quận 3 dọc hai bờ kênh." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Trục Phan Đăng Lưu - Hoàng Văn Thụ", desc: "Hai tuyến đường lớn giao nhau gần chi nhánh, di chuyển nhiều hướng đều thuận tiện." },
+      { icon: ClockIcon, title: "Taxi & xe công nghệ", desc: "Khu vực văn phòng - dân cư đông đúc nên dễ đặt xe vào mọi khung giờ." },
+      { icon: CarIcon, title: "Gần sân bay Tân Sơn Nhất", desc: "Theo Hoàng Văn Thụ khoảng 10-15 phút, thuận tiện cho doanh nghiệp thường xuyên đón khách tỉnh xa." },
+      { icon: HeadsetIcon, title: "Lễ tân toà nhà hỗ trợ đón khách", desc: "Quầy tiếp tân tại sảnh L'MAK 68 hướng dẫn khách lần đầu tìm đúng thang máy và khu vực cần đến." },
+    ],
+    parkingInfo: [
+      "Khu vực để xe máy bố trí trong toà nhà, phục vụ khách đến giao dịch trong giờ hành chính.",
+      "Có chỗ dừng đỗ ô tô ngắn hạn phía trước toà nhà để đưa đón đối tác.",
+      "Bảo vệ và đơn vị quản lý ESTA Property Management trực an ninh tại sảnh và khu để xe.",
+    ],
+    diningItems: [
+      { name: "Quán ăn & cà phê dọc Phan Đăng Lưu", desc: "Nhiều lựa chọn từ bữa trưa nhanh đến quán cà phê không gian rộng để gặp gỡ trao đổi công việc." },
+      { name: "Khu ẩm thực chợ Bà Chiểu", desc: "Đa dạng món ăn địa phương, cách chi nhánh một quãng ngắn dọc trục Phan Đăng Lưu." },
+      { name: "Nhà hàng khu ngã tư Phú Nhuận", desc: "Phù hợp đặt tiệc nhỏ hoặc mời đối tác dùng bữa sau buổi họp." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 68 Phan Đăng Lưu là chi nhánh thứ mấy của MAX OFFICE tại khu vực Phú Nhuận?", a: "Đây là chi nhánh thứ hai, sau 89 Phan Đình Phùng. Hai địa chỉ cùng thuộc khu vực Phú Nhuận (cũ) nhưng nằm trên hai tuyến phố khác nhau và áp dụng hai bảng giá hoàn toàn khác: 68 Phan Đăng Lưu dùng 3 gói CORE/PLUS/PRO của hệ đối tác LiteSpace, còn 89 Phan Đình Phùng dùng 3 gói SILVER/GOLD/PREMIUM. Khi đặt lịch tham quan, bạn nên nói rõ địa chỉ để đội ngũ hướng dẫn đúng chi nhánh." },
+      { q: "Toà nhà L'MAK 68 có phải là toà nhà văn phòng hạng A không?", a: "Đúng. L'MAK 68 là cao ốc văn phòng với mặt tiền kính nguyên khối, sảnh lễ tân ốp đá marble, quầy tiếp tân riêng và bảng chỉ dẫn điện tử, do đơn vị ESTA Property Management vận hành - quản lý chuyên nghiệp. Đây là điểm khác biệt so với nhiều địa chỉ đăng ký kinh doanh giá rẻ đặt trong nhà phố hoặc toà nhà không có đơn vị quản lý riêng." },
+      { q: "Gói CORE, PLUS, PRO ở chi nhánh này là gì? Khác gì hệ giá của 89 Phan Đình Phùng?", a: "Đây là bảng giá riêng của hệ đối tác không gian LiteSpace, không dùng chung với hệ thống LITE–RISE của các chi nhánh MAX OFFICE khác và cũng khác hệ SILVER/GOLD/PREMIUM tại 89 Phan Đình Phùng. CORE và PLUS cùng giá 499.000đ/tháng nhưng khác định hướng (CORE cho người mới chuyển từ cá nhân/hộ kinh doanh, PLUS cho công ty cần địa chỉ hoạt động hợp lệ, hỗ trợ thay đổi GPKD); PRO 899.000đ/tháng đầy đủ hỗ trợ pháp lý và kế toán cơ bản. Toàn bộ giá chưa bao gồm VAT 10%." },
+      { q: "\"Ưu đãi ra mắt MAX\" trên các gói nghĩa là gì?", a: "Cả 3 gói đang áp dụng mức giá thấp hơn giá gốc nhân dịp MAX OFFICE ra mắt địa chỉ hợp tác LiteSpace tại 68 Phan Đăng Lưu: CORE và PLUS còn 499.000đ (giá gốc 599.000đ), PRO còn 899.000đ (giá gốc 999.000đ). Bạn nên liên hệ hotline để xác nhận thời hạn ưu đãi còn hiệu lực tại thời điểm ký hợp đồng." },
+      { q: "Địa chỉ 68 Phan Đăng Lưu có hợp lệ để đăng ký kinh doanh và đăng ký thuế không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Đức Nhuận, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Tôi có thể đến xem sảnh và toà nhà L'MAK 68 trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ sắp xếp lịch tham quan miễn phí và hướng dẫn đường vào toà nhà L'MAK 68 trên trục Phan Đăng Lưu." },
+    ],
+    testimonials: [
+      { quote: "Khách của mình phần lớn là đối tác lớn, mời tới sảnh toà nhà này ai cũng nghĩ công ty thuê nguyên một tầng. Địa chỉ đẹp mà chi phí chỉ bằng một góc thuê văn phòng thật.", initial: "K", name: "Anh Khoa", role: "Giám đốc công ty tư vấn đầu tư" },
+      { quote: "Mình so vài chỗ ở Phú Nhuận rồi chọn 68 Phan Đăng Lưu vì toà nhà có đơn vị quản lý riêng, thư từ nhận đủ và lễ tân chuyên nghiệp, đón khách yên tâm.", initial: "V", name: "Chị Vy", role: "Chủ hộ kinh doanh vừa chuyển lên công ty" },
     ],
   },
 
@@ -2887,7 +2968,11 @@ export type GroupedLocations = {
  */
 const MERGED_AREA_PAIRS: { twoSlug: string; oneSlug: string }[] = [
   { twoSlug: "quan-4-cu", oneSlug: "quan-7-cu" }, // Quận 4 - Quận 7: liền kề địa lý thật
-  { twoSlug: "quan-3-cu", oneSlug: "phu-nhuan-cu" }, // Quận 3 - Phú Nhuận: liền kề địa lý thật
+  // Quận 3 - Phú Nhuận: cặp này KHÔNG còn ghép từ khi Phú Nhuận có chi
+  // nhánh thứ 2 (68 Phan Đăng Lưu) — getGroupedLocations() tự bỏ ghép,
+  // cả Quận 3 và Phú Nhuận đều thành khối riêng có viền. Giữ entry làm
+  // dự phòng nếu Phú Nhuận quay về đúng 1 chi nhánh.
+  { twoSlug: "quan-3-cu", oneSlug: "phu-nhuan-cu" },
   { twoSlug: "quan-10-cu", oneSlug: "quan-tan-phu-cu" }, // Quận 10 - Tân Phú: gần qua trục Quận 11
   // Thủ Đức - Gò Vấp: cặp này KHÔNG còn ghép từ khi Thủ Đức có chi nhánh
   // thứ 3 (28 Mai Chí Thọ) — getGroupedLocations() tự bỏ ghép (Thủ Đức

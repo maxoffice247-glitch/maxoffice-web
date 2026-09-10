@@ -207,6 +207,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "89 Phan Đình Phùng, P. Phú Nhuận",
   },
   {
+    title: "68 Phan Đăng Lưu, Phú Nhuận (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/phan-dang-luu",
+    desc: "68 Phan Đăng Lưu, P. Đức Nhuận — toà nhà hạng A L'MAK 68",
+  },
+  {
     title: "84-86 Nguyễn Trường Tộ, Quận 4 (cũ)",
     category: "Chi nhánh",
     href: "/locations/nguyen-truong-to",
@@ -282,7 +288,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Quận Phú Nhuận (cũ)",
     category: "Khu vực",
     href: "/dia-diem/phu-nhuan-cu",
-    desc: "Chi nhánh 89 Phan Đình Phùng — gần chợ Phú Nhuận",
+    desc: "2 chi nhánh — 89 Phan Đình Phùng và 68 Phan Đăng Lưu (toà L'MAK 68)",
   },
   {
     title: "Quận 4 (cũ)",
