@@ -12,24 +12,25 @@ const Lightbox = dynamic(() => import("./Lightbox"), { ssr: false });
 /**
  * Ảnh mặt tiền + đoạn giới thiệu (bố cục 2 cột SO LE trái/phải theo từng
  * chi nhánh, LocationFacade.tsx) rồi tới lưới ảnh NỘI THẤT còn lại (lưới cố
- * định + carousel mobile, LocationGallery.tsx) — bố cục 2 cột từng bị bỏ
- * hẳn (dồn ảnh mặt tiền vào chung 1 gallery) vì gây khoảng trắng lớn khi
- * văn bản ngắn hơn nhiều so với ảnh dọc; khôi phục lại theo đúng yêu cầu,
- * nhưng lần này XỬ LÝ TẬN GỐC khoảng trắng bằng cách LẤP nó (khối "Điểm
- * nổi bật khu vực" tự chèn khi cần — xem doc comment LocationFacade.tsx)
- * thay vì né tránh bằng cách bỏ hẳn bố cục.
+ * định + carousel mobile, LocationGallery.tsx), và khối tóm tắt "Điểm nổi
+ * bật khu vực" đặt CỐ ĐỊNH ngay dưới lưới ảnh — NHẤT QUÁN cho mọi chi
+ * nhánh. Trước đây khối benefits được chèn ĐỘNG vào khối 2 cột khi
+ * ResizeObserver phát hiện cột văn bản cao hơn cột ảnh; cơ chế đó đã bỏ vì
+ * cho kết quả không đều (chi nhánh chênh lệch nhỏ vẫn bị chèn benefits cắt
+ * ngang mạch đọc phần giới thiệu). Khối 2 cột giờ CHỈ còn văn bản + ảnh
+ * mặt tiền.
  *
- * Ảnh mặt tiền KHÔNG còn nằm trong mảng truyền cho LocationGallery nữa
- * (đã hiện riêng ở LocationFacade) — tránh hiện trùng 2 lần. `allImages`
- * cho Lightbox vẫn gộp đủ CẢ 2 (mặt tiền index 0, nội thất index 1+) để
- * điều hướng prev/next liền mạch qua toàn bộ ảnh của chi nhánh.
+ * Ảnh mặt tiền KHÔNG nằm trong mảng truyền cho LocationGallery (đã hiện
+ * riêng ở LocationFacade) — tránh hiện trùng. `allImages` cho Lightbox vẫn
+ * gộp đủ CẢ 2 (mặt tiền index 0, nội thất index 1+) để điều hướng prev/next
+ * liền mạch qua toàn bộ ảnh của chi nhánh.
  */
 export default function LocationImagesSection({
   name,
   facadeImage,
   imageSide,
   paragraphs,
-  benefitsFiller,
+  benefitsBlock,
   interiorImages,
 }: {
   name: string;
@@ -39,9 +40,10 @@ export default function LocationImagesSection({
   imageSide?: "left" | "right";
   paragraphs: string[];
   /** Khối "Điểm nổi bật khu vực" ĐÃ RENDER SẴN (Server Component, icon đã
-      resolve) — xem doc comment LocationFacade.tsx vì sao không truyền
-      thẳng `BenefitItem[]` xuống đây được. */
-  benefitsFiller?: ReactNode;
+      resolve) — hiện CỐ ĐỊNH dưới lưới ảnh (LocationGallery.tsx). Xem doc
+      comment LocationGallery.tsx vì sao không truyền thẳng `BenefitItem[]`
+      xuống đây được. */
+  benefitsBlock?: ReactNode;
   interiorImages?: InteriorImage[];
 }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -58,10 +60,13 @@ export default function LocationImagesSection({
         image={facadeImage}
         imageSide={imageSide}
         paragraphs={paragraphs}
-        benefitsFiller={benefitsFiller}
         onImageClick={() => setOpenIndex(0)}
       />
-      <LocationGallery images={interiorImages} onImageClick={(i) => setOpenIndex(i + 1)} />
+      <LocationGallery
+        images={interiorImages}
+        benefitsBlock={benefitsBlock}
+        onImageClick={(i) => setOpenIndex(i + 1)}
+      />
       <Lightbox images={allImages} index={openIndex} onClose={() => setOpenIndex(null)} onNavigate={setOpenIndex} />
     </>
   );

@@ -24,9 +24,8 @@ import { getPublicJpegDimensions } from "@/lib/imageDimensions";
 
 /** Ảnh mặt tiền tỉ lệ THẬT dưới ngưỡng này (quá dọc, gần 2:3) bị ép về
     khung 3:4 cố định — đứng 1 mình cạnh đoạn giới thiệu (LocationFacade.tsx)
-    ảnh quá dọc vẫn cao vọt hẳn so với cột văn bản dù đã có khối "Điểm nổi
-    bật khu vực" lấp bớt (xem LocationFacade.tsx), crop nhẹ về 3:4 giúp
-    giảm hẳn phần chênh lệch cần lấp. Tính theo NGƯỠNG SỐ trên tỉ lệ đọc
+    ảnh quá dọc cao vọt hẳn so với cột văn bản, crop nhẹ về 3:4 giúp giảm
+    hẳn phần chênh lệch. Tính theo NGƯỠNG SỐ trên tỉ lệ đọc
     THẬT từ file — không phải danh sách slug cứng — để tự đúng nếu ảnh gốc
     được thay bằng file khác tỉ lệ khác sau này mà không cần sửa code theo
     tay. 0.72 tách rõ 2 nhóm THẬT đang có trong ảnh mặt tiền của 28 chi
@@ -35,11 +34,11 @@ import { getPublicJpegDimensions } from "@/lib/imageDimensions";
     380 Trần Hưng Đạo) và nhóm còn lại ~0.75-1.4 (không cần ép, giữ tỉ lệ
     thật tuyệt đối trong khung 2 cột). */
 const FACADE_TALL_RATIO_THRESHOLD = 0.72;
-/** Số mục benefits tối đa hiện trong khối "Điểm nổi bật khu vực" lấp chỗ
-    trống cạnh ảnh mặt tiền — đủ để giảm đáng kể khoảng trắng ở phần lớn
-    trường hợp mà không đẩy khối lấp phình quá to (khối benefits ĐẦY ĐỦ đã
-    có sẵn riêng ở section "Lợi ích" phía dưới trang, xem ServiceBenefits). */
-const MAX_FACADE_FILLER_ITEMS = 4;
+/** Số mục hiện trong khối tóm tắt "Điểm nổi bật khu vực" đặt ngay dưới lưới
+    ảnh nội thất — đủ nêu bật vài điểm mạnh khu vực mà không lặp lại quá dài
+    (khối benefits ĐẦY ĐỦ đã có riêng ở section "Lợi ích" phía dưới trang,
+    xem ServiceBenefits). */
+const MAX_GALLERY_BENEFIT_ITEMS = 4;
 
 export default function LocationPageTemplate({ data }: { data: LocationData }) {
   // Đọc W/H THẬT của ảnh mặt tiền (đọc trực tiếp header file .jpg, xem
@@ -72,18 +71,23 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
   // Render SẴN ở đây (Server Component, icon đã resolve thành phần tử JSX
   // cụ thể) rồi truyền xuống LocationImagesSection dạng ReactNode — không
   // truyền thẳng `data.benefits` (BenefitItem[], mỗi phần tử có `icon` là
-  // THAM CHIẾU COMPONENT) xuống LocationFacade.tsx ("use client") được,
-  // Next.js chặn truyền function/component qua ranh giới Server→Client
-  // Component. LocationFacade.tsx chỉ quyết định HIỆN/ẨN khối này (đo
-  // chiều cao thật, xem doc comment ở đó), không tự render nội dung.
-  const facadeBenefitsFiller =
+  // THAM CHIẾU COMPONENT) xuống component "use client" được, Next.js chặn
+  // truyền function/component qua ranh giới Server→Client Component.
+  //
+  // Khối này giờ đặt CỐ ĐỊNH full-width ngay DƯỚI lưới ảnh nội thất
+  // (LocationGallery.tsx) — NHẤT QUÁN cho mọi chi nhánh, không còn cơ chế
+  // ĐỘNG so đo chiều cao 2 cột ở LocationFacade.tsx để quyết định chèn hay
+  // không (cơ chế cũ cho kết quả không đều: có chi nhánh bị chèn benefits
+  // vào giữa mạch đọc phần giới thiệu). Bố cục 2 hàng (grid sm:grid-cols-2)
+  // hợp khung ngang full-width, khác khối cũ 1 cột hẹp cạnh ảnh mặt tiền.
+  const galleryBenefits =
     data.benefits.length > 0 ? (
-      <div className="mt-6 rounded-2xl border border-line bg-bg-tint p-5 sm:p-6">
+      <div className="rounded-2xl border border-line bg-bg-tint p-5 sm:p-6">
         <p className="mb-4 text-[11.5px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
           Điểm nổi bật khu vực
         </p>
-        <ul className="space-y-3.5">
-          {data.benefits.slice(0, MAX_FACADE_FILLER_ITEMS).map((b) => (
+        <ul className="grid gap-x-6 gap-y-3.5 sm:grid-cols-2">
+          {data.benefits.slice(0, MAX_GALLERY_BENEFIT_ITEMS).map((b) => (
             <li key={b.title} className="flex items-start gap-3">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-primary">
                 <b.icon className="h-4 w-4" />
@@ -153,7 +157,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         facadeImage={facadeImage}
         imageSide={data.facadeImageSide}
         paragraphs={data.intro}
-        benefitsFiller={facadeBenefitsFiller}
+        benefitsBlock={galleryBenefits}
         interiorImages={data.interiorImages}
       />
       {/* "Dịch vụ tại chi nhánh" chuyển lên NGAY SAU gallery ảnh (trước đây

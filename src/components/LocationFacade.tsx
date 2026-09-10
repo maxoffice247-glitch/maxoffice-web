@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Reveal from "./Reveal";
 
 export type FacadeImage = {
@@ -16,65 +16,65 @@ export type FacadeImage = {
   objectPosition?: string;
 };
 
-/** ẢNH cao hơn VĂN BẢN quá ngần này (px) → hiện khối lấp benefits ở cột
-    văn bản. Ngưỡng thấp vì "lấp benefits" là can thiệp nhẹ (thêm vài mục
-    từ data.benefits có sẵn). */
-const FILL_GAP_THRESHOLD_PX = 48;
 /** VĂN BẢN cao hơn ẢNH quá ngần này (px) → bọc ảnh trong khối nền màu
-    thương hiệu giãn hết cột + căn giữa (`centerImage`). Ngưỡng CAO hơn hẳn
-    vì đây là can thiệp NẶNG về thị giác (đổi hẳn khung ảnh sang 1 khối
-    màu lớn) — chỉ đáng làm khi cột ảnh thấp hơn HẲN (ảnh mặt tiền tỉ lệ
-    ngang), không phải cho chênh lệch nhỏ (ảnh dọc 3:4 chỉ ngắn hơn văn
-    bản chút ít — để top-align như cũ, chấp nhận khoảng hở nhỏ ở đáy). */
+    thương hiệu giãn hết cột + căn giữa (`centerImage`). Chỉ đáng làm khi
+    cột ảnh thấp hơn HẲN (ảnh mặt tiền tỉ lệ NGANG), không phải cho chênh
+    lệch nhỏ (ảnh dọc 3:4 chỉ ngắn hơn văn bản chút ít — để top-align như
+    cũ, chấp nhận khoảng hở nhỏ ở đáy).
+
+    Đo trên 29 chi nhánh (ngưỡng 180 + chặn `isLandscapeFacade` bên dưới):
+    KÍCH HOẠT ở Mai Chí Thọ (hở 490), Yên Thế (361), 54-56 Lê Quốc Hưng
+    (292). KHÔNG kích hoạt: Tân Thắng (158), Bàu Cát 2 (113), Hoàng Kế Viêm
+    (86), Lam Sơn (75) — ảnh ngang nhưng hở vừa phải, khối nền màu sẽ quá
+    nặng so với khoảng trống; Nguyễn Oanh / Quận 7 ảnh gần vuông (tỉ lệ
+    1.0) đã bị `isLandscapeFacade` loại. Toàn bộ ảnh mặt tiền tỉ lệ DỌC
+    không bao giờ chạm ngưỡng (ảnh dọc luôn cao hơn hoặc xấp xỉ cột văn
+    bản). */
 const CENTER_IMAGE_GAP_THRESHOLD_PX = 180;
+/** Chỉ ảnh mặt tiền tỉ lệ NGANG rõ rệt (rộng/cao > 1.1) mới xét
+    `centerImage` — tách khỏi nhóm ảnh gần vuông (Nguyễn Oanh, Quận 7 ~1.0)
+    và ảnh dọc. Trong tỉ lệ THẬT của 29 ảnh mặt tiền có khoảng trống tự
+    nhiên giữa 1.00 và 1.23 (Lam Sơn) nên 1.1 tách 2 nhóm sạch. Tỉ lệ lấy
+    từ `image.aspectRatio` (chuỗi "W / H" đã tính sẵn ở
+    LocationPageTemplate.tsx từ header file .jpg), không đo lại. */
+const LANDSCAPE_FACADE_MIN_RATIO = 1.1;
 /** 2 cột chỉ áp dụng từ `lg:` (1024px, khớp class `lg:grid-cols-2` bên
     dưới) — dưới ngưỡng này ảnh/text xếp dọc, không có "cột nào cao hơn
-    cột nào" để so, nên không cần (và không nên) hiện khối lấp. */
+    cột nào" để so. */
 const TWO_COLUMN_MIN_WIDTH = 1024;
 
 /**
  * Giới thiệu chi nhánh (văn bản) cạnh ảnh mặt tiền toà nhà, bố cục 2 cột —
  * ảnh giữ tỉ lệ thật (không crop, trừ 7 chi nhánh ảnh quá dọc đã ép 3:4 từ
- * LocationPageTemplate.tsx). Khi ảnh cao hơn văn bản đáng kể (chi nhánh có
- * đoạn giới thiệu ngắn), thay vì để trống 1 khoảng lớn dưới văn bản như bố
- * cục 2 cột từng bị bỏ trước đây, tự HIỆN thêm 1 khối "Điểm nổi bật khu
- * vực" (`benefitsFiller`) — LẤY DỮ LIỆU THẬT từ `data.benefits` (field đã
- * dùng sẵn cho section "Lợi ích" đầy đủ phía dưới trang, không bịa nội
- * dung mới) để lấp bớt chỗ trống.
+ * LocationPageTemplate.tsx).
  *
- * `benefitsFiller` được RENDER SẴN ở LocationPageTemplate.tsx (Server
- * Component) rồi truyền xuống dạng ReactNode thay vì truyền thẳng
- * `BenefitItem[]` — mỗi `BenefitItem.icon` là 1 THAM CHIẾU COMPONENT
- * (function), không thể truyền qua ranh giới Server→Client Component
- * (Next.js báo lỗi "Functions cannot be passed directly to Client
- * Components" nếu làm vậy — đã gặp thật khi build component này lần đầu).
- * Component client CHỈ quyết định HIỆN/ẨN khối đã dựng sẵn đó (boolean),
- * không tự render lại nội dung bên trong.
+ * KHỐI NÀY GIỜ CHỈ CÒN văn bản + ảnh mặt tiền — KHÔNG còn chèn "Điểm nổi
+ * bật khu vực" (benefits) động vào đây nữa. Cơ chế cũ dùng ResizeObserver
+ * so chiều cao 2 cột để quyết định CÓ/KHÔNG chèn benefits cho kết quả
+ * không nhất quán giữa các chi nhánh (chi nhánh chênh lệch nhỏ vẫn bị chèn
+ * benefits vào giữa mạch đọc). Benefits nay đặt CỐ ĐỊNH full-width ngay
+ * dưới lưới gallery ảnh nội thất — xem LocationGallery.tsx +
+ * LocationPageTemplate.tsx.
  *
- * ĐO CHIỀU CAO THẬT bằng ResizeObserver (không đoán qua công thức, giống
- * cách sửa row-span gói VPA trong VoPlanCard.tsx trước đây — công thức
- * đoán từng gây bug thật vì không phản ánh đúng độ dài chữ/xuống dòng
- * thực tế) — so chiều cao khối văn bản GỐC (chỉ đoạn giới thiệu, không
- * tính khối lấp) với chiều cao khung ảnh:
- *   - ẢNH cao hơn VĂN BẢN quá ngưỡng → hiện khối lấp benefits ở cột văn
- *     bản (`showFiller`), tránh hiện thừa khi văn bản đã đủ dài.
- *   - VĂN BẢN cao hơn ẢNH quá ngưỡng (thường gặp khi ảnh mặt tiền tỉ lệ
- *     NGANG — Mai Chí Thọ, Yên Thế, Tân Thắng, Bàu Cát 2, Lam Sơn, Hoàng
- *     Kế Viêm, 54-56 Lê Quốc Hưng — cột ảnh thấp lè tè cạnh cột văn bản
- *     dài) → `centerImage`: cột ảnh giãn hết chiều cao hàng (lg:self-stretch),
- *     bọc ảnh trong 1 khung nền `bg-bg-tint` bo góc và CĂN GIỮA ảnh theo
- *     chiều dọc — biến khoảng trống "dồn hết xuống đáy" (trông như lỗi)
- *     thành phần nền khung ảnh chia đều trên/dưới, trông có chủ đích.
- * 2 nhánh loại trừ nhau (1 bên ảnh>văn bản, bên kia văn bản>ảnh) nên
- * không bao giờ bật cùng lúc. Chỉ hoạt động khi đang xếp 2 cột (≥1024px)
- * — dưới ngưỡng đó ảnh/text xếp dọc tuần tự, không có "cột nào cao hơn".
+ * CHỈ CÒN 1 xử lý động: với ảnh mặt tiền tỉ lệ NGANG (isLandscapeFacade,
+ * lọc trước theo tỉ lệ file), ĐO CHIỀU CAO THẬT bằng ResizeObserver để
+ * phát hiện cột ảnh thấp hơn HẲN cột văn bản (> 180px) → `centerImage`.
+ * Đo trên 29 chi nhánh: kích hoạt ở Mai Chí Thọ, Yên Thế, 54-56 Lê Quốc
+ * Hưng (xem số đo cụ thể ở doc comment CENTER_IMAGE_GAP_THRESHOLD_PX).
+ * `centerImage`: cột ảnh
+ * giãn hết chiều cao hàng (lg:self-stretch), bọc ảnh trong 1 khối nền
+ * `bg-primary-tint` bo góc và CĂN GIỮA ảnh theo chiều dọc — biến khoảng
+ * trống "dồn hết xuống đáy" (trông như lỗi) thành phần nền khối "featured
+ * image" chia đều trên/dưới. Chỉ hoạt động khi đang xếp 2 cột (≥1024px).
+ * Đo DOM thật (không đoán qua công thức) vì độ dài chữ/xuống dòng khác
+ * nhau theo từng chi nhánh — công thức đoán từng gây bug thật (xem
+ * VoPlanCard.tsx).
  */
 export default function LocationFacade({
   name,
   image,
   imageSide = "right",
   paragraphs,
-  benefitsFiller,
   onImageClick,
 }: {
   name: string;
@@ -87,15 +87,20 @@ export default function LocationFacade({
       hợp), chỉ đổi bên ở desktop (lg:order-1/2) khi `imageSide === "left"`. */
   imageSide?: "left" | "right";
   paragraphs: string[];
-  benefitsFiller?: ReactNode;
   onImageClick?: () => void;
 }) {
   const imageOrderClass = imageSide === "left" ? "order-1" : "order-1 lg:order-2";
   const textOrderClass = imageSide === "left" ? "order-2" : "order-2 lg:order-1";
   const textRef = useRef<HTMLDivElement>(null);
   const imageBoxRef = useRef<HTMLButtonElement>(null);
-  const [showFiller, setShowFiller] = useState(false);
   const [centerImage, setCenterImage] = useState(false);
+
+  // Tỉ lệ ngang/dọc từ chuỗi "W / H" (đã tính sẵn ở LocationPageTemplate.tsx).
+  const [ratioW, ratioH] = image.aspectRatio.split("/").map((n) => parseFloat(n));
+  const isLandscapeFacade =
+    Number.isFinite(ratioW) && Number.isFinite(ratioH) && ratioH > 0
+      ? ratioW / ratioH > LANDSCAPE_FACADE_MIN_RATIO
+      : false;
 
   useLayoutEffect(() => {
     const textEl = textRef.current;
@@ -103,18 +108,13 @@ export default function LocationFacade({
     if (!textEl || !imageEl) return;
 
     const measure = () => {
-      if (window.innerWidth < TWO_COLUMN_MIN_WIDTH) {
-        setShowFiller((prev) => (prev ? false : prev));
+      if (!isLandscapeFacade || window.innerWidth < TWO_COLUMN_MIN_WIDTH) {
         setCenterImage((prev) => (prev ? false : prev));
         return;
       }
       const imgH = imageEl.getBoundingClientRect().height;
       const textH = textEl.getBoundingClientRect().height;
-      // Ảnh cao hơn văn bản → hiện khối lấp benefits (chỉ khi có sẵn khối
-      // để hiện). Văn bản cao hơn ảnh → căn giữa + đóng khung ảnh.
-      const nextFiller = !!benefitsFiller && imgH - textH > FILL_GAP_THRESHOLD_PX;
       const nextCenter = textH - imgH > CENTER_IMAGE_GAP_THRESHOLD_PX;
-      setShowFiller((prev) => (prev === nextFiller ? prev : nextFiller));
       setCenterImage((prev) => (prev === nextCenter ? prev : nextCenter));
     };
 
@@ -136,7 +136,7 @@ export default function LocationFacade({
       ro.disconnect();
       document.removeEventListener("visibilitychange", onVisible);
     };
-  }, [benefitsFiller]);
+  }, [isLandscapeFacade]);
 
   return (
     <section className="pt-9 pb-3">
@@ -157,7 +157,6 @@ export default function LocationFacade({
                 </p>
               ))}
             </div>
-            {showFiller && benefitsFiller}
           </Reveal>
           <Reveal delay={0.1} className={`${imageOrderClass} ${centerImage ? "lg:self-stretch" : ""}`}>
             {/* Khi văn bản cao hơn ảnh (ảnh mặt tiền tỉ lệ ngang) — bọc ảnh
