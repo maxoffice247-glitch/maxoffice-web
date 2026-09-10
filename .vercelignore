@@ -1,0 +1,5 @@
+# Kho ảnh gốc CHƯA crop — chỉ để tham chiếu khi cần crop lại
+# (xem chú thích trong next.config.ts). Không có file nào trong app trỏ tới
+# /images/originals/* nên không cần deploy ~59MB này lên production; vẫn giữ
+# nguyên trong git để tra cứu.
+public/images/originals
