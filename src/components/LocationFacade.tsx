@@ -80,6 +80,7 @@ export default function LocationFacade({
               alt={image.alt}
               fill
               sizes="(max-width: 1024px) 100vw, 43vw"
+              quality={85}
               className="object-cover"
               style={{ objectPosition: image.objectPosition ?? "center" }}
             />

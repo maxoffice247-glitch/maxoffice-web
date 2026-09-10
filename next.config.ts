@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
     // AVIF first (smaller), WebP fallback — Next picks whichever the browser's
     // Accept header supports.
     formats: ["image/avif", "image/webp"],
+    // 75 = mặc định Next (dùng cho hero/blog). 85 = ảnh chi nhánh
+    // (LocationFacade/LocationGallery/Lightbox) — ảnh nội thất nhiều chi
+    // tiết + chữ trên biển hiệu, 75 hơi mềm. Next 16 bắt buộc khai báo giá
+    // trị quality được phép ở đây trước khi <Image quality={..}> dùng được.
+    qualities: [75, 85],
     // Kept at the framework default (not raised): this project routinely
     // re-crops/replaces photos under the same filename (see /images/originals),
     // and Next has no cache-invalidation mechanism for the image optimizer —

@@ -83,6 +83,7 @@ export default function LocationGallery({
                     alt={img.alt}
                     fill
                     sizes="(max-width: 640px) 68vw, 25vw"
+                    quality={85}
                     className="object-cover"
                     style={{ objectPosition: img.objectPosition ?? "center" }}
                   />

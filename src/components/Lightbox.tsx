@@ -132,6 +132,7 @@ export default function Lightbox({
               width={1600}
               height={1200}
               sizes="100vw"
+              quality={85}
               className="h-full max-h-[85vh] w-auto max-w-full rounded-lg object-contain"
               loading="eager"
               fetchPriority="high"
