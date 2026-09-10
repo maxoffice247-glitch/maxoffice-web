@@ -226,15 +226,6 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_QUAN_10,
   },
   {
-    slug: "vuon-lai",
-    name: "314/6 Điện Biên Phủ, Quận 10 (cũ)",
-    shortAddress: "314/6 Điện Biên Phủ, P. Vườn Lài",
-    area: AREA_QUAN_10,
-    // TẠM ẨN — không xoá dữ liệu, chỉ ẩn khỏi hiển thị công khai. Đặt lại
-    // `isActive: true` (hoặc xoá dòng này) để bật lại chi nhánh.
-    isActive: false,
-  },
-  {
     slug: "pham-van-dong",
     name: "Phạm Văn Đồng, Thủ Đức",
     shortAddress: "1148A Phạm Văn Đồng, P. Thủ Đức",
@@ -498,7 +489,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       },
       {
         // Giai đoạn mới, từ 01/01/2027: gói 24 tháng đổi thành 2 lựa chọn
-        // tuỳ tình trạng GPKD của khách (giống cấu trúc VUON_LAI_VO_PROMOS).
+        // tuỳ tình trạng GPKD của khách (mảng { label, note }, khách chọn 1).
         effectiveFrom: "2027-01-01",
         promotions: [
           "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
@@ -573,10 +564,10 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
         // (the actual coworking setup) fully in frame.
         objectPosition: "center 62%",
       },
-      { src: "/images/dia-diem-dien-bien-phu-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Điện Biên Phủ", caption: "Quầy lễ tân" },
-      { src: "/images/dia-diem-dien-bien-phu-phong-hop.jpg", alt: "Phòng họp văn phòng Điện Biên Phủ", caption: "Phòng họp" },
+      { src: "/images/dia-diem-dien-bien-phu-le-tan-r.jpg", alt: "Khu vực lễ tân văn phòng Điện Biên Phủ", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-dien-bien-phu-phong-hop-r.jpg", alt: "Phòng họp văn phòng Điện Biên Phủ", caption: "Phòng họp" },
       { src: "/images/dia-diem-dien-bien-phu-phong-rieng.jpg", alt: "Phòng riêng văn phòng Điện Biên Phủ", caption: "Phòng riêng" },
-      { src: "/images/dia-diem-dien-bien-phu-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-dien-bien-phu-bang-ten-r.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
     ],
     intro: [
       `Văn phòng Điện Biên Phủ là chi nhánh đắc địa nhất trong hệ thống ${ACTIVE_BRANCH_COUNT} địa điểm của MAX OFFICE, toạ lạc tại số 95 Điện Biên Phủ, Phường Tân Định, Quận 1 — khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM. Đây là lựa chọn hàng đầu cho doanh nghiệp muốn khẳng định vị thế ngay từ địa chỉ đăng ký kinh doanh.`,
@@ -611,7 +602,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       },
       {
         // Giai đoạn mới, từ 01/01/2027: gói 24 tháng đổi thành 2 lựa chọn
-        // tuỳ tình trạng GPKD của khách (giống cấu trúc VUON_LAI_VO_PROMOS).
+        // tuỳ tình trạng GPKD của khách (mảng { label, note }, khách chọn 1).
         effectiveFrom: "2027-01-01",
         promotions: [
           "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
@@ -1606,83 +1597,6 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Toà nhà mặt tiền Ba Tháng Hai khá nổi bật, khách hàng dễ nhận ra ngay từ xa.", initial: "T", name: "Anh Trung", role: "Giám đốc công ty thương mại" },
       { quote: "Gần Đại học Bách Khoa nên công ty mình tuyển sinh viên thực tập khá thuận tiện.", initial: "L", name: "Chị Linh", role: "Trưởng phòng nhân sự" },
       { quote: "Sảnh toà nhà đẹp, rộng rãi, lần đầu đối tác ghé thăm cũng khen không gian chuyên nghiệp.", initial: "D", name: "Anh Duy", role: "Founder công ty công nghệ" },
-    ],
-  },
-
-  /* ===================== 314/6 ĐIỆN BIÊN PHỦ (VƯỜN LÀI) — GÓI GIÁ RIÊNG ===================== */
-  "vuon-lai": {
-    slug: "vuon-lai",
-    name: "314/6 Điện Biên Phủ, Quận 10 (cũ)",
-    area: AREA_QUAN_10,
-    // TẠM ẨN — không xoá dữ liệu, chỉ ẩn khỏi hiển thị công khai (trang
-    // /locations/vuon-lai trả về 404, loại khỏi sitemap). Đặt lại
-    // `isActive: true` (hoặc xoá dòng này) để bật lại chi nhánh.
-    isActive: false,
-    address: "314/6 Điện Biên Phủ, Phường Vườn Lài, Thành phố Hồ Chí Minh",
-    heroTitle: "Văn Phòng Cho Thuê 314/6 Điện Biên Phủ, Phường Vườn Lài",
-    heroDescription: "Chi nhánh MAX OFFICE tại 314/6 Điện Biên Phủ, Phường Vườn Lài, khu vực Quận 10 (cũ) — văn phòng ảo gói V-START từ 380.000đ/tháng, toà nhà mặt tiền hiện đại có tiệm bánh & cà phê tầng trệt.",
-    metaTitle: "Văn Phòng Ảo 314/6 Điện Biên Phủ, Quận 10 (cũ) | Từ 380K/Tháng",
-    metaDescription: "Thuê văn phòng ảo tại 314/6 Điện Biên Phủ, Phường Vườn Lài — gói V-START riêng biệt từ 380.000đ/tháng, toà nhà mặt tiền hiện đại, gần chi nhánh CMT8 cùng khu vực Quận 10 (cũ).",
-    image: "/images/coworking.jpg",
-    // Portrait street-front shot, không cắt — 1024x1535 gốc.
-    facadeAspectRatio: "1024 / 1535",
-    facadeImageSide: "left",
-    interiorImages: [
-      { src: "/images/dia-diem-vuon-lai-lam-viec.jpg", alt: "Không gian làm việc văn phòng 314/6 Điện Biên Phủ", caption: "Không gian làm việc" },
-      { src: "/images/dia-diem-vuon-lai-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 314/6 Điện Biên Phủ", caption: "Bảng tên công ty tại toà nhà" },
-      { src: "/images/dia-diem-vuon-lai-cho-ngoi.jpg", alt: "Chỗ ngồi làm việc văn phòng 314/6 Điện Biên Phủ", caption: "Chỗ ngồi làm việc" },
-      { src: "/images/dia-diem-vuon-lai-tiep-khach.jpg", alt: "Khu vực tiếp khách văn phòng 314/6 Điện Biên Phủ", caption: "Khu vực tiếp khách" },
-      { src: "/images/dia-diem-vuon-lai-tien-ich-tang-tret.jpg", alt: "Tiệm bánh và cà phê tại tầng trệt toà nhà 314/6 Điện Biên Phủ", caption: "Tiện ích: Tiệm bánh & cà phê tại tầng trệt toà nhà" },
-      { src: "/images/dia-diem-vuon-lai-khong-gian-trong.jpg", alt: "Không gian trống sẵn sàng bàn giao tại 314/6 Điện Biên Phủ", caption: "Không gian trống" },
-    ],
-    intro: [
-      "Văn phòng 314/6 Điện Biên Phủ toạ lạc tại Phường Vườn Lài, trên đoạn đường Điện Biên Phủ nối dài thuộc khu vực Quận 10 (cũ) — chi nhánh thứ hai MAX OFFICE mở tại khu vực này, bên cạnh chi nhánh CMT8 đã hoạt động từ trước. Lưu ý: đây là chi nhánh khác hoàn toàn với văn phòng \"Điện Biên Phủ, Quận 1\" tại Phường Tân Định — hai địa chỉ trùng tên đường nhưng thuộc hai khu vực khác nhau của thành phố, khách hàng cần phân biệt rõ khi tra cứu hoặc đặt lịch tham quan.",
-      "Toà nhà đặt chi nhánh mang phong cách kiến trúc hiện đại, mặt tiền ốp kính và khung thép đen nổi bật trên trục đường. Điểm cộng riêng của toà nhà là tầng trệt có tiệm bánh & cà phê 40&TEXAS Bakery — một tiện ích nhỏ nhưng hữu ích cho khách hàng ghé giao dịch hoặc nhân sự làm việc tại đây muốn nghỉ ngơi, gặp gỡ đối tác ngoài giờ làm việc chính thức mà không cần di chuyển xa.",
-      "Chi nhánh cung cấp duy nhất gói văn phòng ảo V-START (380.000đ/tháng, bảng tên 30x10cm) — thiết kế gọn nhẹ với các tiện ích cốt lõi gồm địa chỉ đăng ký kinh doanh, lễ tân, Internet, nước uống và khu vực tiếp khách, phù hợp cho doanh nghiệp mới thành lập cần tối ưu chi phí ban đầu tại khu vực Quận 10 (cũ).",
-      "Từ chi nhánh, việc di chuyển đến khu vực trung tâm Quận 1, Quận 3 hay sang chi nhánh CMT8 cùng khu vực đều khá thuận tiện nhờ vị trí nằm trên trục đường nối dài. Nếu doanh nghiệp bạn cần một địa chỉ đăng ký kinh doanh hợp lệ, chi phí thấp và không yêu cầu nhiều tiện ích cao cấp, chi nhánh 314/6 Điện Biên Phủ là lựa chọn kinh tế trong hệ thống MAX OFFICE.",
-    ],
-    benefitsTitle: "Vì sao nên chọn văn phòng 314/6 Điện Biên Phủ",
-    benefits: [
-      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ, toà nhà mặt tiền", desc: "Đủ điều kiện đăng ký kinh doanh, thiết kế hiện đại, khung kính-thép nổi bật." },
-      { icon: MapPinIcon, title: "Phường Vườn Lài, Quận 10 (cũ)", desc: "Chi nhánh thứ hai của MAX OFFICE tại khu vực này, bên cạnh CMT8." },
-      { icon: BadgePercentIcon, title: "Giá chỉ từ 380.000đ/tháng", desc: "Gói V-START riêng biệt, gọn nhẹ, tối ưu chi phí cho doanh nghiệp mới." },
-      { icon: UsersIcon, title: "Tiệm bánh & cà phê tầng trệt", desc: "Tiện ích 40&TEXAS Bakery ngay dưới toà nhà, thuận tiện gặp gỡ đối tác." },
-      { icon: ClockIcon, title: "Gần trung tâm Quận 1, Quận 3", desc: "Di chuyển thuận tiện qua trục Điện Biên Phủ nối dài." },
-      { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
-    ],
-    nearbyItems: [
-      { name: "Trục Điện Biên Phủ nối dài", desc: "Đoạn đường kết nối khu vực Vườn Lài với trung tâm Quận 1, Quận 3." },
-      { name: "Chi nhánh CMT8", desc: "Chi nhánh MAX OFFICE khác trong cùng khu vực Quận 10 (cũ), cách không xa." },
-      { name: "Khu dân cư Phường Vườn Lài", desc: "Khu vực dân cư ổn định, nhiều hàng quán và dịch vụ tiện ích xung quanh." },
-      { name: "Tiệm bánh & cà phê 40&TEXAS Bakery", desc: "Tiện ích ngay tầng trệt toà nhà, phù hợp gặp gỡ đối tác không chính thức." },
-    ],
-    transportItems: [
-      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua khu vực Phường Vườn Lài." },
-      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mặt tiền đường lớn, dễ dàng đặt xe vào mọi khung giờ." },
-      { icon: CheckCircleIcon, title: "Trục Điện Biên Phủ nối dài", desc: "Kết nối nhanh đến Quận 1, Quận 3 và khu vực trung tâm." },
-      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hỗ trợ chỉ dẫn tận tình, đặc biệt lưu ý phân biệt với chi nhánh Điện Biên Phủ Quận 1." },
-    ],
-    parkingInfo: [
-      "Khu vực giữ xe máy ngay tại toà nhà mặt tiền 314/6 Điện Biên Phủ.",
-      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực Phường Vườn Lài.",
-      "Bảo vệ toà nhà trực suốt giờ hành chính, hỗ trợ khách ra vào gửi xe.",
-    ],
-    diningItems: [
-      { name: "Tiệm bánh & cà phê 40&TEXAS Bakery", desc: "Ngay tầng trệt toà nhà — tiện lợi cho bữa sáng nhẹ hoặc gặp gỡ đối tác." },
-      { name: "Quán ăn khu Vườn Lài", desc: "Đa dạng lựa chọn ẩm thực phục vụ khu dân cư xung quanh." },
-      { name: "Nhà hàng trục Điện Biên Phủ", desc: "Thích hợp đặt tiệc nhỏ hoặc mời đối tác dùng bữa sau buổi họp." },
-    ],
-    faqs: [
-      { q: "Chi nhánh 314/6 Điện Biên Phủ có phải cùng địa chỉ với chi nhánh Điện Biên Phủ, Quận 1 không?", a: "Không. Đây là hai chi nhánh hoàn toàn khác nhau — 314/6 Điện Biên Phủ thuộc Phường Vườn Lài, khu vực Quận 10 (cũ), còn chi nhánh còn lại (95 Điện Biên Phủ) thuộc Phường Tân Định, khu vực Quận 1 (cũ). Hai địa chỉ chỉ trùng tên đường, khách hàng cần kiểm tra kỹ khi đặt lịch tham quan." },
-      { q: "Chi nhánh này có những gói văn phòng ảo nào?", a: "Chi nhánh cung cấp duy nhất gói V-START với giá 380.000đ/tháng, bao gồm địa chỉ đăng ký kinh doanh, lễ tân, Internet, nước uống và khu vực tiếp khách." },
-      { q: "Địa chỉ 314/6 Điện Biên Phủ có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Vườn Lài, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
-      { q: "Ký hợp đồng 24 tháng tại chi nhánh này được khuyến mãi gì?", a: "Có 2 lựa chọn tách biệt tuỳ tình trạng pháp lý của bạn: nếu CHƯA có giấy phép kinh doanh (GPKD), bạn được tặng 3 tháng sử dụng cộng thêm dịch vụ thành lập doanh nghiệp miễn phí; nếu ĐÃ CÓ SẴN GPKD và không cần thành lập mới, bạn được tặng 6 tháng sử dụng thay cho lựa chọn trên. Chỉ chọn 1 trong 2, không cộng dồn." },
-      { q: "Toà nhà có tiệm bánh hoặc cà phê nào không?", a: "Có. Tầng trệt toà nhà là tiệm bánh & cà phê 40&TEXAS Bakery — tiện ích thực tế của toà nhà, không phải dịch vụ do MAX OFFICE cung cấp, nhưng khách thuê văn phòng có thể sử dụng như một điểm gặp gỡ đối tác thuận tiện." },
-      { q: "Tôi có thể đến tham quan văn phòng 314/6 Điện Biên Phủ trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188 để được sắp xếp lịch tham quan, đội ngũ sẽ hướng dẫn cụ thể đường đến chi nhánh để tránh nhầm với văn phòng Điện Biên Phủ Quận 1." },
-    ],
-    testimonials: [
-      { quote: "Ban đầu mình nhầm với chi nhánh Điện Biên Phủ bên Quận 1, may mà lễ tân gọi điện xác nhận địa chỉ trước, tránh mất công đi lộn chỗ.", initial: "P", name: "Anh Phúc", role: "Chủ hộ kinh doanh cá thể" },
-      { quote: "Gói V-START giá hợp lý, đủ dùng cho công ty mới thành lập, lại có tiệm bánh dưới nhà tiện gặp khách.", initial: "N", name: "Chị Ngọc", role: "Giám đốc công ty thương mại" },
     ],
   },
 

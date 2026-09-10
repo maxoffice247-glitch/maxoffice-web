@@ -146,15 +146,6 @@ export const SEARCH_INDEX: SearchItem[] = [
     href: "/locations/ba-thang-hai",
     desc: "614-616-618 Ba Tháng Hai, P. Diên Hồng",
   },
-  // TẠM ẨN — chi nhánh "vuon-lai" đang isActive: false trong locationsData.ts,
-  // trang /locations/vuon-lai trả về 404. Bỏ comment khối bên dưới khi bật
-  // lại chi nhánh (nhớ đặt lại isActive: true trước).
-  // {
-  //   title: "314/6 Điện Biên Phủ, Quận 10 (cũ)",
-  //   category: "Chi nhánh",
-  //   href: "/locations/vuon-lai",
-  //   desc: "314/6 Điện Biên Phủ, P. Vườn Lài",
-  // },
   {
     title: "Phạm Văn Đồng, Thủ Đức",
     category: "Chi nhánh",

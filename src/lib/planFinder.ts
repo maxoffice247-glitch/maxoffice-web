@@ -1,26 +1,21 @@
 /**
  * Gộp toàn bộ 7 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
  * nhánh; M-START/M-BASE/M-ORIGIN riêng Phạm Văn Đồng; W-BASE/W-PRO riêng
- * Bùi Văn Ba; V-START riêng 314/6 Điện Biên Phủ; SAVE/SILVER/GOLD/PREMIUM
+ * Bùi Văn Ba; SAVE/SILVER/GOLD/PREMIUM
  * dùng chung Quận 1 (cũ) + Quận 3 (cũ); SILVER/GOLD/PREMIUM dùng chung
  * Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức/Tân Bình; CORE/PLUS/PRO hệ đối tác
  * LiteSpace — 28 Mai Chí Thọ) thành MỘT danh sách phẳng — dùng cho công cụ
  * /tien-ich/tim-goi-phu-hop.
  *
  * Nguồn dữ liệu: LOCATIONS_LIST (đã tự lọc `isActive !== false`) +
- * virtualOfficePlans.ts. Vì hàm này lặp qua LOCATIONS_LIST (không phải
- * danh sách chi nhánh hardcode), chi nhánh đang tạm ẩn (vd. "vuon-lai")
- * tự động bị loại — và khi được bật lại (`isActive: true`), nhánh xử lý
- * "vuon-lai" bên dưới (đã viết sẵn, giữ tương thích với
- * getCheapestPriceForLocation) sẽ tự động nhận diện lại mà KHÔNG cần sửa
- * code.
+ * virtualOfficePlans.ts. Hàm lặp qua LOCATIONS_LIST nên chi nhánh tạm ẩn
+ * tự động bị loại.
  */
 import { LOCATIONS_LIST, LOCATIONS_DATA, resolveTimedPromotions } from "./locationsData";
 import {
   getPlansForLocation,
   PHAM_VAN_DONG_VO_PLANS,
   QUAN_7_VO_PLANS,
-  VUON_LAI_VO_PLAN,
   SAVE_SILVER_GOLD_PREMIUM_PLANS,
   SAVE_SILVER_GOLD_PREMIUM_LOCATIONS,
   SILVER_GOLD_PREMIUM_VO_PLANS,
@@ -28,7 +23,6 @@ import {
   LITESPACE_PLANS,
   LITESPACE_LOCATIONS,
   type PhamVanDongPlan,
-  type VuonLaiPlan,
   type SaveSilverGoldPremiumPlan,
   type SilverGoldPremiumPlan,
 } from "./virtualOfficePlans";
@@ -119,18 +113,6 @@ export function getAllOfferedPlans(): OfferedPlan[] {
           ],
         });
       }
-    } else if (slug === "vuon-lai") {
-      const p = VUON_LAI_VO_PLAN as VuonLaiPlan;
-      result.push({
-        locationSlug: slug,
-        locationName: name,
-        area,
-        planKey: p.key,
-        planName: p.name,
-        price: p.price,
-        duration: p.duration,
-        features: withPhamVanDongStyleFeatures(p),
-      });
     } else if (SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.includes(slug)) {
       for (const p of SAVE_SILVER_GOLD_PREMIUM_PLANS as SaveSilverGoldPremiumPlan[]) {
         result.push({

@@ -10,7 +10,6 @@ import LocationMap from "./LocationMap";
 import LocationServicesList from "./LocationServicesList";
 import PhamVanDongServices from "./PhamVanDongServices";
 import QuanBaServices from "./QuanBaServices";
-import VuonLaiServices from "./VuonLaiServices";
 import Quan3CuVOServices from "./Quan3CuVOServices";
 import SilverGoldPremiumServices from "./SilverGoldPremiumServices";
 import LitespaceServices from "./LitespaceServices";
@@ -29,8 +28,8 @@ import { getPublicJpegDimensions } from "@/lib/imageDimensions";
     THẬT từ file — không phải danh sách slug cứng — để tự đúng nếu ảnh gốc
     được thay bằng file khác tỉ lệ khác sau này mà không cần sửa code theo
     tay. 0.72 tách rõ 2 nhóm THẬT đang có trong ảnh mặt tiền của 28 chi
-    nhánh: nhóm quá dọc ~0.64-0.67 (Sông Thao, 618 Ba Tháng Hai, 314/6 Điện
-    Biên Phủ, 89 Phan Đình Phùng, 84-86 Nguyễn Trường Tộ, 28-34 Pasteur,
+    nhánh: nhóm quá dọc ~0.64-0.67 (Sông Thao, 618 Ba Tháng Hai,
+    89 Phan Đình Phùng, 84-86 Nguyễn Trường Tộ, 28-34 Pasteur,
     380 Trần Hưng Đạo) và nhóm còn lại ~0.75-1.4 (không cần ép, giữ tỉ lệ
     thật tuyệt đối trong khung 2 cột). */
 const FACADE_TALL_RATIO_THRESHOLD = 0.72;
@@ -171,8 +170,6 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         <PhamVanDongServices />
       ) : data.slug === "quan-7" ? (
         <QuanBaServices />
-      ) : data.slug === "vuon-lai" ? (
-        <VuonLaiServices />
       ) : data.slug === "nguyen-thong" ? (
         <Quan3CuVOServices branchName="60 Nguyễn Thông" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "cach-mang-thang-8" ? (
