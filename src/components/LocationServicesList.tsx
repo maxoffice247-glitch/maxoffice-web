@@ -159,15 +159,14 @@ export default function LocationServicesList({
             ))}
           </RevealGroup>
         </Reveal>
-        {/* Khuyến mãi riêng chi nhánh — chỉ hiện khi `promotions` có dữ liệu
-            sau khi resolve theo thời gian (đồng bộ cách hiển thị với
-            PhamVanDongServices.tsx). Đa số chi nhánh dùng component này
-            không có `promotions` riêng nên khối này ẩn hoàn toàn với các
-            chi nhánh đó, chỉ hiện với chi nhánh có khai báo (VD Sông Thao). */}
+        {/* Khuyến mãi & ưu đãi — `resolveTimedPromotions()` luôn nối
+            UNIVERSAL_PROMOTIONS (ưu đãi toàn hệ thống, VD tặng email tên miền
+            khi ký 24 tháng) vào cuối khuyến mãi riêng chi nhánh, nên khối này
+            hiện ở MỌI chi nhánh dù data có khai `promotions` riêng hay không. */}
         {resolvedPromotions && resolvedPromotions.length > 0 && (
           <Reveal className="mt-6 rounded-2xl bg-accent/8 p-6 sm:p-7">
             <p className="mb-2 flex items-center gap-1.5 text-[14.5px] font-bold text-navy">
-              <span aria-hidden>🎁</span> Khuyến mãi riêng chi nhánh
+              <span aria-hidden>🎁</span> Khuyến mãi & ưu đãi
             </p>
             <ul className="space-y-1.5">
               {resolvedPromotions.map((note) => (

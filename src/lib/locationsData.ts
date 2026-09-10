@@ -399,7 +399,7 @@ export type LocationData = {
   testimonials: Testimonial[];
   /** Chi nhánh khác có gói văn phòng ảo giá thấp hơn (Gói LITE/START), hiển thị khi chi nhánh này chỉ bán gói cao cấp. */
   lowerTierAlternatives?: { slug: string; name: string }[];
-  /** Khuyến mãi có thời hạn/điều kiện riêng của chi nhánh — hiển thị trên trang chi nhánh (qua LocationServicesList/component riêng) và trên card báo giá PNG (PlanQuoteCard/PlanGroupQuoteCard). Khác với `benefits` (đặc điểm cố định), đây là ưu đãi có thể hết hạn nên tách riêng field, không gộp vào benefits. Có thể là `string[]` đơn giản (không đổi theo thời gian) hoặc `TimedPromoVersion[]` (nhiều phiên bản theo mốc ngày, VD chính sách hiện tại + chính sách mới từ 1 ngày trong tương lai) — LUÔN đọc qua `resolveTimedPromotions()` ở nơi hiển thị, không đọc trực tiếp field này. Bỏ trống/undefined => ẩn hẳn khối khuyến mãi. */
+  /** Khuyến mãi có thời hạn/điều kiện riêng của chi nhánh — hiển thị trên trang chi nhánh (qua LocationServicesList/component riêng) và trên card báo giá PNG (PlanQuoteCard/PlanGroupQuoteCard). Khác với `benefits` (đặc điểm cố định), đây là ưu đãi có thể hết hạn nên tách riêng field, không gộp vào benefits. Có thể là `string[]` đơn giản (không đổi theo thời gian) hoặc `TimedPromoVersion[]` (nhiều phiên bản theo mốc ngày, VD chính sách hiện tại + chính sách mới từ 1 ngày trong tương lai) — LUÔN đọc qua `resolveTimedPromotions()` ở nơi hiển thị, không đọc trực tiếp field này. Bỏ trống/undefined => chi nhánh vẫn hiện khối khuyến mãi với ưu đãi toàn hệ thống (`UNIVERSAL_PROMOTIONS`) mà `resolveTimedPromotions()` luôn nối vào cuối. */
   promotions?: string[] | TimedPromoVersion[];
   /** Tạm ẩn chi nhánh khỏi mọi nơi hiển thị công khai (KHÔNG xoá dữ liệu) — trang /locations/[slug] trả về 404, loại khỏi sitemap. Mặc định `true` khi không khai báo. */
   isActive?: boolean;
@@ -418,9 +418,22 @@ export type LocationData = {
  * trong tương lai — chỉ cần khai báo `TimedPromoVersion[]` ở `LocationData`,
  * không cần sửa hàm này.
  */
-export function resolveTimedPromotions(
+/**
+ * Ưu đãi áp dụng ĐỒNG LOẠT cho MỌI chi nhánh — hiện có lẫn thêm mới sau này,
+ * bất kể chi nhánh đó có khai `promotions` riêng hay không. `resolveTimedPromotions()`
+ * tự nối mảng này vào CUỐI danh sách khuyến mãi ở mọi nơi hiển thị (trang chi nhánh,
+ * card báo giá PNG, trang tìm gói). Muốn thêm/bớt ưu đãi toàn hệ thống chỉ sửa ở đây.
+ */
+export const UNIVERSAL_PROMOTIONS: string[] = [
+  "Ký hợp đồng 24 tháng: tặng thêm email doanh nghiệp theo tên miền riêng miễn phí",
+];
+
+/** Chọn phiên bản khuyến mãi RIÊNG của chi nhánh áp dụng tại `now` (chưa gộp ưu
+ * đãi toàn hệ thống). Tách riêng để `resolveTimedPromotions()` gộp thêm
+ * `UNIVERSAL_PROMOTIONS` ở một chỗ duy nhất. */
+function resolveBranchPromotions(
   promotions: LocationData["promotions"],
-  now: Date = new Date()
+  now: Date
 ): string[] | undefined {
   if (!promotions || promotions.length === 0) return undefined;
   // Dạng đơn giản — không có phiên bản theo thời gian, dùng nguyên trạng.
@@ -434,6 +447,18 @@ export function resolveTimedPromotions(
       return bTime - aTime; // Mới nhất trước.
     });
   return applicable[0]?.promotions;
+}
+
+export function resolveTimedPromotions(
+  promotions: LocationData["promotions"],
+  now: Date = new Date()
+): string[] | undefined {
+  const branch = resolveBranchPromotions(promotions, now) ?? [];
+  // Ưu đãi riêng chi nhánh trước, ưu đãi toàn hệ thống nối vào cuối. Luôn có ít
+  // nhất UNIVERSAL_PROMOTIONS nên hàm không còn trả về undefined trong thực tế —
+  // giữ kiểu trả về cũ cho tương thích, chỉ undefined nếu cả hai đều rỗng.
+  const merged = [...branch, ...UNIVERSAL_PROMOTIONS.filter((p) => !branch.includes(p))];
+  return merged.length > 0 ? merged : undefined;
 }
 
 /* ---------------------------------------------------------------------- */

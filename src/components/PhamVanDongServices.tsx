@@ -17,6 +17,7 @@ import {
   PHAM_VAN_DONG_VO_PROMOS,
   VO_LONG_TERM_COMBO_NAME,
 } from "@/lib/virtualOfficePlans";
+import { UNIVERSAL_PROMOTIONS } from "@/lib/locationsData";
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
@@ -162,9 +163,9 @@ export default function PhamVanDongServices() {
             ))}
           </RevealGroup>
           <div className="mt-5 rounded-xl bg-accent/8 p-4">
-            <p className="mb-2 text-[12.5px] font-bold text-navy">Khuyến mãi riêng chi nhánh</p>
+            <p className="mb-2 text-[12.5px] font-bold text-navy">Khuyến mãi &amp; ưu đãi</p>
             <ul className="space-y-1">
-              {PHAM_VAN_DONG_VO_PROMOS.map((note) => (
+              {[...PHAM_VAN_DONG_VO_PROMOS, ...UNIVERSAL_PROMOTIONS].map((note) => (
                 <li key={note} className="text-[12.5px] text-body-text">
                   • {note}
                 </li>

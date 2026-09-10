@@ -215,7 +215,7 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
                     {grp.promotions && grp.locations.length === 1 && (
                       <p className="mt-1 flex items-start gap-1.5 text-[13px] leading-snug text-accent">
                         <span aria-hidden>🎁</span>
-                        <span>{grp.promotions.slice(0, 2).join(" · ")}</span>
+                        <span>{grp.promotions.slice(0, 3).join(" · ")}</span>
                       </p>
                     )}
                   </div>
@@ -239,7 +239,7 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
                       <span aria-hidden>🎁</span> Ưu đãi chung cho các chi nhánh trên
                     </p>
                     <ul className="space-y-1">
-                      {grp.promotions!.slice(0, 3).map((p) => (
+                      {grp.promotions!.slice(0, 4).map((p) => (
                         <li key={p} className="flex items-start gap-2 text-[13.5px] leading-snug text-ink">
                           <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                           {p}

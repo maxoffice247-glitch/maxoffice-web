@@ -135,7 +135,7 @@ export default function LitespaceServices({
         {resolvedPromotions && resolvedPromotions.length > 0 && (
           <Reveal className="mt-6 rounded-2xl bg-accent/8 p-6 sm:p-7">
             <p className="mb-2 flex items-center gap-1.5 text-[14.5px] font-bold text-navy">
-              <span aria-hidden>🎁</span> Khuyến mãi riêng chi nhánh
+              <span aria-hidden>🎁</span> Khuyến mãi & ưu đãi
             </p>
             <ul className="space-y-1.5">
               {resolvedPromotions.map((note) => (
