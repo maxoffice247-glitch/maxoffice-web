@@ -22,6 +22,7 @@ import {
   SILVER_GOLD_PREMIUM_LOCATIONS,
   LITESPACE_PLANS,
   LITESPACE_LOCATIONS,
+  DOMAIN_EMAIL_PERK,
   type PhamVanDongPlan,
   type SaveSilverGoldPremiumPlan,
   type SilverGoldPremiumPlan,
@@ -42,18 +43,27 @@ export type OfferedPlan = {
   addonNote?: string;
 };
 
+/** Ưu đãi email tên miền (`DOMAIN_EMAIL_PERK`) đã nằm sẵn trong `p.features`
+ * của mọi gói — các helper này chèn thêm vài dòng thông số ("Bảng tên:",
+ * "Phòng họp:"...) SAU phần features, nên tách ưu đãi ra và đẩy xuống cuối
+ * cùng để nó luôn là dòng chốt trên ảnh báo giá. */
+function moveDomainPerkLast(list: string[]): string[] {
+  const rest = list.filter((f) => f !== DOMAIN_EMAIL_PERK);
+  return list.length === rest.length ? list : [...rest, DOMAIN_EMAIL_PERK];
+}
+
 function withPhamVanDongStyleFeatures(p: {
   features: string[];
   nameplateSize: string;
   meetingRoom: string;
   flexSeat: string;
 }): string[] {
-  return [
+  return moveDomainPerkLast([
     ...p.features,
     `Bảng tên: ${p.nameplateSize}`,
     `Phòng họp: ${p.meetingRoom}`,
     `Chỗ ngồi làm việc: ${p.flexSeat}`,
-  ];
+  ]);
 }
 
 function withQuan3StyleFeatures(p: {
@@ -72,7 +82,7 @@ function withQuan3StyleFeatures(p: {
   ];
   if (p.addressChangeSupport) list.push("Hỗ trợ đổi địa chỉ đăng ký kinh doanh");
   if (p.legalDossier) list.push("Hồ sơ pháp lý toà nhà đầy đủ");
-  return list;
+  return moveDomainPerkLast(list);
 }
 
 /** Toàn bộ gói văn phòng ảo đang khả dụng công khai, tại mọi chi nhánh đang active. */
@@ -110,6 +120,7 @@ export function getAllOfferedPlans(): OfferedPlan[] {
             `Bảng tên: ${p.nameplate}`,
             `Xác minh địa chỉ: ${p.locationVerification}`,
             `Lễ tân: ${p.reception}`,
+            DOMAIN_EMAIL_PERK,
           ],
         });
       }

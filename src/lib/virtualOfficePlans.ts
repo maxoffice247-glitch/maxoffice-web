@@ -1,3 +1,12 @@
+/**
+ * Ưu đãi áp dụng cho MỌI gói văn phòng ảo ở MỌI chi nhánh (mọi hệ giá) —
+ * ghép thẳng vào CUỐI checklist tính năng của từng gói để khách nhìn thấy
+ * ngay trên thẻ giá và trên ảnh báo giá gửi đi, không phải đọc riêng ở khối
+ * khuyến mãi. Sửa 1 chỗ, áp dụng toàn hệ thống (kể cả chi nhánh thêm mới).
+ */
+export const DOMAIN_EMAIL_PERK =
+  "Tặng email doanh nghiệp theo tên miền riêng (khi ký hợp đồng 24 tháng)";
+
 export type VirtualOfficePlanKey =
   | "lite"
   | "start"
@@ -252,7 +261,9 @@ export function getPlansForLocation(slug: string): VirtualOfficePlan[] {
     return {
       ...plan,
       ...(overridePrice !== undefined ? { price: overridePrice } : null),
-      ...(overrideFeatures !== undefined ? { features: overrideFeatures } : null),
+      // Ưu đãi email tên miền ghép vào cuối checklist mọi gói (kể cả bản
+      // đã override tính năng riêng theo chi nhánh).
+      features: [...(overrideFeatures ?? plan.features), DOMAIN_EMAIL_PERK],
     };
   });
 }
@@ -341,7 +352,7 @@ export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
     nameplateSize: "Bảng tên 28x8cm",
     meetingRoom: "Không có",
     flexSeat: "Không có",
-    features: ["Địa chỉ đăng ký kinh doanh (ĐKKD)", "Lễ tân", "Internet + nước uống", "Khu vực tiếp khách sang trọng"],
+    features: ["Địa chỉ đăng ký kinh doanh (ĐKKD)", "Lễ tân", "Internet + nước uống", "Khu vực tiếp khách sang trọng", DOMAIN_EMAIL_PERK],
     promoNote: "🚀 Gói Vững Bước Khởi Nghiệp — Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
   },
   {
@@ -358,6 +369,7 @@ export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
       "Internet + nước uống",
       "Khu vực tiếp khách sang trọng",
       "In ấn / photocopy / scan",
+      DOMAIN_EMAIL_PERK,
     ],
     promoNote: "🚀 Gói Vững Bước Khởi Nghiệp — Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
   },
@@ -375,6 +387,7 @@ export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
       "Internet + nước uống",
       "Khu vực tiếp khách sang trọng",
       "In ấn / photocopy / scan",
+      DOMAIN_EMAIL_PERK,
     ],
     promoNote: "🚀 Gói Vững Bước Khởi Nghiệp — Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 12 tháng",
   },
@@ -473,6 +486,7 @@ const TIER_FAMILY_COMMON_FEATURES = [
   "Tiếp tân hành chính văn phòng",
   "Tiếp nhận, chuyển tiếp thư từ, bưu phẩm",
   "Tư vấn miễn phí thành lập doanh nghiệp & kế toán",
+  DOMAIN_EMAIL_PERK,
 ];
 
 export type SaveSilverGoldPremiumPlan = {
@@ -734,6 +748,7 @@ export const LITESPACE_PLANS: LitespacePlan[] = [
       "Treo bảng hiệu tại toà nhà",
       "Nhận thư từ, bưu phẩm tận nơi",
       "Tư vấn lộ trình chuyển đổi lên doanh nghiệp",
+      DOMAIN_EMAIL_PERK,
     ],
     comboBox: {
       title: "Chưa có công ty?",
@@ -755,6 +770,7 @@ export const LITESPACE_PLANS: LitespacePlan[] = [
       "Hỗ trợ thay đổi GPKD cơ bản",
       "Tiếp nhận thư từ, bưu phẩm — gửi đi/chuyển tiếp theo yêu cầu (theo phí thực tế)",
       "Dịch vụ kế toán nâng cao: Liên hệ",
+      DOMAIN_EMAIL_PERK,
     ],
   },
   {
@@ -776,6 +792,7 @@ export const LITESPACE_PLANS: LitespacePlan[] = [
       "Hỗ trợ mở tài khoản ngân hàng",
       "Kế toán cơ bản miễn phí",
       "Dịch vụ kế toán nâng cao: Liên hệ",
+      DOMAIN_EMAIL_PERK,
     ],
   },
 ];

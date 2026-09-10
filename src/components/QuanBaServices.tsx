@@ -12,7 +12,7 @@ import {
   CheckCircleIcon,
   ArrowRightSmallIcon,
 } from "./icons";
-import { QUAN_7_VO_PLANS, QUAN_7_ADDONS } from "@/lib/virtualOfficePlans";
+import { QUAN_7_VO_PLANS, QUAN_7_ADDONS, DOMAIN_EMAIL_PERK } from "@/lib/virtualOfficePlans";
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
@@ -122,6 +122,10 @@ export default function QuanBaServices() {
                         <span className="font-semibold text-navy">Lễ tân: </span>
                         {plan.reception}
                       </span>
+                    </li>
+                    <li className="flex items-start gap-1.5 text-[12.5px] text-body-text">
+                      <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                      <span>{DOMAIN_EMAIL_PERK}</span>
                     </li>
                   </ul>
                 </div>
