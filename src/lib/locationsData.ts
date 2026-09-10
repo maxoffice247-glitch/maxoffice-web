@@ -689,6 +689,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
         // nhà) + khoảng 4/10 hàng đầu, thay vì "center" sẽ mất luôn header.
         objectPosition: "top",
       },
+      { src: "/images/dia-diem-nguyen-oanh-tiep-khach.jpg", alt: "Khu tiếp khách sảnh toà nhà văn phòng Nguyễn Oanh", caption: "Khu tiếp khách" },
     ],
     intro: [
       "Văn phòng Nguyễn Oanh nằm tại 238-240-242 Nguyễn Oanh, Phường Gò Vấp, toạ lạc trong một toà nhà hạng A — chất lượng xây dựng và tiện ích vượt trội so với mặt bằng chung khu vực. Đây là lựa chọn phù hợp cho doanh nghiệp đang tăng trưởng, cần địa chỉ uy tín cùng các tiện ích hỗ trợ vận hành thực chất như tư vấn tự động hoá AI, ưu tiên hỗ trợ 24/7 và phòng họp đi kèm.",
@@ -871,6 +872,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     interiorImages: [
       { src: "/images/dia-diem-cong-hoa-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cộng Hoà", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cong-hoa-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cộng Hoà", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-cong-hoa-mat-truoc-sanh.jpg", alt: "Mặt trước sảnh toà nhà văn phòng Cộng Hoà", caption: "Mặt trước sảnh" },
     ],
     intro: [
       "Văn phòng Cộng Hoà toạ lạc tại số 123 Cộng Hoà, Phường Bảy Hiền, Quận Tân Bình — ngay trên một trong những trục đường lớn và sầm uất bậc nhất khu vực Tân Bình. Bảy Hiền từ lâu được biết đến là khu vực gắn liền với nghề dệt may truyền thống của người Quảng Nam di cư vào Sài Gòn, nay đã phát triển thành khu dân cư — thương mại sôi động với mật độ doanh nghiệp vừa và nhỏ dày đặc.",
@@ -1014,6 +1016,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     interiorImages: [
       { src: "/images/dia-diem-cuu-long-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Cửu Long", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cuu-long-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Cửu Long", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-cuu-long-tiep-khach.jpg", alt: "Khu tiếp khách sảnh toà nhà văn phòng Cửu Long", caption: "Khu tiếp khách" },
     ],
     intro: [
       "Văn phòng Cửu Long toạ lạc tại 06-08-10 Cửu Long, Phường Tân Sơn Hòa, Quận Tân Bình — con đường nhỏ, yên tĩnh nằm gần Công viên Hoàng Văn Thụ, một trong những mảng xanh lớn hiếm hoi của khu vực Tân Bình. Đây là lựa chọn phù hợp cho doanh nghiệp muốn có địa chỉ đăng ký kinh doanh trong khu dân cư ổn định, tránh sự ồn ào của các trục đường lớn.",
@@ -1085,6 +1088,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     interiorImages: [
       { src: "/images/dia-diem-hoang-viet-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Hoàng Việt", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-hoang-viet-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Việt", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-hoang-viet-mat-truoc.jpg", alt: "Mặt trước toà nhà văn phòng Hoàng Việt", caption: "Mặt trước tòa nhà" },
     ],
     intro: [
       `Văn phòng Hoàng Việt toạ lạc tại 1/12 Hoàng Việt, Phường Tân Sơn Nhất, Quận Tân Bình — con đường chạy dọc theo ranh giới sân bay Tân Sơn Nhất, một trong những vị trí gần cổng sân bay nhất trong toàn hệ thống ${ACTIVE_BRANCH_COUNT} chi nhánh của MAX OFFICE. Đây là lựa chọn lý tưởng cho doanh nghiệp mới thành lập cần địa chỉ đăng ký kinh doanh với chi phí hợp lý nhưng vẫn ở vị trí thuận tiện.`,
@@ -1230,6 +1234,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     interiorImages: [
       { src: "/images/dia-diem-lam-son-le-tan.jpg", alt: "Khu vực lễ tân văn phòng Lam Sơn", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-lam-son-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Lam Sơn", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-lam-son-mat-truoc.jpg", alt: "Mặt trước toà nhà MC Building — văn phòng Lam Sơn", caption: "Mặt trước tòa nhà" },
     ],
     intro: [
       "Văn phòng Lam Sơn toạ lạc tại 2-2B Lam Sơn, Phường Tân Sơn Hòa, Quận Tân Bình — khu vực nằm gần trục đường Lê Văn Sỹ, một trong những tuyến phố ẩm thực và mua sắm sầm uất nối liền Tân Bình với Quận 3. Đây là lựa chọn thuận tiện cho doanh nghiệp cần địa chỉ vừa gần trung tâm vừa giữ được chi phí hợp lý.",
@@ -1462,6 +1467,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     interiorImages: [
       { src: "/images/dia-diem-cmt8-le-tan.jpg", alt: "Khu vực lễ tân văn phòng CMT8", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-cmt8-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng CMT8", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-cmt8-san-trong.jpg", alt: "Không gian trống văn phòng CMT8", caption: "Không gian trống" },
     ],
     intro: [
       "Văn phòng CMT8 toạ lạc tại 283/26-28 Cách Mạng Tháng 8, Phường Hoà Hưng, Quận 10 — một trong những trục đường lớn và huyết mạch bậc nhất khu vực trung tâm TP.HCM, nối liền Quận 1, Quận 3 với Quận 10 và Quận Tân Bình. Đây là chi nhánh đầu tiên MAX OFFICE mở tại khu vực Quận 10 (cũ), phù hợp cho doanh nghiệp muốn có địa chỉ gần trung tâm với chi phí hợp lý hơn so với Quận 1.",
@@ -2473,6 +2479,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     interiorImages: [
       { src: "/images/dia-diem-nguyen-truong-to-le-tan.jpg", alt: "Quầy lễ tân văn phòng 84-86 Nguyễn Trường Tộ", caption: "Quầy lễ tân" },
       { src: "/images/dia-diem-nguyen-truong-to-san-trong.jpg", alt: "Không gian trống văn phòng 84-86 Nguyễn Trường Tộ", caption: "Không gian trống" },
+      { src: "/images/dia-diem-nguyen-truong-to-view-van-phong.jpg", alt: "View thành phố từ ban công văn phòng 84-86 Nguyễn Trường Tộ", caption: "View văn phòng" },
     ],
     intro: [
       "Văn phòng 84-86 Nguyễn Trường Tộ là chi nhánh đầu tiên MAX OFFICE mở tại khu vực Quận 4 (cũ), toạ lạc tại Phường Xóm Chiếu — khu vực chỉ cách trung tâm Quận 1 một nhịp cầu qua cầu Ông Lãnh hoặc cầu Calmette. Sự xuất hiện của chi nhánh này mở rộng thêm một lựa chọn địa chỉ đăng ký kinh doanh cho doanh nghiệp muốn đặt trụ sở sát trung tâm thành phố với chi phí hợp lý hơn.",
