@@ -16,10 +16,17 @@ export type FacadeImage = {
   objectPosition?: string;
 };
 
-/** Ảnh cao hơn văn bản ít nhất ngần này (px) mới coi là "chênh lệch đáng
-    kể" cần hiện khối lấp — chênh lệch nhỏ hơn chấp nhận để nguyên, không
-    cố lấp bằng mọi giá (xem doc comment dưới). */
+/** ẢNH cao hơn VĂN BẢN quá ngần này (px) → hiện khối lấp benefits ở cột
+    văn bản. Ngưỡng thấp vì "lấp benefits" là can thiệp nhẹ (thêm vài mục
+    từ data.benefits có sẵn). */
 const FILL_GAP_THRESHOLD_PX = 48;
+/** VĂN BẢN cao hơn ẢNH quá ngần này (px) → bọc ảnh trong khối nền màu
+    thương hiệu giãn hết cột + căn giữa (`centerImage`). Ngưỡng CAO hơn hẳn
+    vì đây là can thiệp NẶNG về thị giác (đổi hẳn khung ảnh sang 1 khối
+    màu lớn) — chỉ đáng làm khi cột ảnh thấp hơn HẲN (ảnh mặt tiền tỉ lệ
+    ngang), không phải cho chênh lệch nhỏ (ảnh dọc 3:4 chỉ ngắn hơn văn
+    bản chút ít — để top-align như cũ, chấp nhận khoảng hở nhỏ ở đáy). */
+const CENTER_IMAGE_GAP_THRESHOLD_PX = 180;
 /** 2 cột chỉ áp dụng từ `lg:` (1024px, khớp class `lg:grid-cols-2` bên
     dưới) — dưới ngưỡng này ảnh/text xếp dọc, không có "cột nào cao hơn
     cột nào" để so, nên không cần (và không nên) hiện khối lấp. */
@@ -48,11 +55,19 @@ const TWO_COLUMN_MIN_WIDTH = 1024;
  * cách sửa row-span gói VPA trong VoPlanCard.tsx trước đây — công thức
  * đoán từng gây bug thật vì không phản ánh đúng độ dài chữ/xuống dòng
  * thực tế) — so chiều cao khối văn bản GỐC (chỉ đoạn giới thiệu, không
- * tính khối lấp) với chiều cao khung ảnh; vượt ngưỡng mới hiện khối lấp,
- * để tránh hiện thừa khi văn bản đã đủ dài tự nhiên cân bằng với ảnh.
- * Chỉ hoạt động khi đang xếp 2 cột (≥1024px) — dưới ngưỡng đó ảnh/text
- * xếp dọc tuần tự, không có khái niệm "cột nào cao hơn" nên luôn ẩn khối
- * lấp, không cần đo.
+ * tính khối lấp) với chiều cao khung ảnh:
+ *   - ẢNH cao hơn VĂN BẢN quá ngưỡng → hiện khối lấp benefits ở cột văn
+ *     bản (`showFiller`), tránh hiện thừa khi văn bản đã đủ dài.
+ *   - VĂN BẢN cao hơn ẢNH quá ngưỡng (thường gặp khi ảnh mặt tiền tỉ lệ
+ *     NGANG — Mai Chí Thọ, Yên Thế, Tân Thắng, Bàu Cát 2, Lam Sơn, Hoàng
+ *     Kế Viêm, 54-56 Lê Quốc Hưng — cột ảnh thấp lè tè cạnh cột văn bản
+ *     dài) → `centerImage`: cột ảnh giãn hết chiều cao hàng (lg:self-stretch),
+ *     bọc ảnh trong 1 khung nền `bg-bg-tint` bo góc và CĂN GIỮA ảnh theo
+ *     chiều dọc — biến khoảng trống "dồn hết xuống đáy" (trông như lỗi)
+ *     thành phần nền khung ảnh chia đều trên/dưới, trông có chủ đích.
+ * 2 nhánh loại trừ nhau (1 bên ảnh>văn bản, bên kia văn bản>ảnh) nên
+ * không bao giờ bật cùng lúc. Chỉ hoạt động khi đang xếp 2 cột (≥1024px)
+ * — dưới ngưỡng đó ảnh/text xếp dọc tuần tự, không có "cột nào cao hơn".
  */
 export default function LocationFacade({
   name,
@@ -80,20 +95,27 @@ export default function LocationFacade({
   const textRef = useRef<HTMLDivElement>(null);
   const imageBoxRef = useRef<HTMLButtonElement>(null);
   const [showFiller, setShowFiller] = useState(false);
+  const [centerImage, setCenterImage] = useState(false);
 
   useLayoutEffect(() => {
     const textEl = textRef.current;
     const imageEl = imageBoxRef.current;
-    if (!textEl || !imageEl || !benefitsFiller) return;
+    if (!textEl || !imageEl) return;
 
     const measure = () => {
       if (window.innerWidth < TWO_COLUMN_MIN_WIDTH) {
         setShowFiller((prev) => (prev ? false : prev));
+        setCenterImage((prev) => (prev ? false : prev));
         return;
       }
-      const gap = imageEl.getBoundingClientRect().height - textEl.getBoundingClientRect().height;
-      const next = gap > FILL_GAP_THRESHOLD_PX;
-      setShowFiller((prev) => (prev === next ? prev : next));
+      const imgH = imageEl.getBoundingClientRect().height;
+      const textH = textEl.getBoundingClientRect().height;
+      // Ảnh cao hơn văn bản → hiện khối lấp benefits (chỉ khi có sẵn khối
+      // để hiện). Văn bản cao hơn ảnh → căn giữa + đóng khung ảnh.
+      const nextFiller = !!benefitsFiller && imgH - textH > FILL_GAP_THRESHOLD_PX;
+      const nextCenter = textH - imgH > CENTER_IMAGE_GAP_THRESHOLD_PX;
+      setShowFiller((prev) => (prev === nextFiller ? prev : nextFiller));
+      setCenterImage((prev) => (prev === nextCenter ? prev : nextCenter));
     };
 
     measure();
@@ -137,24 +159,38 @@ export default function LocationFacade({
             </div>
             {showFiller && benefitsFiller}
           </Reveal>
-          <Reveal delay={0.1} className={imageOrderClass}>
-            <button
-              ref={imageBoxRef}
-              type="button"
-              onClick={onImageClick}
-              aria-label={`Xem lớn ảnh mặt tiền văn phòng ${name}`}
-              className="relative block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-card"
-              style={{ aspectRatio: image.aspectRatio }}
+          <Reveal delay={0.1} className={`${imageOrderClass} ${centerImage ? "lg:self-stretch" : ""}`}>
+            {/* Khi văn bản cao hơn ảnh (ảnh mặt tiền tỉ lệ ngang) — bọc ảnh
+                trong 1 KHỐI NỀN màu thương hiệu (primary-tint) giãn hết
+                chiều cao cột, căn giữa ảnh theo chiều dọc: khoảng trống trở
+                thành phần nền của khối "featured image", trông có chủ đích
+                thay vì dồn hết xuống đáy. Khi không (đa số chi nhánh ảnh
+                dọc) — div này là lớp trong suốt, ảnh hiển thị y như cũ. */}
+            <div
+              className={
+                centerImage
+                  ? "flex h-full items-center justify-center rounded-2xl bg-primary-tint p-4 sm:p-5"
+                  : ""
+              }
             >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-                style={{ objectPosition: image.objectPosition ?? "center" }}
-              />
-            </button>
+              <button
+                ref={imageBoxRef}
+                type="button"
+                onClick={onImageClick}
+                aria-label={`Xem lớn ảnh mặt tiền văn phòng ${name}`}
+                className="relative block w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-card"
+                style={{ aspectRatio: image.aspectRatio }}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                  style={{ objectPosition: image.objectPosition ?? "center" }}
+                />
+              </button>
+            </div>
           </Reveal>
         </div>
       </div>

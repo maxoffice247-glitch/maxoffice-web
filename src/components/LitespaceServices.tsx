@@ -40,9 +40,9 @@ const OTHER_SERVICES = [
  *    LitespacePlanCard.tsx).
  * 2. KHÔNG gộp lưới "Dịch vụ khác" chung với lưới gói (grid-flow-row-dense)
  *    như SilverGoldPremiumServices.tsx — 3 gói LiteSpace cao lệch nhau
- *    nhiều nên lưới gộp sẽ kéo giãn card thấp để lại khoảng trắng lớn (xem
- *    doc comment LitespacePlanCard.tsx). Lưới gói dùng `items-start` (đáy
- *    so le nhẹ), "Dịch vụ khác" là lưới RIÊNG bên dưới.
+ *    nhiều. Lưới gói là `sm:grid-cols-3` RIÊNG (stretch mặc định → 3 card
+ *    tự cao bằng nhau, xem doc comment LitespacePlanCard.tsx), "Dịch vụ
+ *    khác" là lưới RIÊNG bên dưới.
  *
  * LiteSpace KHÔNG khai báo "dịch vụ bổ sung" riêng nào (khác SGP có ĐKKD
  * 1.296K/khắc dấu 480K của MAX) nên KHÔNG có khối đó ở đây.
@@ -93,10 +93,11 @@ export default function LitespaceServices({
               </Link>
             </div>
           </div>
-          {/* Lưới 3 gói — `items-start`: mỗi card cao theo nội dung thật
-              (CORE/PLUS/PRO cao lệch nhau, xem doc comment LitespacePlanCard.tsx),
-              KHÔNG gộp dày với "Dịch vụ khác" như các hệ giá đồng-chiều-cao. */}
-          <RevealGroup className="grid grid-cols-1 items-start gap-5 sm:grid-cols-3">
+          {/* Lưới 3 gói RIÊNG (không gộp "Dịch vụ khác") — stretch mặc định
+              của CSS Grid kéo cả 3 card trong 1 hàng cao BẰNG NHAU, spacer
+              `grow` trong card ghim khối combo xuống đáy (xem doc comment
+              LitespacePlanCard.tsx). */}
+          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-3">
             {LITESPACE_PLANS.map((plan) => (
               <LitespacePlanCard key={plan.key} plan={plan} />
             ))}
