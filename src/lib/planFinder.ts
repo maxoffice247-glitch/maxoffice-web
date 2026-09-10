@@ -1,9 +1,11 @@
 /**
- * Gộp toàn bộ 5 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
+ * Gộp toàn bộ 7 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
  * nhánh; M-START/M-BASE/M-ORIGIN riêng Phạm Văn Đồng; W-BASE/W-PRO riêng
- * Bùi Văn Ba; SAVE/SILVER/GOLD/PREMIUM dùng chung Quận 1 (cũ) + Quận 3
- * (cũ); SILVER/GOLD/PREMIUM dùng chung Bình Thạnh/Phú Nhuận/Quận 4/Thủ
- * Đức) thành MỘT danh sách phẳng — dùng cho công cụ /tien-ich/tim-goi-phu-hop.
+ * Bùi Văn Ba; V-START riêng 314/6 Điện Biên Phủ; SAVE/SILVER/GOLD/PREMIUM
+ * dùng chung Quận 1 (cũ) + Quận 3 (cũ); SILVER/GOLD/PREMIUM dùng chung
+ * Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức/Tân Bình; CORE/PLUS/PRO hệ đối tác
+ * LiteSpace — 28 Mai Chí Thọ) thành MỘT danh sách phẳng — dùng cho công cụ
+ * /tien-ich/tim-goi-phu-hop.
  *
  * Nguồn dữ liệu: LOCATIONS_LIST (đã tự lọc `isActive !== false`) +
  * virtualOfficePlans.ts. Vì hàm này lặp qua LOCATIONS_LIST (không phải
@@ -23,6 +25,8 @@ import {
   SAVE_SILVER_GOLD_PREMIUM_LOCATIONS,
   SILVER_GOLD_PREMIUM_VO_PLANS,
   SILVER_GOLD_PREMIUM_LOCATIONS,
+  LITESPACE_PLANS,
+  LITESPACE_LOCATIONS,
   type PhamVanDongPlan,
   type VuonLaiPlan,
   type SaveSilverGoldPremiumPlan,
@@ -151,6 +155,24 @@ export function getAllOfferedPlans(): OfferedPlan[] {
           price: p.price,
           duration: p.duration,
           features: withQuan3StyleFeatures(p),
+        });
+      }
+    } else if (LITESPACE_LOCATIONS.includes(slug)) {
+      // Hệ giá đối tác LiteSpace — `features` đã là danh sách phẳng sẵn,
+      // dùng thẳng (không có field cấu trúc riêng như SGP/M-*). Giá gốc
+      // gạch ngang / badge / combo box chỉ hiển thị ở trang chi nhánh
+      // (LitespaceServices.tsx), không đưa vào OfferedPlan (công cụ tìm
+      // gói + trang chi tiết gói chỉ cần giá + tính năng + tên).
+      for (const p of LITESPACE_PLANS) {
+        result.push({
+          locationSlug: slug,
+          locationName: name,
+          area,
+          planKey: p.key,
+          planName: p.name,
+          price: p.price,
+          duration: p.duration,
+          features: p.features,
         });
       }
     } else {

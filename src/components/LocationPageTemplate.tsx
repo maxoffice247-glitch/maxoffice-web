@@ -13,6 +13,7 @@ import QuanBaServices from "./QuanBaServices";
 import VuonLaiServices from "./VuonLaiServices";
 import Quan3CuVOServices from "./Quan3CuVOServices";
 import SilverGoldPremiumServices from "./SilverGoldPremiumServices";
+import LitespaceServices from "./LitespaceServices";
 import LocationCrossLinks from "./LocationCrossLinks";
 import LocationLeadForm from "./LocationLeadForm";
 import Testimonials from "./Testimonials";
@@ -194,6 +195,8 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         <SilverGoldPremiumServices branchName="614-616-618 Ba Tháng Hai" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "ut-tich" ? (
         <SilverGoldPremiumServices branchName="40A-40B Út Tịch" slug={data.slug} promotions={data.promotions} />
+      ) : data.slug === "mai-chi-tho" ? (
+        <LitespaceServices branchName="28 Mai Chí Thọ" slug={data.slug} promotions={data.promotions} />
       ) : (
         <LocationServicesList name={data.name} slug={data.slug} promotions={data.promotions} />
       )}

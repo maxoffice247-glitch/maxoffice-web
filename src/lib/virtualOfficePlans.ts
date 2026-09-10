@@ -284,6 +284,9 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (SILVER_GOLD_PREMIUM_LOCATIONS.includes(slug)) {
     return SILVER_GOLD_PREMIUM_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
+  if (LITESPACE_LOCATIONS.includes(slug)) {
+    return LITESPACE_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  }
   return getCheapestPlanForLocation(slug)?.price;
 }
 
@@ -732,4 +735,111 @@ export const SILVER_GOLD_PREMIUM_LOCATIONS: string[] = [
   // Chi nhánh SGP đầu tiên tại khu vực Tân Bình (cũ) — 8 chi nhánh Tân Bình
   // còn lại dùng hệ LITE-RISE, KHÔNG cùng bảng giá này.
   "ut-tich",
+];
+
+/* ---------------------------------------------------------------------- */
+/* Hệ giá ĐỐI TÁC "LiteSpace" — CORE / PLUS / PRO. Đây là bảng giá của     */
+/* đơn vị hợp tác cung cấp không gian (LiteSpace), KHÔNG phải hệ giá do    */
+/* MAX OFFICE tự vận hành (LITE-RISE, M-*, W-*, SAVE/SILVER/GOLD/PREMIUM,  */
+/* SILVER/GOLD/PREMIUM). Vì cấu trúc thẻ giá khác hẳn (có giá gốc gạch     */
+/* ngang "ưu đãi ra mắt", badge, câu mô tả riêng từng gói, và khối combo   */
+/* nền vàng chỉ ở gói CORE) nên tạo type + constant RIÊNG — không nhồi vào */
+/* type sẵn có để tránh lẫn lộn logic tính năng giữa các hệ.               */
+/* Dự kiến áp dụng cho tối đa 8 địa chỉ hợp tác LiteSpace; hiện có 1       */
+/* (28 Mai Chí Thọ). Thêm địa chỉ mới: chỉ thêm slug vào                   */
+/* LITESPACE_LOCATIONS bên dưới, KHÔNG tạo lại bộ gói.                     */
+/* ---------------------------------------------------------------------- */
+
+export type LitespacePlanKey = "ls-core" | "ls-plus" | "ls-pro";
+
+export type LitespacePlan = {
+  key: LitespacePlanKey;
+  name: string;
+  /** Giá gốc (gạch ngang) trước ưu đãi ra mắt — luôn > `price`. */
+  originalPrice: number;
+  /** Giá đang áp dụng thực tế. */
+  price: number;
+  duration: string;
+  /** Nhãn ưu đãi hiển thị trên thẻ (VD "Ưu đãi ra mắt MAX"). */
+  badge: string;
+  /** Câu mô tả ngắn dưới tên gói — định vị lợi ích chính của gói. */
+  description: string;
+  features: string[];
+  /** Khối combo tuỳ chọn (nền vàng) hiển thị DƯỚI checklist — CHỈ gói CORE
+      có. Không phải "dịch vụ bổ sung" chung của cả hệ (LiteSpace không khai
+      báo dịch vụ bổ sung riêng nào — để trống, không bịa). */
+  comboBox?: { title: string; body: string };
+};
+
+export const LITESPACE_VAT_NOTE = "Giá trên chưa bao gồm thuế VAT 10%.";
+
+/** 3 gói văn phòng ảo hệ LiteSpace — giá CHƯA gồm VAT 10%. */
+export const LITESPACE_PLANS: LitespacePlan[] = [
+  {
+    key: "ls-core",
+    name: "CORE",
+    originalPrice: 599000,
+    price: 499000,
+    duration: "/ tháng",
+    badge: "Ưu đãi ra mắt MAX",
+    description:
+      "Tối ưu thuế: thu nhập cá nhân tính lũy tiến có thể lên tới 30%, trong khi lập doanh nghiệp chỉ khoảng 7%. MAX lo hết phần thủ tục.",
+    features: [
+      "Địa điểm đặt trụ sở/kinh doanh",
+      "Đăng ký địa chỉ kinh doanh (ĐKKD)",
+      "Treo bảng hiệu tại toà nhà",
+      "Nhận thư từ, bưu phẩm tận nơi",
+      "Tư vấn lộ trình chuyển đổi lên doanh nghiệp",
+    ],
+    comboBox: {
+      title: "Chưa có công ty?",
+      body: "Thêm combo “Đăng ký lo hết” 4.000.000đ — MAX OFFICE lo thủ tục đăng ký cá nhân/hộ kinh doanh trọn gói giúp bạn. Có gói miễn phí cho doanh thu đến 1 tỷ/năm.",
+    },
+  },
+  {
+    key: "ls-plus",
+    name: "PLUS",
+    originalPrice: 599000,
+    price: 499000,
+    duration: "/ tháng",
+    badge: "Ưu đãi ra mắt MAX",
+    description:
+      "Địa chỉ hợp lệ để công ty hoạt động, tránh bị đánh dấu “không hoạt động tại địa chỉ đăng ký”.",
+    features: [
+      "Địa chỉ đăng ký kinh doanh (ĐKKD)",
+      "Pháp lý chuẩn văn phòng, an toàn",
+      "Hỗ trợ thay đổi GPKD cơ bản",
+      "Tiếp nhận thư từ, bưu phẩm — gửi đi/chuyển tiếp theo yêu cầu (theo phí thực tế)",
+      "Dịch vụ kế toán nâng cao: Liên hệ",
+    ],
+  },
+  {
+    key: "ls-pro",
+    name: "PRO",
+    originalPrice: 999000,
+    price: 899000,
+    duration: "/ tháng",
+    badge: "Ưu đãi ra mắt MAX",
+    description:
+      "Địa chỉ hợp lệ để công ty hoạt động, tránh bị đánh dấu “không hoạt động tại địa chỉ đăng ký”.",
+    features: [
+      "Địa chỉ đăng ký kinh doanh (ĐKKD)",
+      "Pháp lý chuẩn văn phòng, an toàn",
+      "Hỗ trợ đăng ký doanh nghiệp (ĐKKD): 2 lần/năm",
+      "Hỗ trợ thay đổi GPKD cơ bản",
+      "Tiếp nhận thư từ, bưu phẩm — gửi đi/chuyển tiếp theo yêu cầu (theo phí thực tế)",
+      "Số điện thoại hotline (số cố định, chuyển tiếp đến số khách hàng): + Phí",
+      "Hỗ trợ mở tài khoản ngân hàng",
+      "Kế toán cơ bản miễn phí",
+      "Dịch vụ kế toán nâng cao: Liên hệ",
+    ],
+  },
+];
+
+/**
+ * Chi nhánh áp dụng hệ giá LiteSpace CORE/PLUS/PRO — thêm slug vào đây khi
+ * mở địa chỉ hợp tác LiteSpace mới, KHÔNG tạo lại bộ gói.
+ */
+export const LITESPACE_LOCATIONS: string[] = [
+  "mai-chi-tho", // Địa chỉ hợp tác LiteSpace đầu tiên (28 Mai Chí Thọ, Thủ Đức).
 ];

@@ -168,6 +168,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "27C Quốc Hương, P. An Khánh",
   },
   {
+    title: "28 Mai Chí Thọ, TP. Thủ Đức",
+    category: "Chi nhánh",
+    href: "/locations/mai-chi-tho",
+    desc: "28 Mai Chí Thọ, P. An Khánh — hệ giá LiteSpace CORE/PLUS/PRO",
+  },
+  {
     title: "Bùi Văn Ba, Quận 7",
     category: "Chi nhánh",
     href: "/locations/quan-7",
@@ -261,7 +267,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Thành phố Thủ Đức (cũ)",
     category: "Khu vực",
     href: "/dia-diem/thu-duc-cu",
-    desc: "2 chi nhánh — Phạm Văn Đồng và 27C Quốc Hương, gần khu Thảo Điền",
+    desc: "3 chi nhánh — Phạm Văn Đồng, 27C Quốc Hương và 28 Mai Chí Thọ, gần khu Thảo Điền và Thủ Thiêm",
   },
   {
     title: "Quận 7 (cũ)",

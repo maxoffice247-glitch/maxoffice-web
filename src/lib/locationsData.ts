@@ -247,6 +247,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_THU_DUC,
   },
   {
+    slug: "mai-chi-tho",
+    name: "28 Mai Chí Thọ, TP. Thủ Đức",
+    shortAddress: "28 Mai Chí Thọ, P. An Khánh",
+    area: AREA_THU_DUC,
+  },
+  {
     slug: "quan-7",
     name: "Bùi Văn Ba, Quận 7",
     shortAddress: "210 Bùi Văn Ba, P. Tân Thuận",
@@ -2290,6 +2296,92 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     ],
   },
 
+  /* =============== 28 MAI CHÍ THỌ (CHI NHÁNH LITESPACE ĐẦU TIÊN — THỦ ĐỨC) =============== */
+  "mai-chi-tho": {
+    slug: "mai-chi-tho",
+    name: "28 Mai Chí Thọ, TP. Thủ Đức",
+    area: AREA_THU_DUC,
+    address: "28 Mai Chí Thọ, Phường An Khánh, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 28 Mai Chí Thọ, TP. Thủ Đức",
+    heroDescription:
+      "Chi nhánh thứ ba của MAX OFFICE tại khu vực Thủ Đức (cũ) — địa chỉ hợp tác đầu tiên với đối tác không gian LiteSpace, 3 gói văn phòng ảo CORE/PLUS/PRO từ 499.000đ/tháng, ngay đại lộ Mai Chí Thọ gần hầm Thủ Thiêm và khu trung tâm mới Thủ Đức.",
+    metaTitle: "Văn Phòng Ảo 28 Mai Chí Thọ, TP. Thủ Đức | Từ 499K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 28 Mai Chí Thọ, Phường An Khánh (TP. Thủ Đức) — địa chỉ hợp tác LiteSpace, 3 gói CORE/PLUS/PRO từ 499.000đ/tháng (chưa VAT), ngay đại lộ Đông Tây, gần hầm Thủ Thiêm và khu đô thị mới Thủ Thiêm.",
+    image: "/images/hero-dich-vu.png",
+    // Ảnh mặt tiền gốc 1598x984 (tỉ lệ ~1.62, ngang tự nhiên — không rơi
+    // vào ngưỡng ép 3:4 của FACADE_TALL_RATIO_THRESHOLD, giữ nguyên tỉ lệ
+    // thật).
+    facadeAspectRatio: "1598 / 984",
+    facadeImageSide: "right",
+    interiorImages: [
+      {
+        src: "/images/dia-diem-mai-chi-tho-le-tan.jpg",
+        alt: "Quầy lễ tân văn phòng 28 Mai Chí Thọ",
+        caption: "Quầy lễ tân",
+      },
+      {
+        src: "/images/dia-diem-mai-chi-tho-khong-gian-lam-viec.jpg",
+        alt: "Không gian làm việc văn phòng 28 Mai Chí Thọ",
+        caption: "Không gian làm việc",
+      },
+      {
+        src: "/images/dia-diem-mai-chi-tho-view-van-phong.jpg",
+        alt: "View nhìn từ văn phòng 28 Mai Chí Thọ",
+        caption: "View văn phòng",
+      },
+    ],
+    intro: [
+      "Văn phòng 28 Mai Chí Thọ là chi nhánh thứ ba của MAX OFFICE tại khu vực Thủ Đức (cũ), sau Phạm Văn Đồng và 27C Quốc Hương, toạ lạc ngay trên đại lộ Mai Chí Thọ — trục chính của tuyến đại lộ Đông Tây, Phường An Khánh. Dù cùng phường với chi nhánh 27C Quốc Hương, đây là hai vị trí khác hẳn nhau: Quốc Hương nằm sâu trong khu dân cư Thảo Điền, còn Mai Chí Thọ là mặt tiền đại lộ lớn, hướng thẳng ra hầm vượt sông Sài Gòn (hầm Thủ Thiêm) và khu đô thị mới Thủ Thiêm.",
+      "Đây cũng là địa chỉ ĐẦU TIÊN MAX OFFICE hợp tác với LiteSpace — đơn vị cung cấp không gian làm việc tại khu vực. Nhờ hợp tác này, khách hàng có thêm lựa chọn đặt trụ sở tại một trong những trục giao thông sầm uất và dễ nhận diện nhất khu Đông thành phố, với bảng giá riêng gồm 3 gói CORE, PLUS và PRO thay cho hệ thống LITE–RISE chung của MAX OFFICE.",
+      "Ba gói được thiết kế theo nhu cầu pháp lý thực tế của doanh nghiệp: CORE 499.000đ/tháng (ưu đãi ra mắt, giá gốc 599.000đ) tập trung vào địa điểm đặt trụ sở và lộ trình chuyển đổi từ cá nhân/hộ kinh doanh lên doanh nghiệp; PLUS 499.000đ/tháng bổ sung pháp lý chuẩn văn phòng và hỗ trợ thay đổi giấy phép kinh doanh; PRO 899.000đ/tháng (giá gốc 999.000đ) thêm hỗ trợ đăng ký doanh nghiệp 2 lần/năm, số hotline chuyển tiếp, hỗ trợ mở tài khoản ngân hàng và kế toán cơ bản miễn phí. Giá chưa bao gồm VAT 10%.",
+      "Vị trí ngay đại lộ Mai Chí Thọ giúp doanh nghiệp di chuyển nhanh về trung tâm Quận 1 qua hầm Thủ Thiêm chỉ vài phút, hoặc kết nối ra xa lộ Hà Nội, cao tốc Long Thành - Dầu Giây về hướng sân bay Long Thành và các tỉnh miền Đông. Đây là lựa chọn phù hợp cho doanh nghiệp thương mại, logistics, tư vấn và các đơn vị mới chuyển từ hình thức cá nhân/hộ kinh doanh muốn một địa chỉ đăng ký kinh doanh nằm ở khu vực phát triển nhanh, gần trung tâm hành chính mới của TP. Thủ Đức.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 28 Mai Chí Thọ",
+    benefits: [
+      { icon: BuildingIcon, title: "Địa chỉ hợp tác LiteSpace đầu tiên", desc: "Chi nhánh mở đầu cho hệ thống địa chỉ MAX OFFICE hợp tác với đối tác không gian LiteSpace." },
+      { icon: MapPinIcon, title: "Mặt tiền đại lộ Mai Chí Thọ", desc: "Trục chính tuyến đại lộ Đông Tây, dễ nhận diện và chỉ đường cho đối tác, khách hàng." },
+      { icon: ClockIcon, title: "Gần hầm Thủ Thiêm", desc: "Kết nối về trung tâm Quận 1 chỉ vài phút qua hầm vượt sông Sài Gòn." },
+      { icon: BadgePercentIcon, title: "3 gói CORE / PLUS / PRO", desc: "Bảng giá riêng từ 499.000đ/tháng, ưu đãi ra mắt cho cả 3 gói (giá gốc cao hơn)." },
+      { icon: HeartHandshakeIcon, title: "Combo cho người chưa có công ty", desc: "Gói CORE kèm tuỳ chọn combo 'Đăng ký lo hết' — MAX lo trọn gói thủ tục đăng ký cá nhân/hộ kinh doanh." },
+      { icon: UsersIcon, title: "Gần khu đô thị mới Thủ Thiêm", desc: "Khu trung tâm hành chính, tài chính mới của TP. Thủ Đức đang phát triển nhanh." },
+    ],
+    nearbyItems: [
+      { name: "Hầm Thủ Thiêm (hầm vượt sông Sài Gòn)", desc: "Đường kết nối nhanh nhất từ khu Đông về trung tâm Quận 1." },
+      { name: "Khu đô thị mới Thủ Thiêm", desc: "Trung tâm hành chính, tài chính mới của TP. Thủ Đức, đang hình thành nhiều toà nhà lớn." },
+      { name: "Chi nhánh 27C Quốc Hương", desc: "Chi nhánh MAX OFFICE khác cùng Phường An Khánh, cách không xa trong khu Thảo Điền." },
+      { name: "Xa lộ Hà Nội", desc: "Kết nối ra hướng cao tốc Long Thành - Dầu Giây, sân bay Long Thành và các tỉnh miền Đông." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Đại lộ Mai Chí Thọ — Võ Nguyên Giáp", desc: "Hai trục lớn giao nhau gần chi nhánh, di chuyển nhiều hướng đều thuận tiện." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Khu vực đông dân cư và văn phòng nên dễ đặt xe công nghệ vào mọi khung giờ." },
+      { icon: CheckCircleIcon, title: "Tuyến Metro số 1", desc: "Ga Metro tuyến Bến Thành - Suối Tiên hoạt động dọc xa lộ Hà Nội gần đó." },
+      { icon: HeadsetIcon, title: "Lễ tân hỗ trợ đón khách", desc: "Đội ngũ tại chi nhánh hướng dẫn khách lần đầu tìm đúng lối vào toà nhà." },
+    ],
+    parkingInfo: [
+      "Khu vực để xe máy bố trí trong khuôn viên toà nhà, phục vụ khách đến làm việc hằng ngày.",
+      "Có chỗ dừng đỗ ô tô ngắn hạn phía trước để đưa đón đối tác.",
+      "Bảo vệ toà nhà trực tại sảnh, theo dõi an ninh khu vực để xe trong giờ hành chính.",
+    ],
+    diningItems: [
+      { name: "Nhà hàng, quán ăn khu An Khánh", desc: "Nhiều lựa chọn từ quán ăn trưa nhanh đến nhà hàng phục vụ tiếp khách." },
+      { name: "Cà phê dọc Mai Chí Thọ", desc: "Các quán cà phê không gian rộng, phù hợp gặp gỡ trao đổi công việc." },
+      { name: "Ẩm thực khu Thảo Điền", desc: "Cách chi nhánh một quãng ngắn, đa dạng phong cách ẩm thực quốc tế." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 28 Mai Chí Thọ có phải là chi nhánh thứ ba của MAX OFFICE tại khu vực Thủ Đức không?", a: "Đúng vậy. Sau Phạm Văn Đồng và 27C Quốc Hương, 28 Mai Chí Thọ là chi nhánh thứ ba MAX OFFICE tại khu vực Thủ Đức (cũ), toạ lạc ngay đại lộ Mai Chí Thọ, Phường An Khánh." },
+      { q: "Gói CORE, PLUS, PRO ở chi nhánh này là gì? Khác gì so với hệ LITE–RISE của MAX OFFICE?", a: "Đây là bảng giá riêng của hệ đối tác LiteSpace — đơn vị hợp tác cung cấp không gian tại địa chỉ này, không dùng chung hệ thống LITE–RISE của các chi nhánh MAX OFFICE khác. CORE và PLUS cùng giá 499.000đ/tháng nhưng khác định hướng (CORE cho người mới chuyển từ cá nhân/hộ kinh doanh, PLUS cho công ty cần địa chỉ hoạt động hợp lệ); PRO 899.000đ/tháng đầy đủ hỗ trợ pháp lý và kế toán cơ bản. Giá chưa gồm VAT 10%." },
+      { q: "\"Ưu đãi ra mắt MAX\" trên các gói nghĩa là gì?", a: "Cả 3 gói đang áp dụng mức giá ưu đãi thấp hơn giá gốc nhân dịp MAX OFFICE ra mắt địa chỉ hợp tác LiteSpace đầu tiên: CORE và PLUS còn 499.000đ (giá gốc 599.000đ), PRO còn 899.000đ (giá gốc 999.000đ). Bạn nên liên hệ hotline để xác nhận thời hạn ưu đãi còn hiệu lực tại thời điểm ký hợp đồng." },
+      { q: "Combo \"Đăng ký lo hết\" 4.000.000đ ở gói CORE dành cho ai?", a: "Dành cho khách chưa có công ty hoặc hộ kinh doanh — MAX OFFICE lo trọn gói thủ tục đăng ký cá nhân/hộ kinh doanh giúp bạn. Với doanh thu đến 1 tỷ đồng/năm, có gói miễn phí phần thủ tục này. Combo là tuỳ chọn thêm, không bắt buộc khi mua gói CORE." },
+      { q: "Địa chỉ 28 Mai Chí Thọ có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường An Khánh, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Tôi có thể đến xem văn phòng 28 Mai Chí Thọ trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ sắp xếp lịch tham quan miễn phí và hướng dẫn đường vào toà nhà trên đại lộ Mai Chí Thọ." },
+    ],
+    testimonials: [
+      { quote: "Văn phòng ngay mặt đại lộ nên chỉ đường cho khách cực dễ, đối tác từ Quận 1 chạy qua hầm Thủ Thiêm là tới.", initial: "N", name: "Anh Nghĩa", role: "Giám đốc công ty thương mại" },
+      { quote: "Mình mới lên công ty từ hộ kinh doanh, gói CORE kèm phần tư vấn chuyển đổi giúp mình đỡ loay hoay thủ tục rất nhiều.", initial: "T", name: "Chị Trang", role: "Chủ doanh nghiệp dịch vụ" },
+    ],
+  },
+
   /* =============== 89 PHAN ĐÌNH PHÙNG (KHU VỰC PHÚ NHUẬN MỚI) =============== */
   "phan-dinh-phung": {
     slug: "phan-dinh-phung",
@@ -2882,7 +2974,12 @@ const MERGED_AREA_PAIRS: { twoSlug: string; oneSlug: string }[] = [
   { twoSlug: "quan-4-cu", oneSlug: "quan-7-cu" }, // Quận 4 - Quận 7: liền kề địa lý thật
   { twoSlug: "quan-3-cu", oneSlug: "phu-nhuan-cu" }, // Quận 3 - Phú Nhuận: liền kề địa lý thật
   { twoSlug: "quan-10-cu", oneSlug: "quan-tan-phu-cu" }, // Quận 10 - Tân Phú: gần qua trục Quận 11
-  { twoSlug: "thu-duc-cu", oneSlug: "quan-go-vap-cu" }, // Thủ Đức - Gò Vấp: cặp còn lại duy nhất
+  // Thủ Đức - Gò Vấp: cặp này KHÔNG còn ghép từ khi Thủ Đức có chi nhánh
+  // thứ 3 (28 Mai Chí Thọ) — getGroupedLocations() tự bỏ ghép (Thủ Đức
+  // thành khối riêng có viền, Gò Vấp/Nguyễn Oanh rơi vào "Các chi nhánh
+  // khu vực khác"). Giữ entry lại làm dự phòng nếu Thủ Đức quay về đúng 2
+  // chi nhánh; rà soát/ghép Gò Vấp với khu vực 2-chi-nhánh khác khi cần.
+  { twoSlug: "thu-duc-cu", oneSlug: "quan-go-vap-cu" },
 ];
 
 /** Khu vực ưu tiên hiển thị lên đầu, theo đúng thứ tự — Quận 1 (cũ) trước
