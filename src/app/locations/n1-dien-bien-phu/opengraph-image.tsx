@@ -7,7 +7,7 @@ export default async function Image() {
   const data = LOCATIONS_DATA["n1-dien-bien-phu"];
   return renderOgImage({
     title: data.metaTitle,
-    backgroundImagePath: `/images/dia-diem-${data.slug}.jpg`,
+    backgroundImagePath: `/images/facade/dia-diem-${data.slug}.jpg`,
     backgroundFit: "contain",
   });
 }

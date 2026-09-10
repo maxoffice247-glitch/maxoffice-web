@@ -64,7 +64,7 @@ function PlanCard({ plan }: { plan: OfferedPlan }) {
             góc trên/dưới khi nhét vào thẻ kết quả, khác tỉ lệ khung ngang cũ. */}
         <div className="relative aspect-[3/4] w-full shrink-0 overflow-hidden bg-bg-tint">
           <Image
-            src={`/images/dia-diem-${plan.locationSlug}.jpg`}
+            src={`/images/facade/dia-diem-${plan.locationSlug}.jpg`}
             alt={`Mặt tiền văn phòng ${plan.locationName}`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

@@ -51,7 +51,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
   // khung theo tỉ lệ thật cho ảnh nào trong gallery này (kể cả 3 ảnh "bảng
   // tên" tỉ lệ cực đoan — nay chỉ khác nhau ở `objectPosition`, xem
   // locationsData.ts).
-  const facadeSrc = `/images/dia-diem-${data.slug}.jpg`;
+  const facadeSrc = `/images/facade/dia-diem-${data.slug}.jpg`;
   const facadeDims = getPublicJpegDimensions(facadeSrc);
   const facadeRealRatio = facadeDims ? facadeDims.width / facadeDims.height : null;
   const facadeImage = {
@@ -109,7 +109,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
     // Ảnh mặt tiền THẬT của chính chi nhánh này cho schema.org (khác với
     // data.image — ảnh hero banner chọn riêng cho tính thẩm mỹ/đa dạng ở
     // PageHero bên dưới, không phải ảnh thật của chi nhánh).
-    image: `${SITE_URL}/images/dia-diem-${data.slug}.jpg`,
+    image: `${SITE_URL}/images/facade/dia-diem-${data.slug}.jpg`,
     telephone: COMPANY_PHONE,
     email: COMPANY_EMAIL,
     address: {

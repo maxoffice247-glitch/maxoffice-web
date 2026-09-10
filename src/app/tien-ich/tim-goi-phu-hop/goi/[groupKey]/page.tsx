@@ -96,7 +96,7 @@ export default async function PlanGroupDetailPage({
                   >
                     <div className="relative aspect-[3/4] w-[52px] shrink-0 overflow-hidden rounded-lg bg-white">
                       <Image
-                        src={`/images/dia-diem-${loc.slug}.jpg`}
+                        src={`/images/facade/dia-diem-${loc.slug}.jpg`}
                         alt={`Mặt tiền văn phòng ${loc.name}`}
                         fill
                         sizes="52px"

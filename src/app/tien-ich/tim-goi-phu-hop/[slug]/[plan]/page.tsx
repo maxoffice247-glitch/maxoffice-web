@@ -45,7 +45,7 @@ export default async function PlanDetailPage({
   const location = LOCATIONS_DATA[slug];
   if (!plan || !location || location.isActive === false) notFound();
 
-  const facadeSrc = `/images/dia-diem-${slug}.jpg`;
+  const facadeSrc = `/images/facade/dia-diem-${slug}.jpg`;
   // Bản đã resize/nén riêng cho card báo giá xuất ảnh (PlanDetailActions ->
   // PlanQuoteCard, xem waitForImages.ts) — card đó chỉ hiển thị ảnh ở khung
   // 270px, dùng ảnh gốc facadeSrc (có thể tới ~600KB) vừa dư thừa vừa làm

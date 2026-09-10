@@ -30,7 +30,7 @@ export default async function Image({
     : "Chi tiết gói văn phòng ảo";
   return renderOgImage({
     title,
-    backgroundImagePath: `/images/dia-diem-${slug}.jpg`,
+    backgroundImagePath: `/images/facade/dia-diem-${slug}.jpg`,
     backgroundFit: "contain",
   });
 }

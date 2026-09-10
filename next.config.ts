@@ -20,22 +20,26 @@ const nextConfig: NextConfig = {
   // renderOgImage() (src/lib/og.tsx) đọc ảnh nền bằng
   // `readFile(join(process.cwd(), "public", backgroundImagePath))` với
   // backgroundImagePath là BIẾN runtime → @vercel/nft không suy ra được
-  // file cụ thể nên gom TOÀN BỘ cây public/images (~190MB) vào trace của
-  // MỌI route. Function bundle vượt giới hạn 250MB unzipped của Vercel →
-  // deploy fail ở bước đóng gói (build vẫn compile sạch, nên không tái
-  // hiện ở local `next build`). Thêm 7 ảnh (2.9MB) ở 972eda7 là giọt tràn.
+  // file cụ thể nên gom TOÀN BỘ cây public/images vào trace của MỌI route.
+  // Function bundle vượt giới hạn 250MB unzipped của Vercel → deploy fail
+  // ở bước đóng gói (build vẫn compile sạch, nên không tái hiện ở local
+  // `next build`).
   //
-  // Cắt cây public/images khỏi trace, rồi include lại ĐÚNG thứ lambda cần
-  // đọc lúc chạy: ảnh mặt tiền `dia-diem-*.jpg` (OG route [slug]/[plan] là
-  // ƒ dynamic), ảnh nền `og/*`, và logo. Các ảnh khác (hero, blog, quote,
-  // originals) chỉ phục vụ qua <Image> (CDN), KHÔNG route nào readFile —
-  // đã rà toàn bộ `fs.readFile*` trong src/.
+  // Cắt cây public/images khỏi trace, rồi include lại ĐÚNG thứ lambda OG
+  // cần đọc lúc chạy: CHỈ 30 ảnh mặt tiền trong public/images/facade/ (OG
+  // route [slug]/[plan] là ƒ dynamic, đọc facade theo slug bất kỳ), ảnh
+  // nền hero cho OG công cụ, và logo. Ảnh gallery nội thất (~110 file,
+  // public/images/dia-diem-*-*.jpg) KHÔNG route nào readFile — chỉ phục vụ
+  // qua <Image> (CDN) — nên KHÔNG nằm trong bundle, thoải mái để chất
+  // lượng cao mà không ăn vào giới hạn 250MB. Đã rà toàn bộ `fs.readFile*`
+  // trong src/: chỉ og.tsx đọc ảnh runtime; imageDimensions.ts chỉ đọc
+  // facade lúc build.
   outputFileTracingExcludes: {
     "**": ["public/images/**", "public/videos/**"],
   },
   outputFileTracingIncludes: {
     "/**/opengraph-image": [
-      "./public/images/dia-diem-*.jpg",
+      "./public/images/facade/**",
       "./public/images/og/**",
       "./public/images/logo-white.png",
     ],
