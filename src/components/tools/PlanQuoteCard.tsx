@@ -104,7 +104,7 @@ export default function PlanQuoteCard({
                 <span aria-hidden>🎁</span> Ưu đãi khi ký hợp đồng dài hạn
               </p>
               <ul className="space-y-1">
-                {promotions.slice(0, 3).map((p) => (
+                {promotions.slice(0, 4).map((p) => (
                   <li key={p} className="flex items-start gap-2 text-[14px] leading-snug text-ink">
                     <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                     {p}
