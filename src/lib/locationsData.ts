@@ -559,7 +559,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo & Trọn Gói Quận 1 Điện Biên Phủ | Địa Chỉ Uy Tín",
     metaDescription:
       "Văn phòng ảo, văn phòng trọn gói tại Điện Biên Phủ, Phường Tân Định, Quận 1 — địa chỉ đăng ký kinh doanh uy tín, đẳng cấp cho doanh nghiệp tại trung tâm TP.HCM.",
-    image: "/images/hero-chi-nhanh.png",
+    image: "/images/hero-chi-nhanh.jpg",
     // Cropped to 934x1232 — bottom lands at the motorbike wheel touching the road (see /images/originals for the source).
     facadeAspectRatio: "934 / 1232",
     facadeImageSide: "left",
@@ -1081,7 +1081,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     heroDescription: "Chi nhánh MAX OFFICE tại Hoàng Việt, Tân Bình — văn phòng ảo từ 299.000đ/tháng, đầy đủ dịch vụ cốt lõi.",
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Hoàng Việt Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Hoàng Việt, Phường Tân Sơn Nhất, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
-    image: "/images/hero-bang-gia-2.png",
+    image: "/images/hero-bang-gia-2.jpg",
     // Cropped to 1122x1394 — bottom extended to the road (see /images/originals for the source).
     facadeAspectRatio: "1122 / 1394",
     facadeImageSide: "left",
@@ -1155,7 +1155,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     heroDescription: "Chi nhánh MAX OFFICE tại Bàu Cát 2, Tân Bình — văn phòng ảo từ 299.000đ/tháng, đầy đủ dịch vụ cốt lõi.",
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Bàu Cát 2 Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Bàu Cát 2, Phường Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
-    image: "/images/hero-ve-chung-toi-2.png",
+    image: "/images/hero-ve-chung-toi-2.jpg",
     facadeAspectRatio: "1448 / 1086",
     facadeImageSide: "right",
     interiorImages: [
@@ -1228,7 +1228,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     heroDescription: "Chi nhánh MAX OFFICE tại Lam Sơn, Tân Bình — văn phòng ảo từ 299.000đ/tháng, đầy đủ dịch vụ cốt lõi.",
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Lam Sơn Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Lam Sơn, Phường Tân Sơn Hòa, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
-    image: "/images/hero-dich-vu.png",
+    image: "/images/hero-dich-vu.jpg",
     facadeAspectRatio: "1390 / 1132",
     facadeImageSide: "left",
     interiorImages: [
@@ -1300,7 +1300,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     heroDescription: "Chi nhánh MAX OFFICE tại Hoàng Kế Viêm, Tân Bình — văn phòng ảo từ 299.000đ/tháng, đầy đủ dịch vụ cốt lõi.",
     metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Hoàng Kế Viêm Tân Bình | MAX OFFICE",
     metaDescription: "Thuê văn phòng ảo, văn phòng trọn gói tại Hoàng Kế Viêm, Phường Bảy Hiền, Tân Bình — giá từ 299.000đ/tháng, đầy đủ dịch vụ MAX OFFICE.",
-    image: "/images/hero-lien-he-2.png",
+    image: "/images/hero-lien-he-2.jpg",
     facadeAspectRatio: "1448 / 1086",
     facadeImageSide: "left",
     interiorImages: [
@@ -1377,7 +1377,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo 40A-40B Út Tịch, Tân Bình (cũ) | Từ 379K/Tháng",
     metaDescription:
       "Thuê văn phòng ảo tại 40A-40B Út Tịch, Phường Tân Sơn Nhất (Tân Bình cũ) — 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), có khu vực nghỉ ngơi riêng cho nhân viên, gần sân bay Tân Sơn Nhất.",
-    image: "/images/hero-chi-nhanh.png",
+    image: "/images/hero-chi-nhanh.jpg",
     // Ảnh mặt tiền gốc 1024x1536, không chỉnh sửa.
     facadeAspectRatio: "1024 / 1536",
     facadeImageSide: "right",
@@ -1537,7 +1537,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo 618 Ba Tháng Hai, Quận 10 (cũ) | Từ 379K/Tháng",
     metaDescription:
       "Thuê văn phòng ảo tại 614-616-618 Ba Tháng Hai, Phường Diên Hồng — chi nhánh mới MAX OFFICE tại Quận 10 (cũ), 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần Đại học Bách Khoa TP.HCM.",
-    image: "/images/hero-chi-nhanh.png",
+    image: "/images/hero-chi-nhanh.jpg",
     // Ảnh mặt tiền gốc 1023x1537, không chỉnh sửa.
     facadeAspectRatio: "1023 / 1537",
     facadeImageSide: "left",
@@ -1998,7 +1998,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo 161 Ung Văn Khiêm, Bình Thạnh (cũ) | Từ 379K/Tháng",
     metaDescription:
       "Thuê văn phòng ảo tại 161 Ung Văn Khiêm, Phường Thạnh Mỹ Tây (Bình Thạnh cũ) — chi nhánh đầu tiên MAX OFFICE tại khu vực này, 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần giao lộ Hàng Xanh.",
-    image: "/images/hero-bang-gia-2.png",
+    image: "/images/hero-bang-gia-2.jpg",
     // Ảnh mặt tiền gốc 813x1086, không chỉnh sửa.
     facadeAspectRatio: "813 / 1086",
     facadeImageSide: "right",
@@ -2076,7 +2076,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo 23 Tân Cảng, Bình Thạnh (cũ) | Từ 379K/Tháng",
     metaDescription:
       "Thuê văn phòng ảo tại 23 Tân Cảng, Phường Thạnh Mỹ Tây (Bình Thạnh cũ) — DHT Building, 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần ga Metro Tân Cảng và Landmark 81.",
-    image: "/images/hero-ve-chung-toi-2.png",
+    image: "/images/hero-ve-chung-toi-2.jpg",
     // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
     facadeAspectRatio: "1086 / 1448",
     facadeImageSide: "left",
@@ -2153,7 +2153,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo N1 Điện Biên Phủ, Bình Thạnh (cũ) | Từ 379K/Tháng",
     metaDescription:
       "Thuê văn phòng ảo tại N1 Điện Biên Phủ, Phường Thạnh Mỹ Tây (Bình Thạnh cũ) — 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT). Lưu ý: khác hoàn toàn chi nhánh Điện Biên Phủ tại Quận 1 (cũ).",
-    image: "/images/hero-dich-vu.png",
+    image: "/images/hero-dich-vu.jpg",
     // Ảnh mặt tiền gốc 1086x1448, không chỉnh sửa.
     facadeAspectRatio: "1086 / 1448",
     facadeImageSide: "right",
@@ -2308,7 +2308,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo 28 Mai Chí Thọ, TP. Thủ Đức | Từ 499K/Tháng",
     metaDescription:
       "Thuê văn phòng ảo tại 28 Mai Chí Thọ, Phường An Khánh (TP. Thủ Đức) — địa chỉ hợp tác LiteSpace, 3 gói CORE/PLUS/PRO từ 499.000đ/tháng (chưa VAT), ngay đại lộ Đông Tây, gần hầm Thủ Thiêm và khu đô thị mới Thủ Thiêm.",
-    image: "/images/hero-dich-vu.png",
+    image: "/images/hero-dich-vu.jpg",
     // Ảnh mặt tiền gốc 1598x984 (tỉ lệ ~1.62, ngang tự nhiên — không rơi
     // vào ngưỡng ép 3:4 của FACADE_TALL_RATIO_THRESHOLD, giữ nguyên tỉ lệ
     // thật).
@@ -2394,7 +2394,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     metaTitle: "Văn Phòng Ảo 89 Phan Đình Phùng, Phú Nhuận (cũ) | Từ 379K/Tháng",
     metaDescription:
       "Thuê văn phòng ảo tại 89 Phan Đình Phùng, Phường Phú Nhuận — chi nhánh đầu tiên MAX OFFICE tại khu vực này, 3 gói SILVER/GOLD/PREMIUM từ 379.000đ/tháng (chưa VAT), gần chợ Phú Nhuận.",
-    image: "/images/hero-lien-he-2.png",
+    image: "/images/hero-lien-he-2.jpg",
     // Ảnh mặt tiền gốc 1024x1536, không chỉnh sửa.
     facadeAspectRatio: "1024 / 1536",
     facadeImageSide: "right",

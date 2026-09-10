@@ -60,7 +60,7 @@ export default function TermsOfUsePage() {
   return (
     <main>
       <PageHero
-        image="/images/hero-bang-gia-2.png"
+        image="/images/hero-bang-gia-2.jpg"
         eyebrow="Pháp lý"
         title="Điều khoản sử dụng"
         description={`Cập nhật lần cuối: ${LAST_UPDATED}`}

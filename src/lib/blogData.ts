@@ -1135,7 +1135,7 @@ thumbnailPosition: "center",
     // Ảnh đại diện riêng cho bài này (graphic tóm tắt 9 rủi ro + cách MAX
     // OFFICE khắc phục từng mục) — dùng làm thumbnail card ở trang danh
     // sách/related posts, không đổi heroImage (banner đầu bài giữ ảnh chung).
-    thumbnailImage: "/images/9-rui-ro-vpa.png",
+    thumbnailImage: "/images/9-rui-ro-vpa.jpg",
     sections: [
       {
         id: "thi-truong-van-phong-ao-va-khoang-cach-gia",
@@ -3380,7 +3380,7 @@ thumbnailImage: "/images/mo-rong-kinh-doanh-sme.jpg",
     heroImage: "/images/anh-hero-moi.jpg",
     // Ảnh mô tả/graphic riêng cho bài này — dùng làm thumbnail card ở
     // trang danh sách blog, không dùng làm hero (đã đổi hero sang ảnh sẵn có).
-    thumbnailImage: "/images/cong-ty-luat-thue-van-phong-ao.png",
+    thumbnailImage: "/images/cong-ty-luat-thue-van-phong-ao.jpg",
     sections: [
       {
         id: "tinh-huong-thuc-te-thuong-gap",

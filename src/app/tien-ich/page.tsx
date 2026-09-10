@@ -25,7 +25,7 @@ export default function TienIchPage() {
   return (
     <main>
       <PageHero
-        image="/images/hero-ve-chung-toi-2.png"
+        image="/images/hero-ve-chung-toi-2.jpg"
         eyebrow="Tiện ích"
         title="Công cụ miễn phí hỗ trợ doanh nghiệp"
         description="13 tiện ích miễn phí giúp bạn ra quyết định nhanh chóng — từ công cụ tính toán, checklist tải PDF, đến bảng so sánh và lộ trình thành lập doanh nghiệp."

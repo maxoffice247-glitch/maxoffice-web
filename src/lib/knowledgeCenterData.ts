@@ -53,7 +53,7 @@ export const KNOWLEDGE_CATEGORIES: KnowledgeCategory[] = [
     description:
       "Điều kiện, thủ tục xin giấy phép con cho các ngành nghề kinh doanh có điều kiện.",
     icon: ShieldCheckIcon,
-    heroImage: "/images/hero-bang-gia-2.png",
+    heroImage: "/images/hero-bang-gia-2.jpg",
   },
   {
     slug: "phap-ly-doanh-nghiep",
@@ -61,7 +61,7 @@ export const KNOWLEDGE_CATEGORIES: KnowledgeCategory[] = [
     description:
       "Quy định pháp luật, hợp đồng và rủi ro pháp lý doanh nghiệp cần lưu ý khi vận hành.",
     icon: ScaleIcon,
-    heroImage: "/images/hero-lien-he-2.png",
+    heroImage: "/images/hero-lien-he-2.jpg",
   },
   {
     slug: "startup-khoi-nghiep",
@@ -69,7 +69,7 @@ export const KNOWLEDGE_CATEGORIES: KnowledgeCategory[] = [
     description:
       "Kinh nghiệm khởi nghiệp, gọi vốn và xây dựng đội ngũ trong giai đoạn đầu.",
     icon: RocketIcon,
-    heroImage: "/images/hero-ve-chung-toi-2.png",
+    heroImage: "/images/hero-ve-chung-toi-2.jpg",
   },
   {
     slug: "quan-ly-tai-chinh",
@@ -77,7 +77,7 @@ export const KNOWLEDGE_CATEGORIES: KnowledgeCategory[] = [
     description:
       "Dòng tiền, ngân sách và kiểm soát tài chính doanh nghiệp hiệu quả.",
     icon: WalletIcon,
-    heroImage: "/images/hero-so-sanh-thue.png",
+    heroImage: "/images/hero-so-sanh-thue.jpg",
   },
   {
     slug: "mo-rong-kinh-doanh",
@@ -85,7 +85,7 @@ export const KNOWLEDGE_CATEGORIES: KnowledgeCategory[] = [
     description:
       "Chiến lược mở chi nhánh, mở rộng quy mô và phát triển thị trường mới.",
     icon: TrendingUpIcon,
-    heroImage: "/images/hero-chi-nhanh.png",
+    heroImage: "/images/hero-chi-nhanh.jpg",
   },
 ];
 

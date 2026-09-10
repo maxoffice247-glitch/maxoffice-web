@@ -62,7 +62,7 @@ export default function TaoMaQrThanhToanPage() {
       // Soạn hồ sơ doanh nghiệp — tỉ lệ ảnh gốc rộng hơn chuẩn OG 1.91:1
       // nên sẽ bị crop 2 bên trên mạng xã hội; giữ nguyên OG tự sinh qua
       // renderOgImage() (logo + tiêu đề + overlay) đã đúng chuẩn OG.
-      heroImage="/images/hero-tao-ma-qr-thanh-toan.png"
+      heroImage="/images/hero-tao-ma-qr-thanh-toan.jpg"
       heroTitle="Tạo mã QR thanh toán tự động"
       heroDescription="Tạo mã QR VietQR để nhận thanh toán nhanh chóng, miễn phí — dùng được cho bất kỳ mục đích thanh toán nào, không giới hạn khách hàng của MAX OFFICE."
       breadcrumbLabel="Tạo mã QR thanh toán"

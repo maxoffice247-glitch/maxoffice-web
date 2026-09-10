@@ -61,7 +61,7 @@ export default function SoanHoSoDoanhNghiepPage() {
       // tại (og-gpkd.jpg) đã có sẵn logo/tiêu đề MAX OFFICE — nhận diện tốt
       // hơn khi hiện dạng thumbnail nhỏ trong link preview so với 1 ảnh
       // chụp văn phòng không chữ.
-      heroImage="/images/Hero-soan-thao-gpkd.png"
+      heroImage="/images/Hero-soan-thao-gpkd.jpg"
       heroTitle="Soạn hồ sơ doanh nghiệp tự động"
       heroDescription="Điền thông tin theo hướng dẫn, nhận ngay bộ hồ sơ soạn sẵn cho thành lập mới, mở chi nhánh, chuyển nhượng vốn, đổi địa chỉ GPKD và Mẫu số 12 — miễn phí, không cần chờ soạn thủ công."
       breadcrumbLabel="Soạn hồ sơ doanh nghiệp"
