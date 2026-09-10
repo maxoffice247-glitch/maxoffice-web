@@ -390,7 +390,6 @@ export type LocationData = {
     alt: string;
     caption?: string;
     objectPosition?: string;
-    aspectRatio?: string;
   }[];
   intro: string[];
   benefitsTitle: string;
@@ -1300,14 +1299,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     facadeAspectRatio: "1448 / 1086",
     facadeImageSide: "left",
     interiorImages: [
-      {
-        src: "/images/dia-diem-hoang-ke-viem-bang-ten.jpg",
-        alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Kế Viêm",
-        caption: "Bảng tên công ty tại toà nhà",
-        // Square (1024x1024) photo — the generic 3:4 solo box left letterbox
-        // gaps above/below; hug the image's real ratio instead.
-        aspectRatio: "1 / 1",
-      },
+      { src: "/images/dia-diem-hoang-ke-viem-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng Hoàng Kế Viêm", caption: "Bảng tên công ty tại toà nhà" },
+      { src: "/images/dia-diem-hoang-ke-viem-san-trong.jpg", alt: "Không gian trống văn phòng Hoàng Kế Viêm", caption: "Không gian trống" },
+      { src: "/images/dia-diem-hoang-ke-viem-wc.jpg", alt: "Khu vực vệ sinh văn phòng Hoàng Kế Viêm", caption: "Nhà vệ sinh" },
     ],
     intro: [
       "Văn phòng Hoàng Kế Viêm toạ lạc tại 26 Hoàng Kế Viêm, Phường Bảy Hiền, Quận Tân Bình — nằm sâu về phía trục Trường Chinh, cửa ngõ Tây Bắc của thành phố nối liền với Quận 12, Hóc Môn. Đây là lựa chọn phù hợp cho doanh nghiệp có nhu cầu kết nối với khu vực ngoại thành phía Tây Bắc TP.HCM.",
