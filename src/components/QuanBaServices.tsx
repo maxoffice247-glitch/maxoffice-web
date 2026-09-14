@@ -2,6 +2,7 @@ import Link from "next/link";
 import SectionHead from "./SectionHead";
 import { RevealGroup, RevealItem } from "./Reveal";
 import Reveal from "./Reveal";
+import QuotePlanMenu from "./QuotePlanMenu";
 import {
   BuildingIcon,
   KeyIcon,
@@ -81,13 +82,19 @@ export default function QuanBaServices() {
                 <BranchPriceBadge />
               </div>
             </div>
-            <Link
-              href="/services/van-phong-ao#bang-gia"
-              className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-primary hover:gap-2.5"
-            >
-              Xem chi tiết
-              <ArrowRightSmallIcon className="transition-transform duration-200" />
-            </Link>
+            {/* Nút "Tạo báo giá" — chi nhánh này trước đây thiếu nút này (xem
+                doc comment QuotePlanMenu.tsx), khác với mọi component dịch vụ
+                chi nhánh khác đã có sẵn. */}
+            <div className="flex shrink-0 items-center gap-3">
+              <QuotePlanMenu slug="quan-7" plans={QUAN_7_VO_PLANS} />
+              <Link
+                href="/services/van-phong-ao#bang-gia"
+                className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-primary hover:gap-2.5"
+              >
+                Xem chi tiết
+                <ArrowRightSmallIcon className="transition-transform duration-200" />
+              </Link>
+            </div>
           </div>
           <RevealGroup className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
             {QUAN_7_VO_PLANS.map((plan) => (

@@ -2,6 +2,7 @@ import Link from "next/link";
 import SectionHead from "./SectionHead";
 import { RevealGroup, RevealItem } from "./Reveal";
 import Reveal from "./Reveal";
+import QuotePlanMenu from "./QuotePlanMenu";
 import {
   BuildingIcon,
   KeyIcon,
@@ -125,7 +126,13 @@ export default function PhamVanDongServices() {
                 <BranchPriceBadge />
               </div>
             </div>
-            <DetailLink href="/services/van-phong-ao#bang-gia" />
+            {/* Nút "Tạo báo giá" — chi nhánh này trước đây thiếu nút này (xem
+                doc comment QuotePlanMenu.tsx), khác với mọi component dịch vụ
+                chi nhánh khác đã có sẵn. */}
+            <div className="flex shrink-0 items-center gap-3">
+              <QuotePlanMenu slug="pham-van-dong" plans={PHAM_VAN_DONG_VO_PLANS} />
+              <DetailLink href="/services/van-phong-ao#bang-gia" />
+            </div>
           </div>
           <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-3">
             {PHAM_VAN_DONG_VO_PLANS.map((plan) => (
