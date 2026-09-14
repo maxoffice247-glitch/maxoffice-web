@@ -2,37 +2,41 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { DownloadIcon, PhoneIcon, SpinnerIcon } from "../icons";
+import { DownloadIcon, PhoneIcon, ShareIcon, SpinnerIcon } from "../icons";
 import PlanGroupQuoteCard from "./PlanGroupQuoteCard";
 import type { PlanGroup } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
-import { waitForImages, inlineImagesAsDataUrls } from "@/lib/waitForImages";
+import { captureQuotePng, shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
 
 export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) {
   const quoteRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
+  // Xem PlanDetailActions (component tương đương cho báo giá 1 chi nhánh)
+  // để biết vì sao dùng useCanShareFiles() thay vì useEffect + setState.
+  const canShare = useCanShareFiles();
 
   const handleDownloadQuote = async () => {
     const node = quoteRef.current;
     if (!node) return;
     setStatus("generating");
     try {
-      // Đợi mọi <img> trong card (logo + ảnh từng chi nhánh — có thể 7+
-      // tấm) load + decode xong TRƯỚC khi chụp, xem chi tiết lý do trong
-      // PlanDetailActions (component tương đương cho báo giá 1 chi nhánh).
-      await waitForImages(node);
-      // Chuyển thẳng từng <img> thành data: URL để tránh html-to-image tự
-      // fetch() lại (nguyên nhân thật gây mất ảnh trên mobile — xem
-      // inlineImagesAsDataUrls() trong waitForImages.ts). Càng quan trọng ở
-      // đây vì báo giá nhóm có thể phải nhúng 7+ ảnh cùng lúc — càng nhiều
-      // ảnh, xác suất ít nhất 1 fetch bị lỗi trên mobile data càng cao.
-      await inlineImagesAsDataUrls(node);
-      const { toBlob } = await import("html-to-image");
-      const blob = await toBlob(node, { pixelRatio: 1, cacheBust: true });
-      if (!blob) throw new Error("toBlob returned null");
+      const filename = `bao-gia-tong-hop-${group.groupKey}.png`;
+      // captureQuotePng() đợi + nhúng ảnh thành data: URL (ngăn html-to-
+      // image tự fetch lại — nguyên nhân thật gây mất ảnh trên mobile, xem
+      // waitForImages.ts) và ném lỗi rõ ràng nếu vẫn thiếu ảnh sau khi thử
+      // lại — càng quan trọng ở đây vì báo giá nhóm có thể phải nhúng 7+
+      // ảnh cùng lúc (logo + ảnh từng chi nhánh).
+      const blob = await captureQuotePng(node);
+      if (
+        canShare &&
+        (await shareQuotePng(blob, filename, `Báo giá ${group.planName} - ${group.locations.length} chi nhánh`))
+      ) {
+        setStatus("idle");
+        return;
+      }
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = `bao-gia-tong-hop-${group.groupKey}.png`;
+      link.download = filename;
       link.href = blobUrl;
       link.click();
       setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
@@ -68,10 +72,12 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
       >
         {status === "generating" ? (
           <SpinnerIcon className="h-4 w-4" />
+        ) : canShare ? (
+          <ShareIcon className="h-4 w-4" />
         ) : (
           <DownloadIcon className="h-4 w-4" />
         )}
-        {status === "generating" ? "Đang tạo báo giá..." : "Tải báo giá tổng hợp"}
+        {status === "generating" ? "Đang tạo báo giá..." : canShare ? "Chia sẻ báo giá tổng hợp" : "Tải báo giá tổng hợp"}
       </button>
       {status === "error" && (
         <p className="mt-2 text-center text-[12.5px] text-accent">

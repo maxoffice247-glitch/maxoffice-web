@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from "react";
+
 /**
  * Đợi mọi <img> bên trong `container` load + decode xong trước khi chụp
  * bằng html-to-image. Trước đây luồng "Tải báo giá" (PlanDetailActions,
@@ -14,12 +16,19 @@
  * - Có timeout an toàn (mặc định 8s) phòng trường hợp trình duyệt không bao
  *   giờ bắn sự kiện load/error/decode cho 1 ảnh nào đó.
  */
-export async function waitForImages(container: HTMLElement, timeoutMs = 8000): Promise<void> {
+export async function waitForImages(container: HTMLElement, timeoutMs?: number): Promise<void> {
   const images = Array.from(container.querySelectorAll("img"));
   if (images.length === 0) return;
 
+  // Không hardcode 8s cố định cho mọi trường hợp — báo giá NHÓM nhiều chi
+  // nhánh có thể phải tải 7+ ảnh CÙNG LÚC trên cùng 1 đường truyền mobile
+  // data, tổng thời gian tải thực tế dài hơn hẳn báo giá 1 chi nhánh (2
+  // ảnh: logo + mặt tiền). Ước lượng ~3s/ảnh, giới hạn trong khoảng
+  // 8-20s — đủ rộng cho nhóm đông chi nhánh mà không treo vô thời hạn.
+  const effectiveTimeout = timeoutMs ?? Math.min(20000, Math.max(8000, images.length * 3000));
+
   const perImage = images.map((img) => waitForOneImage(img));
-  const safetyTimeout = new Promise<void>((resolve) => setTimeout(resolve, timeoutMs));
+  const safetyTimeout = new Promise<void>((resolve) => setTimeout(resolve, effectiveTimeout));
 
   await Promise.race([Promise.all(perImage), safetyTimeout]);
 }
@@ -123,4 +132,116 @@ export async function inlineImagesAsDataUrls(container: HTMLElement): Promise<vo
       }
     })
   );
+}
+
+/**
+ * Mọi <img> trong `container` đã nhúng thành công (`src` là `data:` URL)
+ * chưa — dùng SAU khi gọi `inlineImagesAsDataUrls()` để phát hiện ảnh nào
+ * đó vẫn còn thiếu (mạng quá chậm, vượt cả timeout đã tăng ở
+ * `waitForImages()`), thay vì lặng lẽ chụp ra 1 ảnh báo giá "trông có vẻ
+ * xong" nhưng thật ra thiếu ảnh mặt tiền — đúng triệu chứng người dùng đã
+ * gặp phải trước khi có `captureQuotePng()` bên dưới.
+ */
+export function allImagesEmbedded(container: HTMLElement): boolean {
+  const images = Array.from(container.querySelectorAll("img"));
+  return images.every((img) => img.src.startsWith("data:"));
+}
+
+/**
+ * Rasterize `node` (báo giá 1 chi nhánh hoặc báo giá nhóm) thành 1 PNG
+ * Blob, đảm bảo mọi ảnh đã nhúng xong TRƯỚC khi chụp — dùng chung cho cả
+ * PlanDetailActions lẫn PlanGroupDetailActions thay vì mỗi nơi tự lặp lại
+ * chuỗi waitForImages -> inlineImagesAsDataUrls -> toBlob.
+ *
+ * Thử tối đa 2 lượt `waitForImages()` + `inlineImagesAsDataUrls()`: lượt 1
+ * dùng timeout mặc định (tự co giãn theo số ảnh, xem `waitForImages()`),
+ * lượt 2 (chỉ chạy nếu lượt 1 vẫn còn ảnh thiếu) đợi thêm hẳn 20s nữa cho
+ * mạng cực chậm. Nếu SAU CẢ 2 lượt vẫn còn ảnh chưa nhúng được, NÉM LỖI
+ * thay vì tiếp tục chụp — để nơi gọi hiện đúng thông báo "Không tạo được
+ * ảnh báo giá, vui lòng thử lại" thay vì đưa cho người dùng 1 file trông
+ * như hoàn chỉnh nhưng thật ra thiếu ảnh mặt tiền.
+ */
+export async function captureQuotePng(node: HTMLElement): Promise<Blob> {
+  await waitForImages(node);
+  await inlineImagesAsDataUrls(node);
+  if (!allImagesEmbedded(node)) {
+    await waitForImages(node, 20000);
+    await inlineImagesAsDataUrls(node);
+  }
+  if (!allImagesEmbedded(node)) {
+    throw new Error("Một hoặc nhiều ảnh chưa tải xong kịp trước khi xuất báo giá.");
+  }
+  const { toBlob } = await import("html-to-image");
+  const blob = await toBlob(node, { pixelRatio: 1, cacheBust: true });
+  if (!blob) throw new Error("toBlob returned null");
+  return blob;
+}
+
+/**
+ * Chia sẻ thẳng ảnh báo giá qua Web Share API (mở sheet chia sẻ gốc của hệ
+ * điều hành — có sẵn Zalo/Messenger/Facebook/Tin nhắn nếu máy đã cài đặt
+ * app tương ứng) thay vì bắt người dùng tải file PNG về rồi tự mở lại từ
+ * Ảnh/Tệp để đính kèm thủ công. CHỈ khả dụng khi trình duyệt hỗ trợ chia
+ * sẻ FILE qua `navigator.canShare({ files })` — trên thực tế gần như chỉ
+ * có ở trình duyệt di động (Safari iOS 15+, Chrome/Safari Android), hầu
+ * hết trình duyệt desktop KHÔNG hỗ trợ chia sẻ file (dù có thể có
+ * `navigator.share` cho text/URL) — nơi gọi cần tự kiểm tra hỗ trợ trước
+ * (xem `canShareFiles()`) và rơi về tải file như cũ nếu không hỗ trợ.
+ *
+ * Trả về `true` nếu đã mở được sheet chia sẻ (kể cả khi người dùng tự bấm
+ * Huỷ trong sheet đó — `AbortError`, vẫn tính là đã xử lý xong, KHÔNG phải
+ * lỗi cần báo). Trả về `false` cho mọi lỗi khác để nơi gọi tự rơi về luồng
+ * tải file cũ (best-effort, không throw để không chặn hẳn cả tính năng).
+ */
+export async function shareQuotePng(blob: Blob, filename: string, title: string): Promise<boolean> {
+  if (typeof navigator === "undefined" || !navigator.share) return false;
+  try {
+    const file = new File([blob], filename, { type: "image/png" });
+    const shareData = { files: [file], title };
+    if (!navigator.canShare?.(shareData)) return false;
+    await navigator.share(shareData);
+    return true;
+  } catch (err) {
+    return err instanceof Error && err.name === "AbortError";
+  }
+}
+
+/**
+ * Trình duyệt hiện tại có hỗ trợ chia sẻ FILE qua Web Share API không —
+ * dùng `File` rỗng chỉ để hỏi `navigator.canShare()`, không tạo request
+ * mạng nào.
+ */
+function canShareFiles(): boolean {
+  if (typeof navigator === "undefined" || !navigator.share || !navigator.canShare) return false;
+  try {
+    const probe = new File([""], "probe.png", { type: "image/png" });
+    return navigator.canShare({ files: [probe] });
+  } catch {
+    return false;
+  }
+}
+
+/** `canShareFiles()` không đổi trong suốt vòng đời trang nên "subscribe"
+ * là no-op — không có sự kiện nào để lắng nghe. */
+function subscribeNever() {
+  return () => {};
+}
+
+function getServerCanShareFiles(): boolean {
+  // SSR không có `navigator` -> luôn false, khớp với lần render đầu phía
+  // client trước khi hydrate xong (không lệch hydration).
+  return false;
+}
+
+/**
+ * Hook: trình duyệt hiện tại có hỗ trợ chia sẻ file qua Web Share API
+ * không (`navigator.canShare({ files })`) — trên thực tế gần như chỉ có ở
+ * trình duyệt di động (Safari iOS 15+, Chrome/Safari Android). Dùng
+ * `useSyncExternalStore` thay vì `useEffect` + `setState` (giá trị không
+ * đổi sau khi trang tải xong nên không cần effect đồng bộ liên tục) — vừa
+ * tránh cascading render (rule `react-hooks/set-state-in-effect`), vừa
+ * đọc đúng giá trị thật ngay khi cần mà không phải đợi thêm 1 lượt effect.
+ */
+export function useCanShareFiles(): boolean {
+  return useSyncExternalStore(subscribeNever, canShareFiles, getServerCanShareFiles);
 }

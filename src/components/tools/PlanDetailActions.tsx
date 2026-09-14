@@ -2,11 +2,11 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { DownloadIcon, PhoneIcon, SpinnerIcon } from "../icons";
+import { DownloadIcon, PhoneIcon, ShareIcon, SpinnerIcon } from "../icons";
 import PlanQuoteCard, { type QuoteBenefitTag } from "./PlanQuoteCard";
 import type { OfferedPlan } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
-import { waitForImages, inlineImagesAsDataUrls } from "@/lib/waitForImages";
+import { captureQuotePng, shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
 
 export default function PlanDetailActions({
   plan,
@@ -27,35 +27,35 @@ export default function PlanDetailActions({
 }) {
   const quoteRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
+  // false lúc SSR/lần render đầu (không có `navigator`) -> luôn ra nút
+  // "Tải báo giá" trước, rồi chuyển thành "Chia sẻ báo giá" ngay khi
+  // hydrate xong nếu trình duyệt hỗ trợ (hầu hết là di động — Safari
+  // iOS/Chrome Android) — xem useCanShareFiles() trong waitForImages.ts.
+  const canShare = useCanShareFiles();
 
   const handleDownloadQuote = async () => {
     const node = quoteRef.current;
     if (!node) return;
     setStatus("generating");
     try {
-      // Đợi mọi <img> trong card (logo + ảnh mặt tiền) load + decode xong
-      // TRƯỚC khi chụp — trước đây không đợi gì, chỉ vá bằng cách gọi
-      // toPng() 2 lần liên tiếp (vẫn có thể trật trên mobile/mạng chậm,
-      // đồng thời tốn gần gấp đôi thời gian xử lý một cách không cần thiết).
-      await waitForImages(node);
-      // Chuyển thẳng <img> đã decode xong thành data: URL qua canvas — NGĂN
-      // html-to-image tự fetch() lại ảnh (bước embed nội bộ của nó), vốn là
-      // NGUYÊN NHÂN THẬT khiến ảnh mặt tiền biến mất trên mobile: fetch đó
-      // độc lập với <img> trên trang, không timeout/retry, và lỗi 1 lần là
-      // bị cache rỗng vĩnh viễn cho cả phiên trang (chi tiết đầy đủ xem
-      // comment tại inlineImagesAsDataUrls() trong waitForImages.ts).
-      await inlineImagesAsDataUrls(node);
-      const { toBlob } = await import("html-to-image");
-      // toBlob thay vì toPng (trả data: URL): Safari iOS xử lý thuộc tính
-      // `download` trên <a> trỏ tới data: URL lớn không ổn định — thường mở
-      // thẳng ảnh ra xem (điều hướng) thay vì tải về, hoặc treo lâu khi
-      // phải điều hướng tới 1 chuỗi base64 vài MB. blob: URL qua
-      // createObjectURL được Safari hỗ trợ tải về đáng tin cậy hơn nhiều.
-      const blob = await toBlob(node, { pixelRatio: 1, cacheBust: true });
-      if (!blob) throw new Error("toBlob returned null");
+      const filename = `bao-gia-${plan.locationSlug}-${plan.planKey}.png`;
+      // captureQuotePng() đợi ảnh tải xong + nhúng thành data: URL (ngăn
+      // html-to-image tự fetch lại ảnh — nguyên nhân khiến ảnh mặt tiền
+      // biến mất trên mobile, chi tiết xem waitForImages.ts) và ném lỗi rõ
+      // ràng nếu vẫn còn ảnh thiếu sau khi đã thử lại, thay vì âm thầm xuất
+      // ra 1 ảnh báo giá thiếu ảnh mặt tiền.
+      const blob = await captureQuotePng(node);
+      // Trên di động có hỗ trợ chia sẻ file: mở thẳng sheet chia sẻ gốc của
+      // hệ điều hành (Zalo/Messenger/Facebook nếu đã cài) thay vì bắt tải
+      // file về rồi tự đính kèm thủ công. Rơi về tải file như cũ nếu không
+      // hỗ trợ hoặc chia sẻ thất bại vì lý do khác Huỷ.
+      if (canShare && (await shareQuotePng(blob, filename, `Báo giá ${plan.planName} - ${plan.locationName}`))) {
+        setStatus("idle");
+        return;
+      }
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = `bao-gia-${plan.locationSlug}-${plan.planKey}.png`;
+      link.download = filename;
       link.href = blobUrl;
       link.click();
       // Trì hoãn revoke — thu hồi ngay có thể huỷ tải trên vài trình duyệt
@@ -91,10 +91,12 @@ export default function PlanDetailActions({
       >
         {status === "generating" ? (
           <SpinnerIcon className="h-4 w-4" />
+        ) : canShare ? (
+          <ShareIcon className="h-4 w-4" />
         ) : (
           <DownloadIcon className="h-4 w-4" />
         )}
-        {status === "generating" ? "Đang tạo báo giá..." : "Tải báo giá"}
+        {status === "generating" ? "Đang tạo báo giá..." : canShare ? "Chia sẻ báo giá" : "Tải báo giá"}
       </button>
       {status === "error" && (
         <p className="mt-2 text-center text-[12.5px] text-accent">
