@@ -196,19 +196,28 @@ export default function ContactForm({
       </div>
 
       {status === "error" && (
-        <div className="mt-4 rounded-xl border border-accent/30 bg-accent/10 p-4 text-[13.5px] leading-relaxed text-navy">
-          Có lỗi xảy ra, vui lòng gọi trực tiếp hotline{" "}
-          <a href="tel:0898082188" className="font-bold text-accent underline">
-            089 8082 188
-          </a>{" "}
-          hoặc thử lại.{" "}
-          <button
-            type="button"
-            onClick={doSubmit}
-            className="font-bold text-primary underline"
-          >
-            Thử lại
-          </button>
+        <div className="mt-4 flex items-start gap-3 rounded-xl border border-accent/30 bg-accent/10 p-4 text-[13.5px] leading-relaxed text-navy">
+          <Image
+            src="/images/mascot/linh-vat-max-xin-loi.png"
+            alt=""
+            width={52}
+            height={55}
+            className="h-11 w-auto shrink-0 object-contain"
+          />
+          <p>
+            Có lỗi xảy ra, vui lòng gọi trực tiếp hotline{" "}
+            <a href="tel:0898082188" className="font-bold text-accent underline">
+              089 8082 188
+            </a>{" "}
+            hoặc thử lại.{" "}
+            <button
+              type="button"
+              onClick={doSubmit}
+              className="font-bold text-primary underline"
+            >
+              Thử lại
+            </button>
+          </p>
         </div>
       )}
 

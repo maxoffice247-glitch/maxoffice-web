@@ -273,19 +273,28 @@ export default function BookingForm({
         </div>
 
         {status === "error" && (
-          <div className="mt-4 rounded-xl border border-accent/30 bg-accent/10 p-4 text-[13.5px] leading-relaxed text-white">
-            Có lỗi xảy ra, vui lòng gọi trực tiếp hotline{" "}
-            <a href="tel:0898082188" className="font-bold underline">
-              089 8082 188
-            </a>{" "}
-            hoặc thử lại.{" "}
-            <button
-              type="button"
-              onClick={doSubmit}
-              className="font-bold text-[#8FC1F5] underline"
-            >
-              Thử lại
-            </button>
+          <div className="mt-4 flex items-start gap-3 rounded-xl border border-accent/30 bg-accent/10 p-4 text-[13.5px] leading-relaxed text-white">
+            <Image
+              src="/images/mascot/linh-vat-max-xin-loi.png"
+              alt=""
+              width={52}
+              height={55}
+              className="h-11 w-auto shrink-0 object-contain"
+            />
+            <p>
+              Có lỗi xảy ra, vui lòng gọi trực tiếp hotline{" "}
+              <a href="tel:0898082188" className="font-bold underline">
+                089 8082 188
+              </a>{" "}
+              hoặc thử lại.{" "}
+              <button
+                type="button"
+                onClick={doSubmit}
+                className="font-bold text-[#8FC1F5] underline"
+              >
+                Thử lại
+              </button>
+            </p>
           </div>
         )}
 

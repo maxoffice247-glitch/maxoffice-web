@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
@@ -330,6 +331,15 @@ export default function OfficePackageTool() {
           pkg && (
             <Reveal className="mx-auto max-w-[720px] overflow-hidden rounded-2xl border-2 border-primary bg-white text-center shadow-card">
               <div className="bg-gradient-to-tr from-navy to-primary-dark p-8 sm:p-10">
+                {/* Linh vật MAX ăn mừng "number one" — nhấn mạnh đây là kết
+                    quả gợi ý cuối cùng sau khi trả lời xong bảng câu hỏi. */}
+                <Image
+                  src="/images/mascot/linh-vat-max-number-one.png"
+                  alt=""
+                  width={90}
+                  height={90}
+                  className="mx-auto mb-3 h-[76px] w-auto object-contain"
+                />
                 <span className="mb-4 inline-flex items-center gap-2 text-[12px] font-bold tracking-[0.14em] text-[#8FC1F5] uppercase">
                   Gói phù hợp nhất với bạn
                 </span>

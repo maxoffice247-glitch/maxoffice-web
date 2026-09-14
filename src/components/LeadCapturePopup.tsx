@@ -174,13 +174,22 @@ export default function LeadCapturePopup() {
                   </div>
 
                   {status === "error" && (
-                    <p className="text-[13px] text-accent">
-                      Có lỗi xảy ra, vui lòng gọi hotline{" "}
-                      <a href="tel:0898082188" className="font-bold underline">
-                        089 8082 188
-                      </a>{" "}
-                      hoặc thử lại.
-                    </p>
+                    <div className="flex items-start gap-2.5">
+                      <Image
+                        src="/images/mascot/linh-vat-max-xin-loi.png"
+                        alt=""
+                        width={40}
+                        height={43}
+                        className="h-9 w-auto shrink-0 object-contain"
+                      />
+                      <p className="text-[13px] text-accent">
+                        Có lỗi xảy ra, vui lòng gọi hotline{" "}
+                        <a href="tel:0898082188" className="font-bold underline">
+                          089 8082 188
+                        </a>{" "}
+                        hoặc thử lại.
+                      </p>
+                    </div>
                   )}
 
                   <button

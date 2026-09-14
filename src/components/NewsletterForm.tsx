@@ -79,9 +79,18 @@ export default function NewsletterForm({
         </button>
       </form>
       {status === "error" && (
-        <p className="mt-3 text-[12.5px] leading-relaxed text-accent">
-          Có lỗi xảy ra, vui lòng thử lại sau.
-        </p>
+        <div className="mt-3 flex items-start gap-2">
+          <Image
+            src="/images/mascot/linh-vat-max-xin-loi.png"
+            alt=""
+            width={36}
+            height={38}
+            className="h-8 w-auto shrink-0 object-contain"
+          />
+          <p className="text-[12.5px] leading-relaxed text-accent">
+            Có lỗi xảy ra, vui lòng thử lại sau.
+          </p>
+        </div>
       )}
     </div>
   );

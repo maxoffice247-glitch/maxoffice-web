@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useSearch } from "./SearchContext";
 import { SEARCH_INDEX } from "@/lib/searchIndex";
@@ -106,13 +107,24 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
           )}
 
           {query.trim() !== "" && results.length === 0 && (
-            <div className="p-8 text-center text-[14px] text-body-text">
-              Không tìm thấy kết quả cho &ldquo;{query}&rdquo;. Hãy thử từ
-              khoá khác hoặc{" "}
-              <a href="tel:0898082188" className="font-bold text-primary">
-                gọi 089 8082 188
-              </a>{" "}
-              để được tư vấn trực tiếp.
+            <div className="p-8 text-center">
+              {/* Linh vật MAX ngạc nhiên — cùng cảm giác "ơ, không thấy gì
+                  cả" với người dùng khi tìm kiếm không ra kết quả. */}
+              <Image
+                src="/images/mascot/linh-vat-max-ngac-nhien.png"
+                alt=""
+                width={90}
+                height={90}
+                className="mx-auto mb-3 h-[76px] w-auto object-contain"
+              />
+              <p className="text-[14px] text-body-text">
+                Không tìm thấy kết quả cho &ldquo;{query}&rdquo;. Hãy thử từ
+                khoá khác hoặc{" "}
+                <a href="tel:0898082188" className="font-bold text-primary">
+                  gọi 089 8082 188
+                </a>{" "}
+                để được tư vấn trực tiếp.
+              </p>
             </div>
           )}
 
