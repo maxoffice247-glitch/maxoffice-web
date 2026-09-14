@@ -12,8 +12,13 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
   const quoteRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
   // Xem PlanDetailActions (component tương đương cho báo giá 1 chi nhánh)
-  // để biết vì sao dùng useCanShareFiles() thay vì useEffect + setState.
+  // để biết vì sao dùng useCanShareFiles() thay vì useEffect + setState, và
+  // vì sao có thêm errorDetail/previewUrl (chẩn đoán lỗi thiếu ảnh trên
+  // iPhone qua ảnh chụp màn hình người dùng gửi lại, sau 4 lần sửa dựa trên
+  // suy luận kỹ thuật mà lỗi vẫn còn).
   const canShare = useCanShareFiles();
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleDownloadQuote = async () => {
     const node = quoteRef.current;
@@ -27,6 +32,10 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
       // lại — càng quan trọng ở đây vì báo giá nhóm có thể phải nhúng 7+
       // ảnh cùng lúc (logo + ảnh từng chi nhánh).
       const blob = await captureQuotePng(node);
+      setPreviewUrl((old) => {
+        if (old) URL.revokeObjectURL(old);
+        return URL.createObjectURL(blob);
+      });
       if (
         canShare &&
         (await shareQuotePng(blob, filename, `Báo giá ${group.planName} - ${group.locations.length} chi nhánh`))
@@ -41,7 +50,8 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
       link.click();
       setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
       setStatus("idle");
-    } catch {
+    } catch (err) {
+      setErrorDetail(err instanceof Error ? err.message : String(err));
       setStatus("error");
     }
   };
@@ -82,7 +92,18 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
       {status === "error" && (
         <p className="mt-2 text-center text-[12.5px] text-accent">
           Không tạo được ảnh báo giá, vui lòng thử lại.
+          {errorDetail && <span className="block break-words text-[11px] text-body-text">({errorDetail})</span>}
         </p>
+      )}
+      {/* Xem trước ảnh vừa xuất — xem giải thích ở PlanDetailActions.tsx. */}
+      {previewUrl && (
+        <div className="mt-3 overflow-hidden rounded-xl border border-line">
+          <p className="bg-bg-tint px-3 py-1.5 text-[11px] font-semibold text-body-text">
+            Xem trước ảnh vừa tạo
+          </p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={previewUrl} alt="Xem trước báo giá vừa tạo" className="w-full" />
+        </div>
       )}
 
       {/* Off-screen — dựng khung rộng 1080px (cao tự động theo số chi nhánh)

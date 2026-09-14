@@ -27,6 +27,22 @@ export default function PlanDetailActions({
 }) {
   const quoteRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
+  // Sau 4 lần sửa dựa trên suy luận kỹ thuật (fetch nội bộ lỗi, PNG phình
+  // dung lượng, thiếu width/height <img>, card đặt quá xa khung nhìn) mà
+  // lỗi trên iPhone vẫn còn, tiếp tục đoán mò là không hiệu quả — cần dữ
+  // liệu THẬT từ đúng máy bị lỗi. Hiện thẳng thông báo lỗi gốc (kỹ thuật,
+  // tiếng Anh) lên màn hình thay vì câu chung chung "vui lòng thử lại", để
+  // người dùng chỉ cần CHỤP MÀN HÌNH gửi lại là đủ dữ liệu chẩn đoán, không
+  // cần biết dùng DevTools/Web Inspector.
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
+  // Xem trước chính ảnh PNG vừa xuất ra ngay trên trang — vì triệu chứng
+  // trước giờ KHÔNG ném lỗi gì cả (allImagesEmbedded() vẫn pass vì check
+  // src đã là data: URL hay chưa, không xác nhận html-to-image có thật sự
+  // rasterize đúng nội dung), nên trước đây không có cách nào chụp màn hình
+  // "bằng chứng" nếu không tải file về máy rồi tự mở lại. Hiện thumbnail
+  // ngay tại chỗ để 1 tấm ảnh chụp màn hình là đủ xác nhận ảnh mặt tiền có
+  // ra hay không, không cần mở file đã tải về.
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   // false lúc SSR/lần render đầu (không có `navigator`) -> luôn ra nút
   // "Tải báo giá" trước, rồi chuyển thành "Chia sẻ báo giá" ngay khi
   // hydrate xong nếu trình duyệt hỗ trợ (hầu hết là di động — Safari
@@ -45,6 +61,10 @@ export default function PlanDetailActions({
       // ràng nếu vẫn còn ảnh thiếu sau khi đã thử lại, thay vì âm thầm xuất
       // ra 1 ảnh báo giá thiếu ảnh mặt tiền.
       const blob = await captureQuotePng(node);
+      setPreviewUrl((old) => {
+        if (old) URL.revokeObjectURL(old);
+        return URL.createObjectURL(blob);
+      });
       // Trên di động có hỗ trợ chia sẻ file: mở thẳng sheet chia sẻ gốc của
       // hệ điều hành (Zalo/Messenger/Facebook nếu đã cài) thay vì bắt tải
       // file về rồi tự đính kèm thủ công. Rơi về tải file như cũ nếu không
@@ -62,7 +82,8 @@ export default function PlanDetailActions({
       // (đặc biệt Safari) nếu việc tải chưa kịp bắt đầu đọc blob.
       setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
       setStatus("idle");
-    } catch {
+    } catch (err) {
+      setErrorDetail(err instanceof Error ? err.message : String(err));
       setStatus("error");
     }
   };
@@ -101,7 +122,21 @@ export default function PlanDetailActions({
       {status === "error" && (
         <p className="mt-2 text-center text-[12.5px] text-accent">
           Không tạo được ảnh báo giá, vui lòng thử lại.
+          {errorDetail && <span className="block break-words text-[11px] text-body-text">({errorDetail})</span>}
         </p>
+      )}
+      {/* Xem trước ảnh vừa xuất — xem giải thích ở khai báo state `previewUrl`
+          phía trên: đây là bằng chứng trực quan duy nhất hiện có để xác nhận
+          html-to-image có thật sự vẽ đúng ảnh mặt tiền vào PNG hay không,
+          dùng để chẩn đoán từ xa qua ảnh chụp màn hình người dùng gửi lại. */}
+      {previewUrl && (
+        <div className="mt-3 overflow-hidden rounded-xl border border-line">
+          <p className="bg-bg-tint px-3 py-1.5 text-[11px] font-semibold text-body-text">
+            Xem trước ảnh vừa tạo
+          </p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={previewUrl} alt="Xem trước báo giá vừa tạo" className="w-full" />
+        </div>
       )}
 
       {/* Off-screen — dựng đúng 1080px rộng (cao tự động theo nội dung) để
