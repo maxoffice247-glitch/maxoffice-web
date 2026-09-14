@@ -1,7 +1,8 @@
 "use client";
 
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
-import { CheckCircleIcon, MailIcon } from "./icons";
+import Image from "next/image";
+import { MailIcon } from "./icons";
 import { useLeadSubmit } from "@/lib/useLeadSubmit";
 
 export default function NewsletterForm({
@@ -34,9 +35,13 @@ export default function NewsletterForm({
   if (status === "success") {
     return (
       <div className="rounded-2xl border border-line bg-white p-6 text-center">
-        <span className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-tint text-primary">
-          <CheckCircleIcon className="h-6 w-6" />
-        </span>
+        <Image
+          src="/images/mascot/linh-vat-max-thich-qua.png"
+          alt=""
+          width={90}
+          height={90}
+          className="mx-auto mb-2 h-[72px] w-auto object-contain"
+        />
         <p className="text-[14.5px] font-bold text-navy">Đăng ký thành công!</p>
         <p className="mt-1 text-[13px] text-body-text">
           Cảm ơn bạn đã đăng ký nhận bản tin từ MAX OFFICE.

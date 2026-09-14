@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState, type ChangeEvent, type FormEvent } from "react";
-import { CheckCircleIcon } from "./icons";
+import Image from "next/image";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
 import { useLeadSubmit } from "@/lib/useLeadSubmit";
 import { SERVICE_SELECT_EVENT } from "@/lib/serviceSelectEvent";
@@ -107,9 +107,15 @@ export default function BookingForm({
           aria-hidden
           className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-accent/16 blur-[2px]"
         />
-        <span className="relative mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-[#8FC1F5]">
-          <CheckCircleIcon className="h-7 w-7" />
-        </span>
+        {/* Linh vật MAX giơ 2 ngón cái — cùng mẫu với ContactForm, thay icon
+            dấu tích trước đây. */}
+        <Image
+          src="/images/mascot/linh-vat-max-thich-qua.png"
+          alt=""
+          width={140}
+          height={140}
+          className="relative mb-4 h-[120px] w-auto object-contain"
+        />
         <h3 className="relative mb-2.5 text-[20px] font-bold text-white">
           Cảm ơn bạn đã đặt lịch!
         </h3>

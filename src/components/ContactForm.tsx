@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState, type ChangeEvent, type FormEvent } from "react";
-import { CheckCircleIcon } from "./icons";
+import Image from "next/image";
 import { useLeadSubmit } from "@/lib/useLeadSubmit";
 import { SERVICE_SELECT_EVENT } from "@/lib/serviceSelectEvent";
 
@@ -82,9 +82,16 @@ export default function ContactForm({
   if (status === "success") {
     return (
       <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-line bg-white p-10 text-center">
-        <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-primary-tint text-primary">
-          <CheckCircleIcon className="h-7 w-7" />
-        </span>
+        {/* Linh vật MAX giơ 2 ngón cái — thay icon dấu tích trước đây, dùng
+            chung cho mọi form liên hệ (BookingForm/NewsletterForm cùng
+            mẫu). */}
+        <Image
+          src="/images/mascot/linh-vat-max-thich-qua.png"
+          alt=""
+          width={140}
+          height={140}
+          className="mb-4 h-[120px] w-auto object-contain"
+        />
         <h3 className="mb-2.5 text-[20px] font-bold text-navy">
           Cảm ơn bạn đã liên hệ!
         </h3>

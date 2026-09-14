@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import Image from "next/image";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { CloseIcon, BadgePercentIcon, CheckCircleIcon } from "./icons";
+import { CloseIcon } from "./icons";
 import { useLeadSubmit } from "@/lib/useLeadSubmit";
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
@@ -108,9 +109,15 @@ export default function LeadCapturePopup() {
 
             {status === "success" ? (
               <div className="text-center">
-                <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-tint text-primary">
-                  <CheckCircleIcon className="h-7 w-7" />
-                </span>
+                {/* Linh vật MAX ôm trái tim — thay cho icon dấu tích trước
+                    đây, hợp với lời cảm ơn hơn. */}
+                <Image
+                  src="/images/mascot/linh-vat-max-yeu-thuong.png"
+                  alt=""
+                  width={140}
+                  height={140}
+                  className="mx-auto mb-3 h-[110px] w-auto object-contain"
+                />
                 <h3 className="mb-2 text-[20px] font-bold text-navy">Cảm ơn bạn!</h3>
                 <p className="text-[14.5px] leading-relaxed text-body-text">
                   MAX OFFICE đã nhận được thông tin và sẽ liên hệ tư vấn trong thời gian sớm nhất.
@@ -118,13 +125,19 @@ export default function LeadCapturePopup() {
               </div>
             ) : (
               <>
-                <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-accent">
-                  <BadgePercentIcon className="h-7 w-7" />
-                </span>
-                <h3 id="lead-capture-title" className="mb-2 text-[20px] font-bold text-navy">
+                {/* Linh vật MAX vẫy chào — thay cho icon phần trăm trước
+                    đây, mời gọi thân thiện hơn ngay khi khách vừa thấy popup. */}
+                <Image
+                  src="/images/mascot/linh-vat-max-xin-chao.png"
+                  alt=""
+                  width={160}
+                  height={107}
+                  className="mx-auto mb-3 h-[100px] w-auto object-contain"
+                />
+                <h3 id="lead-capture-title" className="mb-2 text-center text-[20px] font-bold text-navy">
                   🎁 Voucher dành riêng cho bạn!
                 </h3>
-                <p className="mb-6 text-[14.5px] leading-relaxed text-body-text">
+                <p className="mb-6 text-center text-[14.5px] leading-relaxed text-body-text">
                   Để lại số điện thoại, MAX OFFICE tư vấn miễn phí và giữ ưu đãi giảm 10% tháng đầu
                   tiên cho bạn.
                 </p>
