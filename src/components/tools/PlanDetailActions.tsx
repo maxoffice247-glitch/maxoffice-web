@@ -104,11 +104,36 @@ export default function PlanDetailActions({
         </p>
       )}
 
-      {/* Off-screen — dựng đúng 1080px rộng (cao tự động theo nội dung) để html-to-image chụp lại, không hiển thị trực tiếp cho người dùng. */}
-      <div
-        aria-hidden
-        style={{ position: "fixed", top: 0, left: -99999, pointerEvents: "none" }}
-      >
+      {/* Off-screen — dựng đúng 1080px rộng (cao tự động theo nội dung) để
+          html-to-image chụp lại, không hiển thị trực tiếp cho người dùng.
+          TRƯỚC ĐÂY đặt `left: -99999px` (đẩy ra rất xa khung nhìn) — đây
+          chính là nguyên nhân THẬT gây mất ảnh mặt tiền trên iPhone (2 lần
+          fix trước — nhúng data URL, chọn định dạng JPEG/PNG, khai
+          width/height cho <img> — đều đúng nhưng chưa đủ vì vẫn dựng ở vị
+          trí này): Safari/WebKit trì hoãn hoặc bỏ qua việc tải/giải mã ảnh
+          cho nội dung nằm quá xa ngoài khung nhìn (tối ưu hiệu năng), trong
+          khi Chrome (Samsung/Android) không làm vậy nên không lộ lỗi khi
+          test. Đổi sang giữ card ở đúng góc (0,0) — vẫn "vô hình" với người
+          dùng nhờ `opacity: 0` + kẹp trong khung ngoài rộng/cao 0 với
+          `overflow: hidden` (không dùng display:none vì nó bỏ qua layout
+          hẳn) — buộc trình duyệt phải layout/tải/giải mã ảnh như nội dung
+          bình thường thay vì coi là nội dung "ở rất xa, chưa cần render".
+          `opacity: 0` đặt ở div NGOÀI (không phải chính node được chụp) —
+          html-to-image đọc style ngay trên node truyền vào captureQuotePng()
+          để dựng bản sao, nếu đặt opacity: 0 trực tiếp lên node đó thì ảnh
+          PNG xuất ra cũng bị trong suốt theo; opacity không phải thuộc tính
+          kế thừa nên style ở tổ tiên không ảnh hưởng tới getComputedStyle()
+          của node con khi chụp riêng node đó.
+          KHÔNG được ép width/height: 0 + overflow: hidden ở div ngoài (đã
+          thử, phải revert): phần tử position: fixed không có width/height
+          khai rõ vốn co theo NỘI DUNG (shrink-to-fit), nhưng div con
+          `quoteRef` bên trong lại là block thường (width: auto = lấp đầy
+          containing block) — ép containing block về 0 làm chính
+          `quoteRef` bị tính rộng 0, kéo theo html-to-image dựng canvas
+          0x0 và `toBlob()` trả về null (lỗi này lộ ra ngay cả trên Chrome
+          desktop khi test lại, không phải riêng iPhone). opacity: 0 một
+          mình là đủ ẩn khỏi mắt người dùng mà không đụng tới kích thước. */}
+      <div aria-hidden style={{ position: "fixed", top: 0, left: 0, opacity: 0, pointerEvents: "none" }}>
         <div ref={quoteRef}>
           <PlanQuoteCard plan={plan} address={address} facadeSrc={facadeSrc} benefits={benefits} promotions={promotions} />
         </div>
