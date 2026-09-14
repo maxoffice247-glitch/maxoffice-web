@@ -14,9 +14,9 @@ import {
   ArrowRightSmallIcon,
 } from "./icons";
 import {
-  SAVE_SILVER_GOLD_PREMIUM_PLANS,
-  SAVE_SILVER_GOLD_PREMIUM_VAT_NOTE,
-  SAVE_SILVER_GOLD_PREMIUM_ADDONS,
+  SILVER_GOLD_PREMIUM_Q1Q3_PLANS,
+  SILVER_GOLD_PREMIUM_Q1Q3_VAT_NOTE,
+  SILVER_GOLD_PREMIUM_Q1Q3_ADDONS,
 } from "@/lib/virtualOfficePlans";
 import { resolveTimedPromotions, type LocationData } from "@/lib/locationsData";
 
@@ -38,9 +38,12 @@ const OTHER_SERVICES = [
 ];
 
 /**
- * Bảng giá 4 gói SAVE/SILVER/GOLD/PREMIUM dùng chung cho các chi nhánh áp
- * dụng hệ giá này (Quận 3 (cũ) và Quận 1 (cũ)) — cùng nguồn dữ liệu, chỉ
- * khác tên chi nhánh hiển thị.
+ * Bảng giá 3 gói SILVER/GOLD/PREMIUM dùng chung cho các chi nhánh áp dụng
+ * hệ giá này (Quận 3 (cũ) và Quận 1 (cũ)) — cùng nguồn dữ liệu, chỉ khác
+ * tên chi nhánh hiển thị. Trước đây có thêm gói SAVE (379.000đ) rẻ hơn
+ * SILVER, đã bỏ (2026-09) do xác nhận không tồn tại thực tế tại các chi
+ * nhánh này — xem chú thích SILVER_GOLD_PREMIUM_Q1Q3_PLANS trong
+ * virtualOfficePlans.ts.
  */
 export default function Quan3CuVOServices({
   branchName,
@@ -54,7 +57,7 @@ export default function Quan3CuVOServices({
   slug: string;
   /** Khuyến mãi riêng chi nhánh — xem LocationServicesList.tsx cho ý nghĩa
       đầy đủ. Trước đây component này KHÔNG nhận/hiển thị promotions, nên
-      4 chi nhánh dùng bảng giá SAVE/SILVER/GOLD/PREMIUM (60 Nguyễn Thông,
+      4 chi nhánh dùng bảng giá SILVER/GOLD/PREMIUM Q1/Q3 (60 Nguyễn Thông,
       520 Cách Mạng Tháng 8, 36 Mạc Đĩnh Chi, 28-34 Pasteur) không có khối
       "Khuyến mãi riêng chi nhánh" trên trang, dù data đã khai báo. */
   promotions?: LocationData["promotions"];
@@ -66,7 +69,7 @@ export default function Quan3CuVOServices({
         <SectionHead
           eyebrow="Dịch vụ tại chi nhánh"
           title={`Bảng giá riêng tại chi nhánh ${branchName}`}
-          description={`Chi nhánh ${branchName} áp dụng 4 gói văn phòng ảo RIÊNG BIỆT (SAVE, SILVER, GOLD, PREMIUM), khác với hệ thống LITE–RISE chung của MAX OFFICE. Các dịch vụ khác vẫn theo bảng giá chung.`}
+          description={`Chi nhánh ${branchName} áp dụng 3 gói văn phòng ảo RIÊNG BIỆT (SILVER, GOLD, PREMIUM), khác với hệ thống LITE–RISE chung của MAX OFFICE. Các dịch vụ khác vẫn theo bảng giá chung.`}
         />
 
         {/* Văn phòng ảo + Dịch vụ khác — GỘP CHUNG vào 1 lưới CSS Grid +
@@ -75,20 +78,21 @@ export default function Quan3CuVOServices({
             flex-wrap khiến 1 card "dịch vụ khác" đứng lẻ cạnh card VPA cao
             bị stretch kéo giãn để lại khoảng trắng lớn; grid dense lấp
             NHIỀU card dịch vụ khác chồng dọc vào đúng chỗ thay vì 1 card
-            bị kéo giãn). Hệ SAVE/SILVER/GOLD/PREMIUM CẢ 4 GÓI dùng chung
-            đúng 1 danh sách features (TIER_FAMILY_COMMON_FEATURES) nên
-            luôn cao BẰNG NHAU — không cần công thức row-span theo từng gói
-            như LocationServicesList.tsx, dùng 1 hằng số row-span=2 áp dụng
-            đều cho cả 4 gói (đo DOM thật SAU KHI bỏ nút "Tạo báo giá" riêng
-            từng card — gộp về 1 nút chung ở đầu section, xem QuotePlanMenu:
-            card cao tự nhiên ~454px, card "dịch vụ khác" ở layout 4 cột cao
-            tự nhiên ~215px, 454/215≈2.11 → 2 vẫn là hợp lý nhất). 4 gói luôn
-            khớp đúng 4 cột nên hàng gói VPA không
-            bao giờ "cụt" — gộp lưới ở đây chủ yếu để đồng bộ code + trải
-            nghiệm với LocationServicesList.tsx, an toàn nếu sau này số gói
-            thay đổi. Ghi chú VAT + khối "Dịch vụ bổ sung" (đặc thù riêng
-            hệ giá này) nằm SAU toàn bộ lưới gộp vì không còn "giữa" lưới
-            gói VPA/lưới Dịch vụ khác để chèn vào nữa. */}
+            bị kéo giãn). Cả 3 gói SILVER/GOLD/PREMIUM dùng chung đúng 1
+            danh sách features (TIER_FAMILY_COMMON_FEATURES) nên luôn cao
+            BẰNG NHAU — không cần công thức row-span theo từng gói như
+            LocationServicesList.tsx, dùng 1 hằng số row-span=2 áp dụng đều
+            cho cả 3 gói, giống hệt cách tính của SilverGoldPremiumServices.tsx
+            (đo lại DOM thật sau khi bỏ gói SAVE — card cao tự nhiên ~398px,
+            card "dịch vụ khác" ở layout 3 cột cao tự nhiên ~195px,
+            398/195≈2.04 → 2 vẫn là hợp lý nhất — cùng tỉ lệ với hệ "các Quận
+            còn lại" vì 2 hệ dùng chung 1 danh sách tính năng). 3 gói luôn
+            khớp đúng 3 cột nên hàng gói VPA không bao giờ "cụt" — gộp lưới ở
+            đây chủ yếu để đồng bộ code + trải nghiệm với
+            LocationServicesList.tsx, an toàn nếu sau này số gói thay đổi.
+            Ghi chú VAT + khối "Dịch vụ bổ sung" (đặc thù riêng hệ giá này)
+            nằm SAU toàn bộ lưới gộp vì không còn "giữa" lưới gói VPA/lưới
+            Dịch vụ khác để chèn vào nữa. */}
         <Reveal className="rounded-2xl border border-line bg-white p-6 sm:p-7">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -106,7 +110,7 @@ export default function Quan3CuVOServices({
                 card gói (xem doc comment QuotePlanMenu.tsx) — đặt bên trái
                 "Xem chi tiết", cùng hàng tiêu đề section. */}
             <div className="flex shrink-0 items-center gap-3">
-              <QuotePlanMenu slug={slug} plans={SAVE_SILVER_GOLD_PREMIUM_PLANS} />
+              <QuotePlanMenu slug={slug} plans={SILVER_GOLD_PREMIUM_Q1Q3_PLANS} />
               <Link
                 href="/services/van-phong-ao#bang-gia"
                 className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-primary hover:gap-2.5"
@@ -116,8 +120,8 @@ export default function Quan3CuVOServices({
               </Link>
             </div>
           </div>
-          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:auto-rows-[minmax(215px,auto)] sm:grid-flow-row-dense lg:grid-cols-4">
-            {SAVE_SILVER_GOLD_PREMIUM_PLANS.map((plan) => (
+          <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:auto-rows-[minmax(195px,auto)] sm:grid-flow-row-dense">
+            {SILVER_GOLD_PREMIUM_Q1Q3_PLANS.map((plan) => (
               <RevealItem key={plan.key} className="sm:row-span-2">
                 <div className="flex h-full flex-col rounded-xl border border-line bg-bg-tint p-5">
                   <div className="mb-1 text-[14.5px] font-bold text-navy">{plan.name}</div>
@@ -182,12 +186,12 @@ export default function Quan3CuVOServices({
               </RevealItem>
             ))}
           </RevealGroup>
-          <p className="mt-6 text-[12px] text-body-text italic">{SAVE_SILVER_GOLD_PREMIUM_VAT_NOTE}</p>
+          <p className="mt-6 text-[12px] text-body-text italic">{SILVER_GOLD_PREMIUM_Q1Q3_VAT_NOTE}</p>
 
           <div className="mt-5 rounded-xl bg-accent/8 p-4">
             <p className="mb-3 text-[12.5px] font-bold text-navy">Dịch vụ bổ sung (phát sinh sau khi ký hợp đồng)</p>
             <ul className="space-y-1.5">
-              {SAVE_SILVER_GOLD_PREMIUM_ADDONS.map((addon) => (
+              {SILVER_GOLD_PREMIUM_Q1Q3_ADDONS.map((addon) => (
                 <li key={addon.label} className="flex flex-wrap items-baseline justify-between gap-x-3 text-[12.5px]">
                   <span className="text-body-text">{addon.label}</span>
                   <span className="font-mono font-bold text-accent">

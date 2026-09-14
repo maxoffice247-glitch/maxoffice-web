@@ -1,12 +1,3 @@
-/**
- * Ưu đãi áp dụng cho MỌI gói văn phòng ảo ở MỌI chi nhánh (mọi hệ giá) —
- * ghép thẳng vào CUỐI checklist tính năng của từng gói để khách nhìn thấy
- * ngay trên thẻ giá và trên ảnh báo giá gửi đi, không phải đọc riêng ở khối
- * khuyến mãi. Sửa 1 chỗ, áp dụng toàn hệ thống (kể cả chi nhánh thêm mới).
- */
-export const DOMAIN_EMAIL_PERK =
-  "Tặng email doanh nghiệp theo tên miền riêng (khi ký hợp đồng 24 tháng)";
-
 export type VirtualOfficePlanKey =
   | "lite"
   | "start"
@@ -261,9 +252,7 @@ export function getPlansForLocation(slug: string): VirtualOfficePlan[] {
     return {
       ...plan,
       ...(overridePrice !== undefined ? { price: overridePrice } : null),
-      // Ưu đãi email tên miền ghép vào cuối checklist mọi gói (kể cả bản
-      // đã override tính năng riêng theo chi nhánh).
-      features: [...(overrideFeatures ?? plan.features), DOMAIN_EMAIL_PERK],
+      ...(overrideFeatures !== undefined ? { features: overrideFeatures } : null),
     };
   });
 }
@@ -286,8 +275,8 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "quan-7") {
     return QUAN_7_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
-  if (SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.includes(slug)) {
-    return SAVE_SILVER_GOLD_PREMIUM_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  if (SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS.includes(slug)) {
+    return SILVER_GOLD_PREMIUM_Q1Q3_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
   if (SILVER_GOLD_PREMIUM_LOCATIONS.includes(slug)) {
     return SILVER_GOLD_PREMIUM_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
@@ -352,7 +341,7 @@ export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
     nameplateSize: "Bảng tên 28x8cm",
     meetingRoom: "Không có",
     flexSeat: "Không có",
-    features: ["Địa chỉ đăng ký kinh doanh (ĐKKD)", "Lễ tân", "Internet + nước uống", "Khu vực tiếp khách sang trọng", DOMAIN_EMAIL_PERK],
+    features: ["Địa chỉ đăng ký kinh doanh (ĐKKD)", "Lễ tân", "Internet + nước uống", "Khu vực tiếp khách sang trọng"],
     promoNote: "🚀 Gói Vững Bước Khởi Nghiệp — Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
   },
   {
@@ -369,7 +358,6 @@ export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
       "Internet + nước uống",
       "Khu vực tiếp khách sang trọng",
       "In ấn / photocopy / scan",
-      DOMAIN_EMAIL_PERK,
     ],
     promoNote: "🚀 Gói Vững Bước Khởi Nghiệp — Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 24 tháng",
   },
@@ -387,7 +375,6 @@ export const PHAM_VAN_DONG_VO_PLANS: PhamVanDongPlan[] = [
       "Internet + nước uống",
       "Khu vực tiếp khách sang trọng",
       "In ấn / photocopy / scan",
-      DOMAIN_EMAIL_PERK,
     ],
     promoNote: "🚀 Gói Vững Bước Khởi Nghiệp — Tặng dịch vụ thành lập doanh nghiệp khi ký hợp đồng 12 tháng",
   },
@@ -457,22 +444,26 @@ export const QUAN_7_ADDONS: QuanBaAddonRow[] = [
 ];
 
 /* ---------------------------------------------------------------------- */
-/* Gói SAVE/SILVER/GOLD/PREMIUM — bảng giá riêng dùng CHUNG cho mọi chi    */
-/* nhánh có slug trong SAVE_SILVER_GOLD_PREMIUM_LOCATIONS, không thuộc hệ */
-/* thống LITE-RISE hay các gói riêng khác của chi nhánh khác. Đặt tên     */
-/* theo TÊN GÓI (không phải "QUAN_3_CU" như ban đầu) vì hệ giá này ban    */
-/* đầu chỉ dùng cho 2 chi nhánh Quận 3 (cũ) nhưng nay đã dùng chung cho cả */
-/* chi nhánh Quận 1 (cũ) — xem SAVE_SILVER_GOLD_PREMIUM_LOCATIONS bên     */
-/* dưới để biết đầy đủ danh sách, giống cách đặt tên của hệ SILVER/GOLD/  */
-/* PREMIUM (3 gói) dùng chung cho Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức.    */
+/* Gói SILVER/GOLD/PREMIUM — bảng giá riêng dùng CHUNG cho mọi chi nhánh   */
+/* có slug trong SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS (Quận 1 (cũ) + Quận 3 */
+/* (cũ)), không thuộc hệ thống LITE-RISE hay các gói riêng khác của chi   */
+/* nhánh khác. Trước đây có thêm 1 gói SAVE (379.000đ) rẻ hơn SILVER —    */
+/* đã XÁC NHẬN gói này không tồn tại thực tế tại các chi nhánh này (chỉ   */
+/* có ở hệ SILVER/GOLD/PREMIUM "các Quận còn lại" dưới dạng SILVER 379K,  */
+/* KHÁC hệ này) nên đã bỏ hẳn (2026-09) — hệ này giờ bắt đầu từ SILVER     */
+/* 479.000đ, còn 3 gói SILVER/GOLD/PREMIUM. Tên hằng số vẫn theo TÊN GÓI  */
+/* (không phải "QUAN_3_CU" như ban đầu) vì hệ giá này ban đầu chỉ dùng    */
+/* cho 2 chi nhánh Quận 3 (cũ) nhưng nay đã dùng chung cho cả chi nhánh   */
+/* Quận 1 (cũ) — xem SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS bên dưới để biết  */
+/* đầy đủ danh sách, giống cách đặt tên của hệ SILVER/GOLD/PREMIUM (3     */
+/* gói) dùng chung cho Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức.               */
 /* ---------------------------------------------------------------------- */
 
 /**
- * Tính năng đi kèm dùng CHUNG cho MỌI gói của cả 2 hệ giá "4 gói SAVE/
- * SILVER/GOLD/PREMIUM" (bên dưới) và "3 gói SILVER/GOLD/PREMIUM" ("các
- * Quận còn lại", phía sau file) — trước đây khai báo thành 2 hằng số
- * riêng biệt (SAVE_SILVER_GOLD_PREMIUM_COMMON_FEATURES và SILVER_GOLD_
- * PREMIUM_COMMON_FEATURES), từng bị LỆCH NHAU: bản của hệ "3 gói" có
+ * Tính năng đi kèm dùng CHUNG cho MỌI gói của cả 2 hệ giá "3 gói SILVER/
+ * GOLD/PREMIUM (Quận 1/3 cũ)" (bên dưới) và "3 gói SILVER/GOLD/PREMIUM
+ * (các Quận còn lại)" (phía sau file) — trước đây khai báo thành 2 hằng
+ * số riêng biệt, từng bị LỆCH NHAU: bản của hệ "các Quận còn lại" có
  * thêm dòng "Bảng tên vật lý (mica)" — trùng ý với field `nameplate`
  * (đã hiển thị riêng ngay phía trên trong UI, xem Quan3CuVOServices.tsx/
  * SilverGoldPremiumServices.tsx) nên hiện lặp lại 2 lần trên mỗi thẻ giá
@@ -486,11 +477,10 @@ const TIER_FAMILY_COMMON_FEATURES = [
   "Tiếp tân hành chính văn phòng",
   "Tiếp nhận, chuyển tiếp thư từ, bưu phẩm",
   "Tư vấn miễn phí thành lập doanh nghiệp & kế toán",
-  DOMAIN_EMAIL_PERK,
 ];
 
-export type SaveSilverGoldPremiumPlan = {
-  key: "save" | "silver" | "gold" | "premium";
+export type SilverGoldPremiumQ1Q3Plan = {
+  key: "silver" | "gold" | "premium";
   name: string;
   price: number;
   duration: string;
@@ -502,20 +492,8 @@ export type SaveSilverGoldPremiumPlan = {
   features: string[];
 };
 
-/** 4 gói văn phòng ảo dùng chung cho các chi nhánh áp dụng bảng giá SAVE/SILVER/GOLD/PREMIUM — giá CHƯA bao gồm VAT 10%. */
-export const SAVE_SILVER_GOLD_PREMIUM_PLANS: SaveSilverGoldPremiumPlan[] = [
-  {
-    key: "save",
-    name: "SAVE",
-    price: 379000,
-    duration: "/ tháng",
-    nameplate: "Không có bảng tên vật lý (mica)",
-    meetingRoom: "Miễn phí 60 phút/tháng",
-    guestLounge: "Miễn phí 30 phút/ngày",
-    addressChangeSupport: false,
-    legalDossier: false,
-    features: TIER_FAMILY_COMMON_FEATURES,
-  },
+/** 3 gói văn phòng ảo dùng chung cho các chi nhánh áp dụng bảng giá SILVER/GOLD/PREMIUM (Quận 1/3 cũ) — giá CHƯA bao gồm VAT 10%. Không có gói SAVE (xem chú thích khối trên). */
+export const SILVER_GOLD_PREMIUM_Q1Q3_PLANS: SilverGoldPremiumQ1Q3Plan[] = [
   {
     key: "silver",
     name: "SILVER",
@@ -560,27 +538,27 @@ export const SAVE_SILVER_GOLD_PREMIUM_PLANS: SaveSilverGoldPremiumPlan[] = [
   },
 ];
 
-export const SAVE_SILVER_GOLD_PREMIUM_VAT_NOTE = "Giá trên chưa bao gồm thuế VAT 10%.";
+export const SILVER_GOLD_PREMIUM_Q1Q3_VAT_NOTE = "Giá trên chưa bao gồm thuế VAT 10%.";
 
-export type SaveSilverGoldPremiumAddon = {
+export type SilverGoldPremiumQ1Q3Addon = {
   label: string;
   price: number;
   note?: string;
 };
 
-/** Dịch vụ bổ sung phát sinh sau khi ký hợp đồng, áp dụng chung cho các chi nhánh dùng bảng giá SAVE/SILVER/GOLD/PREMIUM. */
-export const SAVE_SILVER_GOLD_PREMIUM_ADDONS: SaveSilverGoldPremiumAddon[] = [
+/** Dịch vụ bổ sung phát sinh sau khi ký hợp đồng, áp dụng chung cho các chi nhánh dùng bảng giá SILVER/GOLD/PREMIUM (Quận 1/3 cũ). */
+export const SILVER_GOLD_PREMIUM_Q1Q3_ADDONS: SilverGoldPremiumQ1Q3Addon[] = [
   { label: "Thay đổi địa chỉ đăng ký kinh doanh", price: 1296000, note: "Đã bao gồm VAT" },
   { label: "Khắc dấu tròn doanh nghiệp / dấu chi nhánh / VPĐD", price: 480000 },
 ];
 
 /**
- * Chi nhánh áp dụng bảng giá SAVE/SILVER/GOLD/PREMIUM chung ở trên — có thể
- * thuộc nhiều khu vực (area) khác nhau (hiện dùng cho cả Quận 3 (cũ) và
- * Quận 1 (cũ)). Thêm slug vào đây khi mở chi nhánh mới dùng bảng giá này,
- * KHÔNG tạo lại bộ gói mới.
+ * Chi nhánh áp dụng bảng giá SILVER/GOLD/PREMIUM (Quận 1/3 cũ) chung ở
+ * trên — có thể thuộc nhiều khu vực (area) khác nhau (hiện dùng cho cả
+ * Quận 3 (cũ) và Quận 1 (cũ)). Thêm slug vào đây khi mở chi nhánh mới
+ * dùng bảng giá này, KHÔNG tạo lại bộ gói mới.
  */
-export const SAVE_SILVER_GOLD_PREMIUM_LOCATIONS: string[] = [
+export const SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS: string[] = [
   "nguyen-thong",
   "cach-mang-thang-8",
   "mac-dinh-chi",
@@ -647,11 +625,11 @@ export const SILVER_GOLD_PREMIUM_VO_PLANS: SilverGoldPremiumPlan[] = [
     guestLounge: "Miễn phí 60 phút/ngày",
     addressChangeSupport: true,
     legalDossier: true,
-    // Giống HỆT định nghĩa "premium" trong SAVE_SILVER_GOLD_PREMIUM_PLANS
+    // Giống HỆT định nghĩa "premium" trong SILVER_GOLD_PREMIUM_Q1Q3_PLANS
     // ở trên (cùng giá 990.000đ, cùng mọi field) sau khi đã chuẩn hoá —
     // getGroupedPlans() (planFinder.ts) tự động gộp 2 nhóm chi nhánh thành
-    // 1 PlanGroup duy nhất (13 chi nhánh — 4 hệ SAVE-tier + 9 hệ SGP-tier,
-    // xem SAVE_SILVER_GOLD_PREMIUM_LOCATIONS/SILVER_GOLD_PREMIUM_LOCATIONS)
+    // 1 PlanGroup duy nhất (13 chi nhánh — 4 hệ Q1Q3-tier + 9 hệ SGP-tier,
+    // xem SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS/SILVER_GOLD_PREMIUM_LOCATIONS)
     // nhờ groupSignature() so khớp planName+price+features, KHÔNG cần sửa
     // gì thêm ở planFinder.ts hay UI khi số chi nhánh trong 1 trong 2 nhóm
     // thay đổi. Vẫn giữ 2 entry PREMIUM riêng (ở đây và ở mảng kia) vì mỗi
@@ -698,7 +676,7 @@ export const SILVER_GOLD_PREMIUM_LOCATIONS: string[] = [
 /* ---------------------------------------------------------------------- */
 /* Hệ giá ĐỐI TÁC "LiteSpace" — CORE / PLUS / PRO. Đây là bảng giá của     */
 /* đơn vị hợp tác cung cấp không gian (LiteSpace), KHÔNG phải hệ giá do    */
-/* MAX OFFICE tự vận hành (LITE-RISE, M-*, W-*, SAVE/SILVER/GOLD/PREMIUM,  */
+/* MAX OFFICE tự vận hành (LITE-RISE, M-*, W-*, SILVER/GOLD/PREMIUM Q1/Q3, */
 /* SILVER/GOLD/PREMIUM). Vì cấu trúc thẻ giá khác hẳn (có giá gốc gạch     */
 /* ngang "ưu đãi ra mắt", badge, câu mô tả riêng từng gói, và khối combo   */
 /* nền vàng chỉ ở gói CORE) nên tạo type + constant RIÊNG — không nhồi vào */
@@ -748,7 +726,6 @@ export const LITESPACE_PLANS: LitespacePlan[] = [
       "Treo bảng hiệu tại toà nhà",
       "Nhận thư từ, bưu phẩm tận nơi",
       "Tư vấn lộ trình chuyển đổi lên doanh nghiệp",
-      DOMAIN_EMAIL_PERK,
     ],
     comboBox: {
       title: "Chưa có công ty?",
@@ -770,7 +747,6 @@ export const LITESPACE_PLANS: LitespacePlan[] = [
       "Hỗ trợ thay đổi GPKD cơ bản",
       "Tiếp nhận thư từ, bưu phẩm — gửi đi/chuyển tiếp theo yêu cầu (theo phí thực tế)",
       "Dịch vụ kế toán nâng cao: Liên hệ",
-      DOMAIN_EMAIL_PERK,
     ],
   },
   {
@@ -792,7 +768,6 @@ export const LITESPACE_PLANS: LitespacePlan[] = [
       "Hỗ trợ mở tài khoản ngân hàng",
       "Kế toán cơ bản miễn phí",
       "Dịch vụ kế toán nâng cao: Liên hệ",
-      DOMAIN_EMAIL_PERK,
     ],
   },
 ];

@@ -11,7 +11,7 @@ export type QuotePlanOption = { key: string; name: string };
  * lặp lại dưới TỪNG card gói trước đây (2-4 nút giống hệt nhau tuỳ chi
  * nhánh, gây nhiễu thị giác). Bấm mở dropdown ngắn liệt kê ĐÚNG tên các gói
  * của CHÍNH chi nhánh đang xem (`plans`, truyền từ nơi gọi theo đúng hệ giá
- * — LITE-RISE/SAVE-SGP/SGP — không phải danh sách cứng), chọn 1 gói điều
+ * — LITE-RISE/Q1Q3-SGP/SGP — không phải danh sách cứng), chọn 1 gói điều
  * hướng thẳng tới `/tien-ich/tim-goi-phu-hop/{slug}/{plan.key}` (trang chi
  * tiết gói đã có sẵn preview + xuất PNG báo giá qua PlanDetailActions/
  * PlanQuoteCard).

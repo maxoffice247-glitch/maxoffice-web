@@ -1,7 +1,7 @@
 /**
  * Gộp toàn bộ 7 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
  * nhánh; M-START/M-BASE/M-ORIGIN riêng Phạm Văn Đồng; W-BASE/W-PRO riêng
- * Bùi Văn Ba; SAVE/SILVER/GOLD/PREMIUM
+ * Bùi Văn Ba; SILVER/GOLD/PREMIUM (3 gói, từ 479K)
  * dùng chung Quận 1 (cũ) + Quận 3 (cũ); SILVER/GOLD/PREMIUM dùng chung
  * Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức/Tân Bình; CORE/PLUS/PRO hệ đối tác
  * LiteSpace — 28 Mai Chí Thọ) thành MỘT danh sách phẳng — dùng cho công cụ
@@ -16,15 +16,14 @@ import {
   getPlansForLocation,
   PHAM_VAN_DONG_VO_PLANS,
   QUAN_7_VO_PLANS,
-  SAVE_SILVER_GOLD_PREMIUM_PLANS,
-  SAVE_SILVER_GOLD_PREMIUM_LOCATIONS,
+  SILVER_GOLD_PREMIUM_Q1Q3_PLANS,
+  SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS,
   SILVER_GOLD_PREMIUM_VO_PLANS,
   SILVER_GOLD_PREMIUM_LOCATIONS,
   LITESPACE_PLANS,
   LITESPACE_LOCATIONS,
-  DOMAIN_EMAIL_PERK,
   type PhamVanDongPlan,
-  type SaveSilverGoldPremiumPlan,
+  type SilverGoldPremiumQ1Q3Plan,
   type SilverGoldPremiumPlan,
 } from "./virtualOfficePlans";
 
@@ -43,27 +42,18 @@ export type OfferedPlan = {
   addonNote?: string;
 };
 
-/** Ưu đãi email tên miền (`DOMAIN_EMAIL_PERK`) đã nằm sẵn trong `p.features`
- * của mọi gói — các helper này chèn thêm vài dòng thông số ("Bảng tên:",
- * "Phòng họp:"...) SAU phần features, nên tách ưu đãi ra và đẩy xuống cuối
- * cùng để nó luôn là dòng chốt trên ảnh báo giá. */
-function moveDomainPerkLast(list: string[]): string[] {
-  const rest = list.filter((f) => f !== DOMAIN_EMAIL_PERK);
-  return list.length === rest.length ? list : [...rest, DOMAIN_EMAIL_PERK];
-}
-
 function withPhamVanDongStyleFeatures(p: {
   features: string[];
   nameplateSize: string;
   meetingRoom: string;
   flexSeat: string;
 }): string[] {
-  return moveDomainPerkLast([
+  return [
     ...p.features,
     `Bảng tên: ${p.nameplateSize}`,
     `Phòng họp: ${p.meetingRoom}`,
     `Chỗ ngồi làm việc: ${p.flexSeat}`,
-  ]);
+  ];
 }
 
 function withQuan3StyleFeatures(p: {
@@ -82,7 +72,7 @@ function withQuan3StyleFeatures(p: {
   ];
   if (p.addressChangeSupport) list.push("Hỗ trợ đổi địa chỉ đăng ký kinh doanh");
   if (p.legalDossier) list.push("Hồ sơ pháp lý toà nhà đầy đủ");
-  return moveDomainPerkLast(list);
+  return list;
 }
 
 /** Toàn bộ gói văn phòng ảo đang khả dụng công khai, tại mọi chi nhánh đang active. */
@@ -120,12 +110,11 @@ export function getAllOfferedPlans(): OfferedPlan[] {
             `Bảng tên: ${p.nameplate}`,
             `Xác minh địa chỉ: ${p.locationVerification}`,
             `Lễ tân: ${p.reception}`,
-            DOMAIN_EMAIL_PERK,
           ],
         });
       }
-    } else if (SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.includes(slug)) {
-      for (const p of SAVE_SILVER_GOLD_PREMIUM_PLANS as SaveSilverGoldPremiumPlan[]) {
+    } else if (SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS.includes(slug)) {
+      for (const p of SILVER_GOLD_PREMIUM_Q1Q3_PLANS as SilverGoldPremiumQ1Q3Plan[]) {
         result.push({
           locationSlug: slug,
           locationName: name,

@@ -10,8 +10,8 @@ import {
   VO_LONG_TERM_COMBO_NAME,
   VO_LONG_TERM_COMBO_DESC,
   getLocationsForPlan,
-  SAVE_SILVER_GOLD_PREMIUM_LOCATIONS,
-  SAVE_SILVER_GOLD_PREMIUM_VAT_NOTE,
+  SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS,
+  SILVER_GOLD_PREMIUM_Q1Q3_VAT_NOTE,
   SILVER_GOLD_PREMIUM_LOCATIONS,
   type VirtualOfficePlanKey,
 } from "@/lib/virtualOfficePlans";
@@ -34,14 +34,14 @@ type Plan = {
       khác (Trọn gói, Thành lập DN, Kế toán) không có khái niệm "chi nhánh
       áp dụng" theo nghĩa này nên không set field này. */
   vpaKey?: VirtualOfficePlanKey;
-  /** Số chi nhánh áp dụng — dùng cho hệ SAVE/SILVER/GOLD/PREMIUM (không có
+  /** Số chi nhánh áp dụng — dùng cho hệ SILVER/GOLD/PREMIUM (Quận 1/3 cũ) (không có
       key-per-plan như LITE-RISE, cả hệ dùng chung 1 danh sách chi nhánh cố
       định) — lấy qua {SYSTEM}_LOCATIONS.length ngay tại nơi khai báo GROUPS
       bên dưới (vẫn động theo mảng, không hardcode số). Ưu tiên hơn vpaKey
       nếu cả 2 đều set. */
   branchCount?: number;
-  /** Breakdown chi tiết — CHỈ tồn tại cho hệ SAVE/SILVER/GOLD/PREMIUM (2
-      type SaveSilverGoldPremiumPlan/SilverGoldPremiumPlan trong
+  /** Breakdown chi tiết — CHỈ tồn tại cho hệ SILVER/GOLD/PREMIUM (Quận 1/3 cũ) (2
+      type SilverGoldPremiumQ1Q3Plan/SilverGoldPremiumPlan trong
       virtualOfficePlans.ts), sao chép nguyên giá trị field gốc — 6 gói
       LITE-RISE không có breakdown này nên không set field, PricingCard sẽ
       tự bỏ qua khối này nếu không có dữ liệu. */
@@ -144,34 +144,21 @@ const GROUPS: {
     // Giống VAT_NOTE của cả 2 hệ dữ liệu (byte-identical, đã đối chiếu) +
     // ghi chú riêng giải thích vì sao SILVER/GOLD xuất hiện 2 lần khác giá
     // — tránh khách hiểu nhầm là lỗi trùng lặp.
-    footnote: `*${SAVE_SILVER_GOLD_PREMIUM_VAT_NOTE} SILVER và GOLD xuất hiện 2 lần vì thuộc 2 hệ giá riêng theo khu vực (ghi rõ khu vực áp dụng trong tên từng gói) — không phải trùng lặp dữ liệu. PREMIUM 990.000đ áp dụng chung cho cả 2 khu vực (12 chi nhánh) do đã xác nhận giống hệt nhau.`,
+    footnote: `*${SILVER_GOLD_PREMIUM_Q1Q3_VAT_NOTE} SILVER và GOLD xuất hiện 2 lần vì thuộc 2 hệ giá riêng theo khu vực (ghi rõ khu vực áp dụng trong tên từng gói) — không phải trùng lặp dữ liệu. PREMIUM 990.000đ áp dụng chung cho cả 2 khu vực (12 chi nhánh) do đã xác nhận giống hệt nhau.`,
+    // Trước đây có thêm 1 thẻ "SAVE" (379.000đ, Quận 1 & Quận 3 (cũ)) —
+    // đã BỎ (2026-09) vì gói này không tồn tại thực tế tại các chi nhánh
+    // đó, xem chú thích SILVER_GOLD_PREMIUM_Q1Q3_PLANS trong
+    // virtualOfficePlans.ts. Hệ Quận 1/3 (cũ) giờ bắt đầu từ SILVER 479K.
     plans: [
-      {
-        name: "SAVE",
-        service: "Văn phòng ảo",
-        price: "379.000đ",
-        unit: "/ tháng",
-        desc: "Quận 1 & Quận 3 (cũ) — tiết kiệm nhất hệ này, không có bảng tên vật lý.",
-        features: ["Địa chỉ ĐKKD + đăng ký thuế", "Bảng tên điện tử", "Tiếp tân hành chính văn phòng"],
-        detailHref: "/services/van-phong-ao#bang-gia",
-        branchCount: SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.length,
-        breakdown: {
-          nameplate: "Không có bảng tên vật lý (mica)",
-          meetingRoom: "Miễn phí 60 phút/tháng",
-          guestLounge: "Miễn phí 30 phút/ngày",
-          addressChangeSupport: false,
-          legalDossier: false,
-        },
-      },
       {
         name: "SILVER — Quận 1 & Quận 3 (cũ)",
         service: "Văn phòng ảo",
         price: "479.000đ",
         unit: "/ tháng",
-        desc: "Có bảng tên vật lý (mica) tại toà nhà, cùng thời lượng phòng họp/sảnh tiếp khách với SAVE.",
+        desc: "Rẻ nhất hệ này — có bảng tên vật lý (mica) tại toà nhà.",
         features: ["Địa chỉ ĐKKD + đăng ký thuế", "Bảng tên điện tử", "Tiếp tân hành chính văn phòng"],
         detailHref: "/services/van-phong-ao#bang-gia",
-        branchCount: SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.length,
+        branchCount: SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS.length,
         breakdown: {
           nameplate: "Có bảng tên vật lý (mica)",
           meetingRoom: "Miễn phí 60 phút/tháng",
@@ -206,7 +193,7 @@ const GROUPS: {
         features: ["Tất cả mục của SILVER", "Hỗ trợ đổi địa chỉ đăng ký kinh doanh", "Sảnh tiếp khách nhiều hơn"],
         featured: true,
         detailHref: "/services/van-phong-ao#bang-gia",
-        branchCount: SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.length,
+        branchCount: SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS.length,
         breakdown: {
           nameplate: "Có bảng tên vật lý (mica)",
           meetingRoom: "Miễn phí 90 phút/tháng",
@@ -240,7 +227,7 @@ const GROUPS: {
         desc: "Cao cấp nhất hệ này — áp dụng chung cho cả 2 khu vực, đầy đủ hồ sơ pháp lý toà nhà.",
         features: ["Tất cả mục của GOLD", "Hồ sơ pháp lý toà nhà đầy đủ", "Phòng họp/sảnh tiếp khách nhiều nhất hệ này"],
         detailHref: "/services/van-phong-ao#bang-gia",
-        branchCount: SAVE_SILVER_GOLD_PREMIUM_LOCATIONS.length + SILVER_GOLD_PREMIUM_LOCATIONS.length,
+        branchCount: SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS.length + SILVER_GOLD_PREMIUM_LOCATIONS.length,
         breakdown: {
           nameplate: "Có bảng tên vật lý (mica)",
           meetingRoom: "Miễn phí 120 phút/tháng (≤ 7 người)",
@@ -363,7 +350,7 @@ const GROUPS: {
 
 function PricingCard({ plan }: { plan: Plan }) {
   // Lấy động — LITE-RISE qua getLocationsForPlan() (cùng hàm GroupCard ở
-  // /tien-ich/tim-goi-phu-hop dùng); hệ SAVE/SILVER/GOLD/PREMIUM dùng
+  // /tien-ich/tim-goi-phu-hop dùng); hệ SILVER/GOLD/PREMIUM (Quận 1/3 cũ) dùng
   // branchCount (đã tính từ {SYSTEM}_LOCATIONS.length ngay tại GROUPS, xem
   // comment ở field branchCount trong type Plan) — không hardcode ở đây.
   const branchCount = plan.branchCount ?? (plan.vpaKey ? getLocationsForPlan(plan.vpaKey).length : undefined);
@@ -408,7 +395,7 @@ function PricingCard({ plan }: { plan: Plan }) {
         {plan.desc}
       </p>
       {/* Breakdown chi tiết — CHỈ hiện khi plan.breakdown có dữ liệu thật
-          (hệ SAVE/SILVER/GOLD/PREMIUM), sao chép nguyên field gốc, KHÔNG
+          (hệ SILVER/GOLD/PREMIUM (Quận 1/3 cũ)), sao chép nguyên field gốc, KHÔNG
           bịa cho 6 gói LITE-RISE (không có field này). Đặt TRÊN checklist
           "Tính năng đi kèm" — checklist bên dưới giữ nguyên không đổi. */}
       {plan.breakdown && (
@@ -527,10 +514,11 @@ export default function Pricing() {
               )}
               {/* CTA dẫn sang VPA finder — chỉ đặt sau nhóm Văn phòng ảo vì
                   đây là nhóm có tình trạng "trùng giá khác nhóm chi nhánh"
-                  (VD SAVE 379K và SILVER 379K) mà 6 gói tiêu biểu ở đây
-                  KHÔNG thể hiện hết — 6-8 gói này chủ đích giữ gọn, không mở
-                  rộng đủ 15+ gói, nên cần lối tắt rõ ràng sang công cụ tra
-                  đúng gói theo khu vực thay vì đoán từ bảng giá rút gọn. */}
+                  (VD ORIGIN 499K ưu đãi Nguyễn Oanh/Trần Hưng Đạo và CORE/
+                  PLUS 499K hệ LiteSpace) mà 6 gói tiêu biểu ở đây KHÔNG thể
+                  hiện hết — 6-8 gói này chủ đích giữ gọn, không mở rộng đủ
+                  15+ gói, nên cần lối tắt rõ ràng sang công cụ tra đúng gói
+                  theo khu vực thay vì đoán từ bảng giá rút gọn. */}
               {group.title === "Văn phòng ảo — 6 gói dịch vụ" && (
                 <Link
                   href="/tien-ich/tim-goi-phu-hop"
@@ -548,9 +536,10 @@ export default function Pricing() {
                     </h3>
                     <p className="mt-1 text-[13.5px] text-white/75">
                       6 gói trên là bảng giá tiêu biểu — một số khu vực còn có gói cùng mức giá
-                      nhưng khác tên/tính năng (VD: SAVE và SILVER cùng 379.000đ nhưng áp dụng 2
-                      nhóm chi nhánh khác nhau). Dùng công cụ Tìm VPA theo nhu cầu để xem đúng gói
-                      theo khu vực bạn chọn.
+                      nhưng khác tên/tính năng (VD: ORIGIN 499.000đ ưu đãi tại Nguyễn Oanh/Trần
+                      Hưng Đạo và CORE/PLUS 499.000đ hệ LiteSpace áp dụng 2 nhóm chi nhánh khác
+                      nhau). Dùng công cụ Tìm VPA theo nhu cầu để xem đúng gói theo khu vực bạn
+                      chọn.
                     </p>
                   </div>
                   <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[13.5px] font-bold text-navy transition-transform duration-200 group-hover:translate-x-1">
