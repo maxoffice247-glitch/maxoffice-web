@@ -5,30 +5,72 @@ import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { PhoneIcon, PlusIcon, MessengerIcon, ZaloIcon } from "./icons";
 
-/** Linh vật MAX vẫy tay, đặt cạnh cụm nút gọi/Zalo/Messenger — link thẳng
-    tới Zalo (kênh chat tức thời phổ biến nhất) khi bấm, khác với nút chính
-    (gọi điện trên mobile, mở speed-dial trên desktop). Hoạt hoạ bằng CSS
-    (.animate-mascot-wave, xem globals.css) thay vì cần dựng GIF/video từ
-    ảnh gốc — xem trả lời câu hỏi 1 trong chat để biết thêm lựa chọn khác
-    nếu muốn hoạt hoạ "thật" (AI tạo video từ ảnh tĩnh) sau này. */
+const BUBBLE_FIRST_DELAY_MS = 3000;
+const BUBBLE_REPEAT_MS = 12000;
+const BUBBLE_VISIBLE_MS = 4000;
+
+/** Linh vật MAX bay lượn cạnh cụm nút gọi/Zalo/Messenger, kèm bong bóng
+    thoại nhắc nhở định kỳ — tham khảo hiệu ứng nổi bật ở góc dưới phải
+    acb.com.vn (KHÔNG phải khung chat AI của họ, chỉ lấy cảm hứng phần
+    linh vật trôi nổi liên tục + bong bóng thoại, theo đúng yêu cầu người
+    dùng). Bấm vào link thẳng tới Zalo (kênh chat tức thời phổ biến nhất),
+    khác với nút chính (gọi điện trên mobile, mở speed-dial trên desktop).
+    Hoạt hoạ trôi nổi bằng CSS thuần (.animate-mascot-fly, xem
+    globals.css) thay vì cần dựng GIF/video từ ảnh gốc. */
 function WavingMascotBubble({ className }: { className?: string }) {
+  const [showBubble, setShowBubble] = useState(false);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    // Giảm chuyển động -> không tự bật bong bóng định kỳ (gây xao nhãng),
+    // nhân vật vẫn đứng yên (rule global đã tắt hẳn animation-duration).
+    if (reduceMotion) return;
+    let hideId: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      setShowBubble(true);
+      hideId = setTimeout(() => setShowBubble(false), BUBBLE_VISIBLE_MS);
+    };
+    const firstId = setTimeout(tick, BUBBLE_FIRST_DELAY_MS);
+    const intervalId = setInterval(tick, BUBBLE_REPEAT_MS);
+    return () => {
+      clearTimeout(firstId);
+      clearInterval(intervalId);
+      clearTimeout(hideId);
+    };
+  }, [reduceMotion]);
+
   return (
-    <a
-      href="https://zalo.me/0898082188"
-      target="_blank"
-      rel="noopener"
-      aria-label="Chat Zalo với MAX OFFICE"
-      title="Chat Zalo với MAX OFFICE"
-      className={`z-[96] block drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:scale-110 ${className ?? ""}`}
-    >
-      <Image
-        src="/images/mascot/linh-vat-max-xin-chao.png"
-        alt=""
-        width={160}
-        height={107}
-        className="animate-mascot-wave h-[58px] w-auto object-contain"
-      />
-    </a>
+    <div className={`z-[96] ${className ?? ""}`}>
+      <AnimatePresence>
+        {showBubble && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.9 }}
+            transition={{ duration: 0.25, ease: EASE_PREMIUM }}
+            className="absolute right-0 bottom-full mb-1.5 w-max max-w-[150px] rounded-2xl rounded-br-md bg-white px-3 py-2 text-[12px] leading-snug font-bold text-navy shadow-[0_8px_20px_rgba(15,27,45,0.18)]"
+          >
+            Cần hỗ trợ? Nhắn Zalo ngay!
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <a
+        href="https://zalo.me/0898082188"
+        target="_blank"
+        rel="noopener"
+        aria-label="Chat Zalo với MAX OFFICE"
+        title="Chat Zalo với MAX OFFICE"
+        className="block drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:scale-110"
+      >
+        <Image
+          src="/images/mascot/linh-vat-max-xin-chao.png"
+          alt=""
+          width={160}
+          height={107}
+          className="animate-mascot-fly h-[58px] w-auto object-contain"
+        />
+      </a>
+    </div>
   );
 }
 

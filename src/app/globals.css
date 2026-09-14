@@ -81,37 +81,33 @@ body {
   animation: pulse-call 2.4s infinite;
 }
 
-/* Linh vật MAX vẫy tay cạnh nút gọi/Zalo/Messenger (FloatingButtons.tsx) —
-   ảnh tĩnh (linh-vat-max-xin-chao.png) không có lớp tách riêng cho cánh
-   tay nên không thể lắc đúng mỗi cánh tay bằng CSS; thay vào đó nghiêng +
-   nảy nhẹ CẢ NHÂN VẬT theo nhịp một đợt vẫy rồi nghỉ (giống
-   header-phone-icon-wiggle) — vẫn đọc được là "đang vẫy chào" nhờ tư thế
-   tay giơ cao sẵn có trong ảnh, mà không cần dựng lại ảnh nhiều lớp hay
-   xuất video/GIF riêng. transform-origin đặt lệch xuống dưới-phải (gần
-   chân) để nhân vật nghiêng như đang đứng vẫy, không xoay quanh tâm ảnh. */
-@keyframes mascot-wave {
+/* Linh vật MAX "bay lượn" cạnh nút gọi/Zalo/Messenger (FloatingButtons.tsx)
+   — theo yêu cầu tham khảo hiệu ứng nổi bật ở góc dưới phải acb.com.vn:
+   trôi nổi LIÊN TỤC (không phải 1 đợt cử chỉ rồi đứng yên như
+   header-phone-icon-wiggle) để tạo cảm giác "đang bay" — kết hợp lên
+   xuống (translateY, biên độ không đều giữa các mốc để không có cảm giác
+   máy móc/lặp lại đơn điệu) với nghiêng nhẹ hai bên. transform-origin đặt
+   giữa nhân vật (khác mascot cũ đặt lệch dưới-phải để "đứng vẫy") vì giờ
+   toàn thân di chuyển như đang lơ lửng, không phải nghiêng người tại chỗ. */
+@keyframes mascot-fly {
   0%,
-  8%,
   100% {
-    transform: rotate(0deg) translateY(0);
+    transform: translateY(0) rotate(-3deg);
   }
-  1% {
-    transform: rotate(-9deg) translateY(-2px);
+  25% {
+    transform: translateY(-9px) rotate(2deg);
   }
-  2.5% {
-    transform: rotate(7deg) translateY(-1px);
+  50% {
+    transform: translateY(-3px) rotate(-2deg);
   }
-  4% {
-    transform: rotate(-6deg) translateY(-2px);
-  }
-  5.5% {
-    transform: rotate(4deg) translateY(0);
+  75% {
+    transform: translateY(-12px) rotate(3deg);
   }
 }
 
-.animate-mascot-wave {
-  animation: mascot-wave 4.5s ease-in-out infinite;
-  transform-origin: 65% 95%;
+.animate-mascot-fly {
+  animation: mascot-fly 3.2s ease-in-out infinite;
+  transform-origin: 50% 50%;
 }
 
 /* Header hotline icon — a periodic wiggle/shake on the phone icon itself,
