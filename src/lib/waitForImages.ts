@@ -200,6 +200,12 @@ export async function captureQuotePng(node: HTMLElement): Promise<Blob> {
   if (!allImagesEmbedded(node)) {
     throw new Error("Một hoặc nhiều ảnh chưa tải xong kịp trước khi xuất báo giá.");
   }
+  // Đợi thêm 2 khung hình trước khi rasterize — biện pháp phòng ngừa thêm
+  // cho Safari/iOS: đảm bảo trình duyệt đã layout/paint xong việc gán lại
+  // `img.src` ở inlineImagesAsDataUrls() (không chỉ đổi thuộc tính DOM mà
+  // còn cần 1 nhịp để ảnh mới thực sự lên khung hình) trước khi
+  // html-to-image chụp lại toàn bộ node.
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   const { toBlob } = await import("html-to-image");
   const blob = await toBlob(node, { pixelRatio: 1, cacheBust: true });
   if (!blob) throw new Error("toBlob returned null");

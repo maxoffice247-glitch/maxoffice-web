@@ -103,8 +103,13 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
     <div style={{ width: 1080 }} className="flex flex-col bg-white">
       {/* Header — logo + tiêu đề báo giá */}
       <div className="flex items-center justify-between px-14 pt-12 pb-8">
+        {/* width/height HTML attribute — bắt buộc để Safari/iOS render đúng
+            <img> khi html-to-image nhúng cả card vào 1 SVG <foreignObject>
+            trung gian để rasterize (xem chú thích đầy đủ ở PlanQuoteCard.tsx,
+            component tương đương cho báo giá 1 chi nhánh). 858x170 là kích
+            thước gốc logo-red.png. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/logo-red.png" alt="MAX OFFICE" style={{ height: 56 }} />
+        <img src="/images/logo-red.png" alt="MAX OFFICE" width={283} height={56} style={{ height: 56 }} />
         <span className="rounded-full bg-navy px-6 py-2.5 text-[22px] font-bold text-white">
           Báo giá tổng hợp
         </span>
@@ -197,10 +202,16 @@ export default function PlanGroupQuoteCard({ group }: { group: PlanGroup }) {
                         full-res: hiển thị ở đây chỉ 64px, ảnh gốc vài trăm KB
                         là dư thừa và làm chậm export trên mobile khi nhóm có
                         nhiều chi nhánh. */}
+                    {/* width/height HTML attribute — xem chú thích ở <img>
+                        logo phía trên trong file này (nguyên nhân ảnh chi
+                        nhánh thiếu trên iPhone). Khung chứa cố định 64x85
+                        (w-[64px] aspect-[3/4]). */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`/images/quote/dia-diem-${loc.slug}.jpg`}
                       alt={loc.name}
+                      width={64}
+                      height={85}
                       className="h-full w-full object-contain"
                     />
                   </div>

@@ -55,8 +55,17 @@ export default function PlanQuoteCard({
     <div style={{ width: 1080 }} className="flex flex-col bg-white">
       {/* Header — logo + tiêu đề báo giá */}
       <div className="flex items-center justify-between px-14 pt-12 pb-8">
+        {/* width/height HTML attribute (không chỉ style/class) — bắt buộc để
+            Safari/iOS render đúng <img> khi html-to-image nhúng cả card vào
+            1 SVG <foreignObject> trung gian để rasterize: WebKit cần kích
+            thước intrinsic khai rõ ở thuộc tính width/height, chỉ có CSS
+            (style/class) tự thân không đủ trong ngữ cảnh foreignObject —
+            đây là nguyên nhân ẢNH LOGO/MẶT TIỀN vẫn thiếu trên iPhone dù đã
+            fix embed JPEG (xem waitForImages.ts) và dữ liệu đã nhỏ lại
+            nhiều — Chrome/Android không bị ảnh hưởng nên trước đó không lộ
+            ra khi test trên Samsung. 858x170 là kích thước gốc logo-red.png. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/logo-red.png" alt="MAX OFFICE" style={{ height: 56 }} />
+        <img src="/images/logo-red.png" alt="MAX OFFICE" width={283} height={56} style={{ height: 56 }} />
         <span className="rounded-full bg-navy px-6 py-2.5 text-[22px] font-bold text-white">
           Báo giá
         </span>
@@ -69,8 +78,17 @@ export default function PlanQuoteCard({
           của từng chi nhánh khác nhau. */}
       <div className="mx-14 flex items-center gap-7 rounded-3xl bg-bg-tint p-6">
         <div className="relative aspect-[3/4] w-[270px] shrink-0 overflow-hidden rounded-2xl bg-white">
+          {/* width/height HTML attribute — xem chú thích ở <img> logo phía
+              trên trong file này (nguyên nhân ảnh mặt tiền thiếu trên
+              iPhone). Khung chứa cố định 270x360 (w-[270px] aspect-[3/4]). */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={facadeSrc} alt={plan.locationName} className="h-full w-full object-contain" />
+          <img
+            src={facadeSrc}
+            alt={plan.locationName}
+            width={270}
+            height={360}
+            className="h-full w-full object-contain"
+          />
         </div>
         <div className="min-w-0">
           <p className="text-[30px] leading-tight font-extrabold text-navy">{plan.locationName}</p>
