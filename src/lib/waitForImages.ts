@@ -99,6 +99,22 @@ function waitForOneImage(img: HTMLImageElement): Promise<void> {
  * toàn bước fetch nội bộ (xem embedImageNode: `!(isImageElement &&
  * !isDataUrl(clonedNode.src))` return sớm), loại bỏ hẳn nguy cơ fetch lỗi
  * trên mobile — không cần gọi mạng thêm lần nào nữa để nhúng ảnh.
+ *
+ * CẬP NHẬT (2026-09) — VẪN còn thiếu ảnh mặt tiền trên iPhone sau fix trên,
+ * dù đã thêm bước chờ dài hơn + xác nhận embed (`captureQuotePng()` bên
+ * dưới) và deploy thật lên production (xác nhận bằng cách đọc thẳng bundle
+ * JS đã build). NGUYÊN NHÂN THỨ HAI: bước vẽ canvas ở trên LUÔN xuất
+ * `image/png` bất kể ảnh gốc là gì — với ảnh mặt tiền (JPEG chụp thật,
+ * nhiều màu/chi tiết), PNG không nén tốt bằng JPEG nên 1 ảnh gốc ~68KB
+ * phình thành ~700KB PNG (~930KB base64) khi nhúng — đã đo thực tế bằng
+ * sharp, xem git history. Chuỗi base64 khổng lồ đó vẫn "chạy được" trên
+ * desktop (bộ nhớ rộng rãi) nhưng Safari/iOS (giới hạn bộ nhớ/độ dài data
+ * URI chặt hơn) render CÂM LẶNG ra khoảng trắng cho riêng ảnh đó khi
+ * html-to-image rasterize — không ném lỗi JS nào, nên bước xác nhận
+ * `allImagesEmbedded()` (chỉ check `src` đã là data: URL hay chưa) không
+ * bắt được. Đã sửa: chỉ giữ PNG cho ảnh nguồn vốn là PNG (logo-red.png,
+ * cần kênh alpha nền trong suốt), ảnh JPEG gốc xuất lại `image/jpeg` —
+ * giảm ~8 lần dung lượng nhúng, xem `inlineImagesAsDataUrls()` bên dưới.
  */
 export async function inlineImagesAsDataUrls(container: HTMLElement): Promise<void> {
   const images = Array.from(container.querySelectorAll("img"));
@@ -118,12 +134,25 @@ export async function inlineImagesAsDataUrls(container: HTMLElement): Promise<vo
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
         ctx.drawImage(img, 0, 0);
-        // PNG (không phải JPEG) để giữ đúng kênh alpha của logo trong suốt
-        // (logo-red.png) — ảnh mặt tiền là JPEG gốc, không có alpha nên
-        // xuất PNG không ảnh hưởng gì tới hiển thị, chỉ tốn thêm vài chục KB
-        // dữ liệu tạm dùng để nhúng (không phải kích thước file PNG cuối
-        // cùng tải về, vốn do toBlob() ở bước sau quyết định).
-        img.src = canvas.toDataURL("image/png");
+        // NGUYÊN NHÂN THẬT khiến ảnh mặt tiền vẫn thiếu trên iPhone dù đã
+        // có bước chờ + xác nhận embed ở trên (đã đo thực tế bằng sharp):
+        // trước đây LUÔN xuất "image/png" ở đây, kể cả cho ảnh mặt tiền
+        // vốn là JPEG chụp thật — PNG không nén tốt ảnh chụp nhiều màu như
+        // JPEG, khiến 1 ảnh 68KB gốc phình thành ~700KB PNG (~930KB base64)
+        // để nhúng vào SVG trung gian mà html-to-image dùng để rasterize.
+        // Chuỗi base64 khổng lồ đó vẫn "chạy được" trên desktop (bộ nhớ
+        // rộng rãi) nhưng Safari/iOS (giới hạn bộ nhớ/độ dài data URI chặt
+        // hơn) render CÂM LẶNG ra khoảng trắng cho riêng ảnh đó — không
+        // ném lỗi JS nào để đoạn code chờ+xác nhận ở trên bắt được (bước
+        // đó chỉ xác nhận `src` đã thành data: URL, không xác nhận
+        // rasterize thành công). Giữ PNG CHỈ cho ảnh nguồn vốn là PNG
+        // (logo-red.png, cần kênh alpha nền trong suốt); ảnh JPEG gốc
+        // (mặt tiền/chi nhánh) xuất lại JPEG — giảm ~8 lần dung lượng
+        // nhúng, về gần bằng kích thước file gốc.
+        const isSourcePng = /\.png(?:[?#]|$)/i.test(img.src);
+        img.src = isSourcePng
+          ? canvas.toDataURL("image/png")
+          : canvas.toDataURL("image/jpeg", 0.9);
       } catch {
         // Canvas bị "tainted" (chỉ xảy ra với ảnh cross-origin không có CORS
         // header — không phải trường hợp của các ảnh cùng origin ở đây) hoặc
