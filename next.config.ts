@@ -48,6 +48,10 @@ const nextConfig: NextConfig = {
       "./public/images/og/**",
       "./public/images/logo-white.png",
     ],
+    // Route tạo ảnh báo giá ở server (thay cho html-to-image ở trình duyệt,
+    // xem chú thích trong route.tsx) — cũng readFile() theo `slug` runtime
+    // nên cùng vấn đề file-tracing như renderOgImage() ở trên.
+    "/api/quote-image/[slug]/[plan]": ["./public/images/quote/**", "./public/images/logo-red.png"],
   },
   async headers() {
     return [

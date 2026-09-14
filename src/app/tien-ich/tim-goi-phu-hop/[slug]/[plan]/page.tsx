@@ -7,7 +7,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import PlanDetailActions from "@/components/tools/PlanDetailActions";
 import { CheckCircleIcon, MapPinIcon, ArrowRightSmallIcon } from "@/components/icons";
 import { getAllOfferedPlans, getOfferedPlan, formatVoPrice } from "@/lib/planFinder";
-import { LOCATIONS_DATA, resolveTimedPromotions } from "@/lib/locationsData";
+import { LOCATIONS_DATA } from "@/lib/locationsData";
 
 export async function generateStaticParams() {
   return getAllOfferedPlans().map((p) => ({ slug: p.locationSlug, plan: p.planKey }));
@@ -46,21 +46,7 @@ export default async function PlanDetailPage({
   if (!plan || !location || location.isActive === false) notFound();
 
   const facadeSrc = `/images/facade/dia-diem-${slug}.jpg`;
-  // Bản đã resize/nén riêng cho card báo giá xuất ảnh (PlanDetailActions ->
-  // PlanQuoteCard, xem waitForImages.ts) — card đó chỉ hiển thị ảnh ở khung
-  // 270px, dùng ảnh gốc facadeSrc (có thể tới ~600KB) vừa dư thừa vừa làm
-  // chậm export trên mobile. Ảnh gốc facadeSrc vẫn dùng nguyên cho hiển thị
-  // full trên trang này (qua next/image ở dưới).
-  const quoteFacadeSrc = `/images/quote/dia-diem-${slug}.jpg`;
   const interiorImages = (location.interiorImages ?? []).slice(0, 2);
-  // Dựng sẵn icon thành JSX ngay tại Server Component này (không phải
-  // component reference) — PlanDetailActions là "use client", còn
-  // BenefitItem.icon là 1 function; truyền hàm qua ranh giới Server -> Client
-  // sẽ lỗi runtime vì React Server Components không serialize được hàm.
-  const quoteBenefits = location.benefits?.map((b) => ({
-    title: b.title,
-    icon: <b.icon className="h-4 w-4 shrink-0" />,
-  }));
 
   return (
     <main>
@@ -160,13 +146,7 @@ export default async function PlanDetailPage({
           </div>
 
           <div className="lg:sticky lg:top-24">
-            <PlanDetailActions
-              plan={plan}
-              address={location.address}
-              facadeSrc={quoteFacadeSrc}
-              benefits={quoteBenefits}
-              promotions={resolveTimedPromotions(location.promotions)}
-            />
+            <PlanDetailActions plan={plan} />
           </div>
         </div>
       </section>

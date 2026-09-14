@@ -1,47 +1,37 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { DownloadIcon, PhoneIcon, ShareIcon, SpinnerIcon } from "../icons";
-import PlanQuoteCard, { type QuoteBenefitTag } from "./PlanQuoteCard";
 import type { OfferedPlan } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
-import { captureQuotePng, shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
+import { shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
 
-export default function PlanDetailActions({
-  plan,
-  address,
-  facadeSrc,
-  benefits,
-  promotions,
-}: {
-  plan: OfferedPlan;
-  address: string;
-  /** Ảnh mặt tiền dành riêng cho luồng xuất ảnh báo giá — đã resize/nén
-      (xem /public/images/quote), KHÔNG phải ảnh gốc full-res dùng hiển thị
-      trên trang (card báo giá chỉ hiển thị ảnh ở khung 270px, dùng ảnh gốc
-      vài trăm KB–600KB không cần thiết và làm chậm export trên mobile). */
-  facadeSrc: string;
-  benefits?: QuoteBenefitTag[];
-  promotions?: string[];
-}) {
-  const quoteRef = useRef<HTMLDivElement>(null);
+/**
+ * TRƯỚC ĐÂY: dựng 1 bản PlanQuoteCard off-screen rồi dùng html-to-image để
+ * "chụp" lại thành PNG ngay trên trình duyệt của khách. Sau 4 lần sửa lỗi
+ * thiếu ảnh mặt tiền/logo trên iPhone (fetch nội bộ lỗi, PNG phình dung
+ * lượng, thiếu width/height <img>, card đặt quá xa khung nhìn) mà lỗi vẫn
+ * còn — kể cả khi đã xác nhận qua ảnh chụp màn hình thật từ máy lỗi rằng cả
+ * logo lẫn ảnh mặt tiền đều trắng trơn ngay trong bước xem trước (không
+ * phải lỗi hiển thị/chia sẻ sau đó) — nguyên nhân nhiều khả năng là hạn chế
+ * ĐÃ BIẾT của html-to-image trên Safari/WebKit (đóng gói nội dung vào 1 SVG
+ * rồi nạp SVG đó như 1 "ảnh" để rasterize — Safari có chính sách bảo mật
+ * riêng cho "SVG dùng làm ảnh" thường từ chối vẽ ảnh raster nhúng bên trong
+ * <foreignObject> trong ngữ cảnh đó), không vá được bằng cách tinh chỉnh
+ * thêm ở tầng DOM/CSS.
+ *
+ * GIỜ: ảnh báo giá được RENDER SẴN Ở SERVER (xem
+ * src/app/api/quote-image/[slug]/[plan]/route.tsx, dùng next/og +
+ * Satori — cùng hạ tầng đã dùng cho ảnh Open Graph) — trình duyệt của
+ * khách chỉ cần TẢI VỀ 1 file PNG có sẵn, không phải tự "chụp" gì nữa, nên
+ * né hoàn toàn giới hạn của Safari nói trên.
+ */
+export default function PlanDetailActions({ plan }: { plan: OfferedPlan }) {
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
-  // Sau 4 lần sửa dựa trên suy luận kỹ thuật (fetch nội bộ lỗi, PNG phình
-  // dung lượng, thiếu width/height <img>, card đặt quá xa khung nhìn) mà
-  // lỗi trên iPhone vẫn còn, tiếp tục đoán mò là không hiệu quả — cần dữ
-  // liệu THẬT từ đúng máy bị lỗi. Hiện thẳng thông báo lỗi gốc (kỹ thuật,
-  // tiếng Anh) lên màn hình thay vì câu chung chung "vui lòng thử lại", để
-  // người dùng chỉ cần CHỤP MÀN HÌNH gửi lại là đủ dữ liệu chẩn đoán, không
-  // cần biết dùng DevTools/Web Inspector.
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
-  // Xem trước chính ảnh PNG vừa xuất ra ngay trên trang — vì triệu chứng
-  // trước giờ KHÔNG ném lỗi gì cả (allImagesEmbedded() vẫn pass vì check
-  // src đã là data: URL hay chưa, không xác nhận html-to-image có thật sự
-  // rasterize đúng nội dung), nên trước đây không có cách nào chụp màn hình
-  // "bằng chứng" nếu không tải file về máy rồi tự mở lại. Hiện thumbnail
-  // ngay tại chỗ để 1 tấm ảnh chụp màn hình là đủ xác nhận ảnh mặt tiền có
-  // ra hay không, không cần mở file đã tải về.
+  // Xem trước ảnh vừa tải về ngay trên trang — giữ lại từ luồng cũ, vẫn hữu
+  // ích để khách xem nhanh trước khi gửi cho khách hàng của họ.
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   // false lúc SSR/lần render đầu (không có `navigator`) -> luôn ra nút
   // "Tải báo giá" trước, rồi chuyển thành "Chia sẻ báo giá" ngay khi
@@ -50,17 +40,12 @@ export default function PlanDetailActions({
   const canShare = useCanShareFiles();
 
   const handleDownloadQuote = async () => {
-    const node = quoteRef.current;
-    if (!node) return;
     setStatus("generating");
     try {
+      const res = await fetch(`/api/quote-image/${plan.locationSlug}/${plan.planKey}`);
+      if (!res.ok) throw new Error(`Server trả về lỗi ${res.status} khi tạo ảnh báo giá.`);
+      const blob = await res.blob();
       const filename = `bao-gia-${plan.locationSlug}-${plan.planKey}.png`;
-      // captureQuotePng() đợi ảnh tải xong + nhúng thành data: URL (ngăn
-      // html-to-image tự fetch lại ảnh — nguyên nhân khiến ảnh mặt tiền
-      // biến mất trên mobile, chi tiết xem waitForImages.ts) và ném lỗi rõ
-      // ràng nếu vẫn còn ảnh thiếu sau khi đã thử lại, thay vì âm thầm xuất
-      // ra 1 ảnh báo giá thiếu ảnh mặt tiền.
-      const blob = await captureQuotePng(node);
       setPreviewUrl((old) => {
         if (old) URL.revokeObjectURL(old);
         return URL.createObjectURL(blob);
@@ -125,10 +110,6 @@ export default function PlanDetailActions({
           {errorDetail && <span className="block break-words text-[11px] text-body-text">({errorDetail})</span>}
         </p>
       )}
-      {/* Xem trước ảnh vừa xuất — xem giải thích ở khai báo state `previewUrl`
-          phía trên: đây là bằng chứng trực quan duy nhất hiện có để xác nhận
-          html-to-image có thật sự vẽ đúng ảnh mặt tiền vào PNG hay không,
-          dùng để chẩn đoán từ xa qua ảnh chụp màn hình người dùng gửi lại. */}
       {previewUrl && (
         <div className="mt-3 overflow-hidden rounded-xl border border-line">
           <p className="bg-bg-tint px-3 py-1.5 text-[11px] font-semibold text-body-text">
@@ -138,41 +119,6 @@ export default function PlanDetailActions({
           <img src={previewUrl} alt="Xem trước báo giá vừa tạo" className="w-full" />
         </div>
       )}
-
-      {/* Off-screen — dựng đúng 1080px rộng (cao tự động theo nội dung) để
-          html-to-image chụp lại, không hiển thị trực tiếp cho người dùng.
-          TRƯỚC ĐÂY đặt `left: -99999px` (đẩy ra rất xa khung nhìn) — đây
-          chính là nguyên nhân THẬT gây mất ảnh mặt tiền trên iPhone (2 lần
-          fix trước — nhúng data URL, chọn định dạng JPEG/PNG, khai
-          width/height cho <img> — đều đúng nhưng chưa đủ vì vẫn dựng ở vị
-          trí này): Safari/WebKit trì hoãn hoặc bỏ qua việc tải/giải mã ảnh
-          cho nội dung nằm quá xa ngoài khung nhìn (tối ưu hiệu năng), trong
-          khi Chrome (Samsung/Android) không làm vậy nên không lộ lỗi khi
-          test. Đổi sang giữ card ở đúng góc (0,0) — vẫn "vô hình" với người
-          dùng nhờ `opacity: 0` + kẹp trong khung ngoài rộng/cao 0 với
-          `overflow: hidden` (không dùng display:none vì nó bỏ qua layout
-          hẳn) — buộc trình duyệt phải layout/tải/giải mã ảnh như nội dung
-          bình thường thay vì coi là nội dung "ở rất xa, chưa cần render".
-          `opacity: 0` đặt ở div NGOÀI (không phải chính node được chụp) —
-          html-to-image đọc style ngay trên node truyền vào captureQuotePng()
-          để dựng bản sao, nếu đặt opacity: 0 trực tiếp lên node đó thì ảnh
-          PNG xuất ra cũng bị trong suốt theo; opacity không phải thuộc tính
-          kế thừa nên style ở tổ tiên không ảnh hưởng tới getComputedStyle()
-          của node con khi chụp riêng node đó.
-          KHÔNG được ép width/height: 0 + overflow: hidden ở div ngoài (đã
-          thử, phải revert): phần tử position: fixed không có width/height
-          khai rõ vốn co theo NỘI DUNG (shrink-to-fit), nhưng div con
-          `quoteRef` bên trong lại là block thường (width: auto = lấp đầy
-          containing block) — ép containing block về 0 làm chính
-          `quoteRef` bị tính rộng 0, kéo theo html-to-image dựng canvas
-          0x0 và `toBlob()` trả về null (lỗi này lộ ra ngay cả trên Chrome
-          desktop khi test lại, không phải riêng iPhone). opacity: 0 một
-          mình là đủ ẩn khỏi mắt người dùng mà không đụng tới kích thước. */}
-      <div aria-hidden style={{ position: "fixed", top: 0, left: 0, opacity: 0, pointerEvents: "none" }}>
-        <div ref={quoteRef}>
-          <PlanQuoteCard plan={plan} address={address} facadeSrc={facadeSrc} benefits={benefits} promotions={promotions} />
-        </div>
-      </div>
     </div>
   );
 }
