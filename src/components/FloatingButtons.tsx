@@ -1,8 +1,36 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { PhoneIcon, PlusIcon, MessengerIcon, ZaloIcon } from "./icons";
+
+/** Linh vật MAX vẫy tay, đặt cạnh cụm nút gọi/Zalo/Messenger — link thẳng
+    tới Zalo (kênh chat tức thời phổ biến nhất) khi bấm, khác với nút chính
+    (gọi điện trên mobile, mở speed-dial trên desktop). Hoạt hoạ bằng CSS
+    (.animate-mascot-wave, xem globals.css) thay vì cần dựng GIF/video từ
+    ảnh gốc — xem trả lời câu hỏi 1 trong chat để biết thêm lựa chọn khác
+    nếu muốn hoạt hoạ "thật" (AI tạo video từ ảnh tĩnh) sau này. */
+function WavingMascotBubble({ className }: { className?: string }) {
+  return (
+    <a
+      href="https://zalo.me/0898082188"
+      target="_blank"
+      rel="noopener"
+      aria-label="Chat Zalo với MAX OFFICE"
+      title="Chat Zalo với MAX OFFICE"
+      className={`z-[96] block drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:scale-110 ${className ?? ""}`}
+    >
+      <Image
+        src="/images/mascot/linh-vat-max-xin-chao.png"
+        alt=""
+        width={160}
+        height={107}
+        className="animate-mascot-wave h-[58px] w-auto object-contain"
+      />
+    </a>
+  );
+}
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
 const CYCLE_INTERVAL_MS = 2600;
@@ -90,8 +118,10 @@ export default function FloatingButtons() {
       >
         <PhoneIcon className="h-[22px] w-[22px]" />
       </a>
+      <WavingMascotBubble className="fixed right-1 bottom-[140px] sm:hidden" />
 
       {/* Tablet/desktop: no bottom nav present, so the full phone/Zalo/Messenger speed-dial stays. */}
+      {!open && <WavingMascotBubble className="fixed right-[14px] bottom-[92px] hidden sm:block" />}
       <div
         ref={rootRef}
         className="fixed right-[22px] bottom-6 z-[97] hidden flex-col items-end gap-3 sm:flex"

@@ -81,6 +81,39 @@ body {
   animation: pulse-call 2.4s infinite;
 }
 
+/* Linh vật MAX vẫy tay cạnh nút gọi/Zalo/Messenger (FloatingButtons.tsx) —
+   ảnh tĩnh (linh-vat-max-xin-chao.png) không có lớp tách riêng cho cánh
+   tay nên không thể lắc đúng mỗi cánh tay bằng CSS; thay vào đó nghiêng +
+   nảy nhẹ CẢ NHÂN VẬT theo nhịp một đợt vẫy rồi nghỉ (giống
+   header-phone-icon-wiggle) — vẫn đọc được là "đang vẫy chào" nhờ tư thế
+   tay giơ cao sẵn có trong ảnh, mà không cần dựng lại ảnh nhiều lớp hay
+   xuất video/GIF riêng. transform-origin đặt lệch xuống dưới-phải (gần
+   chân) để nhân vật nghiêng như đang đứng vẫy, không xoay quanh tâm ảnh. */
+@keyframes mascot-wave {
+  0%,
+  8%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  1% {
+    transform: rotate(-9deg) translateY(-2px);
+  }
+  2.5% {
+    transform: rotate(7deg) translateY(-1px);
+  }
+  4% {
+    transform: rotate(-6deg) translateY(-2px);
+  }
+  5.5% {
+    transform: rotate(4deg) translateY(0);
+  }
+}
+
+.animate-mascot-wave {
+  animation: mascot-wave 4.5s ease-in-out infinite;
+  transform-origin: 65% 95%;
+}
+
 /* Header hotline icon — a periodic wiggle/shake on the phone icon itself,
    like it's ringing, plus a soft ring pulsing outward from behind it. Both
    run on a 5s cycle: the wiggle fires in a quick 0.5s burst then rests for

@@ -332,14 +332,24 @@ export default function OfficePackageTool() {
             <Reveal className="mx-auto max-w-[720px] overflow-hidden rounded-2xl border-2 border-primary bg-white text-center shadow-card">
               <div className="bg-gradient-to-tr from-navy to-primary-dark p-8 sm:p-10">
                 {/* Linh vật MAX ăn mừng "number one" — nhấn mạnh đây là kết
-                    quả gợi ý cuối cùng sau khi trả lời xong bảng câu hỏi. */}
-                <Image
-                  src="/images/mascot/linh-vat-max-number-one.png"
-                  alt=""
-                  width={90}
-                  height={90}
-                  className="mx-auto mb-3 h-[76px] w-auto object-contain"
-                />
+                    quả gợi ý cuối cùng sau khi trả lời xong bảng câu hỏi.
+                    Quầng sáng trắng mờ phía sau (radial-gradient) để tách
+                    linh vật (lông xanh) khỏi nền gradient navy->primary-dark
+                    cũng xanh — không có quầng sáng, linh vật bị "chìm" vào
+                    nền do 2 màu xanh gần nhau. */}
+                <div className="relative mx-auto mb-3 flex h-[92px] w-[92px] items-center justify-center">
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 rounded-full bg-white/20 blur-xl"
+                  />
+                  <Image
+                    src="/images/mascot/linh-vat-max-number-one.png"
+                    alt=""
+                    width={90}
+                    height={90}
+                    className="relative h-[76px] w-auto object-contain"
+                  />
+                </div>
                 <span className="mb-4 inline-flex items-center gap-2 text-[12px] font-bold tracking-[0.14em] text-[#8FC1F5] uppercase">
                   Gói phù hợp nhất với bạn
                 </span>
