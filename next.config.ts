@@ -52,6 +52,7 @@ const nextConfig: NextConfig = {
     // xem chú thích trong route.tsx) — cũng readFile() theo `slug` runtime
     // nên cùng vấn đề file-tracing như renderOgImage() ở trên.
     "/api/quote-image/[slug]/[plan]": ["./public/images/quote/**", "./public/images/logo-red.png"],
+    "/api/quote-image/goi/[groupKey]": ["./public/images/quote/**", "./public/images/logo-red.png"],
   },
   async headers() {
     return [

@@ -1,37 +1,33 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { DownloadIcon, PhoneIcon, ShareIcon, SpinnerIcon } from "../icons";
-import PlanGroupQuoteCard from "./PlanGroupQuoteCard";
 import type { PlanGroup } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
-import { captureQuotePng, shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
+import { shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
 
+/**
+ * Xem PlanDetailActions.tsx (component tương đương cho báo giá 1 chi
+ * nhánh) để biết đầy đủ lý do chuyển từ html-to-image (chụp DOM off-screen
+ * ở trình duyệt) sang render PNG sẵn ở SERVER
+ * (src/app/api/quote-image/goi/[groupKey]/route.tsx): hạn chế đã biết của
+ * html-to-image trên Safari/WebKit khi rasterize ảnh raster bên trong SVG
+ * <foreignObject>, không vá được bằng cách tinh chỉnh thêm ở DOM/CSS.
+ */
 export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) {
-  const quoteRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
-  // Xem PlanDetailActions (component tương đương cho báo giá 1 chi nhánh)
-  // để biết vì sao dùng useCanShareFiles() thay vì useEffect + setState, và
-  // vì sao có thêm errorDetail/previewUrl (chẩn đoán lỗi thiếu ảnh trên
-  // iPhone qua ảnh chụp màn hình người dùng gửi lại, sau 4 lần sửa dựa trên
-  // suy luận kỹ thuật mà lỗi vẫn còn).
   const canShare = useCanShareFiles();
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleDownloadQuote = async () => {
-    const node = quoteRef.current;
-    if (!node) return;
     setStatus("generating");
     try {
+      const res = await fetch(`/api/quote-image/goi/${group.groupKey}`);
+      if (!res.ok) throw new Error(`Server trả về lỗi ${res.status} khi tạo ảnh báo giá.`);
+      const blob = await res.blob();
       const filename = `bao-gia-tong-hop-${group.groupKey}.png`;
-      // captureQuotePng() đợi + nhúng ảnh thành data: URL (ngăn html-to-
-      // image tự fetch lại — nguyên nhân thật gây mất ảnh trên mobile, xem
-      // waitForImages.ts) và ném lỗi rõ ràng nếu vẫn thiếu ảnh sau khi thử
-      // lại — càng quan trọng ở đây vì báo giá nhóm có thể phải nhúng 7+
-      // ảnh cùng lúc (logo + ảnh từng chi nhánh).
-      const blob = await captureQuotePng(node);
       setPreviewUrl((old) => {
         if (old) URL.revokeObjectURL(old);
         return URL.createObjectURL(blob);
@@ -95,7 +91,6 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
           {errorDetail && <span className="block break-words text-[11px] text-body-text">({errorDetail})</span>}
         </p>
       )}
-      {/* Xem trước ảnh vừa xuất — xem giải thích ở PlanDetailActions.tsx. */}
       {previewUrl && (
         <div className="mt-3 overflow-hidden rounded-xl border border-line">
           <p className="bg-bg-tint px-3 py-1.5 text-[11px] font-semibold text-body-text">
@@ -105,29 +100,6 @@ export default function PlanGroupDetailActions({ group }: { group: PlanGroup }) 
           <img src={previewUrl} alt="Xem trước báo giá vừa tạo" className="w-full" />
         </div>
       )}
-
-      {/* Off-screen — dựng khung rộng 1080px (cao tự động theo số chi nhánh)
-          để html-to-image chụp lại, không hiển thị trực tiếp cho người dùng.
-          Xem chú thích đầy đủ ở PlanDetailActions.tsx (component tương
-          đương cho báo giá 1 chi nhánh): TRƯỚC ĐÂY đặt `left: -99999px`
-          (đẩy ra rất xa khung nhìn) là nguyên nhân THẬT gây mất ảnh trên
-          iPhone — Safari/WebKit trì hoãn/bỏ qua tải-giải mã ảnh cho nội
-          dung nằm quá xa ngoài khung nhìn, Chrome (Samsung/Android) thì
-          không nên trước đây không lộ lỗi khi test. Đổi sang giữ card ở
-          đúng góc (0,0), ẩn bằng `opacity: 0` đặt ở div NGOÀI (không phải
-          node truyền vào captureQuotePng(), tránh ảnh PNG xuất ra cũng bị
-          trong suốt theo). KHÔNG ép width/height: 0 + overflow: hidden ở
-          div ngoài (đã thử, phải revert — xem chú thích đầy đủ ở
-          PlanDetailActions.tsx): làm `quoteRef` bên trong bị tính rộng 0
-          (block thường width: auto lấp đầy containing block, containing
-          block lại bị ép về 0), kéo theo html-to-image dựng canvas 0x0 và
-          `toBlob()` trả về null — lộ ra ngay cả trên Chrome desktop, không
-          phải riêng iPhone. opacity: 0 một mình là đủ ẩn. */}
-      <div aria-hidden style={{ position: "fixed", top: 0, left: 0, opacity: 0, pointerEvents: "none" }}>
-        <div ref={quoteRef}>
-          <PlanGroupQuoteCard group={group} />
-        </div>
-      </div>
     </div>
   );
 }

@@ -1,216 +1,27 @@
 import { useSyncExternalStore } from "react";
 
 /**
- * Đợi mọi <img> bên trong `container` load + decode xong trước khi chụp
- * bằng html-to-image. Trước đây luồng "Tải báo giá" (PlanDetailActions,
- * PlanGroupDetailActions) không đợi gì cả — chỉ vá bằng cách gọi toPng() 2
- * lần liên tiếp, giả định lần gọi thứ 2 ảnh đã kịp tải. Trên mạng/thiết bị
- * chậm (đặc biệt Safari iOS) 2 lần gọi đó vẫn có thể chạy xong trước khi ảnh
- * tải xong, khiến ảnh xuất ra bị thiếu ảnh mặt tiền/chi nhánh.
+ * TRƯỚC ĐÂY file này còn có `waitForImages()`, `inlineImagesAsDataUrls()`,
+ * `allImagesEmbedded()`, `captureQuotePng()` — toàn bộ pipeline chờ +
+ * nhúng ảnh + rasterize DOM off-screen bằng html-to-image ở trình duyệt,
+ * dùng cho luồng "Tải báo giá" (PlanDetailActions/PlanGroupDetailActions).
+ * Sau 4 lần sửa lỗi thiếu ảnh mặt tiền/logo trên iPhone (fetch nội bộ lỗi,
+ * PNG phình dung lượng, thiếu width/height <img>, card đặt quá xa khung
+ * nhìn) mà lỗi vẫn còn — kể cả khi đã xác nhận qua ảnh chụp màn hình THẬT
+ * từ máy lỗi rằng cả logo lẫn ảnh mặt tiền đều trắng trơn ngay trong bước
+ * xem trước — kết luận nguyên nhân gốc là hạn chế ĐÃ BIẾT và không vá được
+ * ở tầng ứng dụng của html-to-image trên Safari/WebKit (đóng gói nội dung
+ * vào 1 SVG rồi nạp SVG đó như 1 "ảnh" để rasterize — Safari từ chối vẽ
+ * ảnh raster nhúng bên trong <foreignObject> trong ngữ cảnh đó).
  *
- * - Dùng `img.decode()` khi trình duyệt hỗ trợ (decode xong nghĩa là ảnh sẵn
- *   sàng để vẽ vào canvas ngay, không chỉ "đã tải xong header").
- * - Fallback sang lắng nghe sự kiện load/error cho trình duyệt cũ hơn.
- * - Không bao giờ reject vì 1 ảnh lỗi (404, mạng đứt...) — chụp ảnh báo giá
- *   thiếu 1 tấm vẫn tốt hơn là treo vô thời hạn vì Promise.all bị reject.
- * - Có timeout an toàn (mặc định 8s) phòng trường hợp trình duyệt không bao
- *   giờ bắn sự kiện load/error/decode cho 1 ảnh nào đó.
+ * Toàn bộ luồng tạo ảnh báo giá đã chuyển sang RENDER SẴN Ở SERVER (xem
+ * src/app/api/quote-image/[slug]/[plan]/route.tsx và
+ * src/app/api/quote-image/goi/[groupKey]/route.tsx, dùng next/og) — trình
+ * duyệt khách chỉ `fetch()` về 1 blob PNG có sẵn, không cần tự chụp DOM
+ * nữa, nên toàn bộ pipeline chờ/nhúng ảnh ở trên không còn cần thiết và đã
+ * bị xoá. File này giờ chỉ còn phần chia sẻ file qua Web Share API, vẫn
+ * dùng chung cho cả 2 luồng "Tải báo giá"/"Tải báo giá tổng hợp".
  */
-export async function waitForImages(container: HTMLElement, timeoutMs?: number): Promise<void> {
-  const images = Array.from(container.querySelectorAll("img"));
-  if (images.length === 0) return;
-
-  // Không hardcode 8s cố định cho mọi trường hợp — báo giá NHÓM nhiều chi
-  // nhánh có thể phải tải 7+ ảnh CÙNG LÚC trên cùng 1 đường truyền mobile
-  // data, tổng thời gian tải thực tế dài hơn hẳn báo giá 1 chi nhánh (2
-  // ảnh: logo + mặt tiền). Ước lượng ~3s/ảnh, giới hạn trong khoảng
-  // 8-20s — đủ rộng cho nhóm đông chi nhánh mà không treo vô thời hạn.
-  const effectiveTimeout = timeoutMs ?? Math.min(20000, Math.max(8000, images.length * 3000));
-
-  const perImage = images.map((img) => waitForOneImage(img));
-  const safetyTimeout = new Promise<void>((resolve) => setTimeout(resolve, effectiveTimeout));
-
-  await Promise.race([Promise.all(perImage), safetyTimeout]);
-}
-
-function waitForOneImage(img: HTMLImageElement): Promise<void> {
-  if (img.complete && img.naturalWidth > 0) {
-    // Đã có kích thước thật -> ảnh đã tải xong; vẫn gọi decode() nếu có để
-    // chắc chắn frame đã sẵn sàng vẽ (decode xong mới an toàn để rasterize).
-    if (typeof img.decode === "function") {
-      return img.decode().catch(() => undefined);
-    }
-    return Promise.resolve();
-  }
-
-  return new Promise((resolve) => {
-    const onDone = () => {
-      img.removeEventListener("load", onDone);
-      img.removeEventListener("error", onDone);
-      if (typeof img.decode === "function") {
-        img.decode().then(resolve, () => resolve());
-      } else {
-        resolve();
-      }
-    };
-    img.addEventListener("load", onDone, { once: true });
-    img.addEventListener("error", onDone, { once: true });
-  });
-}
-
-/**
- * NGUYÊN NHÂN THẬT của lỗi "mất ảnh mặt tiền khi xuất báo giá trên mobile"
- * (điều tra lại toàn bộ, xác nhận qua đọc thẳng source html-to-image@1.11.13,
- * node_modules/html-to-image/es/{embed-images,dataurl}.js):
- *
- * `waitForImages()` ở trên chỉ đảm bảo <img> trên TRANG đã tải+decode xong —
- * nhưng html-to-image, trước khi rasterize, tự làm MỘT bước embed RIÊNG:
- * nó gọi `fetch(url)` của chính nó (embedImageNode -> resourceToDataURL ->
- * fetchAsDataURL) để tải lại ảnh và nhúng base64 vào SVG. Fetch này ĐỘC LẬP
- * hoàn toàn với <img> đã tải xong trên trang, KHÔNG có timeout/retry, và
- * quan trọng nhất: nếu fetch đó lỗi (rớt mạng/timeout — rất dễ xảy ra trên
- * mobile data, nhất là báo giá nhóm có 7+ ảnh phải fetch cùng lúc), code
- * của html-to-image (dataurl.js) NUỐT lỗi, thay ảnh bằng placeholder RỖNG
- * (options.imagePlaceholder ?? ""), rồi CACHE VĨNH VIỄN kết quả rỗng đó
- * trong 1 object cache ở module-scope, với cache key đã STRIP phần query
- * string phía sau dấu "?" của URL (xem hàm getCacheKey trong dataurl.js) —
- * nghĩa là `cacheBust: true` (đang dùng ở
- * toBlob() trong PlanDetailActions/PlanGroupDetailActions) KHÔNG giúp ích
- * gì, vì key cache bỏ qua timestamp cacheBust. Kết quả: chỉ cần 1 lần fetch
- * lỗi, MỌI lần bấm "Tải báo giá" tiếp theo trong cùng phiên trang đều tái
- * dùng placeholder rỗng đó — ảnh mặt tiền biến mất, và biến mất "vĩnh viễn"
- * cho tới khi người dùng tải lại trang, đúng như triệu chứng người dùng mô
- * tả (không phải lỗi ngẫu nhiên 1 lần).
- *
- * ĐÃ LOẠI TRỪ 3 giả thuyết còn lại khi điều tra lại:
- * - crossOrigin/CORS: ảnh cùng origin (/images/quote/*.jpg, /images/logo-
- *   red.png, phục vụ từ chính domain), không có request nào là cross-origin
- *   nên không liên quan CORS.
- * - loading="lazy": cả PlanQuoteCard lẫn PlanGroupQuoteCard đều KHÔNG set
- *   thuộc tính `loading` trên bất kỳ <img> nào -> mặc định không lazy.
- * - Ảnh gốc quá nặng: đã xác nhận `public/images/quote/dia-diem-*.jpg` tồn
- *   tại đủ cho cả 27/27 chi nhánh, mỗi ảnh ~45–95KB (đã resize/nén riêng
- *   cho luồng xuất báo giá từ trước) — không phải ảnh gốc full-res nặng
- *   hàng trăm KB–600KB, và không có chi nhánh nào thiếu file.
- *
- * FIX: sau khi `waitForImages()` xác nhận <img> đã decode xong trong bộ nhớ
- * trình duyệt, vẽ THẲNG frame đó qua <canvas> rồi gán lại `img.src` thành
- * data: URL — html-to-image thấy `isDataUrl(src)` = true sẽ BỎ QUA hoàn
- * toàn bước fetch nội bộ (xem embedImageNode: `!(isImageElement &&
- * !isDataUrl(clonedNode.src))` return sớm), loại bỏ hẳn nguy cơ fetch lỗi
- * trên mobile — không cần gọi mạng thêm lần nào nữa để nhúng ảnh.
- *
- * CẬP NHẬT (2026-09) — VẪN còn thiếu ảnh mặt tiền trên iPhone sau fix trên,
- * dù đã thêm bước chờ dài hơn + xác nhận embed (`captureQuotePng()` bên
- * dưới) và deploy thật lên production (xác nhận bằng cách đọc thẳng bundle
- * JS đã build). NGUYÊN NHÂN THỨ HAI: bước vẽ canvas ở trên LUÔN xuất
- * `image/png` bất kể ảnh gốc là gì — với ảnh mặt tiền (JPEG chụp thật,
- * nhiều màu/chi tiết), PNG không nén tốt bằng JPEG nên 1 ảnh gốc ~68KB
- * phình thành ~700KB PNG (~930KB base64) khi nhúng — đã đo thực tế bằng
- * sharp, xem git history. Chuỗi base64 khổng lồ đó vẫn "chạy được" trên
- * desktop (bộ nhớ rộng rãi) nhưng Safari/iOS (giới hạn bộ nhớ/độ dài data
- * URI chặt hơn) render CÂM LẶNG ra khoảng trắng cho riêng ảnh đó khi
- * html-to-image rasterize — không ném lỗi JS nào, nên bước xác nhận
- * `allImagesEmbedded()` (chỉ check `src` đã là data: URL hay chưa) không
- * bắt được. Đã sửa: chỉ giữ PNG cho ảnh nguồn vốn là PNG (logo-red.png,
- * cần kênh alpha nền trong suốt), ảnh JPEG gốc xuất lại `image/jpeg` —
- * giảm ~8 lần dung lượng nhúng, xem `inlineImagesAsDataUrls()` bên dưới.
- */
-export async function inlineImagesAsDataUrls(container: HTMLElement): Promise<void> {
-  const images = Array.from(container.querySelectorAll("img"));
-
-  await Promise.all(
-    images.map(async (img) => {
-      // Đã là data: URL (vd. gọi lại lần 2 trong cùng phiên) -> bỏ qua.
-      if (img.src.startsWith("data:")) return;
-      // Ảnh lỗi/chưa có kích thước thật -> không có gì để vẽ, giữ nguyên
-      // src gốc và để html-to-image tự xử lý theo đường fallback cũ (ảnh đó
-      // vốn đã lỗi từ trước, không phải lỗi do bước inline này).
-      if (!img.naturalWidth || !img.naturalHeight) return;
-      try {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        ctx.drawImage(img, 0, 0);
-        // NGUYÊN NHÂN THẬT khiến ảnh mặt tiền vẫn thiếu trên iPhone dù đã
-        // có bước chờ + xác nhận embed ở trên (đã đo thực tế bằng sharp):
-        // trước đây LUÔN xuất "image/png" ở đây, kể cả cho ảnh mặt tiền
-        // vốn là JPEG chụp thật — PNG không nén tốt ảnh chụp nhiều màu như
-        // JPEG, khiến 1 ảnh 68KB gốc phình thành ~700KB PNG (~930KB base64)
-        // để nhúng vào SVG trung gian mà html-to-image dùng để rasterize.
-        // Chuỗi base64 khổng lồ đó vẫn "chạy được" trên desktop (bộ nhớ
-        // rộng rãi) nhưng Safari/iOS (giới hạn bộ nhớ/độ dài data URI chặt
-        // hơn) render CÂM LẶNG ra khoảng trắng cho riêng ảnh đó — không
-        // ném lỗi JS nào để đoạn code chờ+xác nhận ở trên bắt được (bước
-        // đó chỉ xác nhận `src` đã thành data: URL, không xác nhận
-        // rasterize thành công). Giữ PNG CHỈ cho ảnh nguồn vốn là PNG
-        // (logo-red.png, cần kênh alpha nền trong suốt); ảnh JPEG gốc
-        // (mặt tiền/chi nhánh) xuất lại JPEG — giảm ~8 lần dung lượng
-        // nhúng, về gần bằng kích thước file gốc.
-        const isSourcePng = /\.png(?:[?#]|$)/i.test(img.src);
-        img.src = isSourcePng
-          ? canvas.toDataURL("image/png")
-          : canvas.toDataURL("image/jpeg", 0.9);
-      } catch {
-        // Canvas bị "tainted" (chỉ xảy ra với ảnh cross-origin không có CORS
-        // header — không phải trường hợp của các ảnh cùng origin ở đây) hoặc
-        // lỗi khác -> giữ nguyên src gốc, để html-to-image tự fetch như cũ
-        // (best-effort, không throw để không chặn cả card xuất ảnh).
-      }
-    })
-  );
-}
-
-/**
- * Mọi <img> trong `container` đã nhúng thành công (`src` là `data:` URL)
- * chưa — dùng SAU khi gọi `inlineImagesAsDataUrls()` để phát hiện ảnh nào
- * đó vẫn còn thiếu (mạng quá chậm, vượt cả timeout đã tăng ở
- * `waitForImages()`), thay vì lặng lẽ chụp ra 1 ảnh báo giá "trông có vẻ
- * xong" nhưng thật ra thiếu ảnh mặt tiền — đúng triệu chứng người dùng đã
- * gặp phải trước khi có `captureQuotePng()` bên dưới.
- */
-export function allImagesEmbedded(container: HTMLElement): boolean {
-  const images = Array.from(container.querySelectorAll("img"));
-  return images.every((img) => img.src.startsWith("data:"));
-}
-
-/**
- * Rasterize `node` (báo giá 1 chi nhánh hoặc báo giá nhóm) thành 1 PNG
- * Blob, đảm bảo mọi ảnh đã nhúng xong TRƯỚC khi chụp — dùng chung cho cả
- * PlanDetailActions lẫn PlanGroupDetailActions thay vì mỗi nơi tự lặp lại
- * chuỗi waitForImages -> inlineImagesAsDataUrls -> toBlob.
- *
- * Thử tối đa 2 lượt `waitForImages()` + `inlineImagesAsDataUrls()`: lượt 1
- * dùng timeout mặc định (tự co giãn theo số ảnh, xem `waitForImages()`),
- * lượt 2 (chỉ chạy nếu lượt 1 vẫn còn ảnh thiếu) đợi thêm hẳn 20s nữa cho
- * mạng cực chậm. Nếu SAU CẢ 2 lượt vẫn còn ảnh chưa nhúng được, NÉM LỖI
- * thay vì tiếp tục chụp — để nơi gọi hiện đúng thông báo "Không tạo được
- * ảnh báo giá, vui lòng thử lại" thay vì đưa cho người dùng 1 file trông
- * như hoàn chỉnh nhưng thật ra thiếu ảnh mặt tiền.
- */
-export async function captureQuotePng(node: HTMLElement): Promise<Blob> {
-  await waitForImages(node);
-  await inlineImagesAsDataUrls(node);
-  if (!allImagesEmbedded(node)) {
-    await waitForImages(node, 20000);
-    await inlineImagesAsDataUrls(node);
-  }
-  if (!allImagesEmbedded(node)) {
-    throw new Error("Một hoặc nhiều ảnh chưa tải xong kịp trước khi xuất báo giá.");
-  }
-  // Đợi thêm 2 khung hình trước khi rasterize — biện pháp phòng ngừa thêm
-  // cho Safari/iOS: đảm bảo trình duyệt đã layout/paint xong việc gán lại
-  // `img.src` ở inlineImagesAsDataUrls() (không chỉ đổi thuộc tính DOM mà
-  // còn cần 1 nhịp để ảnh mới thực sự lên khung hình) trước khi
-  // html-to-image chụp lại toàn bộ node.
-  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-  const { toBlob } = await import("html-to-image");
-  const blob = await toBlob(node, { pixelRatio: 1, cacheBust: true });
-  if (!blob) throw new Error("toBlob returned null");
-  return blob;
-}
 
 /**
  * Chia sẻ thẳng ảnh báo giá qua Web Share API (mở sheet chia sẻ gốc của hệ
