@@ -51,8 +51,21 @@ const nextConfig: NextConfig = {
     // Route tạo ảnh báo giá ở server (thay cho html-to-image ở trình duyệt,
     // xem chú thích trong route.tsx) — cũng readFile() theo `slug` runtime
     // nên cùng vấn đề file-tracing như renderOgImage() ở trên.
-    "/api/quote-image/[slug]/[plan]": ["./public/images/quote/**", "./public/images/logo-red.png"],
-    "/api/quote-image/goi/[groupKey]": ["./public/images/quote/**", "./public/images/logo-red.png"],
+    //
+    // QUAN TRỌNG: key được so khớp bằng picomatch (route glob), trong đó
+    // `[...]` là CHARACTER CLASS chứ không phải ký tự ngoặc vuông thật —
+    // phải escape thành `\\[...\\]` thì mới khớp đúng tên thư mục dynamic
+    // segment thật sự (xem ví dụ chính thức trong
+    // node_modules/next/dist/docs/.../output.md: `/api/login/\\[\\[\\.\\.\\.slug\\]\\]`).
+    // Bản đầu tiên dùng "[slug]"/"[plan]" KHÔNG escape — picomatch coi đó là
+    // character class rỗng-ý-nghĩa, không khớp gì cả, nên file trong
+    // public/images/quote/ và logo-red.png vẫn bị outputFileTracingExcludes
+    // cắt khỏi bundle production dù next build local vẫn sạch (đúng y hệt
+    // lỗi ENOENT/500 renderOgImage() từng gặp) — lỗi này CHỈ lộ ra khi chạy
+    // trên Vercel thật, `next dev`/`next build` local không tái hiện được
+    // vì dev/build không áp dụng giới hạn trace này khi phục vụ request.
+    "/api/quote-image/\\[slug\\]/\\[plan\\]": ["./public/images/quote/**", "./public/images/logo-red.png"],
+    "/api/quote-image/goi/\\[groupKey\\]": ["./public/images/quote/**", "./public/images/logo-red.png"],
   },
   async headers() {
     return [
