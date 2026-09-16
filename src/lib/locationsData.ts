@@ -268,6 +268,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_QUAN_3,
   },
   {
+    slug: "nguyen-thi-minh-khai",
+    name: "198 Nguyễn Thị Minh Khai, Quận 3 (cũ)",
+    shortAddress: "198 Nguyễn Thị Minh Khai, P. Xuân Hòa",
+    area: AREA_QUAN_3,
+  },
+  {
     slug: "ung-van-khiem",
     name: "161 Ung Văn Khiêm, Bình Thạnh (cũ)",
     shortAddress: "161 Ung Văn Khiêm, P. Thạnh Mỹ Tây",
@@ -2010,6 +2016,82 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Văn phòng mặt tiền đường lớn nên đối tác dễ tìm, không phải hướng dẫn qua hẻm như chỗ cũ mình từng thuê.", initial: "H", name: "Anh Hùng", role: "Giám đốc công ty xây dựng" },
       { quote: "Lúc đầu mình nhầm với chi nhánh CMT8 bên Quận 10, may mà gọi hotline xác nhận địa chỉ trước khi đi.", initial: "Y", name: "Chị Yến", role: "Chủ hộ kinh doanh cá thể" },
+    ],
+  },
+  "nguyen-thi-minh-khai": {
+    slug: "nguyen-thi-minh-khai",
+    name: "198 Nguyễn Thị Minh Khai, Quận 3 (cũ)",
+    area: AREA_QUAN_3,
+    address: "198 Nguyễn Thị Minh Khai, Phường Xuân Hòa, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 198 Nguyễn Thị Minh Khai, Quận 3 (cũ)",
+    heroDescription:
+      "Chi nhánh thứ 3 của MAX OFFICE tại Quận 3 (cũ) — văn phòng ảo 3 gói CORE/PLUS/PRO từ 499.000đ/tháng, đặt tại toà nhà văn phòng hạng B ngay trục Nguyễn Thị Minh Khai, gần Hồ Con Rùa và Công viên Tao Đàn.",
+    metaTitle: "Văn Phòng Ảo 198 Nguyễn Thị Minh Khai, Quận 3 (cũ) | Từ 499K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 198 Nguyễn Thị Minh Khai, Phường Xuân Hòa — chi nhánh thứ 3 MAX OFFICE tại Quận 3 (cũ), 3 gói CORE/PLUS/PRO từ 499.000đ/tháng (chưa VAT), toà nhà hạng B gần Hồ Con Rùa.",
+    image: "/images/hero-dich-vu.jpg",
+    // Ảnh mặt tiền gốc 1086x1448 (0.75, trên ngưỡng FACADE_TALL_RATIO_THRESHOLD nên giữ tỉ lệ thật).
+    facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "right",
+    interiorImages: [
+      { src: "/images/dia-diem-nguyen-thi-minh-khai-mat-truoc.jpg", alt: "Mặt trước toà nhà văn phòng 198 Nguyễn Thị Minh Khai", caption: "Mặt trước tòa nhà" },
+      { src: "/images/dia-diem-nguyen-thi-minh-khai-le-tan.jpg", alt: "Quầy lễ tân văn phòng 198 Nguyễn Thị Minh Khai", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-nguyen-thi-minh-khai-sanh-thang-may.jpg", alt: "Sảnh thang máy toà nhà văn phòng 198 Nguyễn Thị Minh Khai", caption: "Sảnh thang máy" },
+    ],
+    intro: [
+      "Văn phòng 198 Nguyễn Thị Minh Khai là chi nhánh thứ 3 của MAX OFFICE tại khu vực Quận 3 (cũ), thuộc Phường Xuân Hòa (trước đây là Phường Võ Thị Sáu) — cùng phường với Hồ Con Rùa (Công trường Quốc tế), một trong những địa danh quen thuộc bậc nhất của Sài Gòn. Chi nhánh đặt tại toà nhà văn phòng hạng B quy mô 14 tầng văn phòng cùng 2 tầng hầm, đã đi vào hoạt động từ cuối năm 2017 — đây từng là trụ sở Báo Lao Động, hiện là địa chỉ thuê văn phòng của nhiều doanh nghiệp trong và ngoài nước.",
+      "Sảnh lễ tân của toà nhà ốp đá cao cấp với hệ đèn thả nghệ thuật, quầy tiếp tân bằng đồng sang trọng đặt giữa sảnh, cùng khu vực sảnh thang máy 3 buồng ốp đá marble sáng màu — không gian được đầu tư kỹ lưỡng, tạo ấn tượng chuyên nghiệp ngay từ lối vào, phù hợp cho doanh nghiệp thường xuyên tiếp đối tác tại văn phòng.",
+      "Chi nhánh cung cấp 3 gói văn phòng ảo riêng biệt — CORE và PLUS cùng giá 499.000đ/tháng, PRO giá 899.000đ/tháng, giá chưa bao gồm VAT 10% — cùng bảng giá đối tác riêng đang áp dụng tại 28 Mai Chí Thọ (Thủ Đức) và 68 Phan Đăng Lưu (Phú Nhuận cũ). Đây là hệ giá HOÀN TOÀN KHÁC với gói SILVER/GOLD/PREMIUM đang áp dụng tại 60 Nguyễn Thông và 520 Cách Mạng Tháng 8 cùng khu vực Quận 3 (cũ).",
+      "Với vị trí ngay trục Nguyễn Thị Minh Khai — tuyến đường nối liền Quận 1 và Quận 3 (cũ), tiếp giáp Công viên Tao Đàn và gần các trục lớn Cách Mạng Tháng 8, Nam Kỳ Khởi Nghĩa, Điện Biên Phủ — doanh nghiệp đặt văn phòng tại đây vừa có địa chỉ trung tâm, vừa thuận tiện di chuyển khắp thành phố. Đây là lựa chọn phù hợp cho doanh nghiệp muốn một địa chỉ đăng ký kinh doanh tại toà nhà văn phòng có bề dày lịch sử, dễ nhận diện khi làm việc với đối tác.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 198 Nguyễn Thị Minh Khai",
+    benefits: [
+      { icon: BuildingIcon, title: "Toà nhà văn phòng hạng B", desc: "14 tầng văn phòng, hoạt động từ cuối 2017, từng là trụ sở Báo Lao Động." },
+      { icon: MapPinIcon, title: "Gần Hồ Con Rùa", desc: "Cùng Phường Xuân Hòa với địa danh quen thuộc bậc nhất Sài Gòn." },
+      { icon: BadgePercentIcon, title: "3 gói CORE / PLUS / PRO", desc: "Hệ giá đối tác riêng, từ 499.000đ/tháng." },
+      { icon: ShieldCheckIcon, title: "Sảnh lễ tân sang trọng", desc: "Ốp đá cao cấp, quầy tiếp tân bằng đồng, sảnh thang máy 3 buồng ốp marble." },
+      { icon: ClockIcon, title: "Tiếp giáp Công viên Tao Đàn", desc: "Nằm cùng trục Nguyễn Thị Minh Khai, không gian xanh ngay gần văn phòng." },
+      { icon: UsersIcon, title: "Kết nối Quận 1 — Quận 3", desc: "Gần các trục lớn Cách Mạng Tháng 8, Nam Kỳ Khởi Nghĩa, Điện Biên Phủ." },
+    ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
+    nearbyItems: [
+      { name: "Hồ Con Rùa (Công trường Quốc tế)", desc: "Địa danh quen thuộc của Sài Gòn, cùng Phường Xuân Hòa với chi nhánh." },
+      { name: "Công viên Tao Đàn", desc: "Tiếp giáp trực tiếp đường Nguyễn Thị Minh Khai, không gian xanh giữa trung tâm thành phố." },
+      { name: "Giao lộ Cách Mạng Tháng 8", desc: "Kết nối nhanh về hướng Quận 10, Tân Bình." },
+      { name: "Trung tâm Quận 1 (cũ)", desc: "Nguyễn Thị Minh Khai là trục nối liền Quận 1 và Quận 3, di chuyển chỉ vài phút." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua trục Nguyễn Thị Minh Khai." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mặt tiền đường lớn khu trung tâm, dễ dàng đặt xe mọi thời điểm." },
+      { icon: CheckCircleIcon, title: "Trục Nguyễn Thị Minh Khai", desc: "Kết nối nhanh giữa Quận 1 và Quận 3 (cũ), gần Cách Mạng Tháng 8, Nam Kỳ Khởi Nghĩa, Điện Biên Phủ." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân toà nhà hướng dẫn khách lần đầu ghé văn phòng." },
+    ],
+    parkingInfo: [
+      "Toà nhà có tầng hầm giữ xe máy và ô tô riêng cho khách đến làm việc.",
+      "Bảo vệ và lễ tân toà nhà hỗ trợ hướng dẫn xe ra vào hầm gửi xe.",
+      "Camera an ninh trực tại sảnh và hầm xe suốt giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Ẩm thực khu Hồ Con Rùa", desc: "Khu vực hoạt động ẩm thực từ sáng đến đêm, nhiều quán ăn, cà phê nổi tiếng." },
+      { name: "Nhà hàng, quán cà phê trục Nguyễn Thị Minh Khai", desc: "Đa dạng lựa chọn, phù hợp tiếp khách hoặc làm việc ngoài giờ." },
+      { name: "Khu ẩm thực gần Công viên Tao Đàn", desc: "Phù hợp bữa trưa nhẹ nhàng hoặc dạo bộ sau giờ làm." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 198 Nguyễn Thị Minh Khai có phải là chi nhánh thứ 3 của MAX OFFICE tại Quận 3 không?", a: "Đúng vậy. Đây là chi nhánh thứ 3 MAX OFFICE mở tại khu vực Quận 3 (cũ), sau 60 Nguyễn Thông và 520 Cách Mạng Tháng 8." },
+      { q: "Chi nhánh 198 Nguyễn Thị Minh Khai khác gì so với 60 Nguyễn Thông và 520 Cách Mạng Tháng 8?", a: "198 Nguyễn Thị Minh Khai thuộc Phường Xuân Hòa, khác phường với 2 chi nhánh còn lại (cùng Phường Nhiêu Lộc). Về giá, chi nhánh áp dụng 3 gói CORE/PLUS/PRO của hệ giá đối tác riêng — khác hoàn toàn với gói SILVER/GOLD/PREMIUM đang dùng tại 60 Nguyễn Thông và 520 Cách Mạng Tháng 8." },
+      { q: "Chi nhánh 198 Nguyễn Thị Minh Khai áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 3 gói: CORE và PLUS cùng giá 499.000đ/tháng, PRO giá 899.000đ/tháng — giá chưa bao gồm VAT 10%, cùng bảng giá đối tác riêng đang áp dụng tại 28 Mai Chí Thọ (Thủ Đức) và 68 Phan Đăng Lưu (Phú Nhuận cũ)." },
+      { q: "Toà nhà 198 Nguyễn Thị Minh Khai có phải là toà nhà văn phòng hạng B không?", a: "Đúng. Đây là toà nhà văn phòng hạng B, quy mô 14 tầng văn phòng và 2 tầng hầm, đã đi vào hoạt động từ cuối năm 2017 — từng là trụ sở Báo Lao Động, hiện là địa chỉ cho nhiều doanh nghiệp trong và ngoài nước thuê làm văn phòng." },
+      { q: "Địa chỉ 198 Nguyễn Thị Minh Khai có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Xuân Hòa, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
+      { q: "Gói CORE, PLUS, PRO khác nhau ở điểm nào?", a: "CORE và PLUS cùng giá 499.000đ/tháng nhưng khác định hướng (CORE cho người mới chuyển từ cá nhân/hộ kinh doanh, PLUS cho công ty cần địa chỉ hoạt động hợp lệ, hỗ trợ thay đổi GPKD); PRO 899.000đ/tháng đầy đủ hỗ trợ pháp lý và kế toán cơ bản. Giá chưa bao gồm VAT 10%." },
+      { q: "Ký hợp đồng dài hạn tại 198 Nguyễn Thị Minh Khai có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
+      { q: "Tôi có thể đến tham quan văn phòng 198 Nguyễn Thị Minh Khai trước khi ký hợp đồng không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
+    ],
+    testimonials: [
+      { quote: "Toà nhà từng là trụ sở báo Lao Động nên nói địa chỉ ra là đối tác hình dung được ngay, không cần giải thích nhiều.", initial: "D", name: "Chị Diễm", role: "Trưởng phòng nhân sự, công ty công nghệ" },
+      { quote: "Sảnh thang máy với quầy lễ tân được đầu tư đẹp, mỗi lần dẫn khách lên văn phòng đều thấy chuyên nghiệp hẳn.", initial: "B", name: "Anh Bảo", role: "Chủ studio thiết kế nội thất" },
     ],
   },
 

@@ -195,6 +195,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "520 Cách Mạng Tháng 8, P. Nhiêu Lộc",
   },
   {
+    title: "198 Nguyễn Thị Minh Khai, Quận 3 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/nguyen-thi-minh-khai",
+    desc: "198 Nguyễn Thị Minh Khai, P. Xuân Hòa",
+  },
+  {
     title: "161 Ung Văn Khiêm, Bình Thạnh (cũ)",
     category: "Chi nhánh",
     href: "/locations/ung-van-khiem",
