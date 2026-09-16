@@ -1,11 +1,12 @@
 /**
- * Gộp toàn bộ 7 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
+ * Gộp toàn bộ 8 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
  * nhánh; M-START/M-BASE/M-ORIGIN riêng Phạm Văn Đồng; W-BASE/W-PRO riêng
- * Bùi Văn Ba; SILVER/GOLD/PREMIUM (3 gói, từ 479K)
- * dùng chung Quận 1 (cũ) + Quận 3 (cũ); SILVER/GOLD/PREMIUM dùng chung
- * Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức/Tân Bình; CORE/PLUS/PRO hệ đối tác
- * LiteSpace — 28 Mai Chí Thọ) thành MỘT danh sách phẳng — dùng cho công cụ
- * /tien-ich/tim-goi-phu-hop.
+ * Bùi Văn Ba; LEAN/GROWING/SCALE-UP riêng 79 Nguyễn Thế Truyện (hệ giá đối
+ * tác, xem NGUYEN_THE_TRUYEN_VO_PLANS); SILVER/GOLD/PREMIUM (3 gói, từ
+ * 479K) dùng chung Quận 1 (cũ) + Quận 3 (cũ); SILVER/GOLD/PREMIUM dùng
+ * chung Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức/Tân Bình; CORE/PLUS/PRO hệ đối
+ * tác LiteSpace — 28 Mai Chí Thọ) thành MỘT danh sách phẳng — dùng cho công
+ * cụ /tien-ich/tim-goi-phu-hop.
  *
  * Nguồn dữ liệu: LOCATIONS_LIST (đã tự lọc `isActive !== false`) +
  * virtualOfficePlans.ts. Hàm lặp qua LOCATIONS_LIST nên chi nhánh tạm ẩn
@@ -16,6 +17,7 @@ import {
   getPlansForLocation,
   PHAM_VAN_DONG_VO_PLANS,
   QUAN_7_VO_PLANS,
+  NGUYEN_THE_TRUYEN_VO_PLANS,
   SILVER_GOLD_PREMIUM_Q1Q3_PLANS,
   SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS,
   SILVER_GOLD_PREMIUM_VO_PLANS,
@@ -111,6 +113,23 @@ export function getAllOfferedPlans(): OfferedPlan[] {
             `Xác minh địa chỉ: ${p.locationVerification}`,
             `Lễ tân: ${p.reception}`,
           ],
+        });
+      }
+    } else if (slug === "nguyen-the-truyen") {
+      // Hệ giá đối tác riêng LEAN/GROWING/SCALE-UP — mỗi gói đã tự liệt kê
+      // đủ features[] (xem NguyenTheTruyenPlan trong virtualOfficePlans.ts),
+      // không cần bước ráp lại như withPhamVanDongStyleFeatures/
+      // withQuan3StyleFeatures ở trên.
+      for (const p of NGUYEN_THE_TRUYEN_VO_PLANS) {
+        result.push({
+          locationSlug: slug,
+          locationName: name,
+          area,
+          planKey: p.key,
+          planName: p.name,
+          price: p.price,
+          duration: p.duration,
+          features: p.features,
         });
       }
     } else if (SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS.includes(slug)) {

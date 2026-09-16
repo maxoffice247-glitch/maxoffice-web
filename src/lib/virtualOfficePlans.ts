@@ -275,6 +275,9 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "quan-7") {
     return QUAN_7_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
+  if (slug === "nguyen-the-truyen") {
+    return NGUYEN_THE_TRUYEN_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  }
   if (SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS.includes(slug)) {
     return SILVER_GOLD_PREMIUM_Q1Q3_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
@@ -441,6 +444,94 @@ export const QUAN_7_ADDONS: QuanBaAddonRow[] = [
   { service: "Domain (quốc tế)", wBase: "1 domain", wPro: "1 domain" },
   { service: "Hosting", wBase: "650.000đ/năm", wPro: "2GB" },
   { service: "Dịch vụ pháp lý trọn gói (GPKD, con dấu, hồ sơ thuế ban đầu)", wBase: "900.000đ", wPro: "900.000đ" },
+];
+
+/* ---------------------------------------------------------------------- */
+/* 79 Nguyễn Thế Truyện, Tân Phú (cũ) — bảng giá đối tác riêng LEAN/       */
+/* GROWING/SCALE-UP, không thuộc hệ thống LITE–RISE hay các gói riêng     */
+/* khác. Chỉ khả dụng tại chi nhánh "nguyen-the-truyen". Đây là hệ giá    */
+/* đối tác — KHÔNG hiển thị bất kỳ thông tin gì về tên đối tác gốc ở bất  */
+/* cứ đâu trên site, chỉ hiện tên gói + tính năng như 1 chi nhánh MAX     */
+/* bình thường (yêu cầu tường minh khi tạo hệ giá này — xem thêm ghi chú  */
+/* tương tự ở Bùi Văn Ba/Quận 7 phía trên, cùng nguyên tắc).              */
+/* ---------------------------------------------------------------------- */
+
+export type NguyenTheTruyenPlanKey = "lean" | "growing" | "scale-up";
+
+export type NguyenTheTruyenPlan = {
+  key: NguyenTheTruyenPlanKey;
+  name: string;
+  price: number;
+  duration: string;
+  /** Mỗi gói tự liệt kê ĐẦY ĐỦ tính năng của mình (kể cả dòng "Toàn bộ
+      tính năng <gói thấp hơn>" kế thừa) — khác QuanBaPlan (Bùi Văn Ba) vốn
+      tách từng field riêng rồi planFinder.ts mới ráp thành features[]; ở
+      đây feature list đã đủ phong phú (6-11 dòng/gói) nên lưu thẳng
+      features[] để planFinder.ts dùng nguyên, không cần bước ráp thêm. */
+  features: string[];
+};
+
+export const NGUYEN_THE_TRUYEN_VO_PLANS: NguyenTheTruyenPlan[] = [
+  {
+    key: "lean",
+    name: "LEAN",
+    price: 199000,
+    duration: "/ tháng",
+    features: [
+      "Địa chỉ kinh doanh chuyên nghiệp",
+      "Nhận thư/bưu phẩm",
+      "Bảng tên Mica 13x23",
+      "Tư vấn thành lập doanh nghiệp",
+      "Tiếp khách chung/lễ tân",
+      "Internet/Wifi/nước lọc/cafe",
+      "Bộ hồ sơ Nhân sự - Lao động",
+      "Bộ hồ sơ Kế toán - Thuế",
+      "Kế toán định kỳ & ưu đãi",
+      "Báo cáo/chữ ký số/hóa đơn",
+      "Hỗ trợ vận hành & phát triển",
+    ],
+  },
+  {
+    key: "growing",
+    name: "GROWING",
+    price: 449000,
+    duration: "/ tháng",
+    features: [
+      "Toàn bộ tính năng LEAN",
+      "Mở tài khoản ngân hàng",
+      "Phòng họp miễn phí 2 giờ/tháng",
+      "Kế toán định kỳ: giảm 20%",
+      "Chữ ký số: giảm 30%",
+      "Báo cáo thị trường: giảm 25-30%",
+    ],
+  },
+  {
+    key: "scale-up",
+    name: "SCALE-UP",
+    price: 499000,
+    duration: "/ tháng",
+    features: [
+      "Toàn bộ tính năng GROWING",
+      "Tặng dấu mộc",
+      "Bảng tên nâng cấp: Inox 13x23 (thay vì Mica)",
+      "Tủ hồ sơ",
+      "Phòng họp miễn phí 2 giờ/tháng",
+      "Kế toán định kỳ: giảm 20%",
+      "Chữ ký số: giảm 35%",
+      "Báo cáo thị trường: giảm 30-35%",
+      "Tư vấn hiệu quả kinh doanh (hàng quý)",
+    ],
+  },
+];
+
+/** Ưu đãi ký hợp đồng dài hạn riêng của hệ LEAN/GROWING/SCALE-UP — áp dụng
+    chung cho cả 3 gói, hiển thị trong khối "Khuyến mãi & ưu đãi" của trang
+    chi nhánh (KHÔNG lặp lại trong checklist từng gói — đúng cơ chế 1 nơi
+    hiển thị duy nhất đã áp dụng cho mọi chi nhánh khác). */
+export const NGUYEN_THE_TRUYEN_VO_PROMOS: string[] = [
+  "Ký hợp đồng 12 tháng: tặng thêm 2 tháng + miễn phí thành lập doanh nghiệp + tặng bộ hồ sơ Lao động",
+  "Ký hợp đồng 24 tháng: tặng thêm 6 tháng + miễn phí thành lập doanh nghiệp + tặng bộ hồ sơ Lao động",
+  "Ký hợp đồng 36 tháng: tặng thêm 12 tháng + miễn phí thành lập doanh nghiệp + tặng bộ hồ sơ Kế toán/Thuế + tặng bộ hồ sơ Lao động + khai thuế ban đầu",
 ];
 
 /* ---------------------------------------------------------------------- */

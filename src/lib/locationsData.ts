@@ -19,7 +19,7 @@ import type { TransportItem } from "@/components/LocationAccess";
 import type { DiningItem } from "@/components/LocationDining";
 import type { FaqItem } from "@/components/Faq";
 import type { Testimonial } from "@/components/Testimonials";
-import { PHAM_VAN_DONG_VO_PROMOS } from "./virtualOfficePlans";
+import { PHAM_VAN_DONG_VO_PROMOS, NGUYEN_THE_TRUYEN_VO_PROMOS } from "./virtualOfficePlans";
 
 /**
  * Một PHIÊN BẢN nội dung khuyến mãi, có hiệu lực từ 1 mốc thời gian cụ thể.
@@ -175,6 +175,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     slug: "tan-thang",
     name: "Tân Thắng, Tân Phú",
     shortAddress: "121A-123-125 Tân Thắng, P. Tân Sơn Nhì",
+    area: AREA_TAN_PHU,
+  },
+  {
+    slug: "nguyen-the-truyen",
+    name: "79 Nguyễn Thế Truyện, Tân Phú",
+    shortAddress: "79 Nguyễn Thế Truyện, P. Tân Sơn Nhì",
     area: AREA_TAN_PHU,
   },
   {
@@ -1020,6 +1026,76 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Văn phòng gần Aeon Mall nên mình hay hẹn khách ăn trưa luôn, rất tiện.", initial: "H", name: "Thanh Hằng", role: "Chủ shop online" },
       { quote: "Khu vực Tân Sơn Nhì yên tĩnh, phù hợp cho đội ngũ mình tập trung làm việc.", initial: "K", name: "Anh Khoa", role: "Trưởng nhóm phát triển phần mềm" },
+    ],
+  },
+  "nguyen-the-truyen": {
+    slug: "nguyen-the-truyen",
+    name: "79 Nguyễn Thế Truyện, Tân Phú",
+    area: AREA_TAN_PHU,
+    address: "79 Nguyễn Thế Truyện, Phường Tân Sơn Nhì, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê Nguyễn Thế Truyện Tân Phú",
+    heroDescription: "Chi nhánh MAX OFFICE tại 79 Nguyễn Thế Truyện, Tân Phú (cũ) — văn phòng ảo từ 199.000đ/tháng (gói LEAN, GROWING, SCALE-UP riêng biệt), sát UBND Phường Tân Sơn Nhì.",
+    metaTitle: "Văn Phòng Ảo & Cho Thuê Văn Phòng Nguyễn Thế Truyện Tân Phú | Từ 199K/Tháng",
+    metaDescription: "Thuê văn phòng ảo tại 79 Nguyễn Thế Truyện, Phường Tân Sơn Nhì — văn phòng ảo từ 199.000đ/tháng (gói LEAN, GROWING, SCALE-UP), đầy đủ dịch vụ MAX OFFICE.",
+    image: "/images/hero-dia-diem.jpg",
+    // Full-frame building facade shot, no crop needed — 1086x1448 native (0.75, trên ngưỡng FACADE_TALL_RATIO_THRESHOLD nên giữ tỉ lệ thật).
+    facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-nguyen-the-truyen-tiep-khach.jpg", alt: "Khu tiếp khách văn phòng 79 Nguyễn Thế Truyện", caption: "Khu tiếp khách" },
+      { src: "/images/dia-diem-nguyen-the-truyen-phong-hop.jpg", alt: "Phòng họp văn phòng 79 Nguyễn Thế Truyện", caption: "Phòng họp" },
+      { src: "/images/dia-diem-nguyen-the-truyen-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 79 Nguyễn Thế Truyện", caption: "Bảng tên công ty" },
+    ],
+    intro: [
+      "Văn phòng 79 Nguyễn Thế Truyện toạ lạc tại Phường Tân Sơn Nhì, Thành phố Hồ Chí Minh — một trong những tuyến đường đã hình thành nhiều toà nhà văn phòng cho thuê hoạt động lâu năm tại khu vực Tân Phú (cũ). Chi nhánh đặt trong toà nhà văn phòng hiện đại, mặt tiền kính thoáng sáng, sảnh tiếp khách gọn gàng, tạo ấn tượng chuyên nghiệp ngay từ lối vào.",
+      "Một điểm thuận tiện của chi nhánh: trụ sở UBND Phường Tân Sơn Nhì đặt ngay tại số 6 Nguyễn Thế Truyện, chỉ cách văn phòng vài số nhà — rất tiện nếu doanh nghiệp cần làm việc trực tiếp với chính quyền phường trong quá trình đăng ký kinh doanh hoặc các thủ tục hành chính khác.",
+      "Đường Nguyễn Thế Truyện tiếp giáp các tuyến Trương Vĩnh Ký và Trần Tấn, kết nối thuận tiện sang Quận Bình Tân và Quận Tân Bình (cũ) — phù hợp cho doanh nghiệp có đối tác hoặc khách hàng ở nhiều khu vực lân cận. Các tuyến xe buýt số 62, 69 chạy qua khu vực này, thuận tiện cho nhân viên di chuyển bằng phương tiện công cộng.",
+      "Đây cũng là chi nhánh áp dụng bảng giá văn phòng ảo riêng biệt, gồm 3 gói LEAN (199.000đ/tháng), GROWING (449.000đ/tháng) và SCALE-UP (499.000đ/tháng) — thiết kế theo từng giai đoạn phát triển của doanh nghiệp, từ mới thành lập đến mở rộng quy mô, cùng chính sách ưu đãi khi ký hợp đồng dài hạn.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 79 Nguyễn Thế Truyện",
+    benefits: [
+      { icon: ShieldCheckIcon, title: "Địa chỉ hợp lệ, khu văn phòng sẵn có", desc: "Đủ điều kiện đăng ký kinh doanh, khu vực đã có nhiều toà nhà văn phòng cho thuê lâu năm." },
+      { icon: MapPinIcon, title: "Sát UBND Phường Tân Sơn Nhì", desc: "Trụ sở phường ngay số 6 cùng tuyến đường, tiện xử lý thủ tục hành chính." },
+      { icon: BuildingIcon, title: "Kết nối Bình Tân, Tân Bình", desc: "Tiếp giáp Trương Vĩnh Ký, Trần Tấn, di chuyển liên quận thuận tiện." },
+      { icon: BadgePercentIcon, title: "3 gói theo từng giai đoạn phát triển", desc: "LEAN, GROWING, SCALE-UP — từ 199.000đ/tháng." },
+      { icon: ClockIcon, title: "Tuyến xe buýt 62, 69 chạy qua", desc: "Thuận tiện cho nhân viên di chuyển bằng phương tiện công cộng." },
+      { icon: HeadsetIcon, title: "Đội ngũ vận hành sát sao", desc: "Lễ tân, vận hành hỗ trợ nhanh, quen thuộc khu vực Tân Sơn Nhì." },
+    ],
+    promotions: NGUYEN_THE_TRUYEN_VO_PROMOS,
+    nearbyItems: [
+      { name: "UBND Phường Tân Sơn Nhì", desc: "Trụ sở hành chính phường ngay số 6 Nguyễn Thế Truyện, chỉ cách vài số nhà." },
+      { name: "Trục Trương Vĩnh Ký — Trần Tấn", desc: "Hai tuyến đường tiếp giáp, kết nối nhanh sang Bình Tân và Tân Bình (cũ)." },
+      { name: "Các toà nhà văn phòng lân cận", desc: "Khu vực đã hình thành nhiều văn phòng cho thuê, phù hợp đặt trụ sở doanh nghiệp." },
+      { name: "Khu dân cư Tân Sơn Nhì", desc: "Khu dân cư ổn định, an ninh tốt, thuận tiện sinh hoạt sau giờ làm." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt tuyến 62, 69", desc: "Chạy qua khu vực Nguyễn Thế Truyện, thuận tiện di chuyển bằng phương tiện công cộng." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Dễ dàng đặt xe, khu vực đường sá thông thoáng." },
+      { icon: CheckCircleIcon, title: "Trục Trương Vĩnh Ký — Trần Tấn", desc: "Kết nối nhanh sang Bình Tân, Tân Bình (cũ)." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hỗ trợ chỉ dẫn tận nơi nếu đây là lần đầu bạn đến khu Tân Sơn Nhì." },
+    ],
+    parkingInfo: [
+      "Có khu vực gửi xe máy ngay tại toà nhà văn phòng.",
+      "Đường Nguyễn Thế Truyện thông thoáng, thuận tiện cho xe hơi ra vào đón/trả khách.",
+      "An ninh được đảm bảo suốt giờ làm việc nhờ đội bảo vệ toà nhà.",
+    ],
+    diningItems: [
+      { name: "Quán ăn, cà phê khu Tân Sơn Nhì", desc: "Đa dạng lựa chọn quán ăn, cà phê trong bán kính di chuyển ngắn quanh văn phòng." },
+      { name: "Cửa hàng tiện lợi", desc: "Có sẵn gần khu vực, tiện ghé mua đồ dùng nhanh trong giờ làm." },
+      { name: "Chợ dân sinh khu vực Tân Phú", desc: "Phù hợp mua sắm nhanh, ăn trưa tiết kiệm cho nhân viên." },
+    ],
+    faqs: [
+      { q: "Văn phòng 79 Nguyễn Thế Truyện có gần UBND Phường Tân Sơn Nhì không?", a: "Có. UBND Phường Tân Sơn Nhì đặt tại số 6 Nguyễn Thế Truyện, chỉ cách văn phòng vài số nhà — rất thuận tiện khi cần làm việc trực tiếp với phường trong quá trình đăng ký kinh doanh." },
+      { q: "Chi nhánh cung cấp những gói văn phòng ảo nào?", a: "Chi nhánh áp dụng bảng giá riêng gồm 3 gói: LEAN (199.000đ/tháng), GROWING (449.000đ/tháng) và SCALE-UP (499.000đ/tháng), thiết kế theo từng giai đoạn phát triển doanh nghiệp." },
+      { q: "Địa chỉ 79 Nguyễn Thế Truyện có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Sơn Nhì, Thành phố Hồ Chí Minh, phù hợp đăng ký kinh doanh và đăng ký thuế." },
+      { q: "Từ văn phòng di chuyển sang Bình Tân, Tân Bình có xa không?", a: "Không xa. Đường Nguyễn Thế Truyện tiếp giáp Trương Vĩnh Ký và Trần Tấn, kết nối trực tiếp sang cả hai khu vực này." },
+      { q: "Gói GROWING và SCALE-UP khác gì so với LEAN?", a: "GROWING và SCALE-UP kế thừa toàn bộ tính năng của gói thấp hơn, bổ sung thêm phòng họp miễn phí, hỗ trợ mở tài khoản ngân hàng, và ưu đãi giảm giá dịch vụ kế toán, chữ ký số, báo cáo thị trường — SCALE-UP còn có thêm dấu mộc, bảng tên Inox nâng cấp và tủ hồ sơ riêng." },
+      { q: "Ký hợp đồng dài hạn tại chi nhánh có ưu đãi gì không?", a: "Có. Ký 12 tháng được tặng thêm 2 tháng, ký 24 tháng tặng thêm 6 tháng, ký 36 tháng tặng thêm 12 tháng — mỗi mốc còn kèm miễn phí thành lập doanh nghiệp và tặng thêm bộ hồ sơ Lao động/Kế toán-Thuế tuỳ thời hạn hợp đồng." },
+      { q: "Tôi có thể đặt lịch tham quan văn phòng trước khi ký hợp đồng không?", a: "Có. Đội ngũ MAX OFFICE sẵn sàng sắp xếp lịch tham quan miễn phí theo thời gian thuận tiện của bạn — chỉ cần để lại thông tin qua form hoặc gọi hotline 089 8082 188." },
+    ],
+    testimonials: [
+      { quote: "Ở gần UBND phường nên lúc cần bổ sung giấy tờ đăng ký kinh doanh mình đi rất nhanh, không mất công di chuyển xa.", initial: "T", name: "Minh Tuấn", role: "Chủ doanh nghiệp mới thành lập" },
+      { quote: "Gói GROWING vừa đủ cho team nhỏ của mình, có phòng họp miễn phí mỗi tháng nên không phải thuê ngoài khi cần gặp đối tác.", initial: "L", name: "Bích Loan", role: "Quản lý vận hành, công ty dịch vụ" },
     ],
   },
   "cuu-long": {
@@ -2998,7 +3074,13 @@ const MERGED_AREA_PAIRS: { twoSlug: string; oneSlug: string }[] = [
   // cả Quận 3 và Phú Nhuận đều thành khối riêng có viền. Giữ entry làm
   // dự phòng nếu Phú Nhuận quay về đúng 1 chi nhánh.
   { twoSlug: "quan-3-cu", oneSlug: "phu-nhuan-cu" },
-  { twoSlug: "quan-10-cu", oneSlug: "quan-tan-phu-cu" }, // Quận 10 - Tân Phú: gần qua trục Quận 11
+  // Quận 10 - Tân Phú: cặp này KHÔNG còn ghép từ khi Tân Phú có chi nhánh
+  // thứ 2 (79 Nguyễn Thế Truyện) — getGroupedLocations() tự bỏ ghép (điều
+  // kiện oneGroup.locations.length !== 1 không còn đúng). Quận 10 (cũ)
+  // vốn đã có 2 chi nhánh nên tự thành khối riêng có viền
+  // (unmergedMulti), Tân Phú (cũ) cũng vậy. Giữ entry làm dự phòng nếu Tân
+  // Phú quay về đúng 1 chi nhánh.
+  { twoSlug: "quan-10-cu", oneSlug: "quan-tan-phu-cu" },
   // Thủ Đức - Gò Vấp: cặp này KHÔNG còn ghép từ khi Thủ Đức có chi nhánh
   // thứ 3 (28 Mai Chí Thọ) — getGroupedLocations() tự bỏ ghép (Thủ Đức
   // thành khối riêng có viền, Gò Vấp/Nguyễn Oanh rơi vào "Các chi nhánh

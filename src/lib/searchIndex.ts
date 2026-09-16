@@ -99,6 +99,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "121A-123-125 Tân Thắng, P. Tân Sơn Nhì",
   },
   {
+    title: "79 Nguyễn Thế Truyện, Tân Phú",
+    category: "Chi nhánh",
+    href: "/locations/nguyen-the-truyen",
+    desc: "79 Nguyễn Thế Truyện, P. Tân Sơn Nhì",
+  },
+  {
     title: "Cửu Long, Tân Bình",
     category: "Chi nhánh",
     href: "/locations/cuu-long",

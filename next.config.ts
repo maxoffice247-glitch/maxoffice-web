@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
   // `next build`).
   //
   // Cắt cây public/images khỏi trace, rồi include lại ĐÚNG thứ lambda OG
-  // cần đọc lúc chạy: CHỈ 30 ảnh mặt tiền trong public/images/facade/ (OG
+  // cần đọc lúc chạy: CHỈ ảnh mặt tiền trong public/images/facade/ (OG
   // route [slug]/[plan] là ƒ dynamic, đọc facade theo slug bất kỳ), ảnh
   // nền hero cho OG công cụ, và logo. Ảnh gallery nội thất (~110 file,
   // public/images/dia-diem-*-*.jpg) KHÔNG route nào readFile — chỉ phục vụ
