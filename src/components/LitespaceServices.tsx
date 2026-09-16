@@ -65,7 +65,7 @@ export default function LitespaceServices({
         <SectionHead
           eyebrow="Dịch vụ tại chi nhánh"
           title={`Bảng giá riêng tại chi nhánh ${branchName}`}
-          description={`Chi nhánh ${branchName} áp dụng 3 gói văn phòng ảo CORE, PLUS, PRO (hệ giá đối tác LiteSpace) — khác với hệ thống LITE–RISE chung của MAX OFFICE. Các dịch vụ khác vẫn theo bảng giá chung.`}
+          description={`Chi nhánh ${branchName} áp dụng 3 gói văn phòng ảo CORE, PLUS, PRO (bảng giá đối tác riêng) — khác với hệ thống LITE–RISE chung của MAX OFFICE. Các dịch vụ khác vẫn theo bảng giá chung.`}
         />
 
         <Reveal className="rounded-2xl border border-line bg-white p-6 sm:p-7">

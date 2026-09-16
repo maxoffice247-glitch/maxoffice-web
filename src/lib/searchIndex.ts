@@ -174,7 +174,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "28 Mai Chí Thọ, TP. Thủ Đức",
     category: "Chi nhánh",
     href: "/locations/mai-chi-tho",
-    desc: "28 Mai Chí Thọ, P. An Khánh — hệ giá LiteSpace CORE/PLUS/PRO",
+    desc: "28 Mai Chí Thọ, P. An Khánh — hệ giá riêng CORE/PLUS/PRO",
   },
   {
     title: "Bùi Văn Ba, Quận 7",

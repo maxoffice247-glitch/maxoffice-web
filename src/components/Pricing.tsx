@@ -537,7 +537,7 @@ export default function Pricing() {
                     <p className="mt-1 text-[13.5px] text-white/75">
                       6 gói trên là bảng giá tiêu biểu — một số khu vực còn có gói cùng mức giá
                       nhưng khác tên/tính năng (VD: ORIGIN 499.000đ ưu đãi tại Nguyễn Oanh/Trần
-                      Hưng Đạo và CORE/PLUS 499.000đ hệ LiteSpace áp dụng 2 nhóm chi nhánh khác
+                      Hưng Đạo và CORE/PLUS 499.000đ hệ đối tác riêng áp dụng 2 nhóm chi nhánh khác
                       nhau). Dùng công cụ Tìm VPA theo nhu cầu để xem đúng gói theo khu vực bạn
                       chọn.
                     </p>
