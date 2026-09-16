@@ -654,6 +654,7 @@ export const SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS: string[] = [
   "cach-mang-thang-8",
   "mac-dinh-chi",
   "pasteur",
+  "de-tham",
 ];
 
 /* ---------------------------------------------------------------------- */

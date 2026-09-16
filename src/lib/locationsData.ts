@@ -322,6 +322,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_QUAN_1,
   },
   {
+    slug: "de-tham",
+    name: "159C Đề Thám, Quận 1 (cũ)",
+    shortAddress: "159C Đề Thám, P. Cầu Ông Lãnh",
+    area: AREA_QUAN_1,
+  },
+  {
     slug: "tran-hung-dao",
     name: "380 Trần Hưng Đạo, Quận 5 (cũ)",
     shortAddress: "380 Trần Hưng Đạo, P. Chợ Dừa",
@@ -2877,6 +2883,82 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Văn phòng gần chợ Bến Thành nên đối tác nước ngoài của mình rất dễ tìm, lại tiện ghé phố đi bộ sau giờ làm.", initial: "T", name: "Chị Thu", role: "Giám đốc công ty du lịch" },
       { quote: "Phòng họp riêng khá kín đáo, phù hợp những buổi trao đổi cần sự tập trung với khách hàng.", initial: "D", name: "Anh Duy", role: "Chủ doanh nghiệp dịch vụ" },
+    ],
+  },
+  "de-tham": {
+    slug: "de-tham",
+    name: "159C Đề Thám, Quận 1 (cũ)",
+    area: AREA_QUAN_1,
+    address: "159C Đề Thám, Phường Cầu Ông Lãnh, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 159C Đề Thám, Quận 1 (cũ)",
+    heroDescription:
+      "Chi nhánh thứ 4 của MAX OFFICE tại Quận 1 (cũ) — văn phòng ảo 3 gói riêng biệt từ 479.000đ/tháng, ngay trong khu Phố Tây Đề Thám - Bùi Viện - Phạm Ngũ Lão.",
+    metaTitle: "Văn Phòng Ảo 159C Đề Thám, Quận 1 (cũ) | Từ 479K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 159C Đề Thám, Phường Cầu Ông Lãnh — chi nhánh thứ 4 MAX OFFICE tại Quận 1 (cũ), 3 gói SILVER/GOLD/PREMIUM từ 479.000đ/tháng (chưa VAT), ngay khu Phố Tây.",
+    image: "/images/hero-chi-nhanh.jpg",
+    // Ảnh mặt tiền gốc 1086x1448 (0.75, trên ngưỡng FACADE_TALL_RATIO_THRESHOLD nên giữ tỉ lệ thật).
+    facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "right",
+    interiorImages: [
+      { src: "/images/dia-diem-de-tham-le-tan.jpg", alt: "Quầy lễ tân văn phòng 159C Đề Thám", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-de-tham-tiep-khach.jpg", alt: "Khu tiếp khách văn phòng 159C Đề Thám", caption: "Khu tiếp khách" },
+      { src: "/images/dia-diem-de-tham-phong-hop.jpg", alt: "Phòng họp văn phòng 159C Đề Thám", caption: "Phòng họp" },
+    ],
+    intro: [
+      "Văn phòng 159C Đề Thám là chi nhánh thứ 4 của MAX OFFICE tại khu vực Quận 1 (cũ), thuộc Phường Cầu Ông Lãnh — phường mang tên khu chợ đầu mối Cầu Ông Lãnh lâu đời của Sài Gòn. Đây cũng là tuyến đường nằm trong khu tứ giác Phố Tây ba lô nổi tiếng (Đề Thám - Bùi Viện - Phạm Ngũ Lão - Đỗ Quang Đẩu), nơi tập trung đông đảo khách du lịch quốc tế, khách sạn, nhà hàng và dịch vụ lữ hành — một vị trí đặc trưng, khác hẳn 3 chi nhánh còn lại của MAX OFFICE tại Quận 1.",
+      "Chi nhánh đặt tại một toà nhà văn phòng cao tầng, mặt tiền kính hiện đại nổi bật giữa khu phố cổ. Sảnh lễ tân ốp gỗ với hệ đèn LED âm tường tạo điểm nhấn sang trọng, khu vực tiếp khách bố trí sofa cong êm ái cạnh mảng tường trang trí hoạ tiết đường chân trời thành phố, cùng phòng họp riêng trang bị màn hình trình chiếu, máy lạnh — không gian được đầu tư kỹ lưỡng, phù hợp tiếp đối tác quan trọng.",
+      "Chi nhánh cung cấp 3 gói văn phòng ảo riêng biệt — SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10% — cùng bảng giá đang áp dụng tại 36 Mạc Đĩnh Chi, 28-34 Pasteur (cùng Quận 1) và 2 chi nhánh khu vực Quận 3 (cũ). Đây là hệ giá HOÀN TOÀN KHÁC với gói START/BASE (hệ LITE-RISE) đang áp dụng tại chi nhánh Điện Biên Phủ cùng khu vực Quận 1.",
+      "Với vị trí ngay trong khu Phố Tây, doanh nghiệp đặt văn phòng tại 159C Đề Thám có lợi thế đặc biệt nếu hoạt động trong lĩnh vực du lịch, lữ hành, khách sạn hoặc dịch vụ dành cho khách quốc tế — đồng thời vẫn ở ngay trung tâm Quận 1, thuận tiện di chuyển đến các khu vực hành chính, tài chính lân cận. Đây là lựa chọn phù hợp cho doanh nghiệp cần một địa chỉ đăng ký kinh doanh vừa có bản sắc riêng, vừa giữ được vị trí trung tâm thành phố.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 159C Đề Thám",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh thứ 4 tại Quận 1", desc: "Thêm lựa chọn địa chỉ đăng ký kinh doanh tại Quận 1 (cũ), toà nhà văn phòng cao tầng hiện đại." },
+      { icon: MapPinIcon, title: "Ngay khu Phố Tây Đề Thám - Bùi Viện", desc: "Vị trí đặc trưng, phù hợp doanh nghiệp du lịch, lữ hành, dịch vụ quốc tế." },
+      { icon: BadgePercentIcon, title: "3 gói giá linh hoạt", desc: "SILVER, GOLD, PREMIUM — từ 479.000đ/tháng." },
+      { icon: ShieldCheckIcon, title: "Sảnh lễ tân sang trọng", desc: "Thiết kế ốp gỗ, đèn LED âm tường, khu tiếp khách hiện đại." },
+      { icon: UsersIcon, title: "Phòng họp trang bị màn hình trình chiếu", desc: "Phù hợp các buổi thuyết trình, làm việc với đối tác." },
+      { icon: ClockIcon, title: "Gần trung tâm Quận 1", desc: "Thuận tiện di chuyển đến khu hành chính, tài chính lân cận." },
+    ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
+    nearbyItems: [
+      { name: "Phố Tây Đề Thám - Bùi Viện", desc: "Khu tứ giác du lịch nổi tiếng, tập trung khách sạn, nhà hàng, dịch vụ dành cho khách quốc tế." },
+      { name: "Công viên 23/9", desc: "Không gian xanh dọc đường Phạm Ngũ Lão, sát khu vực chi nhánh." },
+      { name: "Phường Cầu Ông Lãnh", desc: "Khu vực gắn liền với chợ đầu mối Cầu Ông Lãnh lâu đời của Sài Gòn." },
+      { name: "Trung tâm Quận 1", desc: "Chỉ vài phút di chuyển đến khu vực hành chính, tài chính TP.HCM." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Xe buýt nội thành", desc: "Nhiều tuyến xe buýt hoạt động qua khu vực Đề Thám, Phạm Ngũ Lão." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Khu du lịch sầm uất, mật độ xe cao, dễ dàng đặt xe mọi thời điểm." },
+      { icon: CheckCircleIcon, title: "Trục Đề Thám — Phạm Ngũ Lão", desc: "Kết nối nhanh vào trung tâm Quận 1 và các tuyến đường lớn." },
+      { icon: HeadsetIcon, title: "Hỗ trợ chỉ đường", desc: "Lễ tân hướng dẫn tận tình cho khách lần đầu ghé khu Phố Tây." },
+    ],
+    parkingInfo: [
+      "Toà nhà có khu vực đậu xe máy riêng cho khách đến làm việc.",
+      "Khu vực trung tâm có nhiều bãi giữ xe ô tô công cộng, lễ tân hỗ trợ tư vấn khi cần.",
+      "Bảo vệ và camera an ninh trực tại sảnh toà nhà suốt giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Ẩm thực đường phố khu Phố Tây", desc: "Đa dạng quán ăn, quán bar phục vụ cả khách trong nước và quốc tế, mở cửa tới khuya." },
+      { name: "Nhà hàng, quán cà phê khu Đề Thám", desc: "Nhiều lựa chọn phong cách hiện đại lẫn truyền thống, phù hợp tiếp khách." },
+      { name: "Quán ăn bình dân khu vực Cầu Ông Lãnh", desc: "Phù hợp bữa trưa nhanh, giá cả hợp lý cho nhân viên văn phòng." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 159C Đề Thám có phải là chi nhánh thứ 4 của MAX OFFICE tại Quận 1 không?", a: "Đúng vậy. Đây là chi nhánh thứ 4 MAX OFFICE mở tại khu vực Quận 1 (cũ), sau chi nhánh Điện Biên Phủ, 36 Mạc Đĩnh Chi và 28-34 Pasteur." },
+      { q: "Chi nhánh 159C Đề Thám khác gì so với 3 chi nhánh còn lại ở Quận 1?", a: "159C Đề Thám thuộc Phường Cầu Ông Lãnh, nằm ngay trong khu Phố Tây Đề Thám - Bùi Viện - Phạm Ngũ Lão — khác hẳn vị trí của Điện Biên Phủ, 36 Mạc Đĩnh Chi (cùng Phường Tân Định) và 28-34 Pasteur (Phường Sài Gòn). Về giá, chi nhánh dùng chung 3 gói SILVER/GOLD/PREMIUM với 36 Mạc Đĩnh Chi và 28-34 Pasteur — chỉ riêng Điện Biên Phủ dùng gói START/BASE thuộc hệ LITE-RISE." },
+      { q: "Chi nhánh 159C Đề Thám áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 3 gói: SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại 36 Mạc Đĩnh Chi, 28-34 Pasteur (Quận 1 cũ), 60 Nguyễn Thông và 520 Cách Mạng Tháng 8 (Quận 3 cũ)." },
+      { q: "Địa chỉ 159C Đề Thám có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Cầu Ông Lãnh, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Văn phòng có phù hợp cho doanh nghiệp du lịch, lữ hành không?", a: "Rất phù hợp. Chi nhánh nằm ngay trong khu Phố Tây Đề Thám - Bùi Viện - Phạm Ngũ Lão, nơi tập trung đông khách du lịch quốc tế, khách sạn và dịch vụ lữ hành — thuận tiện cho doanh nghiệp hoạt động trong lĩnh vực này đặt địa chỉ đăng ký kinh doanh ngay tại khu vực khách hàng mục tiêu." },
+      { q: "Sau khi ký hợp đồng, đổi địa chỉ giấy phép kinh doanh hoặc khắc dấu công ty tính phí ra sao?", a: "Đây là 2 khoản phát sinh tính riêng ngoài phí gói văn phòng ảo hàng tháng: đổi địa chỉ trên giấy phép kinh doanh giá 1.296.000đ (đã bao gồm VAT), và khắc con dấu tròn công ty, dấu chi nhánh hoặc dấu văn phòng đại diện giá 480.000đ mỗi con dấu." },
+      { q: "Ký hợp đồng dài hạn tại 159C Đề Thám có được khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng sử dụng miễn phí; ký hợp đồng 24 tháng được tặng 6 tháng sử dụng miễn phí — áp dụng cho mọi gói văn phòng ảo tại chi nhánh này." },
+      { q: "Tôi có thể đến tham quan văn phòng 159C Đề Thám trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
+    ],
+    testimonials: [
+      { quote: "Khách nước ngoài của mình toàn ở quanh khu Bùi Viện nên hẹn gặp ở văn phòng cực kỳ tiện, không mất công di chuyển xa.", initial: "Q", name: "Anh Quang", role: "Chủ công ty xuất nhập khẩu" },
+      { quote: "Toà nhà thiết kế đẹp, sảnh tiếp khách sang trọng nên đối tác đến làm việc đều khen không gian chuyên nghiệp.", initial: "N", name: "Chị Ngọc", role: "Giám đốc công ty tư vấn" },
     ],
   },
   "tran-hung-dao": {

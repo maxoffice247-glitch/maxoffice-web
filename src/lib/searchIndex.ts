@@ -69,6 +69,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "28-34 Pasteur, P. Sài Gòn",
   },
   {
+    title: "159C Đề Thám, Quận 1 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/de-tham",
+    desc: "159C Đề Thám, P. Cầu Ông Lãnh",
+  },
+  {
     title: "Sông Thao, Tân Bình",
     category: "Chi nhánh",
     href: "/locations/song-thao",
