@@ -124,20 +124,6 @@ export default function FloatingButtons() {
 
   return (
     <>
-      {/* Mobile: nút gọi nhanh cố định riêng — Zalo/Messenger vẫn có sẵn
-          trong MobileBottomNav. Linh vật bên dưới nay mở thêm popup 3 lựa
-          chọn (gọi/Zalo/Messenger) nên trùng lối liên hệ với
-          MobileBottomNav ở Zalo/Messenger — đây là đánh đổi có chủ đích
-          khi gộp linh vật thành điểm chạm duy nhất; MobileBottomNav vẫn
-          là thanh liên hệ độc lập, không phụ thuộc cụm này. */}
-      <a
-        href="tel:0898082188"
-        aria-label="Gọi ngay 089 8082 188"
-        className="animate-pulse-call fixed left-4 bottom-[80px] z-[97] flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:hidden"
-      >
-        <PhoneIcon className="h-[22px] w-[22px]" />
-      </a>
-
       <div ref={rootRef}>
         <WavingMascotBubble
           className="fixed left-1 bottom-[140px] sm:left-[14px] sm:bottom-[44px]"
