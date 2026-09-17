@@ -15,9 +15,16 @@ import { PhoneIcon, MessengerIcon, ZaloIcon } from "./icons";
     Trước đây linh vật link thẳng tới Zalo VÀ có một nút tròn speed-dial
     riêng biệt bên dưới (2 điểm chạm tách rời, dư thừa) — nay gộp làm một:
     bấm linh vật để mở/đóng popup 3 lựa chọn, dùng chung state
-    `open`/`onToggle` với popup (component cha truyền vào). Vị trí bên
-    trái của linh vật giữ nguyên như trước khi gộp (không đổi): mobile
-    left-1/bottom-140px, desktop left-[14px]/bottom-[92px].
+    `open`/`onToggle` với popup (component cha truyền vào). Component này
+    dùng CHUNG cho cả mobile lẫn desktop (breakpoint responsive ngay
+    trong className truyền vào, không tách 2 instance riêng) — nếu thấy
+    linh vật có vẻ chưa gộp trên 1 breakpoint nào đó, khả năng cao là do
+    trang đang xem chưa load code mới (cache/deploy cũ), không phải do
+    component tách logic theo breakpoint.
+
+    Vị trí bên trái của linh vật giữ nguyên trên mobile: left-1/
+    bottom-140px. Trên desktop, bottom đã hạ từ 92px xuống 44px (gần đáy
+    màn hình hơn theo yêu cầu), left giữ nguyên 14px.
 
     Popup 3 lựa chọn (xem FloatingButtons() bên dưới) neo NGAY PHÍA TRÊN
     linh vật thay vì giữ toạ độ neo cũ của nút tròn đã xoá (trước đây
@@ -133,14 +140,32 @@ export default function FloatingButtons() {
 
       <div ref={rootRef}>
         <WavingMascotBubble
-          className="fixed left-1 bottom-[140px] sm:left-[14px] sm:bottom-[92px]"
+          className="fixed left-1 bottom-[140px] sm:left-[14px] sm:bottom-[44px]"
           open={open}
           onToggle={() => setOpen((v) => !v)}
         />
 
+        {/* Nhãn tĩnh "Liên hệ ngay" cạnh linh vật — CHỈ desktop (mobile đã
+            có MobileBottomNav.tsx ghi rõ chữ Zalo/Messenger làm nhãn sẵn,
+            không cần lặp lại). Khác với bong bóng thoại tự động đã tắt
+            hẳn trước đó ("Cần hỗ trợ? Nhắn Zalo ngay!", tự bật/ẩn theo
+            chu kỳ) — đây là 1 pill tĩnh, luôn hiển thị ngay khi trang tải
+            xong, không hẹn giờ ẩn/hiện, chỉ đóng vai trò chú thích cho
+            biết linh vật bấm được. Không tìm thấy tiền lệ style cũ nào
+            tương tự trong git history (chỉ có nút CTA "Liên hệ ngay"
+            trong Hero.tsx, không liên quan tới linh vật) nên tự thiết kế
+            mới, dùng bg-accent để đồng bộ màu thương hiệu với các nút
+            liên hệ khác trong cụm này. */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none fixed left-[109px] bottom-[58px] z-[96] hidden rounded-full bg-accent px-3 py-1.5 text-[12px] leading-none font-bold whitespace-nowrap text-white shadow-[0_8px_20px_rgba(0,0,0,0.22)] sm:block"
+        >
+          Liên hệ ngay
+        </span>
+
         {/* Popup 3 lựa chọn — neo ngay phía trên linh vật (xem giải thích
             trong doc comment của WavingMascotBubble). */}
-        <div className="fixed left-1 bottom-[210px] z-[97] flex flex-col items-end gap-3 sm:left-[14px] sm:bottom-[162px]">
+        <div className="fixed left-1 bottom-[210px] z-[97] flex flex-col items-end gap-3 sm:left-[14px] sm:bottom-[114px]">
           <AnimatePresence>
             {open &&
               [...CONTACT_OPTIONS].reverse().map((opt, idx) => (
