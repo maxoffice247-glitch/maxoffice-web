@@ -5,55 +5,28 @@ import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { PhoneIcon, PlusIcon, MessengerIcon, ZaloIcon } from "./icons";
 
-const BUBBLE_FIRST_DELAY_MS = 3000;
-const BUBBLE_REPEAT_MS = 12000;
-const BUBBLE_VISIBLE_MS = 4000;
+/** Linh vật MAX bay lượn cạnh cụm nút gọi/Zalo/Messenger — tham khảo hiệu
+    ứng nổi bật ở góc dưới phải acb.com.vn (KHÔNG phải khung chat AI của
+    họ, chỉ lấy cảm hứng phần linh vật trôi nổi liên tục, theo đúng yêu
+    cầu người dùng). Bấm vào link thẳng tới Zalo (kênh chat tức thời phổ
+    biến nhất), khác với nút chính (gọi điện trên mobile, mở speed-dial
+    trên desktop). Hoạt hoạ trôi nổi bằng CSS thuần (.animate-mascot-fly,
+    xem globals.css) thay vì cần dựng GIF/video từ ảnh gốc.
 
-/** Linh vật MAX bay lượn cạnh cụm nút gọi/Zalo/Messenger, kèm bong bóng
-    thoại nhắc nhở định kỳ — tham khảo hiệu ứng nổi bật ở góc dưới phải
-    acb.com.vn (KHÔNG phải khung chat AI của họ, chỉ lấy cảm hứng phần
-    linh vật trôi nổi liên tục + bong bóng thoại, theo đúng yêu cầu người
-    dùng). Bấm vào link thẳng tới Zalo (kênh chat tức thời phổ biến nhất),
-    khác với nút chính (gọi điện trên mobile, mở speed-dial trên desktop).
-    Hoạt hoạ trôi nổi bằng CSS thuần (.animate-mascot-fly, xem
-    globals.css) thay vì cần dựng GIF/video từ ảnh gốc. */
+    Cả cụm (linh vật + nút gọi/speed-dial) chuyển sang GÓC TRÁI màn hình từ
+    khi thêm widget chat Tidio ở góc phải — né chồng lấn hoàn toàn giữa 2
+    bên thay vì cố xếp chồng dọc cùng 1 góc (dashboard Tidio không có ô
+    chỉnh lề dưới theo px, chỉ chọn được trái/phải + kích thước).
+
+    Bong bóng thoại tự động nhắc định kỳ ("Cần hỗ trợ? Nhắn Zalo ngay!") đã
+    BỎ HẲN: Tidio bên phải đã có cơ chế bong bóng chào chủ động riêng
+    ("Chat with us"/Lyro), 2 bên cùng tự bật bong bóng mời gọi cùng lúc sẽ
+    gây rối mắt. Linh vật vẫn bấm được để mở Zalo, vẫn giữ nguyên hiệu ứng
+    bồng bềnh như trước, chỉ không còn tự động mời gọi bằng bong bóng
+    thoại nữa. */
 function WavingMascotBubble({ className }: { className?: string }) {
-  const [showBubble, setShowBubble] = useState(false);
-  const reduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    // Giảm chuyển động -> không tự bật bong bóng định kỳ (gây xao nhãng),
-    // nhân vật vẫn đứng yên (rule global đã tắt hẳn animation-duration).
-    if (reduceMotion) return;
-    let hideId: ReturnType<typeof setTimeout>;
-    const tick = () => {
-      setShowBubble(true);
-      hideId = setTimeout(() => setShowBubble(false), BUBBLE_VISIBLE_MS);
-    };
-    const firstId = setTimeout(tick, BUBBLE_FIRST_DELAY_MS);
-    const intervalId = setInterval(tick, BUBBLE_REPEAT_MS);
-    return () => {
-      clearTimeout(firstId);
-      clearInterval(intervalId);
-      clearTimeout(hideId);
-    };
-  }, [reduceMotion]);
-
   return (
     <div className={`z-[96] ${className ?? ""}`}>
-      <AnimatePresence>
-        {showBubble && (
-          <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.9 }}
-            transition={{ duration: 0.25, ease: EASE_PREMIUM }}
-            className="absolute right-0 bottom-full mb-1.5 w-max max-w-[150px] rounded-2xl rounded-br-md bg-white px-3 py-2 text-[12px] leading-snug font-bold text-navy shadow-[0_8px_20px_rgba(15,27,45,0.18)]"
-          >
-            Cần hỗ trợ? Nhắn Zalo ngay!
-          </motion.div>
-        )}
-      </AnimatePresence>
       <a
         href="https://zalo.me/0898082188"
         target="_blank"
@@ -156,17 +129,17 @@ export default function FloatingButtons() {
       <a
         href="tel:0898082188"
         aria-label="Gọi ngay 089 8082 188"
-        className="animate-pulse-call fixed right-4 bottom-[80px] z-[97] flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:hidden"
+        className="animate-pulse-call fixed left-4 bottom-[80px] z-[97] flex h-[50px] w-[50px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:hidden"
       >
         <PhoneIcon className="h-[22px] w-[22px]" />
       </a>
-      <WavingMascotBubble className="fixed right-1 bottom-[140px] sm:hidden" />
+      <WavingMascotBubble className="fixed left-1 bottom-[140px] sm:hidden" />
 
       {/* Tablet/desktop: no bottom nav present, so the full phone/Zalo/Messenger speed-dial stays. */}
-      {!open && <WavingMascotBubble className="fixed right-[14px] bottom-[92px] hidden sm:block" />}
+      {!open && <WavingMascotBubble className="fixed left-[14px] bottom-[92px] hidden sm:block" />}
       <div
         ref={rootRef}
-        className="fixed right-[22px] bottom-6 z-[97] hidden flex-col items-end gap-3 sm:flex"
+        className="fixed left-[22px] bottom-6 z-[97] hidden flex-col items-end gap-3 sm:flex"
       >
         <AnimatePresence>
           {open &&

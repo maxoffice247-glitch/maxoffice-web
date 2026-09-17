@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -142,6 +143,13 @@ export default function RootLayout({
             <ClientOverlays />
           </div>
         </SearchProvider>
+        {/* Widget chat Tidio — strategy "lazyOnload" (tải sau khi trang đã
+            interactive, không ảnh hưởng tốc độ tải ban đầu). Vị trí/kích
+            thước mặc định của bong bóng chat do Tidio tự dựng (Shadow DOM
+            riêng, ngoài tầm CSS của site) — chỉnh lề dưới trong dashboard
+            Tidio (Settings → Channels → Live chat → Widget appearance) để
+            tránh chồng lấn với FloatingButtons.tsx, xem số đo đã báo cáo. */}
+        <Script src="//code.tidio.co/qa16jzr1uvb5dd0hb4jysvjxzpyyjgmg.js" strategy="lazyOnload" />
       </body>
     </html>
   );
