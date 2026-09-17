@@ -2,37 +2,47 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { PhoneIcon, PlusIcon, MessengerIcon, ZaloIcon } from "./icons";
+import { AnimatePresence, motion } from "framer-motion";
+import { PhoneIcon, MessengerIcon, ZaloIcon } from "./icons";
 
-/** Linh vật MAX bay lượn cạnh cụm nút gọi/Zalo/Messenger — tham khảo hiệu
-    ứng nổi bật ở góc dưới phải acb.com.vn (KHÔNG phải khung chat AI của
-    họ, chỉ lấy cảm hứng phần linh vật trôi nổi liên tục, theo đúng yêu
-    cầu người dùng). Bấm vào link thẳng tới Zalo (kênh chat tức thời phổ
-    biến nhất), khác với nút chính (gọi điện trên mobile, mở speed-dial
-    trên desktop). Hoạt hoạ trôi nổi bằng CSS thuần (.animate-mascot-fly,
-    xem globals.css) thay vì cần dựng GIF/video từ ảnh gốc.
+/** Linh vật MAX bay lượn — nay là TRIGGER DUY NHẤT của speed-dial liên hệ
+    (gọi điện/Zalo/Messenger), tham khảo hiệu ứng nổi bật ở góc dưới phải
+    acb.com.vn (KHÔNG phải khung chat AI của họ, chỉ lấy cảm hứng phần
+    linh vật trôi nổi liên tục, theo đúng yêu cầu người dùng). Hoạt hoạ
+    trôi nổi bằng CSS thuần (.animate-mascot-fly, xem globals.css) thay vì
+    cần dựng GIF/video từ ảnh gốc.
 
-    Cả cụm (linh vật + nút gọi/speed-dial) chuyển sang GÓC TRÁI màn hình từ
-    khi thêm widget chat Tidio ở góc phải — né chồng lấn hoàn toàn giữa 2
-    bên thay vì cố xếp chồng dọc cùng 1 góc (dashboard Tidio không có ô
-    chỉnh lề dưới theo px, chỉ chọn được trái/phải + kích thước).
+    Trước đây linh vật link thẳng tới Zalo VÀ có một nút tròn speed-dial
+    riêng biệt bên dưới (2 điểm chạm tách rời, dư thừa) — nay gộp làm một:
+    bấm linh vật để mở/đóng popup 3 lựa chọn, dùng chung state
+    `open`/`onToggle` với popup (component cha truyền vào). Vị trí bên
+    trái của linh vật giữ nguyên như trước khi gộp (không đổi): mobile
+    left-1/bottom-140px, desktop left-[14px]/bottom-[92px].
 
-    Bong bóng thoại tự động nhắc định kỳ ("Cần hỗ trợ? Nhắn Zalo ngay!") đã
-    BỎ HẲN: Tidio bên phải đã có cơ chế bong bóng chào chủ động riêng
-    ("Chat with us"/Lyro), 2 bên cùng tự bật bong bóng mời gọi cùng lúc sẽ
-    gây rối mắt. Linh vật vẫn bấm được để mở Zalo, vẫn giữ nguyên hiệu ứng
-    bồng bềnh như trước, chỉ không còn tự động mời gọi bằng bong bóng
-    thoại nữa. */
-function WavingMascotBubble({ className }: { className?: string }) {
+    Popup 3 lựa chọn (xem FloatingButtons() bên dưới) neo NGAY PHÍA TRÊN
+    linh vật thay vì giữ toạ độ neo cũ của nút tròn đã xoá (trước đây
+    left-22/bottom-6) — bắt buộc phải đổi neo vì linh vật giờ luôn hiển
+    thị kể cả khi popup đang mở (để còn bấm lại đóng), trong khi nút tròn
+    cũ nằm ở một vị trí khác và linh vật trước đây tự ẩn đi lúc mở
+    (`{!open && <WavingMascotBubble />}`) để tránh đúng kiểu chồng lấn
+    này; giữ nguyên toạ độ neo cũ sẽ khiến các nút Zalo/Messenger đè lên
+    chính linh vật khi mở popup. */
+function WavingMascotBubble({
+  className,
+  open,
+  onToggle,
+}: {
+  className?: string;
+  open: boolean;
+  onToggle: () => void;
+}) {
   return (
     <div className={`z-[96] ${className ?? ""}`}>
-      <a
-        href="https://zalo.me/0898082188"
-        target="_blank"
-        rel="noopener"
-        aria-label="Chat Zalo với MAX OFFICE"
-        title="Chat Zalo với MAX OFFICE"
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ: gọi điện, Zalo, Messenger"}
         className="block drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:scale-110"
       >
         <Image
@@ -42,17 +52,15 @@ function WavingMascotBubble({ className }: { className?: string }) {
           height={107}
           className="animate-mascot-fly h-[58px] w-auto object-contain"
         />
-      </a>
+      </button>
     </div>
   );
 }
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
-const CYCLE_INTERVAL_MS = 2600;
 
-// Same icon-to-button ratio for every option in both states, so
-// phone/Zalo/Messenger never look mismatched next to each other.
-const CYCLE_ICON_SIZE = "h-[27px] w-[27px]";
+// Same icon-to-button ratio for every option, so phone/Zalo/Messenger
+// never look mismatched next to each other.
 const OPEN_ICON_SIZE = "h-[23px] w-[23px] sm:h-[25px] sm:w-[25px]";
 
 const CONTACT_OPTIONS = [
@@ -87,20 +95,7 @@ const CONTACT_OPTIONS = [
 
 export default function FloatingButtons() {
   const [open, setOpen] = useState(false);
-  const [cycleIndex, setCycleIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-
-  // Auto-cycle the closed button's icon through phone/Zalo/Messenger so
-  // customers understand it opens multiple contact channels. Paused while
-  // the speed-dial is open and skipped entirely under reduced motion.
-  useEffect(() => {
-    if (open || reduceMotion) return;
-    const id = setInterval(() => {
-      setCycleIndex((i) => (i + 1) % CONTACT_OPTIONS.length);
-    }, CYCLE_INTERVAL_MS);
-    return () => clearInterval(id);
-  }, [open, reduceMotion]);
 
   useEffect(() => {
     if (!open) return;
@@ -120,12 +115,14 @@ export default function FloatingButtons() {
     };
   }, [open]);
 
-  const current = CONTACT_OPTIONS[cycleIndex];
-
   return (
     <>
-      {/* Mobile: single call button only — Zalo/Messenger already live in MobileBottomNav, so
-          a duplicate speed-dial here would give two Zalo entry points on the same screen. */}
+      {/* Mobile: nút gọi nhanh cố định riêng — Zalo/Messenger vẫn có sẵn
+          trong MobileBottomNav. Linh vật bên dưới nay mở thêm popup 3 lựa
+          chọn (gọi/Zalo/Messenger) nên trùng lối liên hệ với
+          MobileBottomNav ở Zalo/Messenger — đây là đánh đổi có chủ đích
+          khi gộp linh vật thành điểm chạm duy nhất; MobileBottomNav vẫn
+          là thanh liên hệ độc lập, không phụ thuộc cụm này. */}
       <a
         href="tel:0898082188"
         aria-label="Gọi ngay 089 8082 188"
@@ -133,66 +130,38 @@ export default function FloatingButtons() {
       >
         <PhoneIcon className="h-[22px] w-[22px]" />
       </a>
-      <WavingMascotBubble className="fixed left-1 bottom-[140px] sm:hidden" />
 
-      {/* Tablet/desktop: no bottom nav present, so the full phone/Zalo/Messenger speed-dial stays. */}
-      {!open && <WavingMascotBubble className="fixed left-[14px] bottom-[92px] hidden sm:block" />}
-      <div
-        ref={rootRef}
-        className="fixed left-[22px] bottom-6 z-[97] hidden flex-col items-end gap-3 sm:flex"
-      >
-        <AnimatePresence>
-          {open &&
-            [...CONTACT_OPTIONS].reverse().map((opt, idx) => (
-              <motion.a
-                key={opt.key}
-                href={opt.href}
-                target={opt.external ? "_blank" : undefined}
-                rel={opt.external ? "noopener" : undefined}
-                title={opt.label}
-                aria-label={opt.ariaLabel}
-                initial={{ opacity: 0, y: 16, scale: 0.8 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 16, scale: 0.8 }}
-                transition={{ duration: 0.3, ease: EASE_PREMIUM, delay: idx * 0.06 }}
-                className={`relative flex h-[46px] w-[46px] items-center justify-center overflow-hidden rounded-full text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[50px] sm:w-[50px] ${opt.bg}`}
-              >
-                <opt.icon className={OPEN_ICON_SIZE} />
-              </motion.a>
-            ))}
-        </AnimatePresence>
+      <div ref={rootRef}>
+        <WavingMascotBubble
+          className="fixed left-1 bottom-[140px] sm:left-[14px] sm:bottom-[92px]"
+          open={open}
+          onToggle={() => setOpen((v) => !v)}
+        />
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ: gọi điện, Zalo, Messenger"}
-          className="animate-pulse-call relative flex h-[54px] w-[54px] items-center justify-center rounded-full bg-accent text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110"
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {open ? (
-              <motion.span
-                key="close"
-                initial={{ opacity: 0, rotate: -45, scale: 0.6 }}
-                animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                exit={{ opacity: 0, rotate: 45, scale: 0.6 }}
-                transition={{ duration: 0.2, ease: EASE_PREMIUM }}
-              >
-                <PlusIcon className="h-[22px] w-[22px] rotate-45" />
-              </motion.span>
-            ) : (
-              <motion.span
-                key={current.key}
-                initial={{ opacity: 0, y: 8, scale: 0.7 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -8, scale: 0.7 }}
-                transition={{ duration: 0.3, ease: EASE_PREMIUM }}
-              >
-                <current.icon className={CYCLE_ICON_SIZE} />
-              </motion.span>
-            )}
+        {/* Popup 3 lựa chọn — neo ngay phía trên linh vật (xem giải thích
+            trong doc comment của WavingMascotBubble). */}
+        <div className="fixed left-1 bottom-[210px] z-[97] flex flex-col items-end gap-3 sm:left-[14px] sm:bottom-[162px]">
+          <AnimatePresence>
+            {open &&
+              [...CONTACT_OPTIONS].reverse().map((opt, idx) => (
+                <motion.a
+                  key={opt.key}
+                  href={opt.href}
+                  target={opt.external ? "_blank" : undefined}
+                  rel={opt.external ? "noopener" : undefined}
+                  title={opt.label}
+                  aria-label={opt.ariaLabel}
+                  initial={{ opacity: 0, y: 16, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 16, scale: 0.8 }}
+                  transition={{ duration: 0.3, ease: EASE_PREMIUM, delay: idx * 0.06 }}
+                  className={`relative flex h-[46px] w-[46px] items-center justify-center overflow-hidden rounded-full text-white shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:scale-110 sm:h-[50px] sm:w-[50px] ${opt.bg}`}
+                >
+                  <opt.icon className={OPEN_ICON_SIZE} />
+                </motion.a>
+              ))}
           </AnimatePresence>
-        </button>
+        </div>
       </div>
     </>
   );
