@@ -150,22 +150,37 @@ export default function FloatingButtons() {
             không cần lặp lại). Khác với bong bóng thoại tự động đã tắt
             hẳn trước đó ("Cần hỗ trợ? Nhắn Zalo ngay!", tự bật/ẩn theo
             chu kỳ) — đây là 1 pill tĩnh, luôn hiển thị ngay khi trang tải
-            xong, không hẹn giờ ẩn/hiện, chỉ đóng vai trò chú thích cho
-            biết linh vật bấm được. Không tìm thấy tiền lệ style cũ nào
-            tương tự trong git history (chỉ có nút CTA "Liên hệ ngay"
-            trong Hero.tsx, không liên quan tới linh vật) nên tự thiết kế
-            mới, dùng bg-accent để đồng bộ màu thương hiệu với các nút
-            liên hệ khác trong cụm này. */}
+            xong (kể cả lúc popup đang mở), không hẹn giờ ẩn/hiện, chỉ
+            đóng vai trò chú thích cho biết linh vật bấm được. Không tìm
+            thấy tiền lệ style cũ nào tương tự trong git history (chỉ có
+            nút CTA "Liên hệ ngay" trong Hero.tsx, không liên quan tới
+            linh vật) nên tự thiết kế mới, dùng bg-accent để đồng bộ màu
+            thương hiệu với các nút liên hệ khác trong cụm này.
+
+            Đặt PHÍA TRÊN đầu linh vật, căn giữa theo chiều ngang: left
+            trùng tâm ngang của linh vật (14px + nửa bề rộng ảnh ~43px =
+            57px), rồi dùng -translate-x-1/2 để tự căn giữa theo đúng bề
+            rộng thật của nhãn (dùng transform thay vì tính cứng theo bề
+            rộng chữ, để không lệch nếu sau này đổi chữ/font). bottom
+            neo ngay trên đỉnh đầu linh vật (đỉnh = 44+58=102px) + 10px
+            khoảng cách = 112px.
+
+            Vì nhãn giờ nằm ngay phía trên linh vật thay vì cạnh bên, cần
+            đẩy popup 3 lựa chọn (bên dưới) lên cao hơn nữa để không đè
+            lên nhãn khi mở — xem giải thích ở đó. */}
         <span
           aria-hidden="true"
-          className="pointer-events-none fixed left-[109px] bottom-[58px] z-[96] hidden rounded-full bg-accent px-3 py-1.5 text-[12px] leading-none font-bold whitespace-nowrap text-white shadow-[0_8px_20px_rgba(0,0,0,0.22)] sm:block"
+          className="pointer-events-none fixed z-[96] hidden rounded-full bg-accent px-3 py-1.5 text-[12px] leading-none font-bold whitespace-nowrap text-white shadow-[0_8px_20px_rgba(0,0,0,0.22)] sm:left-[57px] sm:bottom-[112px] sm:block sm:-translate-x-1/2"
         >
           Liên hệ ngay
         </span>
 
-        {/* Popup 3 lựa chọn — neo ngay phía trên linh vật (xem giải thích
-            trong doc comment của WavingMascotBubble). */}
-        <div className="fixed left-1 bottom-[210px] z-[97] flex flex-col items-end gap-3 sm:left-[14px] sm:bottom-[114px]">
+        {/* Popup 3 lựa chọn — neo ngay phía trên nhãn "Liên hệ ngay" trên
+            desktop (nhãn giờ nằm trên đỉnh linh vật, chiếm khoảng
+            112-136px; popup neo từ 146px = 136 + 10px khoảng cách, để 2
+            lớp không đè nhau khi popup mở). Trên mobile không có nhãn
+            nên vẫn neo ngay trên đỉnh linh vật như cũ (không đổi). */}
+        <div className="fixed left-1 bottom-[210px] z-[97] flex flex-col items-end gap-3 sm:left-[14px] sm:bottom-[146px]">
           <AnimatePresence>
             {open &&
               [...CONTACT_OPTIONS].reverse().map((opt, idx) => (
