@@ -144,12 +144,52 @@ export default function RootLayout({
           </div>
         </SearchProvider>
         {/* Widget chat Tidio — strategy "lazyOnload" (tải sau khi trang đã
-            interactive, không ảnh hưởng tốc độ tải ban đầu). Vị trí/kích
-            thước mặc định của bong bóng chat do Tidio tự dựng (Shadow DOM
-            riêng, ngoài tầm CSS của site) — chỉnh lề dưới trong dashboard
-            Tidio (Settings → Channels → Live chat → Widget appearance) để
-            tránh chồng lấn với FloatingButtons.tsx, xem số đo đã báo cáo. */}
+            interactive, không ảnh hưởng tốc độ tải ban đầu). FloatingButtons
+            đã chuyển sang góc trái nên không còn chồng lấn với Tidio (mặc
+            định góc phải) trên desktop — không cần chỉnh gì thêm ở đó.
+            Trên mobile, dashboard Tidio (Settings → Live Chat → Appearance
+            → Visibility and position) CHỈ cho đổi Button position
+            trái/phải riêng theo thiết bị, KHÔNG có ô chỉnh lề dưới
+            (margin-bottom) riêng cho mobile — theo tài liệu chính thức
+            (help.tidio.com, mục "Widget Position"), chỉnh lề dưới bắt
+            buộc phải qua code. Xem script "tidio-mobile-position-fix" bên
+            dưới để né MobileBottomNav.tsx trên mobile. */}
         <Script src="//code.tidio.co/qa16jzr1uvb5dd0hb4jysvjxzpyyjgmg.js" strategy="lazyOnload" />
+        {/* Đẩy bong bóng Tidio lên cao hơn MobileBottomNav.tsx (thanh 4 nút
+            dính đáy, cao ~61-95px tuỳ home indicator) trên mobile. Dùng
+            đúng API JS chính thức hiện hành của Tidio
+            (tidioChatApi.adjustStyles, đăng ký qua event 'ready'/
+            'tidioChat-ready') thay vì án <style> CSS chèn thẳng — theo tài
+            liệu Tidio, cách CSS cũ nhắm #tidio-chat-iframe đã bị khai tử,
+            "sẽ ngừng hoạt động ở các bản cập nhật lớn tiếp theo".
+
+            Selector #tidio đã TEST TRỰC TIẾP trên widget đang chạy (gọi
+            tidioChatApi.adjustStyles() qua console, xem bong bóng di
+            chuyển thật) — không đoán theo tài liệu suông. Lưu ý: outer
+            wrapper mà Tidio chèn vào DOM của trang lại có id="tidio-chat"
+            (khác với "#tidio" mà tài liệu/adjustStyles nhắm tới) — đã thử
+            cả 2, chỉ "#tidio" có tác dụng, nên #tidio-chat KHÔNG dùng
+            được ở đây dù nó là id "nhìn thấy được" khi đọc DOM trang
+            ngoài; bong bóng thật nằm trong iframe riêng của Tidio, và
+            adjustStyles() thao tác trực tiếp trong đó bằng id nội bộ
+            #tidio, không liên quan đến id của wrapper ngoài. Ngưỡng
+            max-width: 640px dùng chung breakpoint `sm` của Tailwind —
+            đúng breakpoint FloatingButtons.tsx đang dùng để chuyển
+            mobile/desktop. */}
+        <Script id="tidio-mobile-position-fix" strategy="lazyOnload">
+          {`
+            function onTidioChatApiReady() {
+              window.tidioChatApi.adjustStyles(
+                '@media only screen and (max-width: 640px) { #tidio { bottom: 100px !important; } }'
+              );
+            }
+            if (window.tidioChatApi) {
+              window.tidioChatApi.on('ready', onTidioChatApiReady);
+            } else {
+              document.addEventListener('tidioChat-ready', onTidioChatApiReady);
+            }
+          `}
+        </Script>
       </body>
     </html>
   );
