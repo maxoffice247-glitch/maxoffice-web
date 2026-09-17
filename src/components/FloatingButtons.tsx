@@ -22,9 +22,12 @@ import { PhoneIcon, MessengerIcon, ZaloIcon } from "./icons";
     trang đang xem chưa load code mới (cache/deploy cũ), không phải do
     component tách logic theo breakpoint.
 
-    Vị trí bên trái của linh vật giữ nguyên trên mobile: left-1/
-    bottom-140px. Trên desktop, bottom đã hạ từ 92px xuống 44px (gần đáy
-    màn hình hơn theo yêu cầu), left giữ nguyên 14px.
+    Vị trí bên trái của linh vật: mobile hạ từ bottom-140px xuống
+    bottom-116px (thấp hơn nhưng vẫn chừa khoảng cách an toàn phía trên
+    MobileBottomNav.tsx — thanh nav cao ~61-95px tuỳ home indicator, nên
+    KHÔNG hạ sâu như desktop vì mobile có thêm thanh nav này). Trên
+    desktop, bottom đã hạ từ 92px xuống 44px (gần đáy màn hình hơn, không
+    có thanh nav nào cản), left giữ nguyên 14px.
 
     Popup 3 lựa chọn (xem FloatingButtons() bên dưới) neo NGAY PHÍA TRÊN
     linh vật thay vì giữ toạ độ neo cũ của nút tròn đã xoá (trước đây
@@ -126,47 +129,54 @@ export default function FloatingButtons() {
     <>
       <div ref={rootRef}>
         <WavingMascotBubble
-          className="fixed left-1 bottom-[140px] sm:left-[14px] sm:bottom-[44px]"
+          className="fixed left-1 bottom-[116px] sm:left-[14px] sm:bottom-[44px]"
           open={open}
           onToggle={() => setOpen((v) => !v)}
         />
 
-        {/* Nhãn tĩnh "Liên hệ ngay" cạnh linh vật — CHỈ desktop (mobile đã
-            có MobileBottomNav.tsx ghi rõ chữ Zalo/Messenger làm nhãn sẵn,
-            không cần lặp lại). Khác với bong bóng thoại tự động đã tắt
-            hẳn trước đó ("Cần hỗ trợ? Nhắn Zalo ngay!", tự bật/ẩn theo
-            chu kỳ) — đây là 1 pill tĩnh, luôn hiển thị ngay khi trang tải
-            xong (kể cả lúc popup đang mở), không hẹn giờ ẩn/hiện, chỉ
-            đóng vai trò chú thích cho biết linh vật bấm được. Không tìm
-            thấy tiền lệ style cũ nào tương tự trong git history (chỉ có
-            nút CTA "Liên hệ ngay" trong Hero.tsx, không liên quan tới
-            linh vật) nên tự thiết kế mới, dùng bg-accent để đồng bộ màu
-            thương hiệu với các nút liên hệ khác trong cụm này.
+        {/* Nhãn tĩnh "Liên hệ ngay" trên đầu linh vật — nay hiển thị CẢ
+            mobile lẫn desktop (trước đây chỉ desktop, mobile dựa vào chữ
+            có sẵn trên MobileBottomNav.tsx, nhưng theo yêu cầu mới nhất
+            đã thêm cho cả mobile, thu nhỏ chữ/padding để không chiếm
+            nhiều diện tích màn hình hẹp). Khác với bong bóng thoại tự
+            động đã tắt hẳn trước đó ("Cần hỗ trợ? Nhắn Zalo ngay!", tự
+            bật/ẩn theo chu kỳ) — đây là 1 pill tĩnh, luôn hiển thị ngay
+            khi trang tải xong (kể cả lúc popup đang mở), không hẹn giờ
+            ẩn/hiện, chỉ đóng vai trò chú thích cho biết linh vật bấm
+            được. Không tìm thấy tiền lệ style cũ nào tương tự trong git
+            history (chỉ có nút CTA "Liên hệ ngay" trong Hero.tsx, không
+            liên quan tới linh vật) nên tự thiết kế mới, dùng bg-accent để
+            đồng bộ màu thương hiệu với các nút liên hệ khác trong cụm
+            này.
 
-            Đặt PHÍA TRÊN đầu linh vật, căn giữa theo chiều ngang: left
-            trùng tâm ngang của linh vật (14px + nửa bề rộng ảnh ~43px =
-            57px), rồi dùng -translate-x-1/2 để tự căn giữa theo đúng bề
-            rộng thật của nhãn (dùng transform thay vì tính cứng theo bề
-            rộng chữ, để không lệch nếu sau này đổi chữ/font). bottom
-            neo ngay trên đỉnh đầu linh vật (đỉnh = 44+58=102px) + 10px
-            khoảng cách = 112px.
+            Đặt PHÍA TRÊN đầu linh vật, căn giữa theo chiều ngang bằng
+            left trùng tâm ngang của linh vật rồi dùng -translate-x-1/2
+            để tự căn giữa theo đúng bề rộng thật của nhãn (dùng transform
+            thay vì tính cứng theo bề rộng chữ, để không lệch nếu sau này
+            đổi chữ/font):
+            - Mobile: linh vật left-1(4px), tâm ngang ≈ 4+43=47px; đỉnh
+              đầu linh vật = 116+58=174px, +10px khoảng cách = bottom-184px.
+              Cỡ chữ/padding nhỏ hơn desktop (text-[10px] px-2 py-1) vì
+              màn hình hẹp.
+            - Desktop: linh vật left-[14px], tâm ngang=57px; đỉnh đầu
+              linh vật=44+58=102px, +10px = bottom-[112px] (không đổi).
 
-            Vì nhãn giờ nằm ngay phía trên linh vật thay vì cạnh bên, cần
-            đẩy popup 3 lựa chọn (bên dưới) lên cao hơn nữa để không đè
-            lên nhãn khi mở — xem giải thích ở đó. */}
+            Vì nhãn nằm ngay phía trên linh vật, cần đẩy popup 3 lựa chọn
+            (bên dưới) lên cao hơn nữa để không đè lên nhãn khi mở — xem
+            giải thích ở đó. */}
         <span
           aria-hidden="true"
-          className="pointer-events-none fixed z-[96] hidden rounded-full bg-accent px-3 py-1.5 text-[12px] leading-none font-bold whitespace-nowrap text-white shadow-[0_8px_20px_rgba(0,0,0,0.22)] sm:left-[57px] sm:bottom-[112px] sm:block sm:-translate-x-1/2"
+          className="pointer-events-none fixed left-[47px] bottom-[184px] z-[96] -translate-x-1/2 rounded-full bg-accent px-2 py-1 text-[10px] leading-none font-bold whitespace-nowrap text-white shadow-[0_6px_14px_rgba(0,0,0,0.22)] sm:left-[57px] sm:bottom-[112px] sm:px-3 sm:py-1.5 sm:text-[12px] sm:shadow-[0_8px_20px_rgba(0,0,0,0.22)]"
         >
           Liên hệ ngay
         </span>
 
-        {/* Popup 3 lựa chọn — neo ngay phía trên nhãn "Liên hệ ngay" trên
-            desktop (nhãn giờ nằm trên đỉnh linh vật, chiếm khoảng
-            112-136px; popup neo từ 146px = 136 + 10px khoảng cách, để 2
-            lớp không đè nhau khi popup mở). Trên mobile không có nhãn
-            nên vẫn neo ngay trên đỉnh linh vật như cũ (không đổi). */}
-        <div className="fixed left-1 bottom-[210px] z-[97] flex flex-col items-end gap-3 sm:left-[14px] sm:bottom-[146px]">
+        {/* Popup 3 lựa chọn — neo ngay phía trên nhãn "Liên hệ ngay" (nhãn
+            nằm trên đỉnh linh vật cả 2 breakpoint). Mobile: nhãn chiếm
+            khoảng 184-~204px (đo thực tế bên dưới sau khi build), popup
+            neo từ bottom-[214px] = ~204 + 10px khoảng cách. Desktop: nhãn
+            chiếm 112-136px, popup neo từ 146px = 136 + 10px (không đổi). */}
+        <div className="fixed left-1 bottom-[214px] z-[97] flex flex-col items-end gap-3 sm:left-[14px] sm:bottom-[146px]">
           <AnimatePresence>
             {open &&
               [...CONTACT_OPTIONS].reverse().map((opt, idx) => (
