@@ -207,6 +207,8 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         <LitespaceServices branchName="68 Phan Đăng Lưu" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "nguyen-thi-minh-khai" ? (
         <LitespaceServices branchName="198 Nguyễn Thị Minh Khai" slug={data.slug} promotions={data.promotions} />
+      ) : data.slug === "tran-huy-lieu" ? (
+        <LitespaceServices branchName="62 Trần Huy Liệu" slug={data.slug} promotions={data.promotions} />
       ) : (
         <LocationServicesList name={data.name} slug={data.slug} promotions={data.promotions} />
       )}

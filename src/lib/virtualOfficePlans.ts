@@ -880,4 +880,5 @@ export const LITESPACE_LOCATIONS: string[] = [
   "mai-chi-tho", // Địa chỉ hợp tác LiteSpace đầu tiên (28 Mai Chí Thọ, Thủ Đức).
   "phan-dang-luu", // 68 Phan Đăng Lưu (toà L'MAK 68), khu Phú Nhuận (cũ).
   "nguyen-thi-minh-khai", // 198 Nguyễn Thị Minh Khai (toà L'MAK The Heritage, cựu toà Báo Lao Động), Quận 3 (cũ).
+  "tran-huy-lieu", // 62 Trần Huy Liệu (toà L'MAK The Venture / Betrimex Building), khu Phú Nhuận (cũ).
 ];

@@ -231,6 +231,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "68 Phan Đăng Lưu, P. Đức Nhuận — toà nhà hạng A L'MAK 68",
   },
   {
+    title: "62 Trần Huy Liệu, Phú Nhuận (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/tran-huy-lieu",
+    desc: "62 Trần Huy Liệu, P. Phú Nhuận",
+  },
+  {
     title: "84-86 Nguyễn Trường Tộ, Quận 4 (cũ)",
     category: "Chi nhánh",
     href: "/locations/nguyen-truong-to",

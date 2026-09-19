@@ -304,6 +304,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_PHU_NHUAN,
   },
   {
+    slug: "tran-huy-lieu",
+    name: "62 Trần Huy Liệu, Phú Nhuận (cũ)",
+    shortAddress: "62 Trần Huy Liệu, P. Phú Nhuận",
+    area: AREA_PHU_NHUAN,
+  },
+  {
     slug: "nguyen-truong-to",
     name: "84-86 Nguyễn Trường Tộ, Quận 4 (cũ)",
     shortAddress: "84-86 Nguyễn Trường Tộ, P. Xóm Chiếu",
@@ -2641,6 +2647,81 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Khách của mình phần lớn là đối tác lớn, mời tới sảnh toà nhà này ai cũng nghĩ công ty thuê nguyên một tầng. Địa chỉ đẹp mà chi phí chỉ bằng một góc thuê văn phòng thật.", initial: "K", name: "Anh Khoa", role: "Giám đốc công ty tư vấn đầu tư" },
       { quote: "Mình so vài chỗ ở Phú Nhuận rồi chọn 68 Phan Đăng Lưu vì toà nhà có đơn vị quản lý riêng, thư từ nhận đủ và lễ tân chuyên nghiệp, đón khách yên tâm.", initial: "V", name: "Chị Vy", role: "Chủ hộ kinh doanh vừa chuyển lên công ty" },
+    ],
+  },
+
+  "tran-huy-lieu": {
+    slug: "tran-huy-lieu",
+    name: "62 Trần Huy Liệu, Phú Nhuận (cũ)",
+    area: AREA_PHU_NHUAN,
+    address: "62 Trần Huy Liệu, Phường Phú Nhuận, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 62 Trần Huy Liệu, Phú Nhuận (cũ)",
+    heroDescription:
+      "Chi nhánh thứ 3 của MAX OFFICE tại khu vực Phú Nhuận (cũ) — toà nhà văn phòng L'MAK The Venture ngay đường Trần Huy Liệu, 3 gói văn phòng ảo CORE/PLUS/PRO từ 499.000đ/tháng (bảng giá đối tác riêng, chưa VAT), gần Quận 1, Quận 3 và Tân Bình.",
+    metaTitle: "Văn Phòng Ảo 62 Trần Huy Liệu, Phú Nhuận (cũ) | Từ 499K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 62 Trần Huy Liệu, Phường Phú Nhuận — chi nhánh thứ 3 MAX OFFICE tại Phú Nhuận (cũ), toà nhà L'MAK The Venture, 3 gói CORE/PLUS/PRO từ 499.000đ/tháng (chưa VAT), gần giao lộ Trần Huy Liệu - Nguyễn Văn Trỗi.",
+    image: "/images/hero-dich-vu.jpg",
+    // Ảnh mặt tiền gốc 1086x1448 (0.75, trên ngưỡng FACADE_TALL_RATIO_THRESHOLD nên giữ tỉ lệ thật).
+    facadeAspectRatio: "1086 / 1448",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-tran-huy-lieu-le-tan.jpg", alt: "Quầy lễ tân sảnh toà nhà L'MAK The Venture, văn phòng 62 Trần Huy Liệu", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-tran-huy-lieu-sanh-tiep-khach.jpg", alt: "Sảnh tiếp khách toà nhà văn phòng 62 Trần Huy Liệu", caption: "Sảnh tiếp khách" },
+      { src: "/images/dia-diem-tran-huy-lieu-phong-lam-viec.jpg", alt: "Phòng làm việc tại toà nhà văn phòng 62 Trần Huy Liệu", caption: "Phòng làm việc" },
+    ],
+    intro: [
+      "Văn phòng 62 Trần Huy Liệu là chi nhánh thứ 3 của MAX OFFICE tại khu vực Phú Nhuận (cũ), sau 89 Phan Đình Phùng và 68 Phan Đăng Lưu. Chi nhánh thuộc Phường Phú Nhuận — cùng phường với 89 Phan Đình Phùng, nhưng nằm trên đường Trần Huy Liệu, gần giao lộ Trần Huy Liệu - Nguyễn Văn Trỗi. Vì cả ba địa chỉ đều nằm trong khu vực Phú Nhuận (cũ) nên khi đặt lịch tham quan hoặc tra cứu, bạn nên nêu rõ số nhà 62 Trần Huy Liệu để đội ngũ hướng dẫn đúng chi nhánh.",
+      "Chi nhánh đặt tại toà nhà văn phòng L'MAK The Venture (còn được biết đến với tên Betrimex Building), thuộc phân khúc văn phòng hạng C+. Nhìn từ ngoài, toà nhà nổi bật với mảng kính xanh cao tầng, dãy ban công bo cong ở một bên, phần đế ốp đá tối màu cùng hàng cột cờ trước sảnh và khoảng sân trồng cây xanh phía trước. Bước vào sảnh, khách gặp quầy lễ tân cong ốp màu đồng ánh hồng dưới hệ đèn trần uốn lượn, biển chỉ dẫn các dịch vụ văn phòng - văn phòng ảo - phòng họp, khu sofa tiếp khách rộng cạnh cổng soát vé tự động và một màn hình LED lớn treo ngay lối vào thang máy.",
+      "Bảng giá tại chi nhánh gồm 3 gói CORE, PLUS và PRO thuộc hệ đối tác riêng — cùng bảng giá đang áp dụng tại 68 Phan Đăng Lưu (cùng khu Phú Nhuận), 28 Mai Chí Thọ và 198 Nguyễn Thị Minh Khai, khác với hệ SILVER/GOLD/PREMIUM của 89 Phan Đình Phùng. CORE và PLUS cùng 499.000đ/tháng, PRO 899.000đ/tháng (ưu đãi ra mắt, giá chưa bao gồm VAT 10%). Nếu doanh nghiệp bạn đang cân nhắc giữa hai chi nhánh cùng khu vực dùng chung hệ giá CORE/PLUS/PRO, điểm khác biệt nằm ở toà nhà và tuyến đường: 68 Phan Đăng Lưu ở trục Phan Đăng Lưu, còn 62 Trần Huy Liệu nằm gần giao lộ với Nguyễn Văn Trỗi.",
+      "Điểm mạnh của địa chỉ này là ở giữa nhiều trục lớn: Nguyễn Văn Trỗi chạy sang Quận 1 và Quận 3, Hoàng Văn Thụ dẫn về Tân Bình, còn Phan Đăng Lưu nối sang Bình Thạnh. Theo thông tin tra cứu về toà nhà, từ đây đến Quận 1, Quận 3 hay khu vực sân bay Tân Sơn Nhất đều chỉ khoảng 10 phút. Doanh nghiệp mới thành lập hoặc hộ kinh doanh vừa lên công ty sẽ có một địa chỉ đăng ký kinh doanh trong toà nhà văn phòng thật, có lễ tân và khu tiếp khách, với chi phí thấp hơn nhiều so với thuê nguyên một sàn.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 62 Trần Huy Liệu",
+    benefits: [
+      { icon: BuildingIcon, title: "Toà nhà L'MAK The Venture", desc: "Toà nhà văn phòng hạng C+ (còn gọi Betrimex Building), mặt kính xanh, sảnh có cổng soát vé và màn hình LED." },
+      { icon: MapPinIcon, title: "Trung tâm Phú Nhuận", desc: "Gần giao lộ Trần Huy Liệu - Nguyễn Văn Trỗi, cùng Phường Phú Nhuận với chi nhánh 89 Phan Đình Phùng." },
+      { icon: BadgePercentIcon, title: "3 gói CORE / PLUS / PRO", desc: "CORE và PLUS 499.000đ, PRO 899.000đ mỗi tháng — ưu đãi ra mắt, chưa gồm VAT." },
+      { icon: UsersIcon, title: "Quầy lễ tân và khu tiếp khách", desc: "Quầy lễ tân cong ốp màu đồng, sofa tiếp khách rộng ngay sảnh — thuận tiện đón đối tác." },
+      { icon: CarIcon, title: "Kết nối Quận 1, Quận 3, Tân Bình", desc: "Theo Nguyễn Văn Trỗi, Phan Đăng Lưu, Hoàng Văn Thụ đi các hướng trung tâm đều thuận tiện." },
+      { icon: ShieldCheckIcon, title: "Trụ sở pháp lý tại Phú Nhuận", desc: "Đặt địa chỉ đăng ký kinh doanh ngay trung tâm quận, thuận tiện làm việc với cơ quan thuế và ngân hàng." },
+    ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
+    nearbyItems: [
+      { name: "Giao lộ Trần Huy Liệu - Nguyễn Văn Trỗi", desc: "Trục kết nối nhanh Phú Nhuận với Quận 1 và Quận 3." },
+      { name: "Phú Nhuận Plaza", desc: "Khu trung tâm thương mại và dịch vụ trong bán kính khoảng 1km quanh toà nhà." },
+      { name: "Coopmart Nhiêu Lộc", desc: "Siêu thị gần chi nhánh, tiện mua sắm văn phòng phẩm và nhu yếu phẩm." },
+      { name: "Hai chi nhánh cùng khu vực", desc: "89 Phan Đình Phùng (hệ SILVER/GOLD/PREMIUM) và 68 Phan Đăng Lưu (cùng hệ CORE/PLUS/PRO với chi nhánh này)." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Trục Nguyễn Văn Trỗi - Phan Đăng Lưu", desc: "Hai tuyến đường lớn quanh toà nhà, đi Quận 1, Quận 3 và Bình Thạnh đều thuận tiện." },
+      { icon: ClockIcon, title: "Đặt xe ngay trước toà nhà", desc: "Đường Trần Huy Liệu là đường phố nội đô, taxi và xe ôm công nghệ đón trả khách sát cổng." },
+      { icon: CarIcon, title: "Đi sân bay và Tân Bình", desc: "Theo Hoàng Văn Thụ về hướng Tân Bình, khoảng 10 phút là tới khu vực sân bay Tân Sơn Nhất." },
+      { icon: HeadsetIcon, title: "Sảnh có cổng soát vé", desc: "Khách đi qua quầy lễ tân và cổng soát vé tự động trước khi lên thang máy, việc ra vào được kiểm soát rõ ràng." },
+    ],
+    parkingInfo: [
+      "Toà nhà có lối xuống hầm với cổng chắn barie ở phía mặt tiền, phục vụ xe của khách đến làm việc.",
+      "Khoảng sân phía trước toà nhà thuận tiện cho xe dừng đón, đưa đối tác.",
+      "Bảo vệ toà nhà trực tại cổng và sảnh trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán cà phê gần toà nhà", desc: "Vài bước chân từ sảnh là có quán để hẹn đối tác trước hoặc sau giờ làm việc." },
+      { name: "Quán cơm và bún phở quanh giao lộ", desc: "Các quán bình dân phục vụ bữa trưa văn phòng, đi bộ vài phút từ toà nhà." },
+      { name: "Nhà hàng khu Nguyễn Văn Trỗi", desc: "Phù hợp mời đối tác dùng bữa sau buổi làm việc." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 62 Trần Huy Liệu là chi nhánh thứ mấy của MAX OFFICE tại Phú Nhuận?", a: "Đây là chi nhánh thứ 3 tại khu vực Phú Nhuận (cũ), sau 89 Phan Đình Phùng và 68 Phan Đăng Lưu. Ba địa chỉ nằm trên ba tuyến đường khác nhau; riêng 62 Trần Huy Liệu và 68 Phan Đăng Lưu dùng chung hệ giá CORE/PLUS/PRO." },
+      { q: "62 Trần Huy Liệu khác gì so với 68 Phan Đăng Lưu, khi cả hai cùng dùng gói CORE/PLUS/PRO?", a: "Giá và nội dung các gói giống nhau. Khác biệt nằm ở địa chỉ: 62 Trần Huy Liệu thuộc Phường Phú Nhuận, trong toà nhà L'MAK The Venture gần giao lộ với Nguyễn Văn Trỗi; 68 Phan Đăng Lưu thuộc Phường Đức Nhuận, trên trục Phan Đăng Lưu. Bạn chọn nơi thuận tiện hơn cho khách hàng và đối tác của mình." },
+      { q: "Gói CORE, PLUS, PRO tại 62 Trần Huy Liệu có giá bao nhiêu?", a: "CORE và PLUS cùng 499.000đ/tháng, PRO 899.000đ/tháng — đây là mức ưu đãi ra mắt, giá chưa bao gồm VAT 10%. Bạn nên liên hệ hotline 089 8082 188 để xác nhận thời hạn ưu đãi tại thời điểm ký hợp đồng." },
+      { q: "Toà nhà L'MAK The Venture thuộc loại toà nhà nào?", a: "Đây là toà nhà văn phòng thuộc phân khúc hạng C+, còn được biết đến với tên Betrimex Building, có sảnh lễ tân, khu sofa tiếp khách, cổng soát vé tự động và các phòng làm việc riêng." },
+      { q: "Địa chỉ 62 Trần Huy Liệu có hợp lệ để đăng ký kinh doanh và đăng ký thuế không?", a: "Được. Toà nhà L'MAK The Venture nằm trong Phường Phú Nhuận, MAX OFFICE cung cấp đầy đủ giấy tờ chứng minh quyền sử dụng địa chỉ để bạn nộp hồ sơ đăng ký doanh nghiệp, hộ kinh doanh và khai báo thuế." },
+      { q: "Muốn ghé xem sảnh và phòng làm việc thì đặt lịch thế nào?", a: "Bạn gọi hotline 089 8082 188 hoặc điền form trên trang, MAX OFFICE hẹn giờ phù hợp rồi đón bạn tại quầy lễ tân ở số 62 Trần Huy Liệu — không mất phí tham quan." },
+    ],
+    testimonials: [
+      { quote: "Đối tác của mình toàn đi từ Quận 1 sang, chỉ cần báo giao lộ Trần Huy Liệu - Nguyễn Văn Trỗi là ai cũng tìm được, sảnh toà nhà lại gọn gàng nên đón khách rất yên tâm.", initial: "N", name: "Anh Nam", role: "Giám đốc công ty phân phối thiết bị" },
+      { quote: "Mình vừa chuyển từ hộ kinh doanh lên công ty, chọn gói CORE ở đây vì được tư vấn lộ trình rõ ràng, thư từ có người nhận, không phải lo địa chỉ bị đánh dấu không hoạt động.", initial: "T", name: "Chị Thảo", role: "Chủ shop thời trang vừa lập công ty" },
     ],
   },
 
