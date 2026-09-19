@@ -7,18 +7,17 @@ import { RevealGroup, RevealItem } from "@/components/Reveal";
 import BookingFormSection from "@/components/BookingFormSection";
 import { BuildingIcon, MapPinIcon, ArrowRightSmallIcon, CheckCircleIcon } from "@/components/icons";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
-import { VIRTUAL_OFFICE_PLANS, getLocationsForPlan } from "@/lib/virtualOfficePlans";
-
-export const metadata: Metadata = {
-  alternates: { canonical: "/van-phong-ao-gia-re" },
-  title: "Văn Phòng Ảo Giá Tốt — Từ 299.000đ/Tháng | MAX OFFICE",
-  description:
-    "Gói văn phòng ảo LITE giá thấp nhất hệ thống MAX OFFICE — 299.000đ/tháng, khả dụng tại 5 chi nhánh: Hoàng Việt, Bàu Cát 2, Lam Sơn, Hoàng Kế Viêm, CMT8. Địa chỉ đăng ký kinh doanh hợp lệ, phù hợp doanh nghiệp mới thành lập.",
-};
+import { VIRTUAL_OFFICE_PLANS, getLocationsForPlan, getPlansForLocation } from "@/lib/virtualOfficePlans";
 
 const LITE = VIRTUAL_OFFICE_PLANS.lite;
 const liteSlugs = getLocationsForPlan("lite");
 const liteLocations = LOCATIONS_LIST.filter((loc) => liteSlugs.includes(loc.slug));
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/van-phong-ao-gia-re" },
+  title: "Văn Phòng Ảo Giá Tốt — Từ 299.000đ/Tháng | MAX OFFICE",
+  description: `Gói văn phòng ảo LITE giá thấp nhất hệ thống MAX OFFICE — 299.000đ/tháng, khả dụng tại ${liteLocations.length} chi nhánh: ${liteLocations.map((l) => l.name.split(",")[0]).join(", ")}. Địa chỉ đăng ký kinh doanh hợp lệ, phù hợp doanh nghiệp mới thành lập.`,
+};
 
 /** Mô hình lễ tân thực tế khác nhau theo chi nhánh — không phải mọi nơi đều có quầy lễ tân riêng của MAX OFFICE. */
 const RECEPTION_NOTE: Record<string, string> = {
@@ -27,9 +26,11 @@ const RECEPTION_NOTE: Record<string, string> = {
   "lam-son": "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm",
   "hoang-ke-viem": "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm",
   cmt8: "Nhân viên toà nhà tiếp nhận thư từ, bưu phẩm",
+  // Trụ sở chính — có quầy lễ tân riêng của MAX OFFICE (ảnh "Quầy lễ tân" ở trang chi nhánh).
+  "song-thao": "Lễ tân MAX OFFICE trực tại quầy, tiếp nhận thư từ và đón khách",
 };
 
-/** Chỉ 3/5 chi nhánh LITE có khu vực tiếp khách riêng biệt (sofa, bàn tiếp khách). */
+/** Chỉ một số chi nhánh LITE có khu vực tiếp khách riêng biệt (sofa, bàn tiếp khách). */
 const HAS_GUEST_AREA = new Set(["hoang-viet", "bau-cat", "hoang-ke-viem"]);
 
 function formatVND(n: number) {
@@ -43,7 +44,7 @@ export default function VanPhongAoGiaRePage() {
         image="/images/anh-hero-trang-chu.jpg"
         eyebrow="Văn phòng ảo giá tốt"
         title="Văn phòng ảo giá tốt — Từ 299.000đ/tháng"
-        description="Gói LITE — mức giá khởi điểm thấp nhất trong toàn hệ thống MAX OFFICE, khả dụng tại 5 chi nhánh khu vực Tân Bình và Quận 10."
+        description="Gói LITE — mức giá khởi điểm thấp nhất trong toàn hệ thống MAX OFFICE, khả dụng tại nhiều chi nhánh khu vực Tân Bình và Quận 10."
       />
       <Breadcrumb items={[{ label: "Văn phòng ảo giá tốt" }]} />
 
@@ -105,7 +106,7 @@ export default function VanPhongAoGiaRePage() {
                   </div>
 
                   <ul className="space-y-1.5">
-                    {LITE.features.map((f) => (
+                    {(getPlansForLocation(loc.slug).find((p) => p.key === "lite")?.features ?? LITE.features).map((f) => (
                       <li key={f} className="flex items-start gap-1.5 text-[12.5px] text-body-text">
                         <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                         {f === "Lễ tân" ? RECEPTION_NOTE[loc.slug] : f}

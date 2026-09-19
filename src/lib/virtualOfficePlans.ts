@@ -158,7 +158,7 @@ export const VO_FEATURE_MATRIX: { label: string; values: Record<VirtualOfficePla
 
 /** Which Văn phòng ảo plans each branch on the shared LITE–RISE system offers, per the official rollout table. */
 export const LOCATION_VO_PLANS: Record<string, VirtualOfficePlanKey[]> = {
-  "song-thao": ["start", "base"],
+  "song-thao": ["lite", "start", "base"],
   "dien-bien-phu": ["start", "base"],
   "nguyen-oanh": ["origin", "origin-plus", "rise"],
   "yen-the": ["base", "origin", "origin-plus", "rise"],
@@ -204,6 +204,14 @@ export const LOCATION_VO_PRICE_OVERRIDES: Record<string, Partial<Record<VirtualO
  * override.
  */
 export const LOCATION_VO_FEATURE_OVERRIDES: Record<string, Partial<Record<VirtualOfficePlanKey, string[]>>> = {
+  // Sông Thao (trụ sở chính): gói LITE dùng đúng giá 299.000đ + phụ phí bảng
+  // hiệu 500.000đ của hệ chung, nền là checklist chuẩn LITE (đã có sẵn "Lễ
+  // tân" nên KHÔNG thêm lại) + bổ sung "Phòng họp" — mục checklist chuẩn LITE
+  // không có. Spread từ VIRTUAL_OFFICE_PLANS.lite để tự theo nếu checklist
+  // chuẩn đổi; các chi nhánh LITE khác không bị ảnh hưởng.
+  "song-thao": {
+    lite: [...VIRTUAL_OFFICE_PLANS.lite.features, "Phòng họp"],
+  },
   "tran-hung-dao": {
     origin: [
       "Địa chỉ đăng ký kinh doanh (ĐKKD)",

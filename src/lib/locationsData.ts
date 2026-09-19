@@ -494,9 +494,9 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     heroTitle: "Văn Phòng Cho Thuê Sông Thao Tân Bình",
     heroDescription:
       "Trụ sở chính của MAX OFFICE — đầy đủ toàn bộ dịch vụ văn phòng ảo, văn phòng trọn gói, phòng họp và kế toán thuế, ngay gần sân bay Tân Sơn Nhất.",
-    metaTitle: "Văn Phòng Ảo & Trọn Gói Tại Sông Thao, Tân Bình | Từ 350K/Tháng",
+    metaTitle: "Văn Phòng Ảo & Trọn Gói Tại Sông Thao, Tân Bình | Từ 299K/Tháng",
     metaDescription:
-      "Thuê văn phòng ảo, văn phòng trọn gói tại Sông Thao, Tân Bình — trụ sở chính MAX OFFICE, đầy đủ dịch vụ, văn phòng ảo từ 350.000đ/tháng (gói START, BASE), gần sân bay Tân Sơn Nhất.",
+      "Thuê văn phòng ảo, văn phòng trọn gói tại Sông Thao, Tân Bình — trụ sở chính MAX OFFICE, đầy đủ dịch vụ, văn phòng ảo từ 299.000đ/tháng (gói LITE, START, BASE), gần sân bay Tân Sơn Nhất.",
     image: "/images/hero.jpg",
     // Cropped to 905x1407 (see /images/originals for the uncropped source).
     facadeAspectRatio: "905 / 1407",
@@ -511,7 +511,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       `Văn phòng Sông Thao là trụ sở chính của MAX OFFICE, toạ lạc tại số 10 Sông Thao, Phường Tân Sơn Hoà, Quận Tân Bình — nơi công ty bắt đầu hoạt động từ năm 2022 và phát triển thành hệ thống ${ACTIVE_BRANCH_COUNT} địa điểm tại TP.HCM như hiện nay. Đây là chi nhánh có quy mô lớn nhất, cung cấp đầy đủ toàn bộ dịch vụ của MAX OFFICE dưới một mái nhà.`,
       "Với vai trò trụ sở chính, văn phòng Sông Thao là nơi đội ngũ vận hành cốt lõi làm việc trực tiếp, từ bộ phận tư vấn, kế toán, pháp lý đến chăm sóc khách hàng. Khách hàng lựa chọn chi nhánh này không chỉ được sử dụng địa chỉ đăng ký kinh doanh hợp lệ mà còn được tiếp cận nhanh chóng với đội ngũ chuyên môn giàu kinh nghiệm nhất của công ty.",
       "Vị trí tại Phường Tân Sơn Hoà giúp văn phòng Sông Thao nằm gần sân bay quốc tế Tân Sơn Nhất — lợi thế lớn cho các doanh nghiệp thường xuyên đón tiếp đối tác từ tỉnh khác hoặc nước ngoài. Khu vực xung quanh cũng tập trung nhiều toà nhà văn phòng và khu dân cư, tạo môi trường kinh doanh sôi động thuận tiện cho việc kết nối, giao dịch.",
-      "Từ văn phòng ảo (gói START, BASE) với chi phí khởi điểm 350.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
+      "Từ văn phòng ảo (gói LITE, START, BASE) với chi phí khởi điểm 299.000đ/tháng đến văn phòng trọn gói sẵn sàng sử dụng ngay, chi nhánh Sông Thao đáp ứng linh hoạt nhu cầu của mọi giai đoạn phát triển doanh nghiệp — từ công ty mới thành lập đến doanh nghiệp đang mở rộng quy mô đội ngũ.",
     ],
     benefitsTitle: "Vì sao nên chọn văn phòng Sông Thao",
     benefits: [
