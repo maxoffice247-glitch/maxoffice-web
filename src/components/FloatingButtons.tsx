@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { PhoneIcon, MessengerIcon, ZaloIcon } from "./icons";
 
@@ -9,8 +8,9 @@ import { PhoneIcon, MessengerIcon, ZaloIcon } from "./icons";
     (gọi điện/Zalo/Messenger), tham khảo hiệu ứng nổi bật ở góc dưới phải
     acb.com.vn (KHÔNG phải khung chat AI của họ, chỉ lấy cảm hứng phần
     linh vật trôi nổi liên tục, theo đúng yêu cầu người dùng). Hoạt hoạ
-    trôi nổi bằng CSS thuần (.animate-mascot-fly, xem globals.css) thay vì
-    cần dựng GIF/video từ ảnh gốc.
+    là WebP động tách nền từ video bieu-tuong-chao-mung.mp4 (đã bỏ
+    .animate-mascot-fly cũ vì chuyển động có sẵn trong file, tránh chồng
+    2 chuyển động).
 
     Trước đây linh vật link thẳng tới Zalo VÀ có một nút tròn speed-dial
     riêng biệt bên dưới (2 điểm chạm tách rời, dư thừa) — nay gộp làm một:
@@ -55,13 +55,23 @@ function WavingMascotBubble({
         aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ: gọi điện, Zalo, Messenger"}
         className="block drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:scale-110"
       >
-        <Image
-          src="/images/mascot/linh-vat-max-xin-chao.png"
-          alt=""
-          width={160}
-          height={107}
-          className="animate-mascot-fly h-[58px] w-auto object-contain"
-        />
+        {/* Animated WebP (nền trong suốt, 16fps, ~336KB) — <picture> thay vì
+            next/image vì next/image không hợp với WebP động; <source> theo
+            prefers-reduced-motion để người dùng bật giảm chuyển động chỉ tải
+            + hiển thị khung hình tĩnh đầu tiên (~16KB), KHÔNG tải file
+            động. Kích thước hiển thị 87x58 giữ nguyên như ảnh tĩnh cũ (file
+            174x116 = 2x cho màn hình retina). */}
+        <picture>
+          <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chao-mung-tinh.webp" type="image/webp" />
+          <img
+            src="/images/mascot/linh-vat-max-chao-mung.webp"
+            alt=""
+            width={174}
+            height={116}
+            decoding="async"
+            className="block h-[58px] w-[87px] object-contain"
+          />
+        </picture>
       </button>
     </div>
   );
