@@ -512,7 +512,10 @@ export default function Pricing() {
                   )}
                 </div>
               )}
-              {/* CTA dẫn sang VPA finder — chỉ đặt sau nhóm Văn phòng ảo vì
+              {/* Mobile xếp DỌC (flex-col): trước đây flex-wrap + cột chữ flex-1 khiến icon và cột chữ
+                  nằm chung 1 hàng, chữ bị ép còn ~100-200px (1 từ/dòng trên máy hẹp), nút bị đẩy xuống hàng riêng.
+                  Từ sm trở lên giữ hàng ngang như cũ.
+                  CTA dẫn sang VPA finder — chỉ đặt sau nhóm Văn phòng ảo vì
                   đây là nhóm có tình trạng "trùng giá khác nhóm chi nhánh"
                   (VD ORIGIN 499K ưu đãi Nguyễn Oanh/Trần Hưng Đạo và CORE/
                   PLUS 499K hệ LiteSpace) mà 6 gói tiêu biểu ở đây KHÔNG thể
@@ -522,12 +525,12 @@ export default function Pricing() {
               {group.title === "Văn phòng ảo — 6 gói dịch vụ" && (
                 <Link
                   href="/tien-ich/tim-goi-phu-hop"
-                  className="group mt-8 flex flex-wrap items-center gap-5 rounded-2xl bg-gradient-to-br from-navy to-primary-dark p-7 text-white transition-transform duration-300 ease-out hover:-translate-y-1 sm:flex-nowrap"
+                  className="group mt-8 flex flex-col items-start gap-4 rounded-2xl bg-gradient-to-br from-navy to-primary-dark p-6 text-white transition-transform duration-300 ease-out hover:-translate-y-1 sm:flex-row sm:items-center sm:gap-5 sm:p-7"
                 >
                   <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white">
                     <SearchIcon className="h-7 w-7" />
                   </span>
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 sm:flex-1">
                     <span className="mb-1.5 inline-block rounded-full bg-accent px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase">
                       Công cụ miễn phí
                     </span>
