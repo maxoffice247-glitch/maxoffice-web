@@ -24,6 +24,20 @@ export default function LeadCapturePopup() {
   useEffect(() => {
     if (sessionStorage.getItem(SEEN_KEY)) return;
 
+    // Nạp trước ảnh động của linh vật (~340KB) lúc trình duyệt rảnh, để tới lúc popup
+    // bật lên (~26s) đã nằm trong cache — không tranh băng thông lúc tải trang. Người bật
+    // giảm chuyển động chỉ cần khung tĩnh nên không nạp file động.
+    const preload = () => {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      new window.Image().src = reduce
+        ? "/images/mascot/linh-vat-max-chi-tay-xuong-tinh.webp"
+        : "/images/mascot/linh-vat-max-chi-tay-xuong.webp";
+    };
+    const hasIdle = typeof window.requestIdleCallback === "function";
+    const idle = hasIdle
+      ? window.requestIdleCallback(preload, { timeout: 8000 })
+      : window.setTimeout(preload, 4000);
+
     const dwellStart = Date.now();
     const trigger = () => {
       if (triggeredRef.current) return;
@@ -44,6 +58,8 @@ export default function LeadCapturePopup() {
     const fallbackTimer = window.setTimeout(trigger, FALLBACK_DELAY_MS);
 
     function cleanup() {
+      if (hasIdle) window.cancelIdleCallback(idle);
+      else window.clearTimeout(idle);
       document.removeEventListener("mouseleave", onMouseLeave);
       window.removeEventListener("scroll", onScroll);
       window.clearTimeout(fallbackTimer);
@@ -125,15 +141,23 @@ export default function LeadCapturePopup() {
               </div>
             ) : (
               <>
-                {/* Linh vật MAX vẫy chào — thay cho icon phần trăm trước
-                    đây, mời gọi thân thiện hơn ngay khi khách vừa thấy popup. */}
-                <Image
-                  src="/images/mascot/linh-vat-max-xin-chao.png"
-                  alt=""
-                  width={160}
-                  height={107}
-                  className="mx-auto mb-3 h-[100px] w-auto object-contain"
-                />
+                {/* Linh vật MAX chỉ tay XUỐNG (WebP động tách nền từ
+                    bieu-tuong-chao-mung.mp4) đặt trên cùng popup, hướng vào
+                    tiêu đề ưu đãi/form/nút bên dưới. <picture> + nguồn
+                    prefers-reduced-motion để người bật giảm chuyển động chỉ
+                    tải khung tĩnh. File động được nạp trước ở useEffect bên
+                    trên (rảnh việc) nên khi popup bật lên đã có trong cache. */}
+                <picture>
+                  <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-xuong-tinh.webp" type="image/webp" />
+                  <img
+                    src="/images/mascot/linh-vat-max-chi-tay-xuong.webp"
+                    alt=""
+                    width={174}
+                    height={116}
+                    decoding="async"
+                    className="mx-auto mb-2 block h-[112px] w-[168px] object-contain"
+                  />
+                </picture>
                 <h3 id="lead-capture-title" className="mb-2 text-center text-[20px] font-bold text-navy">
                   🎁 Voucher dành riêng cho bạn!
                 </h3>

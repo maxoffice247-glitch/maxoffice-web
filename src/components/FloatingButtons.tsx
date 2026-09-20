@@ -62,9 +62,9 @@ function WavingMascotBubble({
             động. Kích thước hiển thị 87x58 giữ nguyên như ảnh tĩnh cũ (file
             174x116 = 2x cho màn hình retina). */}
         <picture>
-          <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-len-tinh.webp" type="image/webp" />
+          <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-len-v2-tinh.webp" type="image/webp" />
           <img
-            src="/images/mascot/linh-vat-max-chi-tay-len.webp"
+            src="/images/mascot/linh-vat-max-chi-tay-len-v2.webp"
             alt=""
             width={174}
             height={116}
@@ -152,8 +152,9 @@ export default function FloatingButtons() {
             động đã tắt hẳn trước đó ("Cần hỗ trợ? Nhắn Zalo ngay!", tự
             bật/ẩn theo chu kỳ) — đây là 1 pill tĩnh, luôn hiển thị ngay
             khi trang tải xong (kể cả lúc popup đang mở), không hẹn giờ
-            ẩn/hiện, chỉ đóng vai trò chú thích cho biết linh vật bấm
-            được. Không tìm thấy tiền lệ style cũ nào tương tự trong git
+            ẩn/hiện, đóng vai trò chú thích VÀ là vùng bấm thứ 2 — bấm nhãn cũng mở/đóng
+            popup như bấm linh vật (cùng state; ::before mở rộng vùng chạm
+            thêm 8px mỗi phía cho mobile). Không tìm thấy tiền lệ style cũ nào tương tự trong git
             history (chỉ có nút CTA "Liên hệ ngay" trong Hero.tsx, không
             liên quan tới linh vật) nên tự thiết kế mới, dùng bg-accent để
             đồng bộ màu thương hiệu với các nút liên hệ khác trong cụm
@@ -174,12 +175,15 @@ export default function FloatingButtons() {
             Vì nhãn nằm ngay phía trên linh vật, cần đẩy popup 3 lựa chọn
             (bên dưới) lên cao hơn nữa để không đè lên nhãn khi mở — xem
             giải thích ở đó. */}
-        <span
-          aria-hidden="true"
-          className="pointer-events-none fixed left-[47px] bottom-[184px] z-[96] -translate-x-1/2 rounded-full bg-accent px-2 py-1 text-[10px] leading-none font-bold whitespace-nowrap text-white shadow-[0_6px_14px_rgba(0,0,0,0.22)] sm:left-[57px] sm:bottom-[112px] sm:px-3 sm:py-1.5 sm:text-[12px] sm:shadow-[0_8px_20px_rgba(0,0,0,0.22)]"
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ: gọi điện, Zalo, Messenger"}
+          className="fixed left-[47px] bottom-[184px] z-[96] -translate-x-1/2 cursor-pointer rounded-full bg-accent px-2 py-1 text-[10px] leading-none font-bold whitespace-nowrap text-white shadow-[0_6px_14px_rgba(0,0,0,0.22)] before:absolute before:-inset-2 before:content-[''] sm:left-[57px] sm:bottom-[112px] sm:px-3 sm:py-1.5 sm:text-[12px] sm:shadow-[0_8px_20px_rgba(0,0,0,0.22)]"
         >
           Liên hệ ngay
-        </span>
+        </button>
 
         {/* Popup 3 lựa chọn — neo ngay phía trên nhãn "Liên hệ ngay" (nhãn
             nằm trên đỉnh linh vật cả 2 breakpoint). Mobile: nhãn chiếm
