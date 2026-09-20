@@ -54,7 +54,7 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { registerRef, setHoveredKey } = useNavIndicator();
-  const { multiBranchGroups, singleBranchLocations } = getGroupedLocations();
+  const { multiBranchGroups } = getGroupedLocations();
 
   const handleEnter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -120,10 +120,19 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                           return (
                             <div
                               key={sub.area.slug}
-                              className={`min-w-0 p-1.5 ${sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"}`}
+                              className={`min-w-0 p-1.5 ${
+                                sub.locations.length >= 2
+                                  ? "sm:basis-2/3"
+                                  : group.subGroups!.some((s) => s.locations.length >= 2)
+                                    ? "sm:basis-1/3"
+                                    : "sm:basis-1/2"
+                              }`}
                             >
-                              <p className={`mb-1 px-1 text-[10px] font-bold tracking-[0.06em] uppercase ${color.text}`}>
+                              <p className={`mb-1 flex items-center gap-1.5 px-1 text-[10px] font-bold tracking-[0.06em] uppercase ${color.text}`}>
                                 {sub.area.name}
+                                <span className={`rounded-full px-1.5 py-0.5 text-[9.5px] tracking-normal whitespace-nowrap normal-case ${color.badge}`}>
+                                  {sub.locations.length} chi nhánh
+                                </span>
                               </p>
                               <div className={`grid gap-1 ${sub.locations.length >= 2 ? "grid-cols-2" : "grid-cols-1"}`}>
                                 {sub.locations.map((loc) => (
@@ -148,18 +157,6 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
                     )}
                   </div>
                 ))}
-                {singleBranchLocations.length > 0 && (
-                  <div className="mb-3.5 last:mb-0">
-                    <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
-                      Các chi nhánh khu vực khác
-                    </p>
-                    <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
-                      {singleBranchLocations.map((loc) => (
-                        <MegaMenuLocationItem key={loc.slug} loc={loc} areaBadge={loc.area.name} />
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
               <div className="flex flex-col items-start gap-3 border-t border-line bg-bg-tint px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2.5">

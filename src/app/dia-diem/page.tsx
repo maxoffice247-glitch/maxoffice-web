@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 export default function DiaDiemPage() {
-  const { areaGroups, multiBranchGroups, singleBranchLocations } = getGroupedLocations();
+  const { areaGroups, multiBranchGroups } = getGroupedLocations();
 
   return (
     <main>
@@ -53,7 +53,6 @@ export default function DiaDiemPage() {
           <LocationsAreaBrowser
             areaGroups={areaGroups}
             multiBranchGroups={multiBranchGroups}
-            singleBranchLocations={singleBranchLocations}
             cta={
               // Lối tắt cho khách vào thẳng /dia-diem (không qua dropdown
               // mega menu) — khỏi phải tự kéo xem hết {ACTIVE_BRANCH_COUNT}

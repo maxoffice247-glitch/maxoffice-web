@@ -101,7 +101,11 @@ function MultiBranchGroup({
               <div
                 key={sub.area.slug}
                 className={`min-w-0 rounded-2xl border bg-white/70 p-3.5 sm:p-4 ${color.border} ${
-                  sub.locations.length >= 2 ? "sm:basis-2/3" : "sm:basis-1/3"
+                  sub.locations.length >= 2
+                    ? "sm:basis-2/3"
+                    : subGroups.some((s) => s.locations.length >= 2)
+                      ? "sm:basis-1/3"
+                      : "sm:basis-1/2"
                 }`}
               >
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -155,7 +159,7 @@ function MultiBranchGroup({
  * Khớp theo: tên khu vực (quận cũ, VD "Quận 1") → hiện TRỌN khu vực đó;
  * hoặc tên/địa chỉ chi nhánh (chứa tên phường, VD "P. Tân Định") → chỉ hiện
  * đúng (các) chi nhánh khớp. Rỗng → hiện đủ toàn bộ theo bố cục gộp hàng
- * gốc (multiBranchGroups + singleBranchLocations, xem locationsData.ts) —
+ * gốc (multiBranchGroups, xem locationsData.ts) —
  * lúc ĐANG tìm kiếm thì bỏ qua bố cục ghép hàng, hiện phẳng từng khu vực
  * khớp (số kết quả thường ít, ghép hàng không cần thiết và không ảnh
  * hưởng gì tới logic lọc).
@@ -163,12 +167,10 @@ function MultiBranchGroup({
 export default function LocationsAreaBrowser({
   areaGroups,
   multiBranchGroups,
-  singleBranchLocations,
   cta,
 }: {
   areaGroups: AreaGroup[];
   multiBranchGroups: GroupedLocations["multiBranchGroups"];
-  singleBranchLocations: LocationListItem[];
   cta: ReactNode;
 }) {
   const [query, setQuery] = useState("");
@@ -253,16 +255,6 @@ export default function LocationsAreaBrowser({
           {multiBranchGroups.map((group) => (
             <MultiBranchGroup key={group.area.slug} area={group.area} locations={group.locations} subGroups={group.subGroups} />
           ))}
-          {singleBranchLocations.length > 0 && (
-            <div>
-              <h3 className="mb-5 text-[18px] font-bold text-navy sm:text-[20px]">Các chi nhánh khu vực khác</h3>
-              <RevealGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {singleBranchLocations.map((loc, i) => (
-                  <LocationCard key={loc.slug} loc={loc} index={i} areaBadge={loc.area.name} />
-                ))}
-              </RevealGroup>
-            </div>
-          )}
         </>
       )}
     </>
