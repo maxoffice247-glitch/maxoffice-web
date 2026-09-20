@@ -415,7 +415,7 @@ export default function OfficePackageTool() {
 
         <Reveal delay={0.1} className="mx-auto mt-8 flex max-w-[720px] items-start gap-3 rounded-xl bg-primary-tint p-4">
           <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-          <p className="text-[12.5px] leading-relaxed text-navy">
+          <p className="text-justify-vn text-[12.5px] leading-relaxed text-navy">
             Kết quả chỉ mang tính chất gợi ý dựa trên câu trả lời của bạn. Để
             có phương án chính xác nhất, hãy{" "}
             <Link

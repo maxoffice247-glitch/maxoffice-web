@@ -219,7 +219,7 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
               <p className="mb-2 text-[14.5px] font-bold text-navy">
                 Cần gói văn phòng ảo giá thấp hơn?
               </p>
-              <p className="mb-4 text-[13.5px] leading-relaxed text-body-text">
+              <p className="text-justify-vn mb-4 text-[13.5px] leading-relaxed text-body-text">
                 Chi nhánh {data.name} hiện chỉ áp dụng các gói từ ORIGIN trở lên. Nếu bạn cần gói
                 LITE hoặc START để tối ưu chi phí ban đầu, các chi nhánh sau đang cung cấp:
               </p>

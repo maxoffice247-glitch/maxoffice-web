@@ -26,7 +26,7 @@ export default function LocationCrossLinks({ currentSlug }: { currentSlug: strin
           <h2 className="mb-3.5 font-display text-[26px] leading-[1.2] font-extrabold text-navy sm:text-[32px]">
             Khám phá các địa điểm khác của MAX OFFICE
           </h2>
-          <p className="text-[15.5px] text-body-text">
+          <p className="text-justify-vn text-[15.5px] text-body-text">
             {LOCATIONS_LIST.length} địa điểm trải khắp TP.HCM — chọn chi nhánh gần đối tác, khách
             hàng hoặc thuận tiện nhất cho đội ngũ của bạn.
           </p>

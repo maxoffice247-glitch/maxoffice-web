@@ -34,7 +34,7 @@ export default function ServiceFeatures({
               {title}
             </h2>
             {description && (
-              <p className="mb-7 text-[15.5px] leading-relaxed text-body-text">
+              <p className="text-justify-vn mb-7 text-[15.5px] leading-relaxed text-body-text">
                 {description}
               </p>
             )}

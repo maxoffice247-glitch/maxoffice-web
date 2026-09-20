@@ -130,7 +130,7 @@ export default async function PlanDetailPage({
                 ))}
               </ul>
               {plan.addonNote && (
-                <p className="mt-5 rounded-xl bg-bg-tint p-3.5 text-[12.5px] leading-relaxed text-body-text">
+                <p className="text-justify-vn mt-5 rounded-xl bg-bg-tint p-3.5 text-[12.5px] leading-relaxed text-body-text">
                   * {plan.addonNote}
                 </p>
               )}
