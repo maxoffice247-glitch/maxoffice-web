@@ -30,8 +30,8 @@ export default function LeadCapturePopup() {
     const preload = () => {
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       new window.Image().src = reduce
-        ? "/images/mascot/linh-vat-max-chi-tay-xuong-tinh.webp"
-        : "/images/mascot/linh-vat-max-chi-tay-xuong.webp";
+        ? "/images/mascot/linh-vat-max-chi-tay-xuong-v2-tinh.webp"
+        : "/images/mascot/linh-vat-max-chi-tay-xuong-v2.webp";
     };
     const hasIdle = typeof window.requestIdleCallback === "function";
     const idle = hasIdle
@@ -148,9 +148,9 @@ export default function LeadCapturePopup() {
                     tải khung tĩnh. File động được nạp trước ở useEffect bên
                     trên (rảnh việc) nên khi popup bật lên đã có trong cache. */}
                 <picture>
-                  <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-xuong-tinh.webp" type="image/webp" />
+                  <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-xuong-v2-tinh.webp" type="image/webp" />
                   <img
-                    src="/images/mascot/linh-vat-max-chi-tay-xuong.webp"
+                    src="/images/mascot/linh-vat-max-chi-tay-xuong-v2.webp"
                     alt=""
                     width={174}
                     height={116}

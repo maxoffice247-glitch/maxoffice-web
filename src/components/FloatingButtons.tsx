@@ -62,9 +62,9 @@ function WavingMascotBubble({
             động. Kích thước hiển thị 87x58 giữ nguyên như ảnh tĩnh cũ (file
             174x116 = 2x cho màn hình retina). */}
         <picture>
-          <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-len-v2-tinh.webp" type="image/webp" />
+          <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-len-v3-tinh.webp" type="image/webp" />
           <img
-            src="/images/mascot/linh-vat-max-chi-tay-len-v2.webp"
+            src="/images/mascot/linh-vat-max-chi-tay-len-v3.webp"
             alt=""
             width={174}
             height={116}
