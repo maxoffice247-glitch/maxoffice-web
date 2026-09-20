@@ -154,7 +154,7 @@ export default function SetupCostTool() {
                 <label className="mb-1.5 block text-[15px] font-bold text-navy">
                   Cần thêm dịch vụ pháp lý sửa đổi? (không bắt buộc)
                 </label>
-                <p className="mb-3 text-[12.5px] text-body-text">{COMBO_DISCOUNT_RULE}</p>
+                <p className="text-justify-vn mb-3 text-[12.5px] text-body-text">{COMBO_DISCOUNT_RULE}</p>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {AMENDMENT_SERVICES.map((svc) => {
                     const checked = selectedAmendments.includes(svc.slug);

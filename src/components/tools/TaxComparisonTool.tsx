@@ -98,7 +98,7 @@ export default function TaxComparisonTool() {
 
         {/* Disclaimer — luôn hiển thị rõ, không ẩn/thu nhỏ. */}
         <Reveal className="mx-auto mb-8 max-w-[860px] rounded-2xl border-2 border-amber/40 bg-amber/8 p-5 sm:p-6">
-          <p className="text-[13.5px] leading-relaxed font-semibold text-navy">
+          <p className="text-justify-vn text-[13.5px] leading-relaxed font-semibold text-navy">
             ⚠️ Đây là công cụ ƯỚC TÍNH mang tính chất THAM KHẢO, dựa trên quy định thuế hiện hành.
             Quy định về thuế tại Việt Nam trong giai đoạn này có thể được điều chỉnh theo các
             Thông tư, Nghị định mới nhất — kết quả chính xác nhất cần được đối chiếu theo văn bản

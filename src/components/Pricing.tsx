@@ -482,7 +482,7 @@ export default function Pricing() {
                 ))}
               </RevealGroup>
               {group.footnote && (
-                <p className="mt-5 text-[12.5px] text-body-text">{group.footnote}</p>
+                <p className="text-justify-vn mt-5 text-[12.5px] text-body-text">{group.footnote}</p>
               )}
               {group.promoNotes && group.promoNotes.length > 0 && (
                 <div className="mx-auto mt-6 max-w-[640px] rounded-2xl border-2 border-accent/25 bg-accent/5 p-5">
@@ -492,7 +492,7 @@ export default function Pricing() {
                         🚀 {group.promoComboName}
                       </span>
                       {group.promoComboDesc && (
-                        <p className="text-[13px] leading-relaxed text-navy">{group.promoComboDesc}</p>
+                        <p className="text-justify-vn text-[13px] leading-relaxed text-navy">{group.promoComboDesc}</p>
                       )}
                     </div>
                   )}
