@@ -525,19 +525,19 @@ export default function Pricing() {
               {group.title === "Văn phòng ảo — 6 gói dịch vụ" && (
                 <Link
                   href="/tien-ich/tim-goi-phu-hop"
-                  className="group mt-8 flex flex-col items-start gap-4 rounded-2xl bg-gradient-to-br from-navy to-primary-dark p-6 text-white transition-transform duration-300 ease-out hover:-translate-y-1 sm:flex-row sm:items-center sm:gap-5 sm:p-7"
+                  className="group mt-8 grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-3 rounded-2xl bg-gradient-to-br from-navy to-primary-dark p-6 text-white transition-transform duration-300 ease-out hover:-translate-y-1 sm:flex sm:flex-row sm:gap-5 sm:p-7"
                 >
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white">
-                    <SearchIcon className="h-7 w-7" />
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white sm:h-14 sm:w-14">
+                    <SearchIcon className="h-6 w-6 sm:h-7 sm:w-7" />
                   </span>
-                  <div className="min-w-0 sm:flex-1">
-                    <span className="mb-1.5 inline-block rounded-full bg-accent px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase">
+                  <div className="contents min-w-0 sm:block sm:flex-1">
+                    <span className="col-start-2 row-start-1 mb-0 inline-block w-fit rounded-full bg-accent px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase sm:mb-1.5">
                       Công cụ miễn phí
                     </span>
-                    <h3 className="text-[18px] font-bold">
+                    <h3 className="col-span-2 text-[18px] font-bold sm:col-auto">
                       Muốn biết chính xác gói nào áp dụng cho khu vực bạn quan tâm?
                     </h3>
-                    <p className="mt-1 text-[13.5px] text-white/75">
+                    <p className="text-justify-vn col-span-2 text-[13.5px] text-white/75 sm:col-auto sm:mt-1">
                       6 gói trên là bảng giá tiêu biểu — một số khu vực còn có gói cùng mức giá
                       nhưng khác tên/tính năng (VD: ORIGIN 499.000đ ưu đãi tại Nguyễn Oanh/Trần
                       Hưng Đạo và CORE/PLUS 499.000đ hệ đối tác riêng áp dụng 2 nhóm chi nhánh khác
@@ -545,7 +545,7 @@ export default function Pricing() {
                       chọn.
                     </p>
                   </div>
-                  <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[13.5px] font-bold text-navy transition-transform duration-200 group-hover:translate-x-1">
+                  <span className="col-span-2 inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[13.5px] font-bold text-navy transition-transform duration-200 group-hover:translate-x-1 sm:col-auto">
                     Tìm VPA theo nhu cầu
                     <ArrowRightSmallIcon />
                   </span>
