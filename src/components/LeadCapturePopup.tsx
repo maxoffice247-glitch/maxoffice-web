@@ -24,14 +24,14 @@ export default function LeadCapturePopup() {
   useEffect(() => {
     if (sessionStorage.getItem(SEEN_KEY)) return;
 
-    // Nạp trước ảnh động của linh vật (~340KB) lúc trình duyệt rảnh, để tới lúc popup
+    // Nạp trước ảnh động của linh vật (~790KB, 336×224 = 2x màn retina cho khung hiển thị 168×112) lúc trình duyệt rảnh, để tới lúc popup
     // bật lên (~26s) đã nằm trong cache — không tranh băng thông lúc tải trang. Người bật
     // giảm chuyển động chỉ cần khung tĩnh nên không nạp file động.
     const preload = () => {
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       new window.Image().src = reduce
-        ? "/images/mascot/linh-vat-max-chi-tay-xuong-v2-tinh.webp"
-        : "/images/mascot/linh-vat-max-chi-tay-xuong-v2.webp";
+        ? "/images/mascot/linh-vat-max-chi-tay-xuong-v3-tinh.webp"
+        : "/images/mascot/linh-vat-max-chi-tay-xuong-v3.webp";
     };
     const hasIdle = typeof window.requestIdleCallback === "function";
     const idle = hasIdle
@@ -148,12 +148,12 @@ export default function LeadCapturePopup() {
                     tải khung tĩnh. File động được nạp trước ở useEffect bên
                     trên (rảnh việc) nên khi popup bật lên đã có trong cache. */}
                 <picture>
-                  <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-xuong-v2-tinh.webp" type="image/webp" />
+                  <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-xuong-v3-tinh.webp" type="image/webp" />
                   <img
-                    src="/images/mascot/linh-vat-max-chi-tay-xuong-v2.webp"
+                    src="/images/mascot/linh-vat-max-chi-tay-xuong-v3.webp"
                     alt=""
-                    width={174}
-                    height={116}
+                    width={336}
+                    height={224}
                     decoding="async"
                     className="mx-auto mb-2 block h-[112px] w-[168px] object-contain"
                   />
