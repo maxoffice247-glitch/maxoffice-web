@@ -73,6 +73,33 @@ const COLOR = {
   accent: "#dc3530",
 };
 
+/**
+ * Khối "Tiện ích nổi bật tại chi nhánh này" — CHỈ cho các gói có tính năng
+ * THÊM so với gói chuẩn cùng tên ở chi nhánh khác (superset; xem
+ * SUPERSET_EXTRA_FEATURES ở planFinder.ts), để khách thấy ngay điểm khác
+ * biệt. Khoá `${slug}__${planKey}`; gói/chi nhánh khác không có khối này.
+ */
+const HIGHLIGHTS: Record<string, { icon: "users" | "user-check"; title: string; desc: string }[]> = {
+  "song-thao__lite": [
+    { icon: "users", title: "Phòng họp", desc: "Có sẵn tại trụ sở chính" },
+    { icon: "user-check", title: "Lễ tân", desc: "Tiếp đón & nhận thư, bưu phẩm" },
+  ],
+};
+
+const ICON_PATHS = {
+  users:
+    '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  "user-check":
+    '<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M17 11l2 2 4-4"/>',
+} as const;
+
+// SVG nhúng qua data URI trong <img> — Satori không xử lý ổn <svg> có Fragment/nhiều node con dạng JSX.
+function HighlightIcon({ kind }: { kind: "users" | "user-check" }) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${COLOR.primary}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[kind]}</svg>`;
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={`data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`} alt="" width={22} height={22} />;
+}
+
 function FeatureRow({ text }: { text: string }) {
   return (
     <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
@@ -120,6 +147,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
   const benefits = (location.benefits ?? []).slice(0, 4).map((b) => b.title);
   const promotions = (resolveTimedPromotions(location.promotions) ?? []).slice(0, 4);
   const features = plan.features.slice(0, 9);
+  const highlights = HIGHLIGHTS[`${slug}__${planKey}`] ?? [];
   // Cùng quy tắc chia cột với PlanQuoteCard.tsx (bản DOM cũ): từ 6 tính
   // năng trở lên chia 2 cột, cột trái lấp đầy trước — 9 -> 5/4.
   const useGrid = features.length >= 6;
@@ -138,7 +166,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
     70 + // tên chi nhánh (có thể 2 dòng)
     56 + // địa chỉ (có thể 2 dòng)
     (benefits.length ? 16 + 40 : 0) +
-    (promotions.length ? 16 + 26 + promotions.length * 24 : 0);
+    (promotions.length ? 16 + 26 + promotions.length * 24 : 0) +
+    (highlights.length ? 20 + 26 + highlights.length * 52 : 0);
   const PHOTO_BLOCK_H = Math.max(360, infoColH) + 48 + 32;
   const PRICE_BLOCK_H = 40 + 104;
   const FEATURES_BLOCK_H = 36 + 44 + featureRows * 50;
@@ -250,6 +279,45 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
                 {promotions.map((p) => (
                   <div key={p} style={{ display: "flex", fontSize: 14, color: COLOR.ink, lineHeight: 1.4, marginBottom: 4 }}>
                     • {p}
+                  </div>
+                ))}
+              </div>
+            )}
+            {highlights.length > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginTop: 20,
+                  borderRadius: 16,
+                  border: `1px solid ${COLOR.primary}`,
+                  backgroundColor: "#ffffff",
+                  padding: "14px 18px",
+                }}
+              >
+                <div style={{ display: "flex", fontSize: 14, fontWeight: 700, color: COLOR.primary, marginBottom: 10 }}>
+                  Tiện ích nổi bật tại chi nhánh này
+                </div>
+                {highlights.map((h) => (
+                  <div key={h.title} style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 40,
+                        height: 40,
+                        borderRadius: 9999,
+                        backgroundColor: COLOR.primaryTint,
+                        flexShrink: 0,
+                      }}
+                    >
+                      <HighlightIcon kind={h.icon} />
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: COLOR.navy }}>{h.title}</div>
+                      <div style={{ display: "flex", fontSize: 14, color: COLOR.bodyText }}>{h.desc}</div>
+                    </div>
                   </div>
                 ))}
               </div>

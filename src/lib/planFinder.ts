@@ -307,7 +307,25 @@ function slugifyVN(text: string): string {
  * PlanGroup duy nhất ở đây, không cần code riêng cho trường hợp này.
  */
 function groupSignature(p: OfferedPlan): string {
-  return `${p.planName}__${p.price}__${p.features.join("|")}`;
+  return `${p.planName}__${p.price}__${groupFeatures(p).join("|")}`;
+}
+
+/**
+ * NGOẠI LỆ GỘP CƯỠNG CHẾ (chỉ liệt kê tường minh, KHÔNG đổi thuật toán chung):
+ * chi nhánh có gói là SUPERSET của gói chuẩn — đủ mọi tính năng chuẩn + THÊM
+ * tính năng riêng — được gộp chung nhóm với các chi nhánh cùng gói chuẩn,
+ * phần thêm bị bỏ khi so khớp và khi hiển thị ở card nhóm (phần khác biệt chỉ
+ * hiện ở trang/báo giá riêng của chi nhánh). Khoá: `${locationSlug}__${planKey}`.
+ * KHÔNG dùng cho trường hợp THAY THẾ/KHÁC tính năng (vd. ORIGIN của Nguyễn
+ * Oanh/Trần Hưng Đạo) — những trường hợp đó vẫn tách nhóm để minh bạch.
+ */
+const SUPERSET_EXTRA_FEATURES: Record<string, string[]> = {
+  "song-thao__lite": ["Phòng họp"], // Sông Thao LITE = 4 mục chuẩn + Phòng họp
+};
+
+function groupFeatures(p: OfferedPlan): string[] {
+  const extras = SUPERSET_EXTRA_FEATURES[`${p.locationSlug}__${p.planKey}`];
+  return extras ? p.features.filter((f) => !extras.includes(f)) : p.features;
 }
 
 /** Toàn bộ gói, gộp theo nhóm giống hệt nhau, sắp xếp theo giá tăng dần. */
@@ -348,7 +366,7 @@ export function getGroupedPlans(): PlanGroup[] {
       planName: plan.planName,
       price: plan.price,
       duration: plan.duration,
-      features: plan.features,
+      features: groupFeatures(plan),
       addonNote: plan.addonNote,
       locations,
     };
