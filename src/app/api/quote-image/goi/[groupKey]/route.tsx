@@ -161,7 +161,13 @@ export async function GET(_req: Request, { params }: { params: Promise<{ groupKe
     })
   );
 
-  const features = group.features.slice(0, 9);
+  // KHÔNG cắt bớt (trước đây `.slice(0, 9)`, cùng lỗi và cùng cách sửa như
+  // route anh em [slug]/[plan] — xem chú thích ở đó) — đã âm thầm cắt mất
+  // dòng cuối "Đánh giá sức khỏe doanh nghiệp (AI Biz Health)" của mọi
+  // nhóm BASE (10 mục), và sẽ cắt nặng hơn với nhóm nhiều mục hơn (CAO
+  // CẤP 15 mục). Chiều cao card đã tính động theo featureRows nên bỏ cắt
+  // không cần chỉnh gì thêm.
+  const features = group.features;
   const useFeatureGrid = features.length >= 6;
   const featureRows = Math.ceil(features.length / (useFeatureGrid ? 2 : 1));
   const leftFeatures = useFeatureGrid ? features.slice(0, featureRows) : features;
