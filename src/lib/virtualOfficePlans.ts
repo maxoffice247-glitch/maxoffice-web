@@ -204,13 +204,24 @@ export const LOCATION_VO_PRICE_OVERRIDES: Record<string, Partial<Record<VirtualO
  * override.
  */
 export const LOCATION_VO_FEATURE_OVERRIDES: Record<string, Partial<Record<VirtualOfficePlanKey, string[]>>> = {
-  // Sông Thao (trụ sở chính): gói LITE dùng đúng giá 299.000đ + phụ phí bảng
-  // hiệu 500.000đ của hệ chung, nền là checklist chuẩn LITE (đã có sẵn "Lễ
-  // tân" nên KHÔNG thêm lại) + bổ sung "Phòng họp" — mục checklist chuẩn LITE
-  // không có. Spread từ VIRTUAL_OFFICE_PLANS.lite để tự theo nếu checklist
-  // chuẩn đổi; các chi nhánh LITE khác không bị ảnh hưởng.
+  // Sông Thao (trụ sở chính): gói BASE tại đây có thêm phòng họp miễn phí
+  // giới hạn 6 giờ/tháng — tiện ích chuẩn BASE ở các chi nhánh khác KHÔNG
+  // có (chỉ ORIGIN-PLUS/RISE trở lên mới có phòng họp riêng, xem
+  // FEATURE_COMPARISON_TABLE phía trên). Spread từ VIRTUAL_OFFICE_PLANS.base
+  // để tự theo nếu checklist chuẩn đổi; các chi nhánh BASE khác không bị
+  // ảnh hưởng. Vì tính năng thêm này đủ đáng kể để khách cân nhắc riêng
+  // (khác trường hợp merge-cưỡng-chế đã bỏ trước đây), getGroupedPlans()
+  // (planFinder.ts) KHÔNG cần xử lý gì thêm — checklist khác các chi nhánh
+  // BASE khác nên tự động tách thành PlanGroup riêng ở "Xem theo gói".
+  //
+  // TRƯỚC ĐÂY (đến 2026-09): override này từng gán nhầm "Phòng họp" cho gói
+  // LITE (299.000đ) tại Sông Thao — gói LITE ở đây KHÔNG có phòng họp miễn
+  // phí, phòng họp miễn phí thuộc về gói BASE. Đã sửa lại đúng gói + xoá
+  // luôn cơ chế SUPERSET_EXTRA_FEATURES ở planFinder.ts (từng dùng để ép
+  // gộp nhóm LITE dù có thêm "Phòng họp") vì lý do gộp cưỡng chế đó không
+  // còn áp dụng.
   "song-thao": {
-    lite: [...VIRTUAL_OFFICE_PLANS.lite.features, "Phòng họp"],
+    base: [...VIRTUAL_OFFICE_PLANS.base.features, "Phòng họp 6 giờ/tháng"],
   },
   "tran-hung-dao": {
     origin: [

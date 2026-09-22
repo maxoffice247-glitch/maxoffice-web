@@ -75,15 +75,18 @@ const COLOR = {
 
 /**
  * Khối "Tiện ích nổi bật tại chi nhánh này" — CHỈ cho các gói có tính năng
- * THÊM so với gói chuẩn cùng tên ở chi nhánh khác (superset; xem
- * SUPERSET_EXTRA_FEATURES ở planFinder.ts), để khách thấy ngay điểm khác
- * biệt. Khoá `${slug}__${planKey}`; gói/chi nhánh khác không có khối này.
+ * THÊM so với checklist chuẩn cùng tên ở chi nhánh khác (xem
+ * LOCATION_VO_FEATURE_OVERRIDES ở virtualOfficePlans.ts), để khách thấy
+ * ngay điểm khác biệt. Khoá `${slug}__${planKey}`; gói/chi nhánh khác
+ * không có khối này.
+ *
+ * TRƯỚC ĐÂY (đến 2026-09): khối này gắn ở "song-thao__lite" (khi đó tưởng
+ * gói LITE có phòng họp miễn phí) — đã xác nhận lại: phòng họp miễn phí 6
+ * giờ/tháng thuộc về gói BASE, không phải LITE. Chuyển khối sang
+ * "song-thao__base", chỉ còn đúng 1 dòng khớp với override thật.
  */
 const HIGHLIGHTS: Record<string, { icon: "users" | "user-check"; title: string; desc: string }[]> = {
-  "song-thao__lite": [
-    { icon: "users", title: "Phòng họp", desc: "Có sẵn tại trụ sở chính" },
-    { icon: "user-check", title: "Lễ tân", desc: "Tiếp đón & nhận thư, bưu phẩm" },
-  ],
+  "song-thao__base": [{ icon: "users", title: "Phòng họp", desc: "Miễn phí 6 giờ/tháng" }],
 };
 
 const ICON_PATHS = {
