@@ -283,6 +283,9 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "quan-7") {
     return QUAN_7_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
+  if (slug === "bui-thi-xuan") {
+    return BUI_THI_XUAN_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  }
   if (slug === "nguyen-the-truyen") {
     return NGUYEN_THE_TRUYEN_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
@@ -442,6 +445,46 @@ export const QUAN_7_VO_PLANS: QuanBaPlan[] = [
     locationVerification: "Có",
     reception: "Có (đón khách, nhận thư, chuyển tiếp email)",
     extraHighlights: ["Phòng họp nhỏ miễn phí 10 giờ/tháng", "Chỗ ngồi linh động 48 giờ/năm"],
+  },
+];
+
+/* ---------------------------------------------------------------------- */
+/* 36 Bùi Thị Xuân, Quận 1 (cũ) — bảng giá riêng, ĐÚNG 1 gói duy nhất, KHÔNG */
+/* thuộc hệ thống LITE–RISE hay bất kỳ hệ giá đối tác nào khác. Checklist   */
+/* đã đối chiếu với mọi gói 500.000đ hiện có (BASE hệ LITE-RISE, M-BASE Phạm */
+/* Văn Đồng) — không trùng khớp hoàn toàn (thiếu Workshop/Bảng hiệu/In-photo */
+/* so với BASE; thiếu bảng tên so với M-BASE) nên tạo gói mới thay vì tái sử */
+/* dụng. Đặt tên "STANDARD" (không dùng lại tên "BASE" của hệ LITE-RISE) để */
+/* tránh 2 PlanGroup khác nhau cùng hiển thị "Gói BASE — 500.000đ/tháng" ở   */
+/* "Xem theo gói" (planFinder.ts groupSignature() chỉ gộp khi TÊN + giá +   */
+/* tính năng khớp hệt nhau — tên trùng nhưng tính năng khác sẽ tạo 2 card   */
+/* riêng cùng tiêu đề, gây nhầm lẫn cho khách). Chỉ khả dụng tại chi nhánh  */
+/* "bui-thi-xuan". */
+/* ---------------------------------------------------------------------- */
+
+export type BuiThiXuanPlan = {
+  key: "standard";
+  name: string;
+  price: number;
+  duration: string;
+  vatNote: string;
+  features: string[];
+};
+
+export const BUI_THI_XUAN_VO_PLANS: BuiThiXuanPlan[] = [
+  {
+    key: "standard",
+    name: "STANDARD",
+    price: 500000,
+    duration: "/ tháng",
+    vatNote: "Giá chưa bao gồm VAT 10%",
+    features: [
+      "Địa chỉ đăng ký kinh doanh (ĐKKD)",
+      "Wifi",
+      "Khu vực tiếp khách",
+      "Lễ tân nhận thư, bưu phẩm",
+      "Bảng tên công ty",
+    ],
   },
 ];
 

@@ -17,6 +17,7 @@ import {
   getPlansForLocation,
   PHAM_VAN_DONG_VO_PLANS,
   QUAN_7_VO_PLANS,
+  BUI_THI_XUAN_VO_PLANS,
   NGUYEN_THE_TRUYEN_VO_PLANS,
   SILVER_GOLD_PREMIUM_Q1Q3_PLANS,
   SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS,
@@ -114,6 +115,19 @@ export function getAllOfferedPlans(): OfferedPlan[] {
             `Lễ tân: ${p.reception}`,
             ...(p.extraHighlights ?? []),
           ],
+        });
+      }
+    } else if (slug === "bui-thi-xuan") {
+      for (const p of BUI_THI_XUAN_VO_PLANS) {
+        result.push({
+          locationSlug: slug,
+          locationName: name,
+          area,
+          planKey: p.key,
+          planName: p.name,
+          price: p.price,
+          duration: p.duration,
+          features: p.features,
         });
       }
     } else if (slug === "nguyen-the-truyen") {

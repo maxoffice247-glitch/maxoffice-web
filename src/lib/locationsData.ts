@@ -340,6 +340,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_QUAN_1,
   },
   {
+    slug: "bui-thi-xuan",
+    name: "36 Bùi Thị Xuân, Quận 1 (cũ)",
+    shortAddress: "36 Bùi Thị Xuân, P. Bến Thành",
+    area: AREA_QUAN_1,
+  },
+  {
     slug: "tran-hung-dao",
     name: "380 Trần Hưng Đạo, Quận 5 (cũ)",
     shortAddress: "380 Trần Hưng Đạo, P. Chợ Dừa",
@@ -3124,6 +3130,83 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { quote: "Toà nhà thiết kế đẹp, sảnh tiếp khách sang trọng nên đối tác đến làm việc đều khen không gian chuyên nghiệp.", initial: "N", name: "Chị Ngọc", role: "Giám đốc công ty tư vấn" },
     ],
   },
+
+  /* =============== 36 BÙI THỊ XUÂN (KHU VỰC QUẬN 1, CHI NHÁNH THỨ 5 — ĐẦU TIÊN TẠI PHƯỜNG BẾN THÀNH) =============== */
+  "bui-thi-xuan": {
+    slug: "bui-thi-xuan",
+    name: "36 Bùi Thị Xuân, Quận 1 (cũ)",
+    area: AREA_QUAN_1,
+    address: "36 Bùi Thị Xuân, Phường Bến Thành, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 36 Bùi Thị Xuân, Quận 1 (cũ)",
+    heroDescription:
+      "Chi nhánh thứ 5 của MAX OFFICE tại Quận 1 (cũ) và là chi nhánh đầu tiên tại Phường Bến Thành — văn phòng ảo gói STANDARD duy nhất, 500.000đ/tháng, cao ốc văn phòng ngay gần chợ Bến Thành.",
+    metaTitle: "Văn Phòng Ảo 36 Bùi Thị Xuân, Quận 1 (cũ) | 500K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 36 Bùi Thị Xuân, Phường Bến Thành — chi nhánh thứ 5 MAX OFFICE tại Quận 1 (cũ), gói STANDARD 500.000đ/tháng (chưa VAT), gần chợ Bến Thành và khu Phạm Ngũ Lão - Bùi Viện.",
+    image: "/images/hero-dich-vu.jpg",
+    // Ảnh mặt tiền gốc 1024x1536 (0.667, dưới ngưỡng FACADE_TALL_RATIO_THRESHOLD nên bị ép về 3:4 trong gallery — xem LocationPageTemplate.tsx).
+    facadeAspectRatio: "1024 / 1536",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-bui-thi-xuan-le-tan.jpg", alt: "Quầy lễ tân toà nhà văn phòng 36 Bùi Thị Xuân", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-bui-thi-xuan-tiep-khach.jpg", alt: "Khu vực tiếp khách toà nhà văn phòng 36 Bùi Thị Xuân", caption: "Khu tiếp khách" },
+      { src: "/images/dia-diem-bui-thi-xuan-bang-ten.jpg", alt: "Bảng tên công ty tại toà nhà văn phòng 36 Bùi Thị Xuân", caption: "Bảng tên công ty" },
+    ],
+    intro: [
+      "Văn phòng 36 Bùi Thị Xuân là chi nhánh thứ 5 của MAX OFFICE tại khu vực Quận 1 (cũ), sau Điện Biên Phủ, 36 Mạc Đĩnh Chi, 28-34 Pasteur và 159C Đề Thám — đồng thời là chi nhánh ĐẦU TIÊN của toàn hệ thống đặt tại Phường Bến Thành. Đường Bùi Thị Xuân chạy từ Cách Mạng Tháng Tám đến Cống Quỳnh, băng qua khu vực Bến Thành và Phạm Ngũ Lão, cách chợ Bến Thành khoảng 1km và không xa khu Phố Tây Phạm Ngũ Lão - Bùi Viện, nơi chi nhánh 159C Đề Thám (Phường Cầu Ông Lãnh liền kề) đang hoạt động.",
+      "Chi nhánh đặt tại một cao ốc văn phòng nhiều tầng, mặt tiền kính xanh hiện đại nổi bật trên đường Bùi Thị Xuân. Sảnh toà nhà có quầy lễ tân tiếp nhận thư từ, bưu phẩm cho khách thuê, khu vực ghế sofa tiếp khách ngay lối vào, và một mảng tường bố trí bảng tên công ty cho các đơn vị đặt văn phòng tại đây — nơi doanh nghiệp thuê gói tại MAX OFFICE cũng được đặt bảng tên riêng.",
+      "Khác với 4 chi nhánh còn lại của Quận 1 (Điện Biên Phủ dùng gói START/BASE hệ LITE-RISE; 36 Mạc Đĩnh Chi, 28-34 Pasteur và 159C Đề Thám dùng chung 3 gói SILVER/GOLD/PREMIUM), 36 Bùi Thị Xuân áp dụng một hệ giá HOÀN TOÀN RIÊNG với ĐÚNG 1 gói duy nhất — STANDARD, 500.000đ/tháng (chưa bao gồm VAT 10%). Checklist tập trung vào đúng nhu cầu cơ bản nhất để vận hành hợp pháp: địa chỉ đăng ký kinh doanh (ĐKKD), Wifi, khu vực tiếp khách, lễ tân nhận thư/bưu phẩm và bảng tên công ty — không kèm các tiện ích mở rộng như phòng họp hay workshop.",
+      "Nhờ vậy, đây là lựa chọn phù hợp cho hộ kinh doanh cá thể hoặc doanh nghiệp mới thành lập cần một địa chỉ đăng ký kinh doanh hợp lệ ngay khu trung tâm Quận 1, với chi phí tối ưu và không phải trả thêm cho những tiện ích chưa cần dùng đến. Khi nhu cầu mở rộng, doanh nghiệp vẫn có thể tham khảo các chi nhánh Quận 1 khác đang cung cấp gói cao cấp hơn.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 36 Bùi Thị Xuân",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh thứ 5 tại Quận 1", desc: "Thêm lựa chọn địa chỉ đăng ký kinh doanh tại Quận 1 (cũ), cao ốc văn phòng mặt tiền kính hiện đại." },
+      { icon: MapPinIcon, title: "Đầu tiên tại Phường Bến Thành", desc: "Cách chợ Bến Thành khoảng 1km, gần khu Phố Tây Phạm Ngũ Lão - Bùi Viện." },
+      { icon: BadgePercentIcon, title: "Gói STANDARD 500.000đ/tháng", desc: "Duy nhất 1 gói, tiện ích tối giản đúng nhu cầu cơ bản, chưa gồm VAT." },
+      { icon: WifiIcon, title: "Wifi phục vụ công việc", desc: "Kết nối ổn định ngay tại sảnh và khu vực tiếp khách." },
+      { icon: UsersIcon, title: "Khu vực tiếp khách", desc: "Sofa tiếp khách ngay sảnh toà nhà, thuận tiện đón đối tác." },
+      { icon: ShieldCheckIcon, title: "Địa chỉ ĐKKD hợp lệ", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế ngay trung tâm Quận 1." },
+    ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
+    nearbyItems: [
+      { name: "Chợ Bến Thành", desc: "Biểu tượng thương mại trung tâm TP.HCM, cách chi nhánh khoảng 1km." },
+      { name: "Phố Tây Phạm Ngũ Lão - Bùi Viện", desc: "Khu du lịch sầm uất giáp Phường Cầu Ông Lãnh, nơi có chi nhánh 159C Đề Thám." },
+      { name: "Bốn chi nhánh Quận 1 khác", desc: "Điện Biên Phủ, 36 Mạc Đĩnh Chi, 28-34 Pasteur và 159C Đề Thám." },
+      { name: "Trục Cách Mạng Tháng Tám - Cống Quỳnh", desc: "Hai đầu đường Bùi Thị Xuân, kết nối nhanh sang Quận 3 và Quận 5." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Trục Cách Mạng Tháng Tám - Cống Quỳnh", desc: "Hai đầu đường Bùi Thị Xuân, thuận tiện di chuyển nhiều hướng trung tâm." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Khu trung tâm Quận 1, dễ dàng đặt xe vào mọi khung giờ." },
+      { icon: CarIcon, title: "Gần ga Metro Bến Thành", desc: "Không xa nhà ga trung tâm tuyến Metro số 1 (Bến Thành - Suối Tiên)." },
+      { icon: HeadsetIcon, title: "Lễ tân hỗ trợ nhận thư, bưu phẩm", desc: "Tiếp nhận thư từ, bưu phẩm ngay tại sảnh toà nhà." },
+    ],
+    parkingInfo: [
+      "Khu vực trung tâm Quận 1 có nhiều bãi giữ xe công cộng gần toà nhà.",
+      "Hỗ trợ thông tin bãi đỗ ô tô gần khu vực do mật độ giao thông trung tâm Quận 1.",
+      "Bảo vệ và lễ tân hỗ trợ hướng dẫn khách đến làm việc.",
+    ],
+    diningItems: [
+      { name: "Ẩm thực khu chợ Bến Thành", desc: "Đa dạng quán ăn, hàng quán bình dân quanh khu vực chợ." },
+      { name: "Quán ăn, cà phê khu Phạm Ngũ Lão - Bùi Viện", desc: "Nhiều lựa chọn phục vụ cả khách trong nước và quốc tế." },
+      { name: "Quán cơm văn phòng khu vực Cống Quỳnh", desc: "Phù hợp bữa trưa nhanh, giá cả hợp lý." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 36 Bùi Thị Xuân có phải là chi nhánh đầu tiên của MAX OFFICE tại Phường Bến Thành không?", a: "Đúng vậy. Đây là chi nhánh thứ 5 của MAX OFFICE tại khu vực Quận 1 (cũ), và là chi nhánh ĐẦU TIÊN của toàn hệ thống đặt tại Phường Bến Thành." },
+      { q: "Chi nhánh 36 Bùi Thị Xuân áp dụng gói văn phòng ảo nào?", a: "Chi nhánh chỉ có đúng 1 gói duy nhất — STANDARD, giá 500.000đ/tháng (chưa bao gồm VAT 10%) — khác với 4 chi nhánh còn lại của Quận 1 đang dùng gói START/BASE hoặc SILVER/GOLD/PREMIUM." },
+      { q: "Gói STANDARD tại đây gồm những tiện ích gì?", a: "Gói STANDARD gồm: địa chỉ đăng ký kinh doanh (ĐKKD), Wifi, khu vực tiếp khách, lễ tân nhận thư/bưu phẩm và bảng tên công ty. Đây là mức tiện ích tối giản, tập trung đúng nhu cầu cơ bản để vận hành hợp pháp, không kèm phòng họp hay workshop như một số gói khác trong hệ thống." },
+      { q: "Địa chỉ 36 Bùi Thị Xuân có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Bến Thành, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Chi nhánh có gần chợ Bến Thành không?", a: "Có, cách khoảng 1km. Chi nhánh cũng không xa khu Phố Tây Phạm Ngũ Lão - Bùi Viện thuộc Phường Cầu Ông Lãnh liền kề, nơi có chi nhánh 159C Đề Thám." },
+      { q: "Tôi có thể đến tham quan văn phòng 36 Bùi Thị Xuân trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
+    ],
+    testimonials: [
+      { quote: "Mình chỉ cần địa chỉ để đăng ký hộ kinh doanh, gói STANDARD ở đây vừa đủ, không phải trả thêm cho những thứ mình chưa dùng tới.", initial: "H", name: "Chị Hoa", role: "Chủ hộ kinh doanh online" },
+      { quote: "Toà nhà ngay gần chợ Bến Thành nên hẹn đối tác rất dễ tìm, lễ tân nhận giúp bưu phẩm đầy đủ mỗi lần mình ghé lấy.", initial: "P", name: "Anh Phúc", role: "Giám đốc công ty thương mại nhỏ" },
+    ],
+  },
+
   "tran-hung-dao": {
     slug: "tran-hung-dao",
     name: "380 Trần Hưng Đạo, Quận 5 (cũ)",
