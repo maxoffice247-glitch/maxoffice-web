@@ -149,10 +149,18 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
 
   const benefits = (location.benefits ?? []).slice(0, 4).map((b) => b.title);
   const promotions = (resolveTimedPromotions(location.promotions) ?? []).slice(0, 4);
-  const features = plan.features.slice(0, 9);
+  // KHÔNG cắt bớt (trước đây `.slice(0, 9)`) — mọi gói hiện có trong hệ
+  // thống đều ≤10 mục lúc viết cắt này, nên không ai để ý BASE (10 mục)
+  // đã âm thầm mất dòng cuối "Đánh giá sức khỏe doanh nghiệp (AI Biz
+  // Health)" trong ảnh xuất ra. Phát hiện rõ khi thêm hệ giá CƠ BẢN/NÂNG
+  // CAO/CAO CẤP (254 Trường Chinh, 9/12/15 mục) — cắt còn 9 khiến NÂNG CAO
+  // và CAO CẤP hiện checklist Y HỆT CƠ BẢN trong ảnh báo giá (mất đúng các
+  // mục làm nên khác biệt của gói cao hơn). Chiều cao card đã tính động
+  // theo featureRows bên dưới nên bỏ cắt không cần chỉnh gì thêm.
+  const features = plan.features;
   const highlights = HIGHLIGHTS[`${slug}__${planKey}`] ?? [];
   // Cùng quy tắc chia cột với PlanQuoteCard.tsx (bản DOM cũ): từ 6 tính
-  // năng trở lên chia 2 cột, cột trái lấp đầy trước — 9 -> 5/4.
+  // năng trở lên chia 2 cột, cột trái lấp đầy trước.
   const useGrid = features.length >= 6;
   const featureRows = Math.ceil(features.length / (useGrid ? 2 : 1));
   const leftCol = useGrid ? features.slice(0, featureRows) : features;

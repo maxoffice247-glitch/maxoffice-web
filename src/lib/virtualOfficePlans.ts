@@ -300,6 +300,9 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "nguyen-the-truyen") {
     return NGUYEN_THE_TRUYEN_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
+  if (slug === "truong-chinh") {
+    return TRUONG_CHINH_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  }
   if (SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS.includes(slug)) {
     return SILVER_GOLD_PREMIUM_Q1Q3_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
@@ -603,6 +606,97 @@ export const NGUYEN_THE_TRUYEN_VO_PROMOS: string[] = [
   "Ký hợp đồng 12 tháng: tặng thêm 2 tháng + miễn phí thành lập doanh nghiệp + tặng bộ hồ sơ Lao động",
   "Ký hợp đồng 24 tháng: tặng thêm 6 tháng + miễn phí thành lập doanh nghiệp + tặng bộ hồ sơ Lao động",
   "Ký hợp đồng 36 tháng: tặng thêm 12 tháng + miễn phí thành lập doanh nghiệp + tặng bộ hồ sơ Kế toán/Thuế + tặng bộ hồ sơ Lao động + khai thuế ban đầu",
+];
+
+/* ---------------------------------------------------------------------- */
+/* 254 Trường Chinh, Quận 12 (cũ) — bảng giá riêng CƠ BẢN/NÂNG CAO/CAO CẤP, */
+/* không thuộc hệ thống LITE–RISE hay bất kỳ hệ giá riêng nào khác. Chỉ    */
+/* khả dụng tại chi nhánh "truong-chinh" — chi nhánh đầu tiên (và duy      */
+/* nhất tính đến nay) tại khu vực Quận 12 (cũ).                            */
+/*                                                                          */
+/* KHÁC với NguyenTheTruyenPlan (LEAN/GROWING/SCALE-UP ở trên) — nơi mỗi   */
+/* gói cao hơn chỉ ghi 1 dòng tóm tắt "Toàn bộ tính năng <gói thấp hơn>"   */
+/* rồi mới liệt kê phần thêm — hệ giá này liệt kê ĐẦY ĐỦ TỪNG MỤC riêng lẻ */
+/* ở CẢ 3 gói (kể cả các mục đã có ở gói thấp hơn), theo đúng yêu cầu rõ   */
+/* ràng khi tạo hệ giá này: mỗi gói tự đứng độc lập, đọc đủ không cần suy  */
+/* ra từ gói khác — giống cách trình bày của mọi hệ giá LITE-RISE/SGP/Q1Q3 */
+/* (liệt kê phẳng, không dòng tóm tắt kế thừa). */
+/* ---------------------------------------------------------------------- */
+
+export type TruongChinhPlanKey = "co-ban" | "nang-cao" | "cao-cap";
+
+export type TruongChinhPlan = {
+  key: TruongChinhPlanKey;
+  name: string;
+  price: number;
+  duration: string;
+  /** Liệt kê ĐẦY ĐỦ từng mục — kể cả mục đã có ở gói thấp hơn — không dùng
+      câu tóm tắt kiểu "Bao gồm toàn bộ gói CƠ BẢN". Xem doc comment phía
+      trên khối này để biết lý do khác NguyenTheTruyenPlan. */
+  features: string[];
+};
+
+export const TRUONG_CHINH_VO_PLANS: TruongChinhPlan[] = [
+  {
+    key: "co-ban",
+    name: "CƠ BẢN",
+    price: 299000,
+    duration: "/ tháng",
+    features: [
+      "Địa chỉ đăng ký kinh doanh",
+      "Tiếp nhận thư từ và bưu phẩm",
+      "Sử dụng khu vực tiếp khách",
+      "Tiếp tân hỗ trợ",
+      "Cơ sở vật chất cơ bản",
+      "Đặt bảng tên công ty",
+      "Chỗ ngồi khách vãng lai",
+      "Khu vực tiếp khách chung",
+      "Sử dụng phòng họp",
+    ],
+  },
+  {
+    key: "nang-cao",
+    name: "NÂNG CAO",
+    price: 479000,
+    duration: "/ tháng",
+    features: [
+      "Địa chỉ đăng ký kinh doanh",
+      "Tiếp nhận thư từ và bưu phẩm",
+      "Sử dụng khu vực tiếp khách",
+      "Tiếp tân hỗ trợ",
+      "Cơ sở vật chất cơ bản",
+      "Đặt bảng tên công ty",
+      "Chỗ ngồi khách vãng lai",
+      "Khu vực tiếp khách chung",
+      "Sử dụng phòng họp",
+      "Thiết bị phòng, máy in, scan, photo",
+      "Sử dụng phòng khánh tiết",
+      "Trưng bày tài liệu khu vực lễ tân",
+    ],
+  },
+  {
+    key: "cao-cap",
+    name: "CAO CẤP",
+    price: 779000,
+    duration: "/ tháng",
+    features: [
+      "Địa chỉ đăng ký kinh doanh",
+      "Tiếp nhận thư từ và bưu phẩm",
+      "Sử dụng khu vực tiếp khách",
+      "Tiếp tân hỗ trợ",
+      "Cơ sở vật chất cơ bản",
+      "Đặt bảng tên công ty",
+      "Chỗ ngồi khách vãng lai",
+      "Khu vực tiếp khách chung",
+      "Sử dụng phòng họp",
+      "Thiết bị phòng, máy in, scan, photo",
+      "Sử dụng phòng khánh tiết",
+      "Trưng bày tài liệu khu vực lễ tân",
+      "Tư vấn miễn phí thành lập doanh nghiệp",
+      "Hỗ trợ thủ tục thuế ban đầu",
+      "Hỗ trợ thủ tục cấp giấy chứng nhận doanh nghiệp",
+    ],
+  },
 ];
 
 /* ---------------------------------------------------------------------- */

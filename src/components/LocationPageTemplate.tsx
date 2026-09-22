@@ -12,6 +12,7 @@ import PhamVanDongServices from "./PhamVanDongServices";
 import QuanBaServices from "./QuanBaServices";
 import BuiThiXuanServices from "./BuiThiXuanServices";
 import NguyenTheTruyenServices from "./NguyenTheTruyenServices";
+import TruongChinhServices from "./TruongChinhServices";
 import Quan3CuVOServices from "./Quan3CuVOServices";
 import SilverGoldPremiumServices from "./SilverGoldPremiumServices";
 import LitespaceServices from "./LitespaceServices";
@@ -176,6 +177,8 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         <BuiThiXuanServices branchName="36 Bùi Thị Xuân" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "nguyen-the-truyen" ? (
         <NguyenTheTruyenServices branchName="79 Nguyễn Thế Truyện" slug={data.slug} promotions={data.promotions} />
+      ) : data.slug === "truong-chinh" ? (
+        <TruongChinhServices branchName="254 Trường Chinh" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "nguyen-thong" ? (
         <Quan3CuVOServices branchName="60 Nguyễn Thông" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "cach-mang-thang-8" ? (

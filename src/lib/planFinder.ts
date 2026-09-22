@@ -19,6 +19,7 @@ import {
   QUAN_7_VO_PLANS,
   BUI_THI_XUAN_VO_PLANS,
   NGUYEN_THE_TRUYEN_VO_PLANS,
+  TRUONG_CHINH_VO_PLANS,
   SILVER_GOLD_PREMIUM_Q1Q3_PLANS,
   SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS,
   SILVER_GOLD_PREMIUM_VO_PLANS,
@@ -136,6 +137,21 @@ export function getAllOfferedPlans(): OfferedPlan[] {
       // không cần bước ráp lại như withPhamVanDongStyleFeatures/
       // withQuan3StyleFeatures ở trên.
       for (const p of NGUYEN_THE_TRUYEN_VO_PLANS) {
+        result.push({
+          locationSlug: slug,
+          locationName: name,
+          area,
+          planKey: p.key,
+          planName: p.name,
+          price: p.price,
+          duration: p.duration,
+          features: p.features,
+        });
+      }
+    } else if (slug === "truong-chinh") {
+      // Hệ giá riêng CƠ BẢN/NÂNG CAO/CAO CẤP — mỗi gói đã tự liệt kê đủ
+      // features[] (xem TruongChinhPlan trong virtualOfficePlans.ts).
+      for (const p of TRUONG_CHINH_VO_PLANS) {
         result.push({
           locationSlug: slug,
           locationName: name,

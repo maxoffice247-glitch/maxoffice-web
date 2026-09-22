@@ -68,6 +68,7 @@ const AREA_BINH_THANH = { slug: "binh-thanh-cu", name: "Quận Bình Thạnh (c�
 const AREA_PHU_NHUAN = { slug: "phu-nhuan-cu", name: "Quận Phú Nhuận (cũ)" };
 const AREA_QUAN_4 = { slug: "quan-4-cu", name: "Quận 4 (cũ)" };
 const AREA_QUAN_5 = { slug: "quan-5-cu", name: "Quận 5 (cũ)" };
+const AREA_QUAN_12 = { slug: "quan-12-cu", name: "Quận 12 (cũ)" };
 
 export const AREAS: AreaInfo[] = [
   {
@@ -120,6 +121,11 @@ export const AREAS: AreaInfo[] = [
     ...AREA_QUAN_5,
     description:
       "Khu vực Chợ Lớn — trung tâm thương mại lâu đời của cộng đồng người Hoa, dọc trục Trần Hưng Đạo nối liền Quận 1 và Quận 5, gần chợ An Đông, Bệnh viện Chợ Rẫy và Đại học Y Dược TP.HCM.",
+  },
+  {
+    ...AREA_QUAN_12,
+    description:
+      "Khu vực cửa ngõ Tây Bắc TP.HCM, giáp Hóc Môn, có đại lộ Trường Chinh 10 làn xe — trục giao thông lớn và sầm uất nhất khu vực chạy qua.",
   },
 ];
 
@@ -350,6 +356,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     name: "380 Trần Hưng Đạo, Quận 5 (cũ)",
     shortAddress: "380 Trần Hưng Đạo, P. Chợ Dừa",
     area: AREA_QUAN_5,
+  },
+  {
+    slug: "truong-chinh",
+    name: "254 Trường Chinh, Quận 12 (cũ)",
+    shortAddress: "254 Trường Chinh, P. Tân Hưng Thuận",
+    area: AREA_QUAN_12,
   },
 ];
 
@@ -3310,6 +3322,82 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { slug: "dien-bien-phu", name: "Điện Biên Phủ, Quận 1" },
     ],
   },
+
+  /* =============== 254 TRƯỜNG CHINH (KHU VỰC QUẬN 12 — CHI NHÁNH ĐẦU TIÊN, KHU VỰC MỚI) =============== */
+  "truong-chinh": {
+    slug: "truong-chinh",
+    name: "254 Trường Chinh, Quận 12 (cũ)",
+    area: AREA_QUAN_12,
+    address: "254 Trường Chinh, Phường Tân Hưng Thuận, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 254 Trường Chinh, Quận 12 (cũ)",
+    heroDescription:
+      "Chi nhánh ĐẦU TIÊN của MAX OFFICE tại khu vực Quận 12 (cũ) — văn phòng ảo 3 gói CƠ BẢN/NÂNG CAO/CAO CẤP từ 299.000đ/tháng, mặt tiền đại lộ Trường Chinh 10 làn xe, cửa ngõ Tây Bắc TP.HCM.",
+    metaTitle: "Văn Phòng Ảo 254 Trường Chinh, Quận 12 | Từ 299K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 254 Trường Chinh, Phường Tân Hưng Thuận — chi nhánh đầu tiên MAX OFFICE tại Quận 12 (cũ), 3 gói CƠ BẢN/NÂNG CAO/CAO CẤP từ 299.000đ/tháng (chưa VAT), mặt tiền đại lộ Trường Chinh 10 làn xe.",
+    image: "/images/anh-hero-trang-chu-1.jpg",
+    // Ảnh mặt tiền gốc 1024x1536 (0.667, dưới ngưỡng FACADE_TALL_RATIO_THRESHOLD nên bị ép về 3:4 trong gallery — xem LocationPageTemplate.tsx).
+    facadeAspectRatio: "1024 / 1536",
+    facadeImageSide: "right",
+    interiorImages: [
+      { src: "/images/dia-diem-truong-chinh-le-tan.jpg", alt: "Quầy lễ tân toà nhà văn phòng 254 Trường Chinh", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-truong-chinh-phong-hop.jpg", alt: "Phòng họp toà nhà văn phòng 254 Trường Chinh", caption: "Phòng họp" },
+      { src: "/images/dia-diem-truong-chinh-phong-lam-viec.jpg", alt: "Phòng làm việc toà nhà văn phòng 254 Trường Chinh", caption: "Phòng làm việc" },
+    ],
+    intro: [
+      "Văn phòng 254 Trường Chinh là chi nhánh ĐẦU TIÊN của MAX OFFICE tại khu vực Quận 12 (cũ) — khu vực hoàn toàn mới trong hệ thống, thuộc Phường Tân Hưng Thuận. Chi nhánh nằm ngay mặt tiền đại lộ Trường Chinh, đoạn đã được mở rộng lên 10 làn xe, hiện là trục đường lớn và sầm uất nhất khu vực Quận 12, nối từ phía Tân Bình qua Quận 12 đến tận cửa ngõ Tây Bắc TP.HCM và kết nối tiếp sang hướng Hóc Môn.",
+      "Chi nhánh đặt tại toà nhà văn phòng cao tầng mặt kính của Tập đoàn VSET Group, dễ nhận diện nhờ biển hiệu lớn và logo trên nóc ngay mặt tiền đại lộ. Sảnh lễ tân ốp đá marble kết hợp mảng tường xanh dương nổi bật, có khu vực ghế sofa tiếp khách ngay lối vào. Toà nhà có phòng họp lớn trang bị bàn dài, đủ chỗ cho các buổi họp đông người, cùng nhiều phòng làm việc riêng view cửa sổ thoáng đãng, nội thất gỗ hiện đại.",
+      "Đây cũng là chi nhánh đầu tiên MAX OFFICE triển khai hệ giá 3 gói hoàn toàn mới — CƠ BẢN (299.000đ/tháng), NÂNG CAO (479.000đ/tháng) và CAO CẤP (779.000đ/tháng, giá chưa bao gồm VAT 10%). Gói CƠ BẢN gồm 9 tiện ích nền tảng (địa chỉ đăng ký kinh doanh, tiếp nhận thư từ/bưu phẩm, khu tiếp khách, tiếp tân hỗ trợ, cơ sở vật chất cơ bản, bảng tên công ty, chỗ ngồi khách vãng lai, khu tiếp khách chung, sử dụng phòng họp); NÂNG CAO có thêm thiết bị văn phòng (máy in/scan/photo), phòng khánh tiết và khu trưng bày tài liệu tại lễ tân; CAO CẤP có thêm tư vấn thành lập doanh nghiệp, hỗ trợ thủ tục thuế ban đầu và hỗ trợ thủ tục cấp giấy chứng nhận doanh nghiệp miễn phí.",
+      "Là khu vực cửa ngõ Tây Bắc thành phố với đại lộ 10 làn xe, khu vực Trường Chinh - Tân Hưng Thuận phù hợp cho doanh nghiệp hoạt động ở phía Bắc-Tây Bắc TP.HCM (Hóc Môn, Củ Chi) cần một địa chỉ đăng ký kinh doanh thuận tiện mà không phải di chuyển vào tận trung tâm thành phố, đồng thời vẫn có đầy đủ tiện ích văn phòng chuyên nghiệp.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 254 Trường Chinh",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh đầu tiên tại Quận 12", desc: "Mở rộng hệ thống MAX OFFICE sang khu vực hoàn toàn mới, toà nhà văn phòng cao tầng mặt kính." },
+      { icon: MapPinIcon, title: "Mặt tiền đại lộ Trường Chinh 10 làn xe", desc: "Trục đường lớn và sầm uất nhất Quận 12, cửa ngõ Tây Bắc TP.HCM." },
+      { icon: BadgePercentIcon, title: "3 gói CƠ BẢN/NÂNG CAO/CAO CẤP", desc: "Từ 299.000đ/tháng, hệ giá mới riêng cho chi nhánh này, chưa gồm VAT." },
+      { icon: UsersIcon, title: "Phòng họp trang bị đầy đủ", desc: "Bàn họp dài, đủ chỗ cho các buổi họp nhóm đông người." },
+      { icon: ShieldCheckIcon, title: "Địa chỉ ĐKKD hợp lệ", desc: "Đủ điều kiện đăng ký kinh doanh, đăng ký thuế ngay khu vực Quận 12." },
+      { icon: CarIcon, title: "Kết nối Hóc Môn, Tân Bình", desc: "Đại lộ Trường Chinh nối thẳng về hướng Hóc Môn và khu vực Tân Bình." },
+    ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
+    nearbyItems: [
+      { name: "Đại lộ Trường Chinh", desc: "Trục giao thông lớn nhất khu vực, 10 làn xe, ngay mặt tiền chi nhánh." },
+      { name: "Phường Tân Hưng Thuận", desc: "Khu vực chi nhánh toạ lạc, thuộc Quận 12 (cũ)." },
+      { name: "Hướng Hóc Môn", desc: "Đại lộ Trường Chinh kết nối tiếp sang khu vực Hóc Môn, cửa ngõ Tây Bắc thành phố." },
+      { name: "Giáp ranh Tân Bình", desc: "Đại lộ Trường Chinh nối liền về phía Quận Tân Bình (cũ)." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Mặt tiền đại lộ Trường Chinh", desc: "10 làn xe, trục giao thông chính của khu vực Quận 12." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mặt tiền đại lộ lớn, dễ dàng đặt xe và đón trả khách." },
+      { icon: CarIcon, title: "Kết nối Hóc Môn — Tân Bình", desc: "Đại lộ Trường Chinh nối thẳng hai hướng, thuận tiện di chuyển liên khu vực." },
+      { icon: HeadsetIcon, title: "Lễ tân hỗ trợ đón khách", desc: "Đội ngũ tại sảnh sẵn sàng hướng dẫn khách ngay khi vừa đến." },
+    ],
+    parkingInfo: [
+      "Toà nhà có khu vực đậu xe máy cho khách đến làm việc.",
+      "Mặt tiền đại lộ Trường Chinh rộng rãi, thuận tiện dừng đỗ ô tô ngắn hạn khi cần đưa đón đối tác.",
+      "Bảo vệ toà nhà hỗ trợ hướng dẫn xe ra vào trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán ăn dọc đại lộ Trường Chinh", desc: "Đa dạng quán ăn, cà phê phục vụ dân văn phòng dọc trục đường lớn." },
+      { name: "Quán cơm khu Tân Hưng Thuận", desc: "Phù hợp bữa trưa nhanh, giá cả hợp lý cho nhân viên." },
+      { name: "Cà phê mặt tiền đại lộ", desc: "Không gian thoáng, phù hợp tiếp đối tác hoặc làm việc ngoài giờ." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 254 Trường Chinh có phải là chi nhánh đầu tiên của MAX OFFICE tại Quận 12 không?", a: "Đúng vậy. Đây là chi nhánh đầu tiên của toàn hệ thống MAX OFFICE tại khu vực Quận 12 (cũ), thuộc Phường Tân Hưng Thuận." },
+      { q: "Chi nhánh 254 Trường Chinh áp dụng gói văn phòng ảo nào?", a: "Chi nhánh áp dụng hệ giá mới gồm 3 gói: CƠ BẢN (299.000đ/tháng), NÂNG CAO (479.000đ/tháng) và CAO CẤP (779.000đ/tháng) — giá chưa bao gồm VAT 10%, không thuộc hệ LITE-RISE chung của MAX OFFICE." },
+      { q: "Gói CƠ BẢN tại đây gồm những tiện ích gì?", a: "Gói CƠ BẢN gồm 9 mục: địa chỉ đăng ký kinh doanh, tiếp nhận thư từ và bưu phẩm, sử dụng khu vực tiếp khách, tiếp tân hỗ trợ, cơ sở vật chất cơ bản, đặt bảng tên công ty, chỗ ngồi khách vãng lai, khu vực tiếp khách chung và sử dụng phòng họp." },
+      { q: "Gói NÂNG CAO và CAO CẤP khác gì so với CƠ BẢN?", a: "Gói NÂNG CAO có đủ 9 mục của CƠ BẢN, cộng thêm thiết bị phòng (máy in, scan, photo), sử dụng phòng khánh tiết và khu trưng bày tài liệu tại lễ tân — tổng 12 mục. Gói CAO CẤP có đủ 12 mục của NÂNG CAO, cộng thêm tư vấn miễn phí thành lập doanh nghiệp, hỗ trợ thủ tục thuế ban đầu và hỗ trợ thủ tục cấp giấy chứng nhận doanh nghiệp — tổng 15 mục." },
+      { q: "Địa chỉ 254 Trường Chinh có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Hưng Thuận, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Tôi có thể đến tham quan văn phòng 254 Trường Chinh trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
+    ],
+    testimonials: [
+      { quote: "Công ty mình hoạt động chủ yếu ở khu vực Hóc Môn nên có thêm chi nhánh trên đại lộ Trường Chinh tiện hơn hẳn, khỏi phải chạy vào tận trung tâm.", initial: "T", name: "Anh Tuấn", role: "Giám đốc công ty vật liệu xây dựng" },
+      { quote: "Mình chọn gói CAO CẤP vì cần hỗ trợ thủ tục thành lập doanh nghiệp ngay từ đầu, được tư vấn rõ ràng nên yên tâm hơn nhiều.", initial: "N", name: "Chị Ngân", role: "Chủ doanh nghiệp mới thành lập" },
+    ],
+  },
 };
 
 export function getLocationBySlug(slug: string): LocationData | undefined {
@@ -3488,7 +3576,16 @@ export function getGroupedLocations(): GroupedLocations {
 
   // TỰ ĐỘNG: các khu vực đúng 1 chi nhánh chưa được cặp cố định ghép → ghép
   // đôi theo thứ tự AREAS (mỗi khu vực giữ tiêu đề/màu riêng), xếp cuối
-  // danh sách. Lẻ 1 khu vực thì hàng đó chỉ có 1 subGroup.
+  // danh sách. Lẻ 1 khu vực (số orphan là số lẻ) thì khu vực cuối KHÔNG có
+  // cặp — bỏ trống `subGroups` để rơi về đúng nhánh hiển thị "phẳng" bình
+  // thường (tiêu đề xám + lưới LocationCard full-width, y hệt 1 khu vực
+  // multi-branch thông thường — xem MultiBranchGroup trong
+  // LocationsAreaBrowser.tsx/LocationsMegaMenu.tsx) — TRÁNH đặt 1 phần tử
+  // solo vào mảng `subGroups` (thiết kế cho ĐÚNG 2 khu vực đứng cạnh nhau
+  // trong 1 hàng): từng thử để `subGroups` có 1 phần tử, hàng chỉ chiếm
+  // đúng 1/2 hoặc 1/3 bề ngang do các class `sm:basis-*` viết cho trường
+  // hợp 2 khu vực, để lại khoảng trống lớn vô lý bên cạnh — xác nhận bằng
+  // ảnh chụp /dia-diem thật trước khi sửa, không đoán.
   // Sắp theo tên (numeric-aware: "Quận 5" trước "Quận Gò Vấp") cho thứ tự ổn định.
   const orphans = areaGroups
     .filter((g) => g.locations.length === 1 && !consumedOneSlugs.has(g.area.slug))
@@ -3499,7 +3596,7 @@ export function getGroupedLocations(): GroupedLocations {
     autoGroups.push({
       area: { slug: chunk.map((g) => g.area.slug).join("+"), name: chunk.map((g) => g.area.name).join(" & ") },
       locations: chunk.flatMap((g) => g.locations),
-      subGroups: chunk.map((g) => ({ area: g.area, locations: g.locations, colorIndex: colorCounter++ })),
+      subGroups: chunk.length === 2 ? chunk.map((g) => ({ area: g.area, locations: g.locations, colorIndex: colorCounter++ })) : undefined,
       sortSlug: chunk[0].area.slug,
     });
   }
