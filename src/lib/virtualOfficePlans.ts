@@ -411,6 +411,14 @@ export type QuanBaPlan = {
   nameplate: string;
   locationVerification: string;
   reception: string;
+  /** Điểm khác biệt RIÊNG của gói này so với gói còn lại — rút gọn từ đúng
+      số liệu đã có ở QUAN_7_ADDONS bên dưới (không thêm thông tin mới),
+      nối thêm vào cuối checklist 4 dòng gốc ở MỌI nơi hiển thị (thẻ gói ở
+      trang chi nhánh, VPA finder, trang chi tiết gói, ảnh báo giá PNG —
+      xem getAllOfferedPlans() ở planFinder.ts và QuanBaServices.tsx) để
+      khách thấy rõ lý do chọn gói giá cao hơn. W-BASE không có field này
+      (giữ nguyên checklist 4 dòng như cũ). */
+  extraHighlights?: string[];
 };
 
 export const QUAN_7_VO_PLANS: QuanBaPlan[] = [
@@ -433,6 +441,7 @@ export const QUAN_7_VO_PLANS: QuanBaPlan[] = [
     nameplate: "Có (LCD tại tầng thuê)",
     locationVerification: "Có",
     reception: "Có (đón khách, nhận thư, chuyển tiếp email)",
+    extraHighlights: ["Phòng họp nhỏ miễn phí 10 giờ/tháng", "Chỗ ngồi linh động 48 giờ/năm"],
   },
 ];
 

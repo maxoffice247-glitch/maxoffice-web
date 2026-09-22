@@ -112,6 +112,7 @@ export function getAllOfferedPlans(): OfferedPlan[] {
             `Bảng tên: ${p.nameplate}`,
             `Xác minh địa chỉ: ${p.locationVerification}`,
             `Lễ tân: ${p.reception}`,
+            ...(p.extraHighlights ?? []),
           ],
         });
       }

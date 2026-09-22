@@ -130,6 +130,15 @@ export default function QuanBaServices() {
                         {plan.reception}
                       </span>
                     </li>
+                    {/* Điểm khác biệt riêng của gói (hiện chỉ W-PRO có) — rút
+                        gọn từ đúng số liệu ở bảng "Tiện ích bổ sung" bên dưới,
+                        không phải dòng tự nghĩ thêm. */}
+                    {plan.extraHighlights?.map((h) => (
+                      <li key={h} className="flex items-start gap-1.5 text-[12.5px] text-body-text">
+                        <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                        <span className="font-semibold text-navy">{h}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </RevealItem>
