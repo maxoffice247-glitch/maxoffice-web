@@ -189,6 +189,8 @@ export default function LocationPageTemplate({ data }: { data: LocationData }) {
         <Quan3CuVOServices branchName="28-34 Pasteur" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "de-tham" ? (
         <Quan3CuVOServices branchName="159C Đề Thám" slug={data.slug} promotions={data.promotions} />
+      ) : data.slug === "nguyen-van-thu" ? (
+        <Quan3CuVOServices branchName="215 Nguyễn Văn Thủ" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "ung-van-khiem" ? (
         <SilverGoldPremiumServices branchName="161 Ung Văn Khiêm" slug={data.slug} promotions={data.promotions} />
       ) : data.slug === "tan-cang" ? (

@@ -352,6 +352,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     area: AREA_QUAN_1,
   },
   {
+    slug: "nguyen-van-thu",
+    name: "215 Nguyễn Văn Thủ, Quận 1 (cũ)",
+    shortAddress: "215 Nguyễn Văn Thủ, P. Tân Định",
+    area: AREA_QUAN_1,
+  },
+  {
     slug: "tran-hung-dao",
     name: "380 Trần Hưng Đạo, Quận 5 (cũ)",
     shortAddress: "380 Trần Hưng Đạo, P. Chợ Dừa",
@@ -3140,6 +3146,91 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Khách nước ngoài của mình toàn ở quanh khu Bùi Viện nên hẹn gặp ở văn phòng cực kỳ tiện, không mất công di chuyển xa.", initial: "Q", name: "Anh Quang", role: "Chủ công ty xuất nhập khẩu" },
       { quote: "Toà nhà thiết kế đẹp, sảnh tiếp khách sang trọng nên đối tác đến làm việc đều khen không gian chuyên nghiệp.", initial: "N", name: "Chị Ngọc", role: "Giám đốc công ty tư vấn" },
+    ],
+  },
+
+  /* =============== 215 NGUYỄN VĂN THỦ (KHU VỰC QUẬN 1, CHI NHÁNH THỨ 6) =============== */
+  "nguyen-van-thu": {
+    slug: "nguyen-van-thu",
+    name: "215 Nguyễn Văn Thủ, Quận 1 (cũ)",
+    area: AREA_QUAN_1,
+    // LƯU Ý: người dùng cung cấp địa chỉ với "Phường Đa Kao" (tên phường
+    // CŨ, trước 1/7/2025) — đã tra cứu xác nhận: theo Nghị quyết 1685/
+    // NQ-UBTVQH15, đường Nguyễn Văn Thủ thuộc phần Phường Đa Kao được sáp
+    // nhập vào Phường Tân Định (MỚI), không phải Phường Sài Gòn (phần còn
+    // lại của Đa Kao + Bến Nghé + Nguyễn Thái Bình). Dùng "Phường Tân
+    // Định" cho đúng đơn vị hành chính hiện hành, khớp quy ước "địa chỉ
+    // dùng tên phường MỚI" đang áp dụng cho mọi chi nhánh khác trên site
+    // (Điện Biên Phủ, 36 Mạc Đĩnh Chi cũng đã ở Phường Tân Định) — "Đa
+    // Kao" vẫn dùng như tên gọi khu vực quen thuộc trong nội dung mô tả.
+    address: "215 Nguyễn Văn Thủ, Phường Tân Định, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 215 Nguyễn Văn Thủ, Quận 1 (cũ)",
+    heroDescription:
+      "Chi nhánh thứ 6 của MAX OFFICE tại Quận 1 (cũ) — văn phòng ảo 3 gói riêng biệt từ 479.000đ/tháng, toà nhà MORE ngay khu Đa Kao, gần Thảo Cầm Viên.",
+    metaTitle: "Văn Phòng Ảo 215 Nguyễn Văn Thủ, Quận 1 (cũ) | Từ 479K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 215 Nguyễn Văn Thủ, Phường Tân Định — chi nhánh thứ 6 MAX OFFICE tại Quận 1 (cũ), 3 gói SILVER/GOLD/PREMIUM từ 479.000đ/tháng (chưa VAT), khu Đa Kao gần Thảo Cầm Viên.",
+    image: "/images/anh-hero-trang-chu.jpg",
+    // Ảnh mặt tiền gốc 1070x1086 (0.985, trên ngưỡng FACADE_TALL_RATIO_THRESHOLD nên giữ tỉ lệ thật, gần vuông).
+    facadeAspectRatio: "1070 / 1086",
+    facadeImageSide: "left",
+    interiorImages: [
+      { src: "/images/dia-diem-nguyen-van-thu-le-tan.jpg", alt: "Quầy lễ tân toà nhà văn phòng 215 Nguyễn Văn Thủ", caption: "Quầy lễ tân" },
+      { src: "/images/dia-diem-nguyen-van-thu-sanh-tiep-khach.jpg", alt: "Sảnh tiếp khách toà nhà văn phòng 215 Nguyễn Văn Thủ", caption: "Sảnh tiếp khách" },
+      { src: "/images/dia-diem-nguyen-van-thu-san-trong.jpg", alt: "Sảnh trống toà nhà văn phòng 215 Nguyễn Văn Thủ", caption: "Sảnh trống" },
+    ],
+    intro: [
+      "Văn phòng 215 Nguyễn Văn Thủ là chi nhánh thứ 6 của MAX OFFICE tại khu vực Quận 1 (cũ), và là chi nhánh thứ 3 thuộc Phường Tân Định — cùng phường với Điện Biên Phủ và 36 Mạc Đĩnh Chi. Đường Nguyễn Văn Thủ nằm trong khu vực người dân quen gọi là Đa Kao, giáp kênh Nhiêu Lộc - Thị Nghè về phía Bình Thạnh, và có Thảo Cầm Viên Sài Gòn nằm ngay trên đường Nguyễn Bỉnh Khiêm liền kề — một trong những khu vực trung tâm lâu đời, yên tĩnh hơn so với lõi thương mại sầm uất của Quận 1.",
+      "Chi nhánh đặt tại toà nhà văn phòng MORE — công trình nhiều tầng với các ban công gỗ so le đặc trưng ở khối tháp và mặt kính lớn ở khối đế. Sảnh lễ tân ốp đá marble tối màu, quầy lễ tân khắc chữ RECEPTION nổi bật dưới hệ đèn LED uốn lượn trên trần. Sảnh trống tầng cao có cửa kính lớn từ sàn đến trần, nhìn ra toàn cảnh khu dân cư thấp tầng xung quanh, sàn kết hợp đá marble và gỗ công nghiệp — phù hợp bố trí không gian làm việc mở.",
+      "Chi nhánh cung cấp 3 gói văn phòng ảo riêng biệt — SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng), giá chưa bao gồm VAT 10% — cùng bảng giá đang áp dụng tại 36 Mạc Đĩnh Chi, 28-34 Pasteur, 159C Đề Thám (cùng Quận 1) và 2 chi nhánh khu vực Quận 3 (cũ). Đây là hệ giá HOÀN TOÀN KHÁC với gói START/BASE (hệ LITE-RISE) đang áp dụng tại chi nhánh Điện Biên Phủ cùng khu vực Quận 1.",
+      "Với vị trí tại khu Đa Kao yên tĩnh nhưng vẫn thuộc trung tâm Quận 1, doanh nghiệp đặt văn phòng tại 215 Nguyễn Văn Thủ vừa có địa chỉ đăng ký kinh doanh uy tín, vừa thuận tiện di chuyển sang Bình Thạnh (qua kênh Nhiêu Lộc - Thị Nghè) hoặc vào lõi trung tâm Quận 1. Đây là lựa chọn phù hợp cho doanh nghiệp muốn một không gian làm việc yên tĩnh hơn nhưng vẫn giữ được vị thế địa chỉ trung tâm thành phố.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 215 Nguyễn Văn Thủ",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh thứ 6 tại Quận 1", desc: "Toà nhà văn phòng MORE, ban công gỗ đặc trưng, mặt kính hiện đại." },
+      { icon: MapPinIcon, title: "Khu Đa Kao, gần Thảo Cầm Viên", desc: "Thảo Cầm Viên Sài Gòn nằm ngay trên đường Nguyễn Bỉnh Khiêm liền kề." },
+      { icon: BadgePercentIcon, title: "3 gói giá linh hoạt", desc: "SILVER, GOLD, PREMIUM — từ 479.000đ/tháng." },
+      { icon: ShieldCheckIcon, title: "Sảnh lễ tân sang trọng", desc: "Đá marble tối màu, đèn LED uốn lượn trên trần." },
+      { icon: UsersIcon, title: "Không gian làm việc mở", desc: "Sảnh trống cửa kính lớn, kết hợp sàn đá marble và gỗ công nghiệp." },
+      { icon: ClockIcon, title: "Kết nối Bình Thạnh, trung tâm Quận 1", desc: "Giáp kênh Nhiêu Lộc - Thị Nghè, thuận tiện di chuyển đa hướng." },
+    ],
+    promotions: [
+      "Ký hợp đồng 12 tháng: tặng 2 tháng miễn phí",
+      "Ký hợp đồng 24 tháng: tặng 6 tháng miễn phí",
+    ],
+    nearbyItems: [
+      { name: "Thảo Cầm Viên Sài Gòn", desc: "Nằm ngay trên đường Nguyễn Bỉnh Khiêm, cùng khu vực Đa Kao với chi nhánh." },
+      { name: "Kênh Nhiêu Lộc - Thị Nghè", desc: "Ranh giới tự nhiên phía Bình Thạnh, cảnh quan xanh dọc kênh." },
+      { name: "Phường Tân Định", desc: "Cùng phường với 2 chi nhánh Điện Biên Phủ và 36 Mạc Đĩnh Chi." },
+      { name: "Trung tâm Quận 1", desc: "Từ chi nhánh di chuyển vào lõi trung tâm Quận 1 khá thuận tiện." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Trục Nguyễn Văn Thủ - Nguyễn Bỉnh Khiêm", desc: "Kết nối nhanh tới khu vực Thảo Cầm Viên và trung tâm Quận 1." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Khu vực yên tĩnh, dễ dàng đặt xe vào mọi khung giờ." },
+      { icon: CarIcon, title: "Kết nối Bình Thạnh", desc: "Qua kênh Nhiêu Lộc - Thị Nghè, thuận tiện di chuyển liên khu vực." },
+      { icon: HeadsetIcon, title: "Lễ tân hỗ trợ đón khách", desc: "Đội ngũ tại sảnh sẵn sàng hướng dẫn khách ngay khi vừa đến." },
+    ],
+    parkingInfo: [
+      "Toà nhà có khu vực đậu xe máy cho khách đến làm việc.",
+      "Khu vực Đa Kao yên tĩnh, thuận tiện dừng đỗ ô tô ngắn hạn khi cần đưa đón đối tác.",
+      "Bảo vệ toà nhà hỗ trợ hướng dẫn xe ra vào trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán cà phê khu Đa Kao", desc: "Nhiều lựa chọn không gian yên tĩnh, phù hợp tiếp khách hoặc làm việc." },
+      { name: "Quán ăn khu Nguyễn Bỉnh Khiêm", desc: "Đa dạng quán ăn phục vụ bữa trưa cho nhân viên văn phòng." },
+      { name: "Nhà hàng khu vực Tân Định", desc: "Phù hợp mời đối tác dùng bữa sau buổi làm việc." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 215 Nguyễn Văn Thủ là chi nhánh thứ mấy của MAX OFFICE tại Quận 1?", a: "Đây là chi nhánh thứ 6 tại khu vực Quận 1 (cũ), và là chi nhánh thứ 3 thuộc Phường Tân Định, sau Điện Biên Phủ và 36 Mạc Đĩnh Chi." },
+      { q: "Chi nhánh 215 Nguyễn Văn Thủ áp dụng bảng giá văn phòng ảo nào?", a: "Chi nhánh áp dụng 3 gói: SILVER (479.000đ/tháng), GOLD (639.000đ/tháng) và PREMIUM (990.000đ/tháng) — giá chưa bao gồm VAT 10%, cùng bảng giá đang áp dụng tại 36 Mạc Đĩnh Chi, 28-34 Pasteur, 159C Đề Thám (Quận 1 cũ), 60 Nguyễn Thông và 520 Cách Mạng Tháng 8 (Quận 3 cũ)." },
+      { q: "Chi nhánh có gần Thảo Cầm Viên không?", a: "Có. Thảo Cầm Viên Sài Gòn nằm ngay trên đường Nguyễn Bỉnh Khiêm, cùng khu vực Đa Kao với chi nhánh." },
+      { q: "Địa chỉ 215 Nguyễn Văn Thủ có hợp lệ để đăng ký kinh doanh không?", a: "Có. Toà nhà MORE nằm trong Phường Tân Định, MAX OFFICE cung cấp đầy đủ giấy tờ chứng minh quyền sử dụng địa chỉ để bạn nộp hồ sơ đăng ký doanh nghiệp, hộ kinh doanh và khai báo thuế." },
+      { q: "Chi nhánh 215 Nguyễn Văn Thủ khác gì so với Điện Biên Phủ và 36 Mạc Đĩnh Chi dù cùng Phường Tân Định?", a: "Về giá, 215 Nguyễn Văn Thủ và 36 Mạc Đĩnh Chi dùng chung 3 gói SILVER/GOLD/PREMIUM; riêng Điện Biên Phủ dùng gói START/BASE thuộc hệ LITE-RISE. Về vị trí, 215 Nguyễn Văn Thủ nằm sâu hơn trong khu Đa Kao yên tĩnh, gần Thảo Cầm Viên, khác với Điện Biên Phủ và 36 Mạc Đĩnh Chi ở trục đường lớn gần Thảo Cầm Viên phía cổng chính." },
+      { q: "Tôi có thể đến tham quan văn phòng 215 Nguyễn Văn Thủ trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
+    ],
+    testimonials: [
+      { quote: "Khu vực Đa Kao yên tĩnh hơn hẳn so với văn phòng cũ của mình ở lõi trung tâm, mà vẫn giữ được địa chỉ Quận 1 khi giao dịch với đối tác.", initial: "L", name: "Chị Linh", role: "Giám đốc công ty thiết kế nội thất" },
+      { quote: "Sảnh lễ tân toà nhà MORE khá ấn tượng, đối tác ghé văn phòng lần đầu đều khen không gian sang trọng.", initial: "H", name: "Anh Huy", role: "Chủ doanh nghiệp tư vấn đầu tư" },
     ],
   },
 

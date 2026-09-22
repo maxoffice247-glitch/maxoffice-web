@@ -820,6 +820,7 @@ export const SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS: string[] = [
   "mac-dinh-chi",
   "pasteur",
   "de-tham",
+  "nguyen-van-thu",
 ];
 
 /* ---------------------------------------------------------------------- */

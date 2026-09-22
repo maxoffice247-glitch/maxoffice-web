@@ -243,6 +243,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "36 Bùi Thị Xuân, P. Bến Thành",
   },
   {
+    title: "215 Nguyễn Văn Thủ, Quận 1 (cũ)",
+    category: "Chi nhánh",
+    href: "/locations/nguyen-van-thu",
+    desc: "215 Nguyễn Văn Thủ, P. Tân Định",
+  },
+  {
     title: "254 Trường Chinh, Quận 12 (cũ)",
     category: "Chi nhánh",
     href: "/locations/truong-chinh",
