@@ -303,6 +303,9 @@ export function getCheapestPriceForLocation(slug: string): number | undefined {
   if (slug === "truong-chinh") {
     return TRUONG_CHINH_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
+  if (slug === "vanh-dai-trong") {
+    return VANH_DAI_TRONG_VO_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
+  }
   if (SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS.includes(slug)) {
     return SILVER_GOLD_PREMIUM_Q1Q3_PLANS.reduce((min, p) => Math.min(min, p.price), Infinity);
   }
@@ -926,4 +929,86 @@ export const SILVER_GOLD_PREMIUM_LOCATIONS: string[] = [
   // Chi nhánh SGP đầu tiên tại khu vực Tân Bình (cũ) — 8 chi nhánh Tân Bình
   // còn lại dùng hệ LITE-RISE, KHÔNG cùng bảng giá này.
   "ut-tich",
+];
+
+/* ---------------------------------------------------------------------- */
+/* 345 Vành Đai Trong, Bình Tân — bảng giá riêng BASIC/STANDARD/PRIME,     */
+/* không thuộc hệ thống LITE–RISE hay bất kỳ hệ giá riêng nào khác. Chỉ    */
+/* khả dụng tại chi nhánh "vanh-dai-trong" — chi nhánh ĐẦU TIÊN (và duy    */
+/* nhất tính đến nay) tại khu vực Quận Bình Tân (cũ), khu vực hoàn toàn    */
+/* mới trong hệ thống.                                                     */
+/*                                                                          */
+/* Tên gói "PRIME" (không phải "Premium") — CỐ Ý để tránh trùng với gói    */
+/* PREMIUM (990.000đ) đã có sẵn ở hệ SILVER/GOLD/PREMIUM (Bình Thạnh/Phú   */
+/* Nhuận/Quận 4/Thủ Đức/Tân Bình) — đã xác nhận với chủ site, không đổi    */
+/* lại thành "Premium".                                                    */
+/*                                                                          */
+/* Cùng khuôn mẫu TruongChinhPlan (liệt kê ĐẦY ĐỦ từng mục ở cả 3 gói, kể  */
+/* cả mục đã có ở gói thấp hơn — không dùng câu tóm tắt kiểu "Bao gồm toàn */
+/* bộ gói BASIC"), theo đúng danh sách tính năng gốc do chủ site cung cấp. */
+/* ---------------------------------------------------------------------- */
+
+export type VanhDaiTrongPlanKey = "basic" | "standard" | "prime";
+
+export type VanhDaiTrongPlan = {
+  key: VanhDaiTrongPlanKey;
+  name: string;
+  price: number;
+  duration: string;
+  /** Liệt kê ĐẦY ĐỦ từng mục — kể cả mục đã có ở gói thấp hơn — không dùng
+      câu tóm tắt kiểu "Bao gồm toàn bộ gói BASIC". Xem doc comment phía
+      trên khối này. */
+  features: string[];
+};
+
+export const VANH_DAI_TRONG_VO_PLANS: VanhDaiTrongPlan[] = [
+  {
+    key: "basic",
+    name: "BASIC",
+    price: 600000,
+    duration: "/ tháng",
+    features: [
+      "Sử dụng địa chỉ kinh doanh",
+      "Đặt bảng tên công ty",
+      "Lễ tân chuyên nghiệp",
+      "Tiếp nhận thư, bưu phẩm",
+      "Internet tốc độ cao",
+      "Sử dụng sảnh tiếp khách chung",
+      "Phòng họp miễn phí: 2 giờ/tháng",
+    ],
+  },
+  {
+    key: "standard",
+    name: "STANDARD",
+    price: 800000,
+    duration: "/ tháng",
+    features: [
+      "Sử dụng địa chỉ kinh doanh",
+      "Đặt bảng tên công ty",
+      "Lễ tân chuyên nghiệp",
+      "Tiếp nhận thư, bưu phẩm",
+      "Internet tốc độ cao",
+      "Sử dụng sảnh tiếp khách chung",
+      "Free 1 hot desk: 8 giờ/tháng",
+      "Phòng họp miễn phí: 4 giờ/tháng",
+      "Quầy pantry: cafe, trà, nước",
+    ],
+  },
+  {
+    key: "prime",
+    name: "PRIME",
+    price: 1000000,
+    duration: "/ tháng",
+    features: [
+      "Sử dụng địa chỉ kinh doanh",
+      "Đặt bảng tên công ty",
+      "Lễ tân chuyên nghiệp",
+      "Tiếp nhận thư, bưu phẩm",
+      "Internet tốc độ cao",
+      "Sử dụng sảnh tiếp khách chung",
+      "Free 1 hot desk: 24 giờ/tháng",
+      "Phòng họp miễn phí: 8 giờ/tháng",
+      "Quầy pantry: cafe, trà, nước",
+    ],
+  },
 ];

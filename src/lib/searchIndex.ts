@@ -231,6 +231,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "254 Trường Chinh, P. Tân Hưng Thuận",
   },
   {
+    title: "345 Vành Đai Trong, Bình Tân",
+    category: "Chi nhánh",
+    href: "/locations/vanh-dai-trong",
+    desc: "345 Vành Đai Trong, P. An Lạc — toà nhà Phúc Thịnh Building",
+  },
+  {
     title: "84-86 Nguyễn Trường Tộ, Quận 4 (cũ)",
     category: "Chi nhánh",
     href: "/locations/nguyen-truong-to",
@@ -319,6 +325,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Khu vực",
     href: "/dia-diem/quan-5-cu",
     desc: "Chi nhánh 380 Trần Hưng Đạo — gần khu Chợ Lớn, có pantry cà phê miễn phí trên tầng thượng",
+  },
+  {
+    title: "Quận Bình Tân (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-binh-tan-cu",
+    desc: "Chi nhánh 345 Vành Đai Trong — toà nhà Phúc Thịnh Building, mặt tiền đường Vành Đai Trong (Vành đai 2)",
   },
   {
     title: "Bảng giá Văn phòng & Coworking",

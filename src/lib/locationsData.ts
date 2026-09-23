@@ -69,6 +69,7 @@ const AREA_PHU_NHUAN = { slug: "phu-nhuan-cu", name: "Quận Phú Nhuận (cũ)"
 const AREA_QUAN_4 = { slug: "quan-4-cu", name: "Quận 4 (cũ)" };
 const AREA_QUAN_5 = { slug: "quan-5-cu", name: "Quận 5 (cũ)" };
 const AREA_QUAN_12 = { slug: "quan-12-cu", name: "Quận 12 (cũ)" };
+const AREA_BINH_TAN = { slug: "quan-binh-tan-cu", name: "Quận Bình Tân (cũ)" };
 
 export const AREAS: AreaInfo[] = [
   {
@@ -126,6 +127,11 @@ export const AREAS: AreaInfo[] = [
     ...AREA_QUAN_12,
     description:
       "Khu vực cửa ngõ Tây Bắc TP.HCM, giáp Hóc Môn, có đại lộ Trường Chinh 10 làn xe — trục giao thông lớn và sầm uất nhất khu vực chạy qua.",
+  },
+  {
+    ...AREA_BINH_TAN,
+    description:
+      "Khu vực cửa ngõ Tây Nam TP.HCM, mặt tiền đường Vành Đai Trong (Vành đai 2), kết nối thuận tiện sang Quận 1, Quận 6, Quận 8 và Bình Chánh.",
   },
 ];
 
@@ -344,6 +350,12 @@ const ALL_LOCATIONS_LIST: LocationListItem[] = [
     name: "254 Trường Chinh, Quận 12 (cũ)",
     shortAddress: "254 Trường Chinh, P. Tân Hưng Thuận",
     area: AREA_QUAN_12,
+  },
+  {
+    slug: "vanh-dai-trong",
+    name: "345 Vành Đai Trong, Bình Tân",
+    shortAddress: "345 Vành Đai Trong, P. An Lạc",
+    area: AREA_BINH_TAN,
   },
 ];
 
@@ -3150,6 +3162,92 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     testimonials: [
       { quote: "Công ty mình hoạt động chủ yếu ở khu vực Hóc Môn nên có thêm chi nhánh trên đại lộ Trường Chinh tiện hơn hẳn, khỏi phải chạy vào tận trung tâm.", initial: "T", name: "Anh Tuấn", role: "Giám đốc công ty vật liệu xây dựng" },
       { quote: "Mình chọn gói CAO CẤP vì cần hỗ trợ thủ tục thành lập doanh nghiệp ngay từ đầu, được tư vấn rõ ràng nên yên tâm hơn nhiều.", initial: "N", name: "Chị Ngân", role: "Chủ doanh nghiệp mới thành lập" },
+    ],
+  },
+
+  /* =============== 345 VÀNH ĐAI TRONG (CHI NHÁNH ĐẦU TIÊN — BÌNH TÂN) =============== */
+  "vanh-dai-trong": {
+    slug: "vanh-dai-trong",
+    name: "345 Vành Đai Trong, Bình Tân",
+    area: AREA_BINH_TAN,
+    address: "345 Vành Đai Trong, Phường An Lạc, Thành phố Hồ Chí Minh",
+    heroTitle: "Văn Phòng Cho Thuê 345 Vành Đai Trong, Bình Tân",
+    heroDescription:
+      "Chi nhánh ĐẦU TIÊN của MAX OFFICE tại khu vực Quận Bình Tân (cũ) — văn phòng ảo 3 gói BASIC/STANDARD/PRIME từ 600.000đ/tháng, toà nhà Phúc Thịnh Building ngay mặt tiền đường Vành Đai Trong (Vành đai 2).",
+    metaTitle: "Văn Phòng Ảo 345 Vành Đai Trong, Bình Tân | Từ 600K/Tháng",
+    metaDescription:
+      "Thuê văn phòng ảo tại 345 Vành Đai Trong, Phường An Lạc — chi nhánh đầu tiên MAX OFFICE tại Bình Tân, 3 gói BASIC/STANDARD/PRIME từ 600.000đ/tháng (chưa VAT), toà nhà Phúc Thịnh Building mặt tiền Vành Đai Trong.",
+    image: "/images/coworking.jpg",
+    // Ảnh mặt tiền gốc 1107x1421 (tỉ lệ ~0.779, trên ngưỡng
+    // FACADE_TALL_RATIO_THRESHOLD 0.72 nên giữ nguyên tỉ lệ thật, không ép
+    // về khung 3:4 — xem LocationPageTemplate.tsx).
+    facadeAspectRatio: "1107 / 1421",
+    facadeImageSide: "left",
+    interiorImages: [
+      {
+        src: "/images/dia-diem-vanh-dai-trong-le-tan-tiep-khach.jpg",
+        alt: "Quầy lễ tân và khu tiếp khách văn phòng 345 Vành Đai Trong",
+        caption: "Quầy lễ tân & tiếp khách",
+      },
+      {
+        src: "/images/dia-diem-vanh-dai-trong-phong-hop.jpg",
+        alt: "Phòng họp văn phòng 345 Vành Đai Trong",
+        caption: "Phòng họp",
+      },
+      {
+        src: "/images/dia-diem-vanh-dai-trong-cho-ngoi-lam-viec.jpg",
+        alt: "Chỗ ngồi làm việc văn phòng 345 Vành Đai Trong",
+        caption: "Chỗ ngồi làm việc",
+      },
+    ],
+    intro: [
+      "Văn phòng 345 Vành Đai Trong là chi nhánh ĐẦU TIÊN của MAX OFFICE tại khu vực Quận Bình Tân (cũ) — khu vực hoàn toàn mới trong hệ thống, thuộc Phường An Lạc. Chi nhánh toạ lạc ngay mặt tiền đường Vành Đai Trong, một đoạn thuộc tuyến Vành đai 2 của TP.HCM, giúp doanh nghiệp đặt văn phòng tại đây kết nối thuận tiện sang nhiều hướng: vào trung tâm Quận 1, hoặc sang các khu vực Quận 6, Quận 8 và Bình Chánh mà không phải đi vòng qua nội đô.",
+      "Chi nhánh đặt tại toà nhà Phúc Thịnh Building, dễ nhận diện nhờ biển hiệu lớn ngay mặt tiền đường Vành Đai Trong. Không gian làm việc được bố trí với khu vực lễ tân và sảnh tiếp khách chung ngay lối vào, phòng họp riêng trang bị bàn ghế đầy đủ cho các buổi trao đổi với đối tác, cùng khu vực chỗ ngồi làm việc thoáng đãng, có cửa sổ lấy sáng tự nhiên.",
+      "Đây cũng là chi nhánh đầu tiên MAX OFFICE triển khai hệ giá 3 gói hoàn toàn mới — BASIC (600.000đ/tháng), STANDARD (800.000đ/tháng) và PRIME (1.000.000đ/tháng, giá chưa bao gồm VAT 10%). Gói BASIC gồm các tiện ích nền tảng: sử dụng địa chỉ kinh doanh, đặt bảng tên công ty, lễ tân chuyên nghiệp, tiếp nhận thư/bưu phẩm, internet tốc độ cao, sảnh tiếp khách chung và 2 giờ phòng họp miễn phí mỗi tháng. Gói STANDARD có thêm 1 hot desk miễn phí 8 giờ/tháng, tăng phòng họp lên 4 giờ/tháng và quầy pantry phục vụ cafe, trà, nước. Gói PRIME nâng hot desk lên 24 giờ/tháng và phòng họp lên 8 giờ/tháng, vẫn giữ đầy đủ quầy pantry.",
+      "Là khu vực cửa ngõ Tây Nam thành phố với mặt tiền Vành Đai Trong (Vành đai 2), chi nhánh này phù hợp cho doanh nghiệp hoạt động ở khu vực Bình Tân, Bình Chánh hoặc cần một địa chỉ đăng ký kinh doanh thuận tiện di chuyển sang Quận 6, Quận 8 mà không phải đặt văn phòng tận trung tâm thành phố, đồng thời vẫn có đầy đủ tiện ích văn phòng chuyên nghiệp.",
+    ],
+    benefitsTitle: "Vì sao nên chọn văn phòng 345 Vành Đai Trong",
+    benefits: [
+      { icon: BuildingIcon, title: "Chi nhánh đầu tiên tại Bình Tân", desc: "Mở rộng hệ thống MAX OFFICE sang khu vực hoàn toàn mới, toà nhà Phúc Thịnh Building." },
+      { icon: MapPinIcon, title: "Mặt tiền đường Vành Đai Trong", desc: "Thuộc tuyến Vành đai 2, kết nối thuận tiện sang Quận 1, Quận 6, Quận 8 và Bình Chánh." },
+      { icon: BadgePercentIcon, title: "3 gói BASIC/STANDARD/PRIME", desc: "Từ 600.000đ/tháng, hệ giá mới riêng cho chi nhánh này, chưa gồm VAT." },
+      { icon: KeyIcon, title: "Hot desk linh hoạt", desc: "Gói STANDARD và PRIME có sẵn hot desk miễn phí, dùng được ngay khi cần chỗ ngồi làm việc." },
+      { icon: CoffeeIcon, title: "Quầy pantry phục vụ tại chỗ", desc: "Cafe, trà, nước phục vụ miễn phí cho gói STANDARD và PRIME." },
+      { icon: CarIcon, title: "Kết nối Quận 6, Quận 8, Bình Chánh", desc: "Vành Đai Trong nối thẳng nhiều hướng, thuận tiện di chuyển liên khu vực." },
+    ],
+    nearbyItems: [
+      { name: "Đường Vành Đai Trong (Vành đai 2)", desc: "Trục giao thông chính khu vực, ngay mặt tiền chi nhánh." },
+      { name: "Phường An Lạc", desc: "Khu vực chi nhánh toạ lạc, thuộc Quận Bình Tân (cũ)." },
+      { name: "Hướng Bình Chánh", desc: "Vành Đai Trong kết nối tiếp sang khu vực Bình Chánh, cửa ngõ Tây Nam thành phố." },
+      { name: "Giáp Quận 6, Quận 8", desc: "Vị trí thuận tiện di chuyển sang khu vực Quận 6 và Quận 8." },
+    ],
+    transportItems: [
+      { icon: MapPinIcon, title: "Mặt tiền đường Vành Đai Trong", desc: "Thuộc tuyến Vành đai 2, trục giao thông chính của khu vực Bình Tân." },
+      { icon: ClockIcon, title: "Taxi & Grab", desc: "Mặt tiền đường lớn, dễ dàng đặt xe và đón trả khách." },
+      { icon: CarIcon, title: "Kết nối Quận 6 — Quận 8 — Bình Chánh", desc: "Vành Đai Trong nối nhiều hướng, thuận tiện di chuyển liên khu vực." },
+      { icon: HeadsetIcon, title: "Lễ tân hỗ trợ đón khách", desc: "Đội ngũ tại sảnh sẵn sàng hướng dẫn khách ngay khi vừa đến." },
+    ],
+    parkingInfo: [
+      "Toà nhà có khu vực đậu xe máy cho khách đến làm việc.",
+      "Mặt tiền đường Vành Đai Trong rộng rãi, thuận tiện dừng đỗ ô tô ngắn hạn khi cần đưa đón đối tác.",
+      "Bảo vệ toà nhà hỗ trợ hướng dẫn xe ra vào trong giờ làm việc.",
+    ],
+    diningItems: [
+      { name: "Quán ăn dọc Vành Đai Trong", desc: "Đa dạng quán ăn, cà phê phục vụ dân văn phòng dọc trục đường." },
+      { name: "Quán cơm khu An Lạc", desc: "Phù hợp bữa trưa nhanh, giá cả hợp lý cho nhân viên." },
+      { name: "Quầy pantry tại chỗ", desc: "Cafe, trà, nước phục vụ ngay tại văn phòng cho khách dùng gói STANDARD/PRIME." },
+    ],
+    faqs: [
+      { q: "Chi nhánh 345 Vành Đai Trong có phải là chi nhánh đầu tiên của MAX OFFICE tại Bình Tân không?", a: "Đúng vậy. Đây là chi nhánh đầu tiên của toàn hệ thống MAX OFFICE tại khu vực Quận Bình Tân (cũ), thuộc Phường An Lạc." },
+      { q: "Chi nhánh 345 Vành Đai Trong áp dụng gói văn phòng ảo nào?", a: "Chi nhánh áp dụng hệ giá mới gồm 3 gói: BASIC (600.000đ/tháng), STANDARD (800.000đ/tháng) và PRIME (1.000.000đ/tháng) — giá chưa bao gồm VAT 10%, không thuộc hệ LITE-RISE chung của MAX OFFICE." },
+      { q: "Gói BASIC tại đây gồm những tiện ích gì?", a: "Gói BASIC gồm: sử dụng địa chỉ kinh doanh, đặt bảng tên công ty, lễ tân chuyên nghiệp, tiếp nhận thư/bưu phẩm, internet tốc độ cao, sử dụng sảnh tiếp khách chung và phòng họp miễn phí 2 giờ/tháng." },
+      { q: "Gói STANDARD và PRIME khác gì so với BASIC?", a: "Gói STANDARD có đủ tiện ích của BASIC, cộng thêm 1 hot desk miễn phí 8 giờ/tháng, tăng phòng họp lên 4 giờ/tháng và quầy pantry (cafe, trà, nước). Gói PRIME giữ nguyên các tiện ích của STANDARD nhưng tăng hot desk lên 24 giờ/tháng và phòng họp lên 8 giờ/tháng." },
+      { q: "Địa chỉ 345 Vành Đai Trong có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường An Lạc, đủ điều kiện đăng ký kinh doanh và đăng ký thuế cho công ty TNHH, công ty cổ phần lẫn hộ kinh doanh cá thể." },
+      { q: "Tôi có thể đến tham quan văn phòng 345 Vành Đai Trong trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ MAX OFFICE sẽ liên hệ sắp xếp lịch tham quan miễn phí phù hợp với thời gian của bạn." },
+    ],
+    testimonials: [
+      { quote: "Công ty mình hoạt động chủ yếu ở khu vực Bình Chánh nên có thêm chi nhánh trên đường Vành Đai Trong tiện hơn hẳn, khỏi phải chạy vào tận trung tâm.", initial: "H", name: "Anh Hải", role: "Giám đốc công ty vận tải" },
+      { quote: "Mình chọn gói PRIME vì cần chỗ ngồi làm việc thường xuyên, có hot desk riêng lại thêm cafe miễn phí nên khá thoải mái.", initial: "L", name: "Chị Linh", role: "Chủ doanh nghiệp thương mại điện tử" },
     ],
   },
 };

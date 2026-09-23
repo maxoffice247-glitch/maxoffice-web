@@ -1,11 +1,13 @@
 /**
- * Gộp toàn bộ 7 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
+ * Gộp toàn bộ 8 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
  * nhánh; M-START/M-BASE/M-ORIGIN riêng Phạm Văn Đồng; W-BASE/W-PRO riêng
  * Bùi Văn Ba; LEAN/GROWING/SCALE-UP riêng 79 Nguyễn Thế Truyện (hệ giá đối
  * tác, xem NGUYEN_THE_TRUYEN_VO_PLANS); SILVER/GOLD/PREMIUM (3 gói, từ
  * 479K) dùng chung Quận 1 (cũ) + Quận 3 (cũ); SILVER/GOLD/PREMIUM dùng
- * chung Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức/Tân Bình) thành MỘT danh sách
- * phẳng — dùng cho công cụ /tien-ich/tim-goi-phu-hop.
+ * chung Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức/Tân Bình; CƠ BẢN/NÂNG CAO/CAO
+ * CẤP riêng 254 Trường Chinh; BASIC/STANDARD/PRIME riêng 345 Vành Đai
+ * Trong) thành MỘT danh sách phẳng — dùng cho công cụ
+ * /tien-ich/tim-goi-phu-hop.
  *
  * (Đã xoá hệ giá đối tác CORE/PLUS/PRO "LiteSpace" — 28 Mai Chí Thọ, 68
  * Phan Đăng Lưu, 198 Nguyễn Thị Minh Khai, 62 Trần Huy Liệu — cùng lúc
@@ -24,6 +26,7 @@ import {
   BUI_THI_XUAN_VO_PLANS,
   NGUYEN_THE_TRUYEN_VO_PLANS,
   TRUONG_CHINH_VO_PLANS,
+  VANH_DAI_TRONG_VO_PLANS,
   SILVER_GOLD_PREMIUM_Q1Q3_PLANS,
   SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS,
   SILVER_GOLD_PREMIUM_VO_PLANS,
@@ -154,6 +157,21 @@ export function getAllOfferedPlans(): OfferedPlan[] {
       // Hệ giá riêng CƠ BẢN/NÂNG CAO/CAO CẤP — mỗi gói đã tự liệt kê đủ
       // features[] (xem TruongChinhPlan trong virtualOfficePlans.ts).
       for (const p of TRUONG_CHINH_VO_PLANS) {
+        result.push({
+          locationSlug: slug,
+          locationName: name,
+          area,
+          planKey: p.key,
+          planName: p.name,
+          price: p.price,
+          duration: p.duration,
+          features: p.features,
+        });
+      }
+    } else if (slug === "vanh-dai-trong") {
+      // Hệ giá riêng BASIC/STANDARD/PRIME — mỗi gói đã tự liệt kê đủ
+      // features[] (xem VanhDaiTrongPlan trong virtualOfficePlans.ts).
+      for (const p of VANH_DAI_TRONG_VO_PLANS) {
         result.push({
           locationSlug: slug,
           locationName: name,
