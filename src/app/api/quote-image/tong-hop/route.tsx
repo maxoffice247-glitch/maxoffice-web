@@ -17,7 +17,14 @@ import {
   type QuoteBucket,
 } from "@/lib/compositeQuote";
 import { amountToVietnameseWords } from "@/lib/numberToWords";
-import { buildVietQrImageUrl, buildQrNote, vietQrAccountLabel, detectImageMimeType } from "@/lib/vietQr";
+import {
+  buildVietQrImageUrl,
+  buildQrNote,
+  vietQrAccountLabel,
+  detectImageMimeType,
+  isVietQrAccountKey,
+  DEFAULT_VIETQR_ACCOUNT_KEY,
+} from "@/lib/vietQr";
 
 /**
  * Ảnh "Báo giá tổng hợp" — 1 ảnh PNG gộp NHIỀU dịch vụ khác nhau (VD: gói
@@ -380,10 +387,15 @@ export async function POST(req: Request) {
     if (qrAmount == null || total > qrAmount) qrAmount = total;
   }
 
+  // KHÔNG tin thẳng body.qrAccountKey — chỉ chấp nhận khi khớp đúng 1 trong
+  // các key đã khai báo sẵn ở VIETQR_ACCOUNTS, rơi về tài khoản mặc định
+  // (đúng hành vi trước khi có nhiều tài khoản) nếu thiếu hoặc sai key.
+  const qrAccountKey = isVietQrAccountKey(body.qrAccountKey) ? body.qrAccountKey : DEFAULT_VIETQR_ACCOUNT_KEY;
+
   let qrDataUri: string | null = null;
   if (body.showQr) {
     try {
-      const qrUrl = buildVietQrImageUrl(qrAmount, buildQrNote(customer));
+      const qrUrl = buildVietQrImageUrl(qrAccountKey, qrAmount, buildQrNote(customer));
       const qrRes = await fetch(qrUrl);
       if (qrRes.ok) {
         const buf = await qrRes.arrayBuffer();
@@ -494,7 +506,7 @@ export async function POST(req: Request) {
                 Quét mã để chuyển khoản
               </div>
               <div style={{ display: "flex", marginTop: 6, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
-                {vietQrAccountLabel()}
+                {vietQrAccountLabel(qrAccountKey)}
               </div>
               {qrAmount != null && (
                 <div style={{ display: "flex", marginTop: 2, fontSize: 14, color: QUOTE_COLOR.bodyText }}>

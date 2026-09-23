@@ -18,6 +18,12 @@ import {
   type CustomServiceSlug,
   type MonthOption,
 } from "@/lib/compositeQuote";
+import {
+  VIETQR_ACCOUNT_KEYS,
+  DEFAULT_VIETQR_ACCOUNT_KEY,
+  vietQrAccountLabel,
+  type VietQrAccountKey,
+} from "@/lib/vietQr";
 
 function formatVnd(n: number): string {
   return n.toLocaleString("vi-VN") + "đ";
@@ -166,6 +172,9 @@ export default function CompositeQuoteTool() {
   // Mặc định TẮT theo đúng yêu cầu — QR chuyển khoản là tuỳ chọn thêm vào
   // ảnh, không phải mặc định của mọi báo giá.
   const [showQr, setShowQr] = useState(false);
+  // Mặc định đúng tài khoản đã dùng TRƯỚC khi có tính năng chọn nhiều tài
+  // khoản — không đổi hành vi cũ nếu nhân viên không chủ động đổi lựa chọn.
+  const [qrAccountKey, setQrAccountKey] = useState<VietQrAccountKey>(DEFAULT_VIETQR_ACCOUNT_KEY);
   const [rows, setRows] = useState<QuoteRow[]>(() => [createEmptyRow()]);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
@@ -208,7 +217,7 @@ export default function CompositeQuoteTool() {
       const res = await fetch("/api/quote-image/tong-hop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customer, items, showQr }),
+        body: JSON.stringify({ customer, items, showQr, qrAccountKey }),
       });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
@@ -318,21 +327,47 @@ export default function CompositeQuoteTool() {
             )}
           </div>
 
-          <label className="mb-6 flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-bg-tint p-4">
-            <input
-              type="checkbox"
-              checked={showQr}
-              onChange={(e) => setShowQr(e.target.checked)}
-              className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
-            />
-            <span>
-              <span className="block text-[13.5px] font-bold text-navy">Hiện mã QR chuyển khoản</span>
-              <span className="block text-[12px] text-body-text">
-                Tắt mặc định. Khi bật, ảnh báo giá có thêm mã QR VietQR chuyển khoản vào tài khoản công ty (TCB —
-                1117777888 — CTY MAX OFFICE), số tiền gợi ý điền sẵn là khoản lớn nhất trong báo giá.
+          <div className="mb-6 rounded-xl border border-line bg-bg-tint p-4">
+            <label className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={showQr}
+                onChange={(e) => setShowQr(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+              />
+              <span>
+                <span className="block text-[13.5px] font-bold text-navy">Hiện mã QR chuyển khoản</span>
+                <span className="block text-[12px] text-body-text">
+                  Tắt mặc định. Khi bật, ảnh báo giá có thêm mã QR VietQR chuyển khoản, số tiền gợi ý điền sẵn là
+                  khoản lớn nhất trong báo giá.
+                </span>
               </span>
-            </span>
-          </label>
+            </label>
+            {showQr && (
+              <div className="mt-3.5 border-t border-line pt-3.5">
+                <span className="mb-2 block text-[12px] font-bold text-body-text">
+                  Chọn tài khoản nhận — chỉ chọn từ danh sách, không tự nhập được
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {VIETQR_ACCOUNT_KEYS.map((key) => (
+                    <button
+                      key={key}
+                      type="button"
+                      aria-pressed={qrAccountKey === key}
+                      onClick={() => setQrAccountKey(key)}
+                      className={`rounded-full border-[1.5px] px-3.5 py-2 text-[12.5px] font-bold transition-all duration-200 ${
+                        qrAccountKey === key
+                          ? "border-primary bg-primary text-white"
+                          : "border-line bg-white text-body-text hover:border-primary/40"
+                      }`}
+                    >
+                      {vietQrAccountLabel(key)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           <button
             type="button"

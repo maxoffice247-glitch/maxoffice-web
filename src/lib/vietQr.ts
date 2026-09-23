@@ -5,15 +5,39 @@
  * Việt Nam hỗ trợ) — KHÔNG có SDK/thư viện VietQR nào trong repo này để tái
  * sử dụng, đây là lần đầu tích hợp.
  *
- * Tài khoản nhận cố định của công ty (theo yêu cầu khi triển khai tính
- * năng này) — không cho nhân viên/khách đổi tài khoản nhận trên form, tránh
- * rủi ro chuyển QR nhận tiền sai tài khoản.
+ * Tài khoản nhận CỐ ĐỊNH của công ty — nhân viên/khách chỉ được CHỌN 1
+ * trong các tài khoản khai báo sẵn ở đây, KHÔNG được tự gõ số tài khoản
+ * bất kỳ trên form, tránh rủi ro chuyển QR nhận tiền sai tài khoản. Thêm
+ * tài khoản mới: chỉ thêm 1 entry vào VIETQR_ACCOUNTS, không cần sửa gì
+ * thêm ở route.tsx/CompositeQuoteTool.tsx (cả 2 đều đọc động từ đây).
  */
-const MAX_OFFICE_BANK = {
-  bankCode: "TCB",
-  accountNumber: "1117777888",
-  accountName: "CTY MAX OFFICE",
+export type VietQrAccountKey = "1117777888" | "16868889";
+
+export const VIETQR_ACCOUNTS: Record<
+  VietQrAccountKey,
+  { bankCode: string; accountNumber: string; accountName: string }
+> = {
+  "1117777888": { bankCode: "TCB", accountNumber: "1117777888", accountName: "CTY MAX OFFICE" },
+  "16868889": { bankCode: "TCB", accountNumber: "16868889", accountName: "CTY MAX OFFICE" },
 };
+
+/** Tài khoản mặc định khi bật QR mà không đổi lựa chọn — GIỮ NGUYÊN tài
+ * khoản đã dùng trước khi có tính năng chọn nhiều tài khoản này, để không
+ * đổi hành vi mặc định đã có. */
+export const DEFAULT_VIETQR_ACCOUNT_KEY: VietQrAccountKey = "1117777888";
+
+/** Thứ tự hiển thị trên form — liệt kê TƯỜNG MINH thay vì
+ * `Object.keys(VIETQR_ACCOUNTS)`: cả 2 key hiện tại đều là chuỗi toàn chữ
+ * số ("1117777888"/"16868889"), mà JS tự sắp xếp key kiểu này theo thứ tự
+ * SỐ TĂNG DẦN bất kể thứ tự khai báo trong object literal (đã xác nhận:
+ * Object.keys({"1117777888":1,"16868889":2}) -> ["16868889",
+ * "1117777888"]) — dựa vào Object.keys() sẽ vô tình đẩy tài khoản mặc định
+ * xuống vị trí 2, gây hiểu nhầm khi hiển thị. */
+export const VIETQR_ACCOUNT_KEYS: VietQrAccountKey[] = ["1117777888", "16868889"];
+
+export function isVietQrAccountKey(value: unknown): value is VietQrAccountKey {
+  return typeof value === "string" && Object.hasOwn(VIETQR_ACCOUNTS, value);
+}
 
 /** Bỏ dấu tiếng Việt cho nội dung chuyển khoản (`addInfo`) — 1 số app ngân
  * hàng hiển thị lỗi font hoặc cắt bớt nội dung có dấu trong QR chuyển
@@ -27,6 +51,10 @@ function stripDiacritics(text: string): string {
 }
 
 /**
+ * `accountKey`: 1 trong các key khai báo ở VIETQR_ACCOUNTS — hàm LUÔN tự
+ * tra cứu tài khoản thật từ đây theo key, KHÔNG BAO GIỜ nhận trực tiếp số
+ * tài khoản/ngân hàng từ client (giữ đúng nguyên tắc an toàn đã áp dụng
+ * cho các trường có cấu trúc khác trong compositeQuote.ts).
  * `amount`: số tiền gợi ý điền sẵn trên QR — null nếu không có tổng nào đủ
  * rõ ràng để điền (xem route.tsx: chọn khối tổng LỚN NHẤT trong các khối
  * đang có trên báo giá; null thì QR vẫn quét được, chỉ không tự điền số
@@ -34,19 +62,21 @@ function stripDiacritics(text: string): string {
  * `note`: nội dung chuyển khoản — bỏ dấu, giới hạn độ dài để tương thích
  * rộng với các app ngân hàng.
  */
-export function buildVietQrImageUrl(amount: number | null, note: string): string {
-  const base = `https://img.vietqr.io/image/${MAX_OFFICE_BANK.bankCode}-${MAX_OFFICE_BANK.accountNumber}-qr_only.png`;
+export function buildVietQrImageUrl(accountKey: VietQrAccountKey, amount: number | null, note: string): string {
+  const account = VIETQR_ACCOUNTS[accountKey];
+  const base = `https://img.vietqr.io/image/${account.bankCode}-${account.accountNumber}-qr_only.png`;
   const params = new URLSearchParams();
   if (amount != null && Number.isFinite(amount) && amount > 0) {
     params.set("amount", String(Math.round(amount)));
   }
   params.set("addInfo", stripDiacritics(note).slice(0, 50));
-  params.set("accountName", MAX_OFFICE_BANK.accountName);
+  params.set("accountName", account.accountName);
   return `${base}?${params.toString()}`;
 }
 
-export function vietQrAccountLabel(): string {
-  return `${MAX_OFFICE_BANK.bankCode} — ${MAX_OFFICE_BANK.accountNumber} — ${MAX_OFFICE_BANK.accountName}`;
+export function vietQrAccountLabel(accountKey: VietQrAccountKey): string {
+  const account = VIETQR_ACCOUNTS[accountKey];
+  return `${account.bankCode} — ${account.accountNumber} — ${account.accountName}`;
 }
 
 /**

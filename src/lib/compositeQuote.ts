@@ -115,6 +115,11 @@ export type CompositeQuoteRequestBody = {
   /** Khách có yêu cầu hiện mã QR chuyển khoản trên ảnh không — mặc định
    * false ở phía client; server đọc lại đúng field này (không đoán). */
   showQr?: boolean;
+  /** Key tài khoản nhận trong VIETQR_ACCOUNTS (xem vietQr.ts) — kiểu string
+   * lỏng ở đây (không import VietQrAccountKey) để compositeQuote.ts không
+   * phụ thuộc vietQr.ts; route.tsx tự validate qua isVietQrAccountKey()
+   * trước khi dùng, không tin trực tiếp giá trị client gửi. */
+  qrAccountKey?: string;
   items: CompositeQuoteItem[];
 };
 
