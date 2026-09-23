@@ -5,21 +5,12 @@ import { LOCATIONS_DATA, AREAS } from "@/lib/locationsData";
 import { KNOWLEDGE_CATEGORIES } from "@/lib/knowledgeCenterData";
 import { BLOG_POSTS } from "@/lib/blogData";
 import { getAllOfferedPlans, getGroupedPlans } from "@/lib/planFinder";
+import { TOOL_GROUPS } from "@/lib/toolsData";
 
-const TOOL_SLUGS = [
-  "chon-goi-van-phong",
-  "tinh-chi-phi-thanh-lap",
-  "tinh-le-phi-mon-bai",
-  "so-sanh-thue",
-  "tim-goi-phu-hop",
-  "checklist-thanh-lap-doanh-nghiep",
-  "checklist-mo-chi-nhanh",
-  "checklist-thay-doi-giay-phep-kinh-doanh",
-  "so-sanh-van-phong-ao-va-tron-goi",
-  "so-sanh-tnhh-va-co-phan",
-  "quy-trinh-thanh-lap-doanh-nghiep",
-  "tao-bao-gia-tong-hop",
-];
+/** Lấy trực tiếp từ TOOL_GROUPS (nguồn dữ liệu duy nhất cho danh sách tiện
+ * ích) thay vì liệt kê tay, để không lặp lại tình trạng thiếu slug khi có
+ * tool mới. */
+const TOOL_SLUGS = TOOL_GROUPS.flatMap((group) => group.tools.map((tool) => tool.slug));
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
