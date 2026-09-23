@@ -4,6 +4,7 @@ import { KNOWLEDGE_CATEGORIES } from "./knowledgeCenterData";
 // locationsData.ts) — nhưng bài "công ty luật thuê văn phòng ảo" bên dưới
 // được yêu cầu lấy số chi nhánh ĐỘNG, nên import riêng cho bài đó.
 import { ACTIVE_BRANCH_COUNT } from "./locationsData";
+import { TRUSTED_BUSINESS_COUNT } from "./siteConfig";
 
 export type BlogCategory = { slug: string; name: string };
 
@@ -1209,7 +1210,7 @@ thumbnailPosition: "center",
           "Địa chỉ tại các toà nhà văn phòng thực tế, không phải chung cư hay nhà ở — đảm bảo đủ điều kiện đăng ký kinh doanh và đăng ký thuế ngay từ đầu.",
           "Có biển hiệu công ty thật, đặt tại vị trí dễ nhận diện trong toà nhà — không chỉ tuân thủ quy định mà còn tạo hình ảnh chuyên nghiệp khi đối tác hoặc cơ quan chức năng đến làm việc.",
           "Hợp đồng thuê chính chủ, minh bạch — MAX OFFICE trực tiếp làm việc với chủ toà nhà, không qua mô hình cho thuê lại trái phép, giúp doanh nghiệp yên tâm về tính ổn định lâu dài của địa chỉ.",
-          `Hoạt động từ năm 2022, hiện có ${ACTIVE_BRANCH_COUNT} chi nhánh và hơn 500 doanh nghiệp đang tin dùng — quy mô đủ lớn để đảm bảo tính liên tục của dịch vụ, kể cả khi doanh nghiệp cần chuyển đổi hoặc mở rộng sang chi nhánh khác.`,
+          `Hoạt động từ năm 2022, hiện có ${ACTIVE_BRANCH_COUNT} chi nhánh và hơn ${TRUSTED_BUSINESS_COUNT} doanh nghiệp đang tin dùng — quy mô đủ lớn để đảm bảo tính liên tục của dịch vụ, kể cả khi doanh nghiệp cần chuyển đổi hoặc mở rộng sang chi nhánh khác.`,
         ],
       },
     ],

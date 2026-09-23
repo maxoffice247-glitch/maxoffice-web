@@ -2,11 +2,12 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ACTIVE_BRANCH_COUNT } from "./locationsData";
+import { TRUSTED_BUSINESS_COUNT } from "./siteConfig";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const DEFAULT_SUBTITLE = `${ACTIVE_BRANCH_COUNT} chi nhánh TP.HCM • 500+ doanh nghiệp tin dùng`;
+const DEFAULT_SUBTITLE = `${ACTIVE_BRANCH_COUNT} chi nhánh TP.HCM • ${TRUSTED_BUSINESS_COUNT}+ doanh nghiệp tin dùng`;
 const DEFAULT_HOTLINE = "Hotline: 089 8082 188";
 
 let fontsPromise: ReturnType<typeof loadFonts> | null = null;

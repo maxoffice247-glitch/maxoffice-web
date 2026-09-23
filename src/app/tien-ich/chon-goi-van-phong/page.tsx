@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ToolPageTemplate from "@/components/ToolPageTemplate";
 import OfficePackageTool from "@/components/tools/OfficePackageTool";
 import { ClockIcon, BadgePercentIcon, ShieldCheckIcon, HeadsetIcon } from "@/components/icons";
+import { TRUSTED_BUSINESS_COUNT } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/tien-ich/chon-goi-van-phong" },
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 const BENEFITS = [
   { icon: ClockIcon, title: "Chỉ mất 1 phút", desc: "Trả lời vài câu hỏi ngắn, nhận kết quả gợi ý ngay lập tức." },
   { icon: BadgePercentIcon, title: "Tối ưu chi phí", desc: "Tránh chọn gói dịch vụ thừa hoặc thiếu so với nhu cầu thực tế." },
-  { icon: ShieldCheckIcon, title: "Dựa trên dữ liệu thực tế", desc: "Gợi ý dựa trên hơn 500 doanh nghiệp đã sử dụng dịch vụ MAX OFFICE." },
+  { icon: ShieldCheckIcon, title: "Dựa trên dữ liệu thực tế", desc: `Gợi ý dựa trên hơn ${TRUSTED_BUSINESS_COUNT} doanh nghiệp đã sử dụng dịch vụ MAX OFFICE.` },
   { icon: HeadsetIcon, title: "Tư vấn miễn phí sau đó", desc: "Nhận thêm tư vấn chi tiết từ chuyên viên nếu cần." },
 ];
 

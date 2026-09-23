@@ -23,6 +23,7 @@ import type { ComparisonRow } from "@/components/ServiceComparison";
 import type { Testimonial } from "@/components/Testimonials";
 import type { FaqItem } from "@/components/Faq";
 import { LOCATIONS_LIST, ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
+import { TRUSTED_BUSINESS_COUNT } from "@/lib/siteConfig";
 import {
   VIRTUAL_OFFICE_PLANS,
   VIRTUAL_OFFICE_PLAN_ORDER,
@@ -535,7 +536,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     intro: [
       "Thành lập doanh nghiệp là bước đầu tiên và quan trọng nhất trên hành trình khởi nghiệp. Việc lựa chọn đúng loại hình doanh nghiệp, chuẩn bị hồ sơ chính xác và thực hiện đúng quy trình pháp lý sẽ giúp bạn tránh được những rắc rối và chi phí phát sinh không đáng có về sau. MAX OFFICE cung cấp dịch vụ tư vấn và thực hiện thủ tục thành lập doanh nghiệp trọn gói cho cả ba loại hình phổ biến nhất: Hộ kinh doanh, Công ty TNHH và Công ty Cổ phần — theo 2 gói dịch vụ với mức giá minh bạch, áp dụng chung cho mọi loại hình.",
       "Đội ngũ tư vấn của MAX OFFICE sẽ giúp bạn xác định loại hình phù hợp với quy mô và định hướng phát triển, soạn thảo hồ sơ đầy đủ, đại diện nộp hồ sơ tại cơ quan đăng ký kinh doanh và theo dõi tiến độ cho đến khi bạn nhận được giấy phép. Đặc biệt, khi đăng ký dịch vụ thành lập doanh nghiệp cùng lúc với Văn phòng ảo tại MAX OFFICE, bạn sẽ được áp dụng mức giá ưu đãi thấp hơn cho Gói 1.",
-      "Với kinh nghiệm hỗ trợ hơn 500 doanh nghiệp tại TP.HCM, MAX OFFICE cam kết quy trình minh bạch, thời gian xử lý nhanh chóng và tư vấn tận tâm để doanh nghiệp của bạn có thể bắt đầu hoạt động đúng luật ngay từ ngày đầu tiên.",
+      `Với kinh nghiệm hỗ trợ hơn ${TRUSTED_BUSINESS_COUNT} doanh nghiệp tại TP.HCM, MAX OFFICE cam kết quy trình minh bạch, thời gian xử lý nhanh chóng và tư vấn tận tâm để doanh nghiệp của bạn có thể bắt đầu hoạt động đúng luật ngay từ ngày đầu tiên.`,
       "Sau khi thành lập, nếu doanh nghiệp cần thay đổi tên, địa chỉ, ngành nghề, vốn điều lệ hay đại diện pháp luật, MAX OFFICE cũng có nhóm dịch vụ pháp lý sửa đổi riêng với mức giá rõ ràng cho từng nội dung thay đổi.",
     ],
     introImage: {
@@ -551,7 +552,7 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       { icon: ShieldCheckIcon, title: "Hồ sơ chính xác, đúng luật", desc: "Giảm thiểu rủi ro bị trả hồ sơ hoặc chậm tiến độ." },
       { icon: ClockIcon, title: "Xử lý nhanh chóng", desc: "Hoàn tất thủ tục thành lập trong 5-7 ngày." },
       { icon: KeyIcon, title: "Hỗ trợ trọn gói sau thành lập", desc: "Có sẵn dịch vụ pháp lý sửa đổi khi doanh nghiệp cần thay đổi thông tin." },
-      { icon: DocumentCheckIcon, title: "Đội ngũ giàu kinh nghiệm", desc: "Đã hỗ trợ hơn 500 doanh nghiệp tại TP.HCM." },
+      { icon: DocumentCheckIcon, title: "Đội ngũ giàu kinh nghiệm", desc: `Đã hỗ trợ hơn ${TRUSTED_BUSINESS_COUNT} doanh nghiệp tại TP.HCM.` },
     ],
     featuresTitle: "Dịch vụ thành lập doanh nghiệp bao gồm những gì?",
     featuresDescription: "Hỗ trợ trọn gói từ tư vấn đến khi doanh nghiệp chính thức đi vào hoạt động.",
@@ -637,12 +638,10 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     slug: "ke-toan-thue",
     name: "Kế toán & thuế",
     heroTitle: "Dịch Vụ Kế Toán Thuế Trọn Gói TP.HCM",
-    heroDescription:
-      "Kê khai đúng hạn, đúng luật, tối ưu chi phí thuế hợp pháp — đồng hành cùng hơn 500 doanh nghiệp tại TP.HCM.",
+    heroDescription: `Kê khai đúng hạn, đúng luật, tối ưu chi phí thuế hợp pháp — đồng hành cùng hơn ${TRUSTED_BUSINESS_COUNT} doanh nghiệp tại TP.HCM.`,
     image: "/images/ke-toan-thue.jpg",
     metaTitle: "Dịch Vụ Kế Toán Thuế Trọn Gói TP.HCM | MAX OFFICE",
-    metaDescription:
-      "Dịch vụ kế toán thuế trọn gói từ 500.000đ/tháng, tính theo số hoá đơn/quý và loại hình kinh doanh. Đúng hạn, đúng luật, tối ưu thuế hợp pháp. 500+ doanh nghiệp tin dùng.",
+    metaDescription: `Dịch vụ kế toán thuế trọn gói từ 500.000đ/tháng, tính theo số hoá đơn/quý và loại hình kinh doanh. Đúng hạn, đúng luật, tối ưu thuế hợp pháp. ${TRUSTED_BUSINESS_COUNT}+ doanh nghiệp tin dùng.`,
     intro: [
       "Kế toán và thuế là một trong những nghiệp vụ quan trọng nhưng cũng dễ phát sinh rủi ro nhất đối với doanh nghiệp, đặc biệt là các công ty mới thành lập chưa có bộ phận kế toán chuyên trách. Sai sót trong kê khai thuế, chậm nộp báo cáo hay hạch toán không đúng quy định có thể dẫn đến các khoản phạt không đáng có, ảnh hưởng đến uy tín và hoạt động của doanh nghiệp.",
       "Dịch vụ kế toán & thuế trọn gói của MAX OFFICE giúp doanh nghiệp yên tâm về toàn bộ nghiệp vụ sổ sách, từ kê khai thuế định kỳ, lập báo cáo tài chính đến tư vấn tối ưu nghĩa vụ thuế hợp pháp. Đội ngũ kế toán viên giàu kinh nghiệm của chúng tôi luôn cập nhật quy định pháp luật mới nhất, đảm bảo doanh nghiệp bạn kê khai đúng hạn và đúng luật trong mọi kỳ báo cáo.",

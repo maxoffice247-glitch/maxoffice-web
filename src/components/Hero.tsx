@@ -8,6 +8,7 @@ import { PhoneIcon, MapPinIcon } from "./icons";
 import Button from "./Button";
 import LeadFormButton from "./LeadFormButton";
 import { LOCATIONS_LIST } from "@/lib/locationsData";
+import { TRUSTED_BUSINESS_COUNT } from "@/lib/siteConfig";
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
 
@@ -50,7 +51,7 @@ function getHeroSlides(branchCount: number): HeroSlide[] {
     },
     {
       question: "Chưa biết chọn đơn vị nào đủ uy tín để tin tưởng?",
-      answer: `Hơn 500 doanh nghiệp đã tin chọn MAX OFFICE, tại ${branchCount} địa điểm trung tâm TP.HCM.`,
+      answer: `Hơn ${TRUSTED_BUSINESS_COUNT} doanh nghiệp đã tin chọn MAX OFFICE, tại ${branchCount} địa điểm trung tâm TP.HCM.`,
     },
     {
       question: "Cần địa chỉ kinh doanh hợp pháp nhưng ngại chi phí thuê văn phòng?",

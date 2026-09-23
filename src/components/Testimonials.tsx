@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import SectionHead from "./SectionHead";
 import { RevealGroup, RevealItem } from "./Reveal";
 import { QuoteIcon, StarIcon, ChevronRightIcon } from "./icons";
+import { TRUSTED_BUSINESS_COUNT } from "@/lib/siteConfig";
 
 export type Testimonial = {
   quote: string;
@@ -119,7 +120,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
 export default function Testimonials({
   id = "testimonials",
   eyebrow = "Khách hàng nói gì",
-  title = "Được hơn 500 doanh nghiệp tin dùng",
+  title = `Được hơn ${TRUSTED_BUSINESS_COUNT} doanh nghiệp tin dùng`,
   description = "Từ startup mới thành lập đến doanh nghiệp đang mở rộng quy mô — đây là những chia sẻ thật từ khách hàng đã đồng hành cùng MAX OFFICE.",
   items = DEFAULT_TESTIMONIALS,
   tint = false,

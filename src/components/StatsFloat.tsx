@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import StatNumber from "./StatNumber";
 import { BuildingIcon, UsersIcon, CalendarIcon, TagIcon, StarIcon } from "./icons";
-import { GOOGLE_MAPS_REVIEW_URL } from "@/lib/siteConfig";
+import { GOOGLE_MAPS_REVIEW_URL, TRUSTED_BUSINESS_COUNT } from "@/lib/siteConfig";
 import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
@@ -17,7 +17,7 @@ const GOOGLE_RATING: { rating: number; reviewCount: number } | null = { rating: 
 
 const STATS = [
   { icon: BuildingIcon, value: String(ACTIVE_BRANCH_COUNT), label: "Chi nhánh tại TP.HCM" },
-  { icon: UsersIcon, value: "500", suffix: "+", label: "Doanh nghiệp tin dùng" },
+  { icon: UsersIcon, value: String(TRUSTED_BUSINESS_COUNT), suffix: "+", label: "Doanh nghiệp tin dùng" },
   { icon: CalendarIcon, value: "2022", label: "Năm thành lập" },
   { icon: TagIcon, value: "6", label: "Dịch vụ cốt lõi" },
 ];

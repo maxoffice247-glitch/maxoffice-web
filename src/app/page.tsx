@@ -11,13 +11,12 @@ import Pricing from "@/components/Pricing";
 import KnowledgeCenter from "@/components/KnowledgeCenter";
 import Faq from "@/components/Faq";
 import BookingFormSection from "@/components/BookingFormSection";
-import { SITE_URL, SITE_NAME } from "@/lib/siteConfig";
+import { SITE_URL, SITE_NAME, TRUSTED_BUSINESS_COUNT } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
   title: "Văn Phòng Ảo Từ 299K, Trọn Gói TP.HCM | MAX OFFICE",
-  description:
-    "Văn phòng ảo từ 299.000đ/tháng, văn phòng trọn gói tại TP.HCM. Địa chỉ kinh doanh hợp lệ, hỗ trợ thành lập doanh nghiệp, hơn 500 doanh nghiệp tin dùng.",
+  description: `Văn phòng ảo từ 299.000đ/tháng, văn phòng trọn gói tại TP.HCM. Địa chỉ kinh doanh hợp lệ, hỗ trợ thành lập doanh nghiệp, hơn ${TRUSTED_BUSINESS_COUNT} doanh nghiệp tin dùng.`,
 };
 
 // WebSite structured data — the signal Google's "site name" (line above the URL in

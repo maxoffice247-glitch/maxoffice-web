@@ -1,5 +1,6 @@
 import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import { ShieldCheckIcon, BadgePercentIcon, HeadsetIcon, CheckCircleIcon } from "./icons";
+import { TRUSTED_BUSINESS_COUNT } from "@/lib/siteConfig";
 
 const BADGES = [
   {
@@ -138,7 +139,7 @@ export default function TrustBar() {
 
         <Reveal className="pt-9">
           <p className="mb-6 text-center text-[12px] font-bold tracking-[0.14em] text-body-text uppercase">
-            Được tin dùng bởi hơn 500 doanh nghiệp
+            Được tin dùng bởi hơn {TRUSTED_BUSINESS_COUNT} doanh nghiệp
           </p>
           <div className="group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
             <div className="flex w-max items-center gap-x-10 will-change-transform animate-marquee group-hover:[animation-play-state:paused]">

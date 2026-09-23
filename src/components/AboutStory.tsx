@@ -1,6 +1,7 @@
 import Reveal, { RevealGroup, RevealItem } from "./Reveal";
 import { BuildingIcon, HeartHandshakeIcon } from "./icons";
 import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
+import { TRUSTED_BUSINESS_COUNT } from "@/lib/siteConfig";
 
 export default function AboutStory() {
   return (
@@ -19,7 +20,7 @@ export default function AboutStory() {
             hành đúng tiến độ và không phải tự mình xoay sở với hàng loạt thủ
             tục pháp lý, thuế và văn phòng. Từ một trụ sở đầu tiên, chúng tôi
             đã mở rộng thành hệ thống {ACTIVE_BRANCH_COUNT} địa điểm tại các quận trung tâm
-            TP.HCM, đồng hành cùng hơn 500 doanh nghiệp — từ những nhà sáng
+            TP.HCM, đồng hành cùng hơn {TRUSTED_BUSINESS_COUNT} doanh nghiệp — từ những nhà sáng
             lập mới khởi nghiệp đến các công ty đang mở rộng quy mô.
           </p>
         </Reveal>
