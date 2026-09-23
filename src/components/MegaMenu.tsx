@@ -28,6 +28,7 @@ const MEGA_SERVICES = [
     title: "Văn phòng ảo",
     desc: "Địa chỉ đăng ký kinh doanh hợp lệ",
     price: "Từ 299.000đ/tháng",
+    featured: true,
   },
   {
     slug: "van-phong-tron-goi",
@@ -35,7 +36,6 @@ const MEGA_SERVICES = [
     title: "Văn phòng trọn gói",
     desc: "Không gian riêng, sẵn sàng làm việc",
     price: "Từ 4.500.000đ/tháng",
-    featured: true,
   },
   {
     slug: "phong-hop",

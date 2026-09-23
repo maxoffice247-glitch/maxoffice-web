@@ -32,6 +32,7 @@ const SERVICES: ServiceItem[] = [
     title: "Văn phòng ảo",
     price: "Từ 299.000đ/tháng",
     desc: "Địa chỉ đăng ký kinh doanh hợp lệ, lễ tân chuyên nghiệp, nhận thư hộ — không cần thuê mặt bằng vật lý.",
+    featured: true,
   },
   {
     slug: "van-phong-tron-goi",
@@ -39,7 +40,6 @@ const SERVICES: ServiceItem[] = [
     title: "Văn phòng trọn gói",
     price: "Từ 4.500.000đ/tháng",
     desc: "Không gian riêng, sẵn sàng làm việc ngay với đầy đủ nội thất, internet và tiện ích văn phòng.",
-    featured: true,
   },
   {
     slug: "phong-hop",
