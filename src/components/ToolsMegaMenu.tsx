@@ -72,7 +72,8 @@ export default function ToolsMegaMenu({ solid, isActive }: { solid: boolean; isA
                           className="group flex items-start gap-2.5 rounded-lg px-2 py-2 transition-colors duration-200 hover:bg-bg-tint"
                         >
                           {/* highlight (Tìm VPA theo nhu cầu, So sánh thuế,
-                              Soạn hồ sơ doanh nghiệp): icon tô đỏ (accent)
+                              Soạn hồ sơ doanh nghiệp, Tạo mã QR thanh toán,
+                              Tạo báo giá tổng hợp): icon tô đỏ (accent)
                               thay vì xanh mặc định để làm điểm nhấn nổi bật
                               hơn các mục còn lại. */}
                           <span

@@ -45,7 +45,10 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
     tools: [
       // "Tìm VPA theo nhu cầu", "So sánh thuế" và "Soạn hồ sơ doanh nghiệp"
       // cố định 3 vị trí đầu (điểm nhấn, icon tô đỏ) — các mục còn lại giữ
-      // nguyên thứ tự tương đối sau đó.
+      // nguyên thứ tự tương đối sau đó. "Tạo mã QR thanh toán" và "Tạo báo
+      // giá tổng hợp" cũng được tô đỏ (highlight: true) dù không đứng đầu
+      // danh sách — điểm nhấn không bắt buộc phải ở vị trí đầu, chỉ cần
+      // cùng cơ chế tô màu icon.
       {
         slug: "tim-goi-phu-hop",
         icon: TagIcon,
@@ -80,6 +83,7 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
         titleFull: "Tạo mã QR thanh toán tự động",
         desc: "Tạo mã QR VietQR để nhận thanh toán nhanh chóng, miễn phí — dùng được cho bất kỳ mục đích thanh toán nào.",
         linkLabel: "Dùng công cụ ngay",
+        highlight: true,
       },
       {
         slug: "tao-bao-gia-tong-hop",
@@ -88,6 +92,7 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
         titleFull: "Tạo báo giá tổng hợp nhiều dịch vụ",
         desc: "Chọn nhiều dịch vụ khác nhau (Văn phòng ảo, Thành lập doanh nghiệp, Kế toán & thuế...), xuất ra 1 ảnh báo giá duy nhất để gửi khách hàng.",
         linkLabel: "Dùng công cụ ngay",
+        highlight: true,
       },
       {
         slug: "chon-goi-van-phong",

@@ -43,10 +43,11 @@ export default function TienIchPage() {
                     href={`/tien-ich/${tool.slug}`}
                     className="group flex h-full flex-col rounded-2xl border border-line bg-white p-7 transition-all duration-400 ease-out hover:-translate-y-2 hover:border-transparent hover:shadow-card"
                   >
-                    {/* highlight (Tìm VPA theo nhu cầu, So sánh thuế): icon
-                        tô đỏ (accent) thay vì xanh mặc định để làm điểm
-                        nhấn nổi bật hơn các mục còn lại — đồng bộ với
-                        dropdown desktop (ToolsMegaMenu.tsx). */}
+                    {/* highlight (Tìm VPA theo nhu cầu, So sánh thuế, Soạn hồ
+                        sơ doanh nghiệp, Tạo mã QR thanh toán, Tạo báo giá
+                        tổng hợp): icon tô đỏ (accent) thay vì xanh mặc định
+                        để làm điểm nhấn nổi bật hơn các mục còn lại — đồng bộ
+                        với dropdown desktop (ToolsMegaMenu.tsx). */}
                     <span
                       className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl transition-colors duration-300 ${
                         tool.highlight
