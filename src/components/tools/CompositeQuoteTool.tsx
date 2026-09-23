@@ -13,9 +13,15 @@ import {
   getAccountingRangeOptions,
   getCustomServiceReferencePrice,
   CUSTOM_SERVICE_META,
+  MONTH_OPTIONS,
   type CompositeQuoteItem,
   type CustomServiceSlug,
+  type MonthOption,
 } from "@/lib/compositeQuote";
+
+function formatVnd(n: number): string {
+  return n.toLocaleString("vi-VN") + "đ";
+}
 
 /**
  * Form "Tạo báo giá tổng hợp" — cho phép gộp NHIỀU dịch vụ khác nhau (VD:
@@ -61,6 +67,10 @@ type QuoteRow = {
   serviceType: ServiceTypeKey | "";
   locationSlug: string;
   planKey: string;
+  /** Chỉ dùng cho Văn phòng ảo — kỳ hạn hợp đồng, quyết định "Tạm tính" (=
+   * đơn giá × số tháng) và có tự động kèm ưu đãi dài hạn hay không (xem
+   * compositeQuote.ts). Mặc định 12 — kỳ hạn phổ biến nhất khi tư vấn. */
+  months: MonthOption;
   tier: "goi-1" | "goi-2";
   group: "A" | "B" | "C";
   rangeIndex: number;
@@ -74,6 +84,7 @@ function createEmptyRow(): QuoteRow {
     serviceType: "",
     locationSlug: "",
     planKey: "",
+    months: 12,
     tier: "goi-1",
     group: "A",
     rangeIndex: 0,
@@ -91,7 +102,13 @@ function firstPlanAt(allPlans: OfferedPlan[], locationSlug: string): string {
  * "chưa chọn gì" dù select đã hiện giá trị đầu tiên. */
 function applyServiceTypeDefaults(row: QuoteRow, type: ServiceTypeKey, firstLocationSlug: string, allPlans: OfferedPlan[]): QuoteRow {
   if (type === "van-phong-ao") {
-    return { ...row, serviceType: type, locationSlug: firstLocationSlug, planKey: firstPlanAt(allPlans, firstLocationSlug) };
+    return {
+      ...row,
+      serviceType: type,
+      locationSlug: firstLocationSlug,
+      planKey: firstPlanAt(allPlans, firstLocationSlug),
+      months: 12,
+    };
   }
   if (type === "thanh-lap-doanh-nghiep") {
     return { ...row, serviceType: type, tier: "goi-1" };
@@ -106,7 +123,7 @@ function rowToItem(row: QuoteRow): CompositeQuoteItem | null {
   switch (row.serviceType) {
     case "van-phong-ao":
       return row.locationSlug && row.planKey
-        ? { type: "van-phong-ao", locationSlug: row.locationSlug, planKey: row.planKey }
+        ? { type: "van-phong-ao", locationSlug: row.locationSlug, planKey: row.planKey, months: row.months }
         : null;
     case "thanh-lap-doanh-nghiep":
       return { type: "thanh-lap-doanh-nghiep", tier: row.tier };
@@ -146,6 +163,9 @@ export default function CompositeQuoteTool() {
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerCompany, setCustomerCompany] = useState("");
+  // Mặc định TẮT theo đúng yêu cầu — QR chuyển khoản là tuỳ chọn thêm vào
+  // ảnh, không phải mặc định của mọi báo giá.
+  const [showQr, setShowQr] = useState(false);
   const [rows, setRows] = useState<QuoteRow[]>(() => [createEmptyRow()]);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
@@ -188,7 +208,7 @@ export default function CompositeQuoteTool() {
       const res = await fetch("/api/quote-image/tong-hop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customer, items }),
+        body: JSON.stringify({ customer, items, showQr }),
       });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
@@ -297,6 +317,22 @@ export default function CompositeQuoteTool() {
               <p className="text-center text-[12px] text-body-text">Đã đạt tối đa {MAX_ROWS} dòng dịch vụ.</p>
             )}
           </div>
+
+          <label className="mb-6 flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-bg-tint p-4">
+            <input
+              type="checkbox"
+              checked={showQr}
+              onChange={(e) => setShowQr(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+            />
+            <span>
+              <span className="block text-[13.5px] font-bold text-navy">Hiện mã QR chuyển khoản</span>
+              <span className="block text-[12px] text-body-text">
+                Tắt mặc định. Khi bật, ảnh báo giá có thêm mã QR VietQR chuyển khoản vào tài khoản công ty (TCB —
+                1117777888 — CTY MAX OFFICE), số tiền gợi ý điền sẵn là khoản lớn nhất trong báo giá.
+              </span>
+            </span>
+          </label>
 
           <button
             type="button"
@@ -450,6 +486,26 @@ function QuoteRowEditor({
               ))}
             </select>
           </div>
+          <div className="sm:col-span-2">
+            <label className={labelClass}>Số tháng ký hợp đồng</label>
+            <div className="flex flex-wrap gap-2">
+              {MONTH_OPTIONS.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  aria-pressed={row.months === m}
+                  onClick={() => onUpdate({ months: m })}
+                  className={`rounded-full border-[1.5px] px-4 py-2 text-[12.5px] font-bold transition-all duration-200 ${
+                    row.months === m
+                      ? "border-primary bg-primary text-white"
+                      : "border-line bg-white text-body-text hover:border-primary/40"
+                  }`}
+                >
+                  {m} tháng
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
@@ -549,12 +605,23 @@ function QuoteRowEditor({
       )}
 
       {preview && (
-        <div className="mt-3 flex items-center justify-between rounded-lg bg-white px-3.5 py-2.5 text-[13px]">
-          <span className="text-body-text">
-            {preview.title}
-            {preview.subtitle ? ` · ${preview.subtitle}` : ""}
-          </span>
-          <span className="font-mono font-bold text-primary">{preview.priceLabel}</span>
+        <div className="mt-3 rounded-lg bg-white px-3.5 py-2.5 text-[13px]">
+          <div className="flex items-center justify-between">
+            <span className="text-body-text">
+              {preview.title}
+              {preview.subtitle ? ` · ${preview.subtitle}` : ""}
+            </span>
+            <span className="font-mono font-bold text-primary">
+              {preview.breakdown ? formatVnd(preview.breakdown.total) : preview.fallbackLabel}
+            </span>
+          </div>
+          {preview.breakdown && (
+            <div className="mt-1 text-[11.5px] text-body-text">
+              Tạm tính {formatVnd(preview.breakdown.subtotal)} + VAT {preview.breakdown.vatRatePercent}% (
+              {formatVnd(preview.breakdown.vatAmount)})
+              {preview.breakdown.promo && <span className="text-amber-600"> · 🎁 tặng {preview.breakdown.promo.extraMonths} tháng</span>}
+            </div>
+          )}
         </div>
       )}
     </div>
