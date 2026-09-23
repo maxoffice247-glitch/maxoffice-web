@@ -171,12 +171,6 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "27C Quốc Hương, P. An Khánh",
   },
   {
-    title: "28 Mai Chí Thọ, TP. Thủ Đức",
-    category: "Chi nhánh",
-    href: "/locations/mai-chi-tho",
-    desc: "28 Mai Chí Thọ, P. An Khánh — hệ giá riêng CORE/PLUS/PRO",
-  },
-  {
     title: "Bùi Văn Ba, Quận 7",
     category: "Chi nhánh",
     href: "/locations/quan-7",
@@ -193,12 +187,6 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Chi nhánh",
     href: "/locations/cach-mang-thang-8",
     desc: "520 Cách Mạng Tháng 8, P. Nhiêu Lộc",
-  },
-  {
-    title: "198 Nguyễn Thị Minh Khai, Quận 3 (cũ)",
-    category: "Chi nhánh",
-    href: "/locations/nguyen-thi-minh-khai",
-    desc: "198 Nguyễn Thị Minh Khai, P. Xuân Hòa",
   },
   {
     title: "161 Ung Văn Khiêm, Bình Thạnh (cũ)",
@@ -223,18 +211,6 @@ export const SEARCH_INDEX: SearchItem[] = [
     category: "Chi nhánh",
     href: "/locations/phan-dinh-phung",
     desc: "89 Phan Đình Phùng, P. Phú Nhuận",
-  },
-  {
-    title: "68 Phan Đăng Lưu, Phú Nhuận (cũ)",
-    category: "Chi nhánh",
-    href: "/locations/phan-dang-luu",
-    desc: "68 Phan Đăng Lưu, P. Đức Nhuận — toà nhà hạng A L'MAK 68",
-  },
-  {
-    title: "62 Trần Huy Liệu, Phú Nhuận (cũ)",
-    category: "Chi nhánh",
-    href: "/locations/tran-huy-lieu",
-    desc: "62 Trần Huy Liệu, P. Phú Nhuận",
   },
   {
     title: "36 Bùi Thị Xuân, Quận 1 (cũ)",

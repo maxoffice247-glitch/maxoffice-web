@@ -38,8 +38,8 @@ const OTHER_SERVICES = [
  * dùng cho chi nhánh "79 Nguyễn Thế Truyện" (xem NGUYEN_THE_TRUYEN_VO_PLANS
  * trong virtualOfficePlans.ts để biết lý do KHÔNG hiển thị tên đối tác
  * gốc). Thiết kế nhận props branchName/slug/promotions (giống
- * SilverGoldPremiumServices/Quan3CuVOServices/LitespaceServices, KHÔNG
- * hardcode tên chi nhánh như PhamVanDongServices/QuanBaServices) để chi
+ * SilverGoldPremiumServices/Quan3CuVOServices, KHÔNG hardcode tên chi
+ * nhánh như PhamVanDongServices/QuanBaServices) để chi
  * nhánh tương lai cùng hệ giá đối tác này tái sử dụng ngay được, chỉ cần
  * đổi branchName/slug khi gọi.
  *

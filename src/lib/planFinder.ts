@@ -1,12 +1,16 @@
 /**
- * Gộp toàn bộ 8 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
+ * Gộp toàn bộ 7 hệ thống giá văn phòng ảo (LITE–RISE dùng chung 12 chi
  * nhánh; M-START/M-BASE/M-ORIGIN riêng Phạm Văn Đồng; W-BASE/W-PRO riêng
  * Bùi Văn Ba; LEAN/GROWING/SCALE-UP riêng 79 Nguyễn Thế Truyện (hệ giá đối
  * tác, xem NGUYEN_THE_TRUYEN_VO_PLANS); SILVER/GOLD/PREMIUM (3 gói, từ
  * 479K) dùng chung Quận 1 (cũ) + Quận 3 (cũ); SILVER/GOLD/PREMIUM dùng
- * chung Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức/Tân Bình; CORE/PLUS/PRO hệ đối
- * tác LiteSpace — 28 Mai Chí Thọ) thành MỘT danh sách phẳng — dùng cho công
- * cụ /tien-ich/tim-goi-phu-hop.
+ * chung Bình Thạnh/Phú Nhuận/Quận 4/Thủ Đức/Tân Bình) thành MỘT danh sách
+ * phẳng — dùng cho công cụ /tien-ich/tim-goi-phu-hop.
+ *
+ * (Đã xoá hệ giá đối tác CORE/PLUS/PRO "LiteSpace" — 28 Mai Chí Thọ, 68
+ * Phan Đăng Lưu, 198 Nguyễn Thị Minh Khai, 62 Trần Huy Liệu — cùng lúc
+ * ngừng hợp tác và xoá cả 4 chi nhánh này khỏi hệ thống. Xem lịch sử commit
+ * nếu cần khôi phục lại hệ giá này cho địa chỉ đối tác mới.)
  *
  * Nguồn dữ liệu: LOCATIONS_LIST (đã tự lọc `isActive !== false`) +
  * virtualOfficePlans.ts. Hàm lặp qua LOCATIONS_LIST nên chi nhánh tạm ẩn
@@ -24,8 +28,6 @@ import {
   SILVER_GOLD_PREMIUM_Q1Q3_LOCATIONS,
   SILVER_GOLD_PREMIUM_VO_PLANS,
   SILVER_GOLD_PREMIUM_LOCATIONS,
-  LITESPACE_PLANS,
-  LITESPACE_LOCATIONS,
   type PhamVanDongPlan,
   type SilverGoldPremiumQ1Q3Plan,
   type SilverGoldPremiumPlan,
@@ -187,24 +189,6 @@ export function getAllOfferedPlans(): OfferedPlan[] {
           price: p.price,
           duration: p.duration,
           features: withQuan3StyleFeatures(p),
-        });
-      }
-    } else if (LITESPACE_LOCATIONS.includes(slug)) {
-      // Hệ giá đối tác LiteSpace — `features` đã là danh sách phẳng sẵn,
-      // dùng thẳng (không có field cấu trúc riêng như SGP/M-*). Giá gốc
-      // gạch ngang / badge / combo box chỉ hiển thị ở trang chi nhánh
-      // (LitespaceServices.tsx), không đưa vào OfferedPlan (công cụ tìm
-      // gói + trang chi tiết gói chỉ cần giá + tính năng + tên).
-      for (const p of LITESPACE_PLANS) {
-        result.push({
-          locationSlug: slug,
-          locationName: name,
-          area,
-          planKey: p.key,
-          planName: p.name,
-          price: p.price,
-          duration: p.duration,
-          features: p.features,
         });
       }
     } else {

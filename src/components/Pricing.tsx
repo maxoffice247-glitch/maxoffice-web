@@ -517,11 +517,11 @@ export default function Pricing() {
                   Từ sm trở lên giữ hàng ngang như cũ.
                   CTA dẫn sang VPA finder — chỉ đặt sau nhóm Văn phòng ảo vì
                   đây là nhóm có tình trạng "trùng giá khác nhóm chi nhánh"
-                  (VD ORIGIN 499K ưu đãi Nguyễn Oanh/Trần Hưng Đạo và CORE/
-                  PLUS 499K hệ LiteSpace) mà 6 gói tiêu biểu ở đây KHÔNG thể
-                  hiện hết — 6-8 gói này chủ đích giữ gọn, không mở rộng đủ
-                  15+ gói, nên cần lối tắt rõ ràng sang công cụ tra đúng gói
-                  theo khu vực thay vì đoán từ bảng giá rút gọn. */}
+                  (VD ORIGIN 499K ưu đãi Nguyễn Oanh/Trần Hưng Đạo) mà 6 gói
+                  tiêu biểu ở đây KHÔNG thể hiện hết — 6-8 gói này chủ đích
+                  giữ gọn, không mở rộng đủ 15+ gói, nên cần lối tắt rõ ràng
+                  sang công cụ tra đúng gói theo khu vực thay vì đoán từ
+                  bảng giá rút gọn. */}
               {group.title === "Văn phòng ảo — 6 gói dịch vụ" && (
                 <Link
                   href="/tien-ich/tim-goi-phu-hop"

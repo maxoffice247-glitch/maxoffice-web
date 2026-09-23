@@ -54,11 +54,10 @@ export const CUSTOM_SERVICE_META: Record<
  * động áp dụng (xem báo cáo đầy đủ ở cuối phiên làm việc):
  * - Hệ LITE-RISE dùng chung (VO_PROMO_NOTES, đa số chi nhánh): chỉ ghi
  *   KHOẢNG ("tặng thêm 1-2 tháng", "4-6 tháng"), không có 1 số cụ thể.
- * - Hệ LiteSpace (CORE/PLUS/PRO, 28 Mai Chí Thọ): virtualOfficePlans.ts
- *   KHÔNG có bất kỳ field/constant ưu đãi dài hạn nào cho hệ này (khác với
- *   suy đoán ban đầu) — không có gì để đưa vào đây.
  * - Mọi hệ giá riêng khác (Bùi Thị Xuân, Quận 7, Trường Chinh,
  *   SILVER/GOLD/PREMIUM...) cũng không có constant ưu đãi dài hạn tương tự.
+ *   (Hệ đối tác CORE/PLUS/PRO "LiteSpace" từng ở nhóm này — đã xoá cùng 4
+ *   chi nhánh dùng hệ giá đó, xem lịch sử commit.)
  *
  * 2 hệ DUY NHẤT có số chính xác, khớp đúng field `VO_PROMO_.*` dạng
  * string[] mô tả nhưng số tháng nêu rõ ràng không mơ hồ:

@@ -1,5 +1,24 @@
 import type { NextConfig } from "next";
 
+/**
+ * 4 chi nhánh hệ giá đối tác "LiteSpace" (CORE/PLUS/PRO) đã ngừng hợp tác
+ * và bị xoá khỏi hệ thống (locationsData.ts, virtualOfficePlans.ts) — giữ
+ * redirect 301 (permanent) cho các URL cũ có thể đã được chia sẻ/index
+ * trước đó, tránh 404. KHÔNG xoá redirect này khi dọn dẹp sau này trừ khi
+ * chắc chắn không còn traffic/backlink nào trỏ tới các URL cũ.
+ */
+const REMOVED_LITESPACE_LOCATION_SLUGS = [
+  "mai-chi-tho",
+  "phan-dang-luu",
+  "nguyen-thi-minh-khai",
+  "tran-huy-lieu",
+];
+const REMOVED_LITESPACE_PLAN_KEYS = ["ls-core", "ls-plus", "ls-pro"];
+/** groupKey suy ra từ getGroupedPlans() (slugifyVN(planName)-round(price/1000)+"k")
+ * lúc hệ giá này còn tồn tại — cả 3 đều là gói ĐỘC QUYỀN của hệ LiteSpace,
+ * không trùng tên/giá với hệ giá nào khác nên chắc chắn an toàn khi xoá. */
+const REMOVED_LITESPACE_GROUP_KEYS = ["core-499k", "plus-499k", "pro-899k"];
+
 const nextConfig: NextConfig = {
   images: {
     // AVIF first (smaller), WebP fallback — Next picks whichever the browser's
@@ -66,6 +85,33 @@ const nextConfig: NextConfig = {
     // vì dev/build không áp dụng giới hạn trace này khi phục vụ request.
     "/api/quote-image/\\[slug\\]/\\[plan\\]": ["./public/images/quote/**", "./public/images/logo-red.png"],
     "/api/quote-image/goi/\\[groupKey\\]": ["./public/images/quote/**", "./public/images/logo-red.png"],
+  },
+  async redirects() {
+    return [
+      // /locations/{slug} và mọi URL con (VD /locations/{slug}/opengraph-image)
+      // của 4 chi nhánh LiteSpace đã xoá -> trang danh sách chi nhánh.
+      ...REMOVED_LITESPACE_LOCATION_SLUGS.map((slug) => ({
+        source: `/locations/${slug}/:path*`,
+        destination: "/dia-diem",
+        permanent: true,
+      })),
+      // Trang chi tiết gói /tien-ich/tim-goi-phu-hop/{slug}/{plan} của cả 4
+      // chi nhánh x 3 gói CORE/PLUS/PRO -> trang công cụ tìm gói.
+      ...REMOVED_LITESPACE_LOCATION_SLUGS.flatMap((slug) =>
+        REMOVED_LITESPACE_PLAN_KEYS.map((plan) => ({
+          source: `/tien-ich/tim-goi-phu-hop/${slug}/${plan}`,
+          destination: "/tien-ich/tim-goi-phu-hop",
+          permanent: true,
+        }))
+      ),
+      // Chế độ "Xem theo gói" /tien-ich/tim-goi-phu-hop/goi/{groupKey} — 3
+      // nhóm gói CORE/PLUS/PRO không còn chi nhánh nào cung cấp.
+      ...REMOVED_LITESPACE_GROUP_KEYS.map((key) => ({
+        source: `/tien-ich/tim-goi-phu-hop/goi/${key}`,
+        destination: "/tien-ich/tim-goi-phu-hop",
+        permanent: true,
+      })),
+    ];
   },
   async headers() {
     return [

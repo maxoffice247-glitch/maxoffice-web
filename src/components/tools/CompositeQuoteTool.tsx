@@ -50,7 +50,7 @@ const SERVICE_TYPE_OPTIONS: { value: ServiceTypeKey; label: string }[] = [
 const MAX_ROWS = 12;
 
 // Trivial, đọc thẳng từ servicesData.ts (2 gói GPKD, 3 nhóm + 9 mức kế toán)
-// — không cần useMemo như getAllOfferedPlans() (lặp qua 37 chi nhánh, xem
+// — không cần useMemo như getAllOfferedPlans() (lặp qua toàn bộ chi nhánh, xem
 // bên dưới), gọi 1 lần ở module scope là đủ.
 const GPKD_TIERS = getGpkdTierOptions();
 const ACCOUNTING_GROUPS = getAccountingGroupOptions();
@@ -147,7 +147,7 @@ const inputClass =
 const labelClass = "mb-1.5 block text-[12px] font-bold text-body-text";
 
 export default function CompositeQuoteTool() {
-  // getAllOfferedPlans() lặp qua toàn bộ 37 chi nhánh + 8 hệ giá để dựng
+  // getAllOfferedPlans() lặp qua toàn bộ chi nhánh + 7 hệ giá để dựng
   // danh sách gói đầy đủ — cùng hàm "nặng" đã có sẵn ở PlanFinderTool.tsx,
   // gọi qua useMemo(..., []) giống hệt cách đó thay vì module scope, để
   // không tính lại mỗi lần re-render.
