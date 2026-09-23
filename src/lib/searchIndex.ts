@@ -456,7 +456,13 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Tiện ích miễn phí",
     category: "Trang",
     href: "/tien-ich",
-    desc: "13 công cụ miễn phí hỗ trợ doanh nghiệp",
+    desc: "14 công cụ miễn phí hỗ trợ doanh nghiệp",
+  },
+  {
+    title: "Tạo báo giá tổng hợp nhiều dịch vụ",
+    category: "Tiện ích",
+    href: "/tien-ich/tao-bao-gia-tong-hop",
+    desc: "Chọn nhiều dịch vụ khác nhau, xuất ra 1 ảnh báo giá duy nhất để gửi khách hàng",
   },
   {
     title: "Soạn hồ sơ doanh nghiệp tự động",

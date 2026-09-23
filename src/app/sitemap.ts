@@ -18,6 +18,7 @@ const TOOL_SLUGS = [
   "so-sanh-van-phong-ao-va-tron-goi",
   "so-sanh-tnhh-va-co-phan",
   "quy-trinh-thanh-lap-doanh-nghiep",
+  "tao-bao-gia-tong-hop",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

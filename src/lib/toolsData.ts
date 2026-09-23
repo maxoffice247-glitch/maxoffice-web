@@ -82,6 +82,14 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
         linkLabel: "Dùng công cụ ngay",
       },
       {
+        slug: "tao-bao-gia-tong-hop",
+        icon: DocumentCheckIcon,
+        title: "Tạo báo giá tổng hợp",
+        titleFull: "Tạo báo giá tổng hợp nhiều dịch vụ",
+        desc: "Chọn nhiều dịch vụ khác nhau (Văn phòng ảo, Thành lập doanh nghiệp, Kế toán & thuế...), xuất ra 1 ảnh báo giá duy nhất để gửi khách hàng.",
+        linkLabel: "Dùng công cụ ngay",
+      },
+      {
         slug: "chon-goi-van-phong",
         icon: KeyIcon,
         title: "Chọn gói văn phòng",
