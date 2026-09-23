@@ -50,6 +50,19 @@ export function vietQrAccountLabel(): string {
 }
 
 /**
+ * Nội dung chuyển khoản (`addInfo`) — xác nhận với chủ site trước khi làm:
+ * "{tên khách hoặc SĐT hoặc 'Khach hang MAX OFFICE'} thanh toan phi dich vu"
+ * (KHÔNG kèm tên dịch vụ cụ thể — quyết định rõ ràng, không phải thiếu sót).
+ * Ưu tiên tên khách > SĐT > nhãn chung, để bên nhận tiền còn cách đối chiếu
+ * đúng giao dịch của đúng khách khi có nhiều đơn chuyển cùng lúc, ngay cả
+ * khi nhân viên không nhập tên khách hàng trên form.
+ */
+export function buildQrNote(customer?: { name?: string; phone?: string }): string {
+  const identifier = customer?.name?.trim() || customer?.phone?.trim() || "Khach hang MAX OFFICE";
+  return `${identifier} thanh toan phi dich vu`;
+}
+
+/**
  * Tự nhận diện định dạng ảnh thật qua magic bytes — KHÔNG tin đuôi URL
  * (".png") lẫn header `Content-Type` của response. Đã xác nhận bằng byte
  * thật: img.vietqr.io trả về `content-type: image/png` nhưng dữ liệu THẬT
