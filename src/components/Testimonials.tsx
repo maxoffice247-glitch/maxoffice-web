@@ -172,6 +172,10 @@ export default function Testimonials({
                 <ChevronRightIcon className="h-4 w-4 rotate-180" />
               </button>
               <div className="flex items-center gap-2">
+                {/* Nút ngoài 24×24px (vùng chạm thật) bọc chấm màu nhỏ bên
+                    trong (span, giữ nguyên kích thước hiển thị cũ) — cùng
+                    lỗi/cùng cách sửa như dot indicator Hero.tsx (WCAG 2.5.8
+                    Target Size Minimum, Lighthouse audit "target-size"). */}
                 {Array.from({ length: pageCount }).map((_, i) => (
                   <button
                     key={i}
@@ -179,10 +183,14 @@ export default function Testimonials({
                     onClick={() => goTo(i)}
                     aria-label={`Xem nhóm đánh giá ${i + 1}`}
                     aria-current={i === page}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      i === page ? "w-6 bg-primary" : "w-2 bg-line hover:bg-primary/40"
-                    }`}
-                  />
+                    className="group flex h-6 w-6 items-center justify-center"
+                  >
+                    <span
+                      className={`block h-2 rounded-full transition-all duration-300 ${
+                        i === page ? "w-6 bg-primary" : "w-2 bg-line group-hover:bg-primary/40"
+                      }`}
+                    />
+                  </button>
                 ))}
               </div>
               <button

@@ -46,6 +46,37 @@ function WavingMascotBubble({
   open: boolean;
   onToggle: () => void;
 }) {
+  // Trì hoãn tải bản WebP ĐỘNG (nay đã nén còn ~160KB, giảm ~50% từ 324KB
+  // gốc nhờ giảm còn 8fps/42 khung thay vì 16fps/84 khung — vẫn đủ mượt
+  // cho 1 linh vật nền nhỏ luôn hiển thị) tới SAU KHI trang đã load xong
+  // (window "load"), thay vì tải ngay từ đầu trên MỌI trang — trước đây
+  // <picture><source media="prefers-reduced-motion"> chỉ tránh tải file
+  // động cho người bật giảm chuyển động, nhưng người dùng bình thường vẫn
+  // tải file động NGAY LẬP TỨC cùng lúc với toàn bộ tài nguyên khác của
+  // trang, cộng dồn vào Lighthouse total-byte-weight/TBT dù linh vật không
+  // phải nội dung chính. Hiện khung TĨNH có sẵn (~14KB) ngay từ đầu (giữ
+  // đúng layout, không lệch kích thước vì cùng 174x116), đổi sang bản động
+  // khi trình duyệt đã rảnh sau "load" — người dùng gần như không nhận ra
+  // độ trễ vì linh vật luôn ở góc màn hình, ít khi nhìn ngay khung đầu.
+  // Người bật prefers-reduced-motion: không đổi, giữ khung tĩnh vĩnh viễn.
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const onLoad = () => setAnimate(true);
+    if (document.readyState === "complete") {
+      // Trang đã "load" xong từ trước khi effect này chạy (VD hydrate
+      // muộn) — sự kiện "load" sẽ không bắn lại nữa nên phải tự kích hoạt,
+      // nhưng qua setTimeout(0) thay vì gọi setState thẳng trong thân
+      // effect (tránh lỗi lint react-hooks/set-state-in-effect: setState
+      // đồng bộ trong effect có thể gây render dây chuyền).
+      const t = window.setTimeout(onLoad, 0);
+      return () => window.clearTimeout(t);
+    }
+    window.addEventListener("load", onLoad, { once: true });
+    return () => window.removeEventListener("load", onLoad);
+  }, []);
+
   return (
     <div className={`z-[96] ${className ?? ""}`}>
       <button
@@ -55,16 +86,20 @@ function WavingMascotBubble({
         aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ: gọi điện, Zalo, Messenger"}
         className="block drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:scale-110"
       >
-        {/* Animated WebP (nền trong suốt, 16fps, ~324KB) — <picture> thay vì
-            next/image vì next/image không hợp với WebP động; <source> theo
-            prefers-reduced-motion để người dùng bật giảm chuyển động chỉ tải
-            + hiển thị khung hình tĩnh đầu tiên (~15KB, tư thế chỉ tay lên), KHÔNG tải file
-            động. Kích thước hiển thị 87x58 giữ nguyên như ảnh tĩnh cũ (file
-            174x116 = 2x cho màn hình retina). */}
+        {/* Kích thước hiển thị 87x58 giữ nguyên (file 174x116 = 2x cho màn
+            hình retina) dù đang hiện khung tĩnh hay bản động — không lệch
+            layout lúc đổi ảnh. Vẫn bọc trong <picture> dù chỉ 1 <img> (không
+            còn <source> vì logic prefers-reduced-motion nay xử lý bằng JS ở
+            effect trên) — ESLint no-img-element bỏ qua <img> con của
+            <picture> (next/image không hỗ trợ WebP động), thiếu <picture>
+            sẽ làm lint báo lại warning này. */}
         <picture>
-          <source media="(prefers-reduced-motion: reduce)" srcSet="/images/mascot/linh-vat-max-chi-tay-len-v3-tinh.webp" type="image/webp" />
           <img
-            src="/images/mascot/linh-vat-max-chi-tay-len-v3.webp"
+            src={
+              animate
+                ? "/images/mascot/linh-vat-max-chi-tay-len-v3.webp"
+                : "/images/mascot/linh-vat-max-chi-tay-len-v3-tinh.webp"
+            }
             alt=""
             width={174}
             height={116}
@@ -179,7 +214,13 @@ export default function FloatingButtons() {
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label={open ? "Đóng danh sách liên hệ" : "Mở danh sách liên hệ: gọi điện, Zalo, Messenger"}
+          // aria-label PHẢI chứa đúng cụm chữ hiển thị "Liên hệ ngay" (nhãn
+          // luôn hiển thị nguyên văn này, không đổi theo open/close) — trước
+          // đây chỉ ghi "Mở/Đóng danh sách liên hệ...", không chứa chữ hiển
+          // thị, vi phạm WCAG 2.5.3 Label in Name (Lighthouse audit
+          // "label-content-name-mismatch"). Cả 2 nhánh open/false đều phải
+          // bắt đầu bằng "Liên hệ ngay" vì chữ hiển thị không đổi.
+          aria-label={open ? "Liên hệ ngay: đóng danh sách" : "Liên hệ ngay: gọi điện, Zalo, Messenger"}
           className="fixed left-[47px] bottom-[184px] z-[96] -translate-x-1/2 cursor-pointer rounded-full bg-accent px-2 py-1 text-[10px] leading-none font-bold whitespace-nowrap text-white shadow-[0_6px_14px_rgba(0,0,0,0.22)] before:absolute before:-inset-2 before:content-[''] sm:left-[57px] sm:bottom-[112px] sm:px-3 sm:py-1.5 sm:text-[12px] sm:shadow-[0_8px_20px_rgba(0,0,0,0.22)]"
         >
           Liên hệ ngay

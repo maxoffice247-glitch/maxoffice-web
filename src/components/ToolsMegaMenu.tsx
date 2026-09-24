@@ -5,11 +5,13 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDownIcon, PhoneIcon, ArrowRightSmallIcon } from "./icons";
 import { useNavIndicator } from "./NavIndicator";
+import { useDropdownKeyboardClose } from "./useDropdownKeyboardClose";
 import { TOOL_GROUPS } from "@/lib/toolsData";
 
 export default function ToolsMegaMenu({ solid, isActive }: { solid: boolean; isActive: boolean }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const { registerRef, setHoveredKey } = useNavIndicator();
 
   const handleEnter = () => {
@@ -21,16 +23,26 @@ export default function ToolsMegaMenu({ solid, isActive }: { solid: boolean; isA
     closeTimer.current = setTimeout(() => setOpen(false), 150);
     setHoveredKey(null);
   };
+  // Escape hoặc Tab ra khỏi vùng dropdown đều đóng menu (bổ sung lối đóng
+  // bằng bàn phím, không đụng handleLeave — vẫn giữ cho chuột).
+  useDropdownKeyboardClose(open, () => setOpen(false), rootRef);
 
   return (
     <div
-      ref={(node) => registerRef("tien-ich", node)}
+      ref={(node) => {
+        registerRef("tien-ich", node);
+        rootRef.current = node;
+      }}
       className="relative"
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
       <button
         type="button"
+        // onClick để bàn phím (Enter/Space) mở/đóng được — trước đây chỉ
+        // mở qua onMouseEnter của div cha. Theo đúng cơ chế nút chevron
+        // "Chi nhánh" (LocationsMegaMenu.tsx).
+        onClick={() => setOpen((v) => !v)}
         className={`flex items-center gap-1.5 text-[14.5px] whitespace-nowrap transition-colors duration-300 ${
           isActive
             ? "font-bold text-accent"

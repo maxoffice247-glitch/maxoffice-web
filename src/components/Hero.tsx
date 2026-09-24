@@ -303,6 +303,12 @@ export default function Hero() {
             className="mb-6 flex items-center gap-2"
           >
             {slides.map((slide, i) => (
+              // Nút ngoài 24×24px (kích thước vùng chạm THẬT theo khung
+              // border-box, không phải pseudo-element phủ lên — đủ để
+              // Lighthouse/axe đo đúng, đạt WCAG 2.5.8 Target Size Minimum)
+              // bọc quanh chấm màu nhỏ bên trong (span, giữ nguyên kích
+              // thước HIỂN THỊ 8×8/24×8 như cũ) — trước đây chính nút là
+              // chấm màu nên vùng chạm chỉ 8×8px, quá nhỏ.
               <button
                 key={i}
                 type="button"
@@ -310,10 +316,16 @@ export default function Hero() {
                 aria-selected={i === activeSlide}
                 aria-label={`Xem nội dung ${i + 1} trên ${slides.length}`}
                 onClick={() => setActiveSlide(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === activeSlide ? "w-6 bg-[#3B9EFF]" : "w-2 bg-white/40 hover:bg-white/60"
-                }`}
-              />
+                className="group flex h-6 w-6 items-center justify-center"
+              >
+                <span
+                  className={`block h-2 rounded-full transition-all duration-300 ${
+                    i === activeSlide
+                      ? "w-6 bg-[#3B9EFF]"
+                      : "w-2 bg-white/40 group-hover:bg-white/60"
+                  }`}
+                />
+              </button>
             ))}
           </motion.div>
 

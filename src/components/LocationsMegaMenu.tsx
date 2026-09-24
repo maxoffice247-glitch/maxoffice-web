@@ -14,6 +14,7 @@ import {
 import { CLUSTER_COLORS } from "@/lib/locationClusterColors";
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
 import { useNavIndicator } from "./NavIndicator";
+import { useDropdownKeyboardClose } from "./useDropdownKeyboardClose";
 
 function MegaMenuLocationItem({ loc, areaBadge }: { loc: LocationListItem; areaBadge?: string }) {
   const price = getCheapestPriceForLocation(loc.slug);
@@ -53,6 +54,7 @@ function MegaMenuLocationItem({ loc, areaBadge }: { loc: LocationListItem; areaB
 export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean; isActive: boolean }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const { registerRef, setHoveredKey } = useNavIndicator();
   const { multiBranchGroups } = getGroupedLocations();
 
@@ -65,6 +67,10 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
     closeTimer.current = setTimeout(() => setOpen(false), 150);
     setHoveredKey(null);
   };
+  // Escape hoặc Tab ra khỏi vùng dropdown đều đóng menu (bổ sung lối đóng
+  // bằng bàn phím cho cả dropdown này — trước đây chỉ đóng qua
+  // handleLeave hẹn giờ, dành cho chuột).
+  useDropdownKeyboardClose(open, () => setOpen(false), rootRef);
 
   const stateClasses = isActive
     ? "font-bold text-accent"
@@ -72,7 +78,10 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
 
   return (
     <div
-      ref={(node) => registerRef("chi-nhanh", node)}
+      ref={(node) => {
+        registerRef("chi-nhanh", node);
+        rootRef.current = node;
+      }}
       className="relative flex items-center"
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}

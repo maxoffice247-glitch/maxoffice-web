@@ -12,10 +12,16 @@ const SEEN_KEY = "mo_lead_popup_seen";
 const MIN_DWELL_MS = 6000;
 const FALLBACK_DELAY_MS = 26000;
 const SCROLL_DEPTH_RATIO = 0.55;
+// Khoảng "báo trước" để bắt đầu nạp ảnh động TRƯỚC khi popup thực sự bật —
+// đủ xa ngưỡng thật để tải kịp (ảnh ~400KB), nhưng không xa đến mức lại
+// thành tải mù như cơ chế idle/4s cũ.
+const PRELOAD_LEAD_RATIO = 0.15; // nạp sớm hơn 15 điểm % cuộn trang
+const PRELOAD_LEAD_MS = 6000; // nạp sớm hơn 6s so với mốc dwell 26s
 
 export default function LeadCapturePopup() {
   const [open, setOpen] = useState(false);
   const triggeredRef = useRef(false);
+  const preloadedRef = useRef(false);
   const uid = useId();
   const { status, submit } = useLeadSubmit();
   const [name, setName] = useState("");
@@ -24,19 +30,27 @@ export default function LeadCapturePopup() {
   useEffect(() => {
     if (sessionStorage.getItem(SEEN_KEY)) return;
 
-    // Nạp trước ảnh động của linh vật (~790KB, 336×224 = 2x màn retina cho khung hiển thị 168×112) lúc trình duyệt rảnh, để tới lúc popup
-    // bật lên (~26s) đã nằm trong cache — không tranh băng thông lúc tải trang. Người bật
-    // giảm chuyển động chỉ cần khung tĩnh nên không nạp file động.
+    // Nạp trước ảnh động của linh vật (đã nén còn ~400KB, giảm ~50% từ
+    // ~807KB gốc — xem linh-vat-max-chi-tay-xuong-v3.webp) để tới lúc
+    // popup bật lên đã nằm trong cache. TRƯỚC ĐÂY nạp qua
+    // requestIdleCallback/setTimeout(4000) CHẠY VÔ ĐIỀU KIỆN trên MỌI lượt
+    // xem trang — trình duyệt thường rảnh chỉ sau 1-2s nên trên thực tế
+    // gần như luôn tải ngay từ đầu, kể cả với người rời trang trước khi
+    // popup có cơ hội hiện (chưa đủ 6s dwell, chưa cuộn, chưa 26s) — lãng
+    // phí băng thông + cộng dồn vào total-byte-weight khi đo Lighthouse.
+    // NAY: chỉ nạp khi có TÍN HIỆU THẬT cho thấy popup SẮP hiện — còn
+    // ~15 điểm % trước ngưỡng cuộn 55% thật, hoặc còn 6s trước mốc 26s thật
+    // — vẫn đủ thời gian tải xong trước khi popup thực sự bật, nhưng không
+    // còn tải mù cho mọi lượt xem trang. Riêng nhánh rời trang (exit-intent)
+    // không có cách báo trước, đành nạp ngay lúc đó (không tệ hơn trước).
     const preload = () => {
+      if (preloadedRef.current) return;
+      preloadedRef.current = true;
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       new window.Image().src = reduce
         ? "/images/mascot/linh-vat-max-chi-tay-xuong-v3-tinh.webp"
         : "/images/mascot/linh-vat-max-chi-tay-xuong-v3.webp";
     };
-    const hasIdle = typeof window.requestIdleCallback === "function";
-    const idle = hasIdle
-      ? window.requestIdleCallback(preload, { timeout: 8000 })
-      : window.setTimeout(preload, 4000);
 
     const dwellStart = Date.now();
     const trigger = () => {
@@ -49,19 +63,25 @@ export default function LeadCapturePopup() {
     };
 
     const onMouseLeave = (e: MouseEvent) => {
-      if (e.clientY <= 0 && !e.relatedTarget) trigger();
+      if (e.clientY <= 0 && !e.relatedTarget) {
+        preload(); // không có tín hiệu báo trước — nạp ngay lúc rời trang
+        trigger();
+      }
     };
     const onScroll = () => {
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollable > 0 && window.scrollY / scrollable >= SCROLL_DEPTH_RATIO) trigger();
+      if (scrollable <= 0) return;
+      const ratio = window.scrollY / scrollable;
+      if (ratio >= SCROLL_DEPTH_RATIO - PRELOAD_LEAD_RATIO) preload();
+      if (ratio >= SCROLL_DEPTH_RATIO) trigger();
     };
+    const preloadTimer = window.setTimeout(preload, FALLBACK_DELAY_MS - PRELOAD_LEAD_MS);
     const fallbackTimer = window.setTimeout(trigger, FALLBACK_DELAY_MS);
 
     function cleanup() {
-      if (hasIdle) window.cancelIdleCallback(idle);
-      else window.clearTimeout(idle);
       document.removeEventListener("mouseleave", onMouseLeave);
       window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(preloadTimer);
       window.clearTimeout(fallbackTimer);
     }
 

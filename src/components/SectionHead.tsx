@@ -31,7 +31,15 @@ export default function SectionHead({
         {title}
       </h2>
       {tagline && (
-        <p className="mb-2.5 text-[15.5px] font-bold text-accent">{tagline}</p>
+        // text-accent-dark (không phải text-accent) — Lighthouse xác nhận
+        // #dc3530 trên nền thật của trang (--color-bg #fafaf9 / --color-bg-tint
+        // #f3f7fc, không phải trắng thuần) chỉ đạt ~4.3-4.4:1, dưới ngưỡng
+        // AA 4.5:1. --color-accent-dark (#c62828, token có sẵn) đạt ~5.2-5.6:1
+        // trên cả 2 nền — có biên an toàn rõ rệt, không chỉ vừa đủ ngưỡng.
+        // Không đổi --color-accent gốc (dùng khắp site cho nút/badge/giá,
+        // đã được tinh chỉnh riêng cho độ tương phản chữ trắng-trên-accent ở
+        // globals.css) để tránh ảnh hưởng ngoài phạm vi lỗi này.
+        <p className="mb-2.5 text-[15.5px] font-bold text-accent-dark">{tagline}</p>
       )}
       {description && (
         <p className="text-[16.5px] text-body-text">{description}</p>

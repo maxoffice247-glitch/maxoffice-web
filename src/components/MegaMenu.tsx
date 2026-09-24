@@ -18,6 +18,7 @@ import {
   CalendarIcon,
 } from "./icons";
 import { useNavIndicator } from "./NavIndicator";
+import { useDropdownKeyboardClose } from "./useDropdownKeyboardClose";
 import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 import { TRUSTED_BUSINESS_COUNT } from "@/lib/siteConfig";
 
@@ -76,6 +77,7 @@ const TRUST_STATS = [
 export default function MegaMenu({ solid, isActive }: { solid: boolean; isActive: boolean }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const { registerRef, setHoveredKey } = useNavIndicator();
 
   const handleEnter = () => {
@@ -87,6 +89,10 @@ export default function MegaMenu({ solid, isActive }: { solid: boolean; isActive
     closeTimer.current = setTimeout(() => setOpen(false), 150);
     setHoveredKey(null);
   };
+  // Escape (bất kể focus ở đâu) hoặc Tab ra khỏi toàn bộ vùng dropdown đều
+  // đóng menu — bổ sung lối đóng bằng bàn phím, không đụng handleLeave ở
+  // trên (vẫn giữ nguyên cho chuột). Xem useDropdownKeyboardClose.ts.
+  useDropdownKeyboardClose(open, () => setOpen(false), rootRef);
 
   return (
     <>
@@ -109,13 +115,22 @@ export default function MegaMenu({ solid, isActive }: { solid: boolean; isActive
           document.body,
         )}
       <div
-        ref={(node) => registerRef("dich-vu", node)}
+        ref={(node) => {
+          registerRef("dich-vu", node);
+          rootRef.current = node;
+        }}
         className="relative"
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
       >
         <button
           type="button"
+          // onClick để bàn phím (Enter/Space, hành vi mặc định của thẻ
+          // button) mở/đóng được — trước đây nút này chỉ mở qua
+          // onMouseEnter của div cha nên người dùng bàn phím không mở được
+          // dropdown. Theo đúng cơ chế đã dùng ở nút chevron "Chi nhánh"
+          // (LocationsMegaMenu.tsx).
+          onClick={() => setOpen((v) => !v)}
           className={`flex items-center gap-1.5 text-[14.5px] whitespace-nowrap transition-colors duration-300 ${
             isActive
               ? "font-bold text-accent"
