@@ -327,6 +327,12 @@ export const SEARCH_INDEX: SearchItem[] = [
     desc: "Chi nhánh 380 Trần Hưng Đạo — gần khu Chợ Lớn, có pantry cà phê miễn phí trên tầng thượng",
   },
   {
+    title: "Quận 12 (cũ)",
+    category: "Khu vực",
+    href: "/dia-diem/quan-12-cu",
+    desc: "Chi nhánh 254 Trường Chinh — cửa ngõ Tây Bắc TP.HCM, mặt tiền đại lộ Trường Chinh 10 làn xe",
+  },
+  {
     title: "Quận Bình Tân (cũ)",
     category: "Khu vực",
     href: "/dia-diem/quan-binh-tan-cu",
