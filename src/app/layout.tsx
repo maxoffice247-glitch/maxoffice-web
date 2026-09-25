@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
+import { beVietnamProVariable } from "@/fonts/fonts";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -19,18 +20,15 @@ import {
 } from "@/lib/siteConfig";
 import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
-const beVietnamPro = Be_Vietnam_Pro({
-  variable: "--font-be-vietnam-pro",
-  subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  display: "swap",
-});
-
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
   display: "swap",
+  // Inter (font-mono) chỉ dùng cho SỐ (giá, thống kê) — không phải chữ chính
+  // của màn hình đầu — nên không preload (48KB) để nhường băng thông cho ảnh
+  // Hero (LCP); vẫn tải bình thường khi trang thực sự hiển thị số bằng font này.
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -101,7 +99,7 @@ export default function RootLayout({
     <html
       lang="vi"
       data-scroll-behavior="smooth"
-      className={`${beVietnamPro.variable} ${inter.variable}`}
+      className={`${beVietnamProVariable} ${inter.variable}`}
     >
       {/* suppressHydrationWarning CHỈ ở cấp body — không phải lỗi code: 1
           số extension ví crypto trong trình duyệt (VD TokenPocket) tự chèn
