@@ -81,6 +81,25 @@ body {
   animation: pulse-call 2.4s infinite;
 }
 
+/* Chấm "online" xanh lá trên nút "Chat trực tuyến" (FloatingButtons.tsx) —
+   pulse RẤT NHẸ (chỉ toả bóng mờ, không đổi kích thước chấm) để không gây
+   xao nhãng cạnh linh vật động và 3 nút liên hệ khác trong cùng cột. Tự
+   tắt dưới prefers-reduced-motion nhờ luật @media toàn cục ở trên (mọi
+   animation-duration bị ép về 0.01ms), không cần xử lý riêng. */
+@keyframes chat-online-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0);
+  }
+}
+
+.animate-chat-online-pulse {
+  animation: chat-online-pulse 2s ease-in-out infinite;
+}
+
 /* Linh vật MAX "bay lượn" cạnh nút gọi/Zalo/Messenger (FloatingButtons.tsx)
    — theo yêu cầu tham khảo hiệu ứng nổi bật ở góc dưới phải acb.com.vn:
    trôi nổi LIÊN TỤC (không phải 1 đợt cử chỉ rồi đứng yên như
