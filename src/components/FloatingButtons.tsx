@@ -200,20 +200,35 @@ function MascotDecoration() {
     return () => window.removeEventListener("load", onLoad);
   }, []);
 
+  // DÙNG LẠI đúng file linh vật của popup ưu đãi (LeadCapturePopup.tsx) —
+  // cùng URL để trình duyệt cache chung 1 lần cho cả 2 nơi — thay vì bản
+  // "widget-v1" cắt riêng 1 đoạn 3,4-4,27s lặp ping-pong (đã xoá, xem git
+  // history): đoạn đó gần như đứng yên nên chỉ thấy nhún lên xuống, MẤT
+  // hẳn động tác vẫy tay rồi chỉ xuống của video gốc. File gốc KHÔNG cắt
+  // đoạn, KHÔNG ping-pong, giữ nguyên toàn bộ chuyển động — chỉ thu nhỏ
+  // KÍCH THƯỚC HIỂN THỊ bằng CSS (giữ đúng tỉ lệ 3:2 của file 336x224:
+  // 96x64 mobile, 114x76 desktop — không méo, không cắt).
+  //
+  // Vị trí nhân vật trong khung: đã đo bbox từng khung hình (không đoán) —
+  // khung tĩnh (đứng yên, tay chưa giơ) lệch phải +10,5px/336px (~3%,
+  // không đáng kể ở kích thước hiển thị nhỏ); các khung "chỉ tay xuống"
+  // cuối chuỗi (tư thế lặp lại/giữ) gần như CĂN GIỮA (lệch ~1px) và chạm
+  // sát đáy khung — tức ngón tay chỉ trúng ngay mép dưới, đúng hướng vào
+  // cụm nút bên dưới trong cột mà không cần bù translate/margin thêm.
   return (
     <picture>
       <img
         src={
           animate
-            ? "/images/mascot/linh-vat-max-chi-xuong-widget-v1.webp"
-            : "/images/mascot/linh-vat-max-chi-xuong-widget-v1-tinh.webp"
+            ? "/images/mascot/linh-vat-max-chi-tay-xuong-v3.webp"
+            : "/images/mascot/linh-vat-max-chi-tay-xuong-v3-tinh.webp"
         }
         alt=""
         aria-hidden
-        width={168}
-        height={152}
+        width={336}
+        height={224}
         decoding="async"
-        className="pointer-events-none block h-[76px] w-[84px] object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.2)]"
+        className="pointer-events-none block h-16 w-24 object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.2)] sm:h-[76px] sm:w-[114px]"
       />
     </picture>
   );
