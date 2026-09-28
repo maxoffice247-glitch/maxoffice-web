@@ -24,7 +24,15 @@ const COMPANY_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-navy pt-9 pb-36 text-white/75 sm:pb-7">
+    // pb-36→pb-64 trên mobile: chừa đủ chỗ cho cả MobileBottomNav.tsx (cao
+    // ~61-95px tuỳ home indicator) LẪN cụm nổi mới ở FloatingButtons.tsx
+    // (nhãn + linh vật + nút Chat, đặt từ bottom-76px, cao thêm ~162px nữa
+    // = tới ~238px tính từ đáy màn hình) — pb-36 (144px) cũ đủ cho cụm cũ
+    // bên trái (không đụng dòng bản quyền), nhưng cụm mới nằm bên PHẢI,
+    // đúng chỗ dòng "© ... Tất cả các quyền được bảo lưu." hay chạy tới
+    // (đã xác nhận bằng screenshot thật: bị đè chữ với pb-36). pb-64
+    // (256px) > 238px, có dư khoảng đệm nhỏ.
+    <footer className="relative bg-navy pt-9 pb-64 text-white/75 sm:pb-7">
       <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary via-accent to-primary-dark" />
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <div className="mb-12 grid grid-cols-1 gap-10 sm:mb-14 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:gap-10">
