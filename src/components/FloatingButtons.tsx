@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { PhoneIcon, MessengerIcon, ZaloIcon, ChatBotIcon, SpinnerIcon } from "./icons";
-import { openTidioChat, useTidioReady } from "@/lib/tidioChat";
+import {
+  openTidioChat,
+  useTidioAnnouncement,
+  useTidioReady,
+  useTidioUnread,
+} from "@/lib/tidioChat";
 
 /** Cụm nút liên hệ nổi — MỘT CỘT DỌC duy nhất ở góc dưới phải (trước đây
     tách 2 bên: linh vật + popup click-để-mở bên trái, launcher Tidio mặc
@@ -61,6 +66,8 @@ const CONTACT_LINKS = [
     trong) để không giật layout. */
 function ChatButton({ className }: { className?: string }) {
   const ready = useTidioReady();
+  const unread = useTidioUnread();
+  const announcement = useTidioAnnouncement();
   const [pending, setPending] = useState(false);
 
   useEffect(() => {
@@ -75,27 +82,53 @@ function ChatButton({ className }: { className?: string }) {
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      aria-label="Chat trực tuyến với trợ lý MAX OFFICE"
-      className={`${BUTTON_BASE} bg-gradient-to-br from-[#4FACFE] to-[#0068FF] ${className ?? ""}`}
-    >
-      {pending ? (
-        <SpinnerIcon className="h-5 w-5" />
-      ) : (
-        <>
-          <ChatBotIcon className={OPEN_ICON_SIZE} />
-          {/* Chấm "online" — trang trí, không mang thông tin trạng thái
-              thật (Tidio có thể offline, xem lời chào mặc định "Hiện tại
-              chúng tôi đang offline..."), nên aria-hidden. */}
-          <span
-            aria-hidden
-            className="animate-chat-online-pulse absolute top-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-[#22C55E]"
-          />
-        </>
-      )}
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={handleClick}
+        aria-label={
+          unread
+            ? "Chat trực tuyến, có tin nhắn mới"
+            : "Chat trực tuyến với trợ lý MAX OFFICE"
+        }
+        className={`${BUTTON_BASE} bg-gradient-to-br from-[#4FACFE] to-[#0068FF] ${className ?? ""}`}
+      >
+        {pending ? (
+          <SpinnerIcon className="h-5 w-5" />
+        ) : (
+          <>
+            <ChatBotIcon className={OPEN_ICON_SIZE} />
+            {/* Chấm "online" — trang trí, không mang thông tin trạng thái
+                thật (Tidio có thể offline, xem lời chào mặc định "Hiện tại
+                chúng tôi đang offline..."), nên aria-hidden. */}
+            <span
+              aria-hidden
+              className="animate-chat-online-pulse absolute top-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-[#22C55E]"
+            />
+            {/* Chấm "có tin nhắn mới" — góc trên-TRÁI, màu đỏ, cố ý khác cả
+                vị trí lẫn màu với chấm online ở trên-phải. aria-hidden vì
+                trạng thái đã được truyền đạt qua aria-label (thay đổi khi
+                unread) + vùng aria-live bên dưới, tránh trùng lặp thông tin
+                cho trình đọc màn hình. position: absolute, kích thước cố
+                định — không đổi kích thước nút, không gây CLS. */}
+            {unread && (
+              <span
+                aria-hidden
+                className="animate-chat-unread-pulse absolute -top-1 -left-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#EF4444]"
+              />
+            )}
+          </>
+        )}
+      </button>
+      {/* Vùng thông báo cho trình đọc màn hình — đọc 1 LẦN mỗi khi có tin
+          nhắn mới hợp lệ tới (xem triggerAnnounce() trong tidioChat.ts, kỹ
+          thuật zero-width space để buộc đọc lại cho từng tin dù nội dung
+          hiển thị giống hệt lần trước). Rỗng ban đầu nên không đọc gì lúc
+          trang vừa tải. */}
+      <span aria-live="polite" className="sr-only">
+        {announcement}
+      </span>
+    </>
   );
 }
 

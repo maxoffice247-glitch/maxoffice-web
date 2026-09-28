@@ -100,6 +100,28 @@ body {
   animation: chat-online-pulse 2s ease-in-out infinite;
 }
 
+/* Chấm "có tin nhắn mới" (đỏ, góc trên-TRÁI) trên nút Chat — cố ý khác BIỆT
+   CẢ MÀU lẫn VỊ TRÍ với chấm "online" (xanh lá, góc trên-phải) ở trên, theo
+   đúng yêu cầu phải phân biệt rõ 2 trạng thái. Pulse mạnh/nhanh hơn chấm
+   online một chút (toả bóng xa hơn, chu kỳ ngắn hơn) vì đây là tín hiệu cần
+   khách hành động (có tin chưa đọc), không chỉ trang trí như chấm online.
+   Chỉ đổi box-shadow (không đổi kích thước chấm) và định vị absolute nên
+   không ảnh hưởng kích thước nút / không gây CLS. Tự tắt dưới
+   prefers-reduced-motion nhờ luật @media toàn cục ở trên. */
+@keyframes chat-unread-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.65);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0);
+  }
+}
+
+.animate-chat-unread-pulse {
+  animation: chat-unread-pulse 1.6s ease-in-out infinite;
+}
+
 /* Linh vật MAX "bay lượn" cạnh nút gọi/Zalo/Messenger (FloatingButtons.tsx)
    — theo yêu cầu tham khảo hiệu ứng nổi bật ở góc dưới phải acb.com.vn:
    trôi nổi LIÊN TỤC (không phải 1 đợt cử chỉ rồi đứng yên như
