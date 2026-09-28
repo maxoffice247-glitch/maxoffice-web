@@ -492,3 +492,21 @@ export function CarIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/** Robot chatbot — dùng cho nút "Chat trực tuyến" nổi (FloatingButtons.tsx),
+    vẽ tay bằng hình khối cơ bản (không có icon robot/chatbot sẵn trong bộ
+    này) thay vì tải thêm ảnh, giữ đúng yêu cầu "không thêm request ảnh".
+    fill="currentColor" giống Messenger/Facebook ở trên — dùng trên nền màu
+    (text-white ở phần tử cha) chứ không phải trên nền sáng. */
+export function ChatBotIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none">
+      <path d="M12 2.5v2.25" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" />
+      <circle cx="12" cy="3.6" r="1.3" fill="currentColor" />
+      <rect x="4" y="6.5" width="16" height="12" rx="4" fill="currentColor" />
+      <path d="M7.5 18.5 6 22l4.2-2.4" fill="currentColor" />
+      <circle cx="9" cy="12.2" r="1.7" fill="#0068FF" />
+      <circle cx="15" cy="12.2" r="1.7" fill="#0068FF" />
+    </svg>
+  );
+}
