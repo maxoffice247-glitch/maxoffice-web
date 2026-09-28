@@ -537,11 +537,14 @@ export type NguyenTheTruyenPlan = {
   name: string;
   price: number;
   duration: string;
-  /** Mỗi gói tự liệt kê ĐẦY ĐỦ tính năng của mình (kể cả dòng "Toàn bộ
-      tính năng <gói thấp hơn>" kế thừa) — khác QuanBaPlan (Bùi Văn Ba) vốn
-      tách từng field riêng rồi planFinder.ts mới ráp thành features[]; ở
-      đây feature list đã đủ phong phú (6-11 dòng/gói) nên lưu thẳng
-      features[] để planFinder.ts dùng nguyên, không cần bước ráp thêm. */
+  /** SỬA (xem lịch sử git): bản trước liệt kê dư nhiều tiện ích LEAN/GROWING
+      không có thật do đọc sai bảng giá gốc (bảng đánh dấu ✓/– theo TỪNG cột
+      gói — dòng ✓ mới thuộc gói đó). Nay liệt kê ĐẦY ĐỦ TỪNG MỤC riêng lẻ ở
+      CẢ 3 gói theo đúng cột ✓ của bảng gốc — KHÔNG dùng câu tóm tắt kế thừa
+      "Toàn bộ tính năng <gói thấp hơn>" nữa (cùng kiểu trình bày với
+      TruongChinhPlan/VanhDaiTrongPlan bên dưới, không phải kiểu tóm tắt cũ
+      của chính hệ giá này). Số dòng đúng bảng gốc: LEAN 6, GROWING 12,
+      SCALE-UP 15. */
   features: string[];
 };
 
@@ -553,16 +556,11 @@ export const NGUYEN_THE_TRUYEN_VO_PLANS: NguyenTheTruyenPlan[] = [
     duration: "/ tháng",
     features: [
       "Địa chỉ kinh doanh chuyên nghiệp",
-      "Nhận thư/bưu phẩm",
+      "Nhận thư từ, bưu phẩm",
       "Bảng tên Mica 13x23",
       "Tư vấn thành lập doanh nghiệp",
-      "Tiếp khách chung/lễ tân",
-      "Internet/Wifi/nước lọc/cafe",
-      "Bộ hồ sơ Nhân sự - Lao động",
-      "Bộ hồ sơ Kế toán - Thuế",
-      "Kế toán định kỳ & ưu đãi",
-      "Báo cáo/chữ ký số/hóa đơn",
-      "Hỗ trợ vận hành & phát triển",
+      "Tiếp khách chung, lễ tân",
+      "Internet/Wifi, nước lọc, cafe",
     ],
   },
   {
@@ -571,9 +569,15 @@ export const NGUYEN_THE_TRUYEN_VO_PLANS: NguyenTheTruyenPlan[] = [
     price: 449000,
     duration: "/ tháng",
     features: [
-      "Toàn bộ tính năng LEAN",
+      "Địa chỉ kinh doanh chuyên nghiệp",
+      "Nhận thư từ, bưu phẩm",
+      "Bảng tên Mica 13x23",
+      "Tư vấn thành lập doanh nghiệp",
       "Mở tài khoản ngân hàng",
+      "Tiếp khách chung, lễ tân",
+      "Internet/Wifi, nước lọc, cafe",
       "Phòng họp miễn phí 2 giờ/tháng",
+      "Bộ hồ sơ Kế toán/Thuế",
       "Kế toán định kỳ: giảm 20%",
       "Chữ ký số: giảm 30%",
       "Báo cáo thị trường: giảm 25-30%",
@@ -585,11 +589,17 @@ export const NGUYEN_THE_TRUYEN_VO_PLANS: NguyenTheTruyenPlan[] = [
     price: 499000,
     duration: "/ tháng",
     features: [
-      "Toàn bộ tính năng GROWING",
+      "Địa chỉ kinh doanh chuyên nghiệp",
+      "Nhận thư từ, bưu phẩm",
+      "Bảng tên Inox 13x23",
+      "Tư vấn thành lập doanh nghiệp",
+      "Mở tài khoản ngân hàng",
       "Tặng dấu mộc",
-      "Bảng tên nâng cấp: Inox 13x23 (thay vì Mica)",
-      "Tủ hồ sơ",
-      "Phòng họp miễn phí 2 giờ/tháng",
+      "Tiếp khách chung, lễ tân",
+      "Internet/Wifi, nước lọc, cafe",
+      "Tủ hồ sơ, phòng họp 2 giờ/tháng",
+      "Bộ hồ sơ Nhân sự/Lao động",
+      "Bộ hồ sơ Kế toán/Thuế",
       "Kế toán định kỳ: giảm 20%",
       "Chữ ký số: giảm 35%",
       "Báo cáo thị trường: giảm 30-35%",

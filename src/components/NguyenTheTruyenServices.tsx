@@ -45,9 +45,9 @@ const OTHER_SERVICES = [
  *
  * Card gói dùng `plan.features` PHẲNG (không có field breakdown riêng như
  * "Bảng tên:"/"Phòng họp:" của SilverGoldPremiumServices/QuanBaServices)
- * — đúng bản chất NguyenTheTruyenPlan (mỗi gói tự liệt kê đủ tính năng,
- * kể cả dòng "Toàn bộ tính năng <gói thấp hơn>" kế thừa), giống cách
- * VoPlanCard/PlanQuoteCard hiển thị VirtualOfficePlan.features.
+ * — đúng bản chất NguyenTheTruyenPlan (mỗi gói tự liệt kê ĐẦY ĐỦ từng mục
+ * theo đúng cột ✓ của bảng giá gốc, KHÔNG dùng câu tóm tắt kế thừa), giống
+ * cách VoPlanCard/PlanQuoteCard hiển thị VirtualOfficePlan.features.
  */
 export default function NguyenTheTruyenServices({
   branchName,
