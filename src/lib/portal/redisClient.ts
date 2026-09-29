@@ -13,13 +13,25 @@ import { Redis } from "@upstash/redis";
          thật trong route.ts. */
 export type PortalRedisClient = {
   get(key: string): Promise<string | null>;
-  set(key: string, value: string, opts?: { ex?: number }): Promise<unknown>;
+  /** `get: true` — Phase 2 dùng làm nguyên tố idempotency cho webhook
+      SePay (xem order.ts markOrderPaidIfNotAlready): SET ... GET là 1 lệnh
+      Redis ATOMIC vừa ghi giá trị mới vừa trả về giá trị CŨ cùng lúc — nếu
+      giá trị cũ là null (key chưa tồn tại) thì lệnh gọi này là lần đầu
+      "thắng cuộc", các lệnh gọi lại sau (SePay retry webhook) sẽ thấy giá
+      trị cũ đã là "1" và biết đây là lần xử lý trùng, không cần Lua script
+      riêng cho việc này. */
+  set(key: string, value: string, opts?: { ex?: number; get?: boolean }): Promise<string | null>;
   del(key: string): Promise<unknown>;
   incr(key: string): Promise<number>;
   expire(key: string, seconds: number): Promise<unknown>;
   zadd(key: string, scoreMember: { score: number; member: string }): Promise<unknown>;
   zremrangebyscore(key: string, min: number, max: number): Promise<unknown>;
   zcard(key: string): Promise<number>;
+  /** Liệt kê key theo mẫu — dùng ở cron portal-sync để quét toàn bộ đơn
+      hàng "paid" đang chờ khớp MST (KEYS chấp nhận được ở quy mô vài chục-
+      vài trăm đơn hàng cùng lúc của 1 doanh nghiệp nhỏ; không dùng cho tập
+      dữ liệu lớn/production ở quy mô khác). */
+  keys(pattern: string): Promise<string[]>;
 };
 
 let cached: Redis | null = null;

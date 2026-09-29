@@ -60,3 +60,22 @@ export type SearchOutcome =
   | { type: "not_found" }
   | { type: "ambiguous" }
   | { type: "found"; record: ContractRecord };
+
+/** Đơn đăng ký mới (Phase 2, Luồng B) — xem order.ts. */
+export type PendingOrderStatus = "pending" | "paid";
+
+export type PendingOrder = {
+  orderCode: string;
+  status: PendingOrderStatus;
+  customerName: string;
+  mst: string | null;
+  phone: string;
+  email: string | null;
+  locationSlug: string;
+  locationName: string;
+  planKey: string;
+  planName: string;
+  price: number;
+  createdAt: number;
+  paidAt: number | null;
+};
