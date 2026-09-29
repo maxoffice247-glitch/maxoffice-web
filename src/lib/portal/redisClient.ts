@@ -40,7 +40,21 @@ export function getRedis(): PortalRedisClient {
     if (!url || !token) {
       throw new Error("Thiếu KV_REST_API_URL/KV_REST_API_TOKEN — xem .env.example.");
     }
-    cached = new Redis({ url, token });
+    // automaticDeserialization: false — QUAN TRỌNG, đã bắt được lỗi thật
+    // khi test với Redis thật: mặc định @upstash/redis TỰ ĐỘNG JSON.parse()
+    // giá trị trả về nếu trông giống JSON (kể cả 1 chuỗi số thuần như OTP
+    // "123456" cũng bị parse thành NUMBER 123456). Hậu quả kép:
+    //   1. recordsCache.ts/lookupSession.ts tự JSON.parse() THÊM 1 LẦN NỮA
+    //      trên giá trị ĐÃ được parse sẵn (nay là object) -> JSON.parse(1
+    //      object) ném lỗi, bị try/catch nuốt âm thầm, trả về null.
+    //   2. verifyOtp so `stored !== submittedCode` (chuỗi) nhưng `stored`
+    //      thực ra là NUMBER do bị tự parse -> so sánh luôn lệch kiểu dữ
+    //      liệu -> OTP ĐÚNG vẫn báo sai.
+    // Tắt hẳn tính năng này để get()/set() hoạt động đúng như hợp đồng
+    // kiểu PortalRedisClient đã khai báo (chuỗi vào, chuỗi ra) — toàn bộ
+    // code portal/* đã tự JSON.stringify/parse tường minh ở đúng chỗ cần,
+    // không cần SDK làm hộ.
+    cached = new Redis({ url, token, automaticDeserialization: false });
   }
   return cached;
 }
