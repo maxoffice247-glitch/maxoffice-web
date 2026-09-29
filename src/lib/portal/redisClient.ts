@@ -25,17 +25,20 @@ export type PortalRedisClient = {
 let cached: Redis | null = null;
 
 /** Lazy singleton — chỉ tạo client khi thực sự cần (lần gọi đầu trong 1
-    lượt chạy serverless function), đọc 2 biến môi trường Upstash. Ném lỗi
-    rõ ràng nếu thiếu cấu hình thay vì để lỗi mờ mịt lúc gọi lệnh Redis đầu
-    tiên. */
+    lượt chạy serverless function). Đọc tên biến `KV_REST_API_URL`/
+    `KV_REST_API_TOKEN` — ĐÂY LÀ TÊN VERCEL TỰ ĐỘNG BƠM VÀO MÔI TRƯỜNG khi
+    liên kết tích hợp Upstash qua Vercel Marketplace (không phải
+    `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` như tên gốc của
+    Upstash) — cố ý đọc đúng tên Vercel cấp để KHÔNG phải tự tay thêm biến
+    trùng lặp mãi mãi lúc deploy thật (Vercel tự bơm sẵn, chỉ .env.local
+    lúc dev cần khai báo tay theo đúng tên này). Ném lỗi rõ ràng nếu thiếu
+    cấu hình thay vì để lỗi mờ mịt lúc gọi lệnh Redis đầu tiên. */
 export function getRedis(): PortalRedisClient {
   if (!cached) {
-    const url = process.env.UPSTASH_REDIS_REST_URL;
-    const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+    const url = process.env.KV_REST_API_URL;
+    const token = process.env.KV_REST_API_TOKEN;
     if (!url || !token) {
-      throw new Error(
-        "Thiếu UPSTASH_REDIS_REST_URL/UPSTASH_REDIS_REST_TOKEN — xem .env.example."
-      );
+      throw new Error("Thiếu KV_REST_API_URL/KV_REST_API_TOKEN — xem .env.example.");
     }
     cached = new Redis({ url, token });
   }
