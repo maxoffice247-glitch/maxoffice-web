@@ -4,16 +4,17 @@ import { getClientIp } from "@/lib/portal/requestIp";
 import { checkAndRecordLookup } from "@/lib/portal/rateLimit";
 import { readContractRecordsCache } from "@/lib/portal/recordsCache";
 import { searchContract } from "@/lib/portal/search";
-import { maskCompanyName, maskEmail } from "@/lib/portal/mask";
+import { maskCompanyName, maskEmail, maskPhone } from "@/lib/portal/mask";
 import { createLookupSession } from "@/lib/portal/lookupSession";
-import { generateOtpCode, sendOtpEmail, storeOtp } from "@/lib/portal/otp";
 
 const MAX_QUERY_LENGTH = 40;
 
-/** Bước 1 — tìm kiếm. Xem chú thích chi tiết logic trong search.ts. Phản
-    hồi CHỦ Ý không phân biệt "ambiguous" (2+ kết quả gần đúng) với
-    "not_found" ở phía khách — cả 2 hiện y hệt nhau ("không tìm thấy") vì
-    khách không cần biết chi tiết nội bộ; log lại phía server để debug. */
+/** Mức 1 — tìm kiếm. CHƯA gửi OTP ở bước này (đổi so với thiết kế trước) —
+    chỉ hiện thông tin che 1 phần + ngày hợp đồng (không nhạy cảm, hiển thị
+    đầy đủ để khách yên tâm đã tìm đúng) để khách sang Mức 2 xác nhận SĐT/
+    email đầy đủ trước khi hệ thống tự gửi OTP. Xem chú thích logic phân
+    biệt "ambiguous" (2+ kết quả gần đúng, không tự đoán) trong search.ts —
+    CHỦ Ý không cho khách phân biệt với "not_found", cả 2 hiện y hệt nhau. */
 export async function POST(request: Request) {
   let body: { query?: string };
   try {
@@ -64,40 +65,40 @@ export async function POST(request: Request) {
   }
 
   const { record } = outcome;
-  if (!record.email) {
+
+  // Không có CẢ SĐT lẫn email trong dữ liệu -> không có cách nào để xác
+  // minh danh tính (Mức 2 lẫn Mức 3 đều bế tắc) -> báo CSKH ngay, không
+  // tạo phiên tra cứu vì không còn bước nào để làm tiếp.
+  if (!record.phone && !record.email) {
     return NextResponse.json({
-      status: "no_email",
+      status: "no_contact_info",
       companyNameMasked: maskCompanyName(record.companyName),
       message:
-        "Hợp đồng này chưa có email đăng ký để nhận mã xác minh. Vui lòng liên hệ CSKH để bổ sung email vào hệ thống, sau đó quay lại tra cứu.",
+        "Hợp đồng này chưa có SĐT hoặc email đăng ký để xác minh danh tính. Vui lòng liên hệ CSKH để được hỗ trợ.",
     });
   }
 
-  const emailMasked = maskEmail(record.email);
+  const companyNameMasked = maskCompanyName(record.companyName);
+  const phoneMasked = record.phone ? maskPhone(record.phone) : null;
+  const emailMasked = record.email ? maskEmail(record.email) : null;
+
   const sessionId = await createLookupSession(redis, {
     mst: record.mst,
     contractNumber: record.contractNumber,
-    companyNameMasked: maskCompanyName(record.companyName),
-    email: record.email,
+    companyNameMasked,
+    phoneFull: record.phone,
+    phoneMasked,
+    emailFull: record.email,
     emailMasked,
   });
 
-  const code = generateOtpCode();
-  await storeOtp(redis, sessionId, code);
-  try {
-    await sendOtpEmail(record.email, code);
-  } catch (err) {
-    console.error("[portal/search] send OTP email failed:", err);
-    return NextResponse.json(
-      { status: "error", message: "Không gửi được email xác minh, vui lòng thử lại sau." },
-      { status: 502 }
-    );
-  }
-
   return NextResponse.json({
-    status: "otp_sent",
+    status: "found",
     sessionId,
-    companyNameMasked: maskCompanyName(record.companyName),
+    companyNameMasked,
+    startDate: record.startDate,
+    endDate: record.endDate,
+    phoneMasked,
     emailMasked,
   });
 }

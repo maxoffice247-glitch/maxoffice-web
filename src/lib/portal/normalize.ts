@@ -22,3 +22,19 @@ export function normalizeContractNumber(value: string): string {
 export function normalizeStatusText(value: string): string {
   return value.trim().toLowerCase();
 }
+
+/** SĐT chỉ giữ chữ số — bỏ khoảng trắng/dấu chấm/gạch ngang khách có thể
+    gõ khác cách trình bày trong dữ liệu gốc (VD dữ liệu lưu "0902 632
+    428", khách gõ "0902632428" vẫn phải khớp). KHÔNG chuẩn hoá đầu số
+    quốc tế (+84 -> 0) ở Phase 1 — dữ liệu gốc quan sát được toàn dùng
+    dạng 0 đầu, chưa thấy dạng +84 nào cần xử lý. */
+export function normalizePhone(value: string): string {
+  return value.replace(/[^0-9]/g, "");
+}
+
+/** Email: trim + lowercase toàn bộ (kể cả phần domain — email không phân
+    biệt hoa/thường theo chuẩn thực tế dùng phổ biến, dù RFC kỹ thuật cho
+    phép local-part phân biệt, các nhà cung cấp lớn đều không phân biệt). */
+export function normalizeEmail(value: string): string {
+  return value.trim().toLowerCase();
+}

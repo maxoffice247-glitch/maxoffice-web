@@ -4,8 +4,17 @@ import { useState, type FormEvent } from "react";
 import type { ContractLink } from "@/lib/portal/types";
 
 type StepIdle = { step: "idle" };
-type StepOtp = { step: "otp"; sessionId: string; companyNameMasked: string; emailMasked: string };
-type StepNoEmail = { step: "no_email"; companyNameMasked: string };
+type StepConfirm = {
+  step: "confirm";
+  sessionId: string;
+  companyNameMasked: string;
+  startDate: string | null;
+  endDate: string | null;
+  phoneMasked: string | null;
+  emailMasked: string | null;
+};
+type StepOtp = { step: "otp"; sessionId: string; emailMasked: string };
+type StepDeadEnd = { step: "dead_end"; companyNameMasked?: string; message: string };
 type StepVerified = {
   step: "verified";
   record: {
@@ -20,19 +29,32 @@ type StepVerified = {
     links: ContractLink[];
   };
 };
-type UiState = StepIdle | StepOtp | StepNoEmail | StepVerified;
+type UiState = StepIdle | StepConfirm | StepOtp | StepDeadEnd | StepVerified;
 
-/** Form tra cứu hợp đồng 2 bước — Phase 1 kiến trúc portal khách hàng.
-    Toàn bộ nghiệp vụ (fuzzy search, OTP, rate-limit, che tên/email) nằm ở
-    API route (src/app/api/portal/search|verify-otp) — component này CHỈ
-    quản lý trạng thái hiển thị theo phản hồi API, không tự quyết định gì
-    thêm về bảo mật/logic. */
+/** Form tra cứu hợp đồng 3 MỨC (Phase 1, bản chốt cuối):
+      Mức 1 — tìm theo MST/số hợp đồng, hiện tên che 60% + ngày hợp đồng
+        đầy đủ + SĐT/email che 1 phần.
+      Mức 2 — khách nhập lại TOÀN BỘ SĐT hoặc email để xác nhận; khớp thì
+        hệ thống tự gửi OTP tới email đã lưu sẵn (không phải giá trị vừa
+        gõ) — trừ khi hợp đồng không có email, dẫn tới bế tắc báo CSKH.
+      Mức 3 — nhập đúng OTP mới thấy đầy đủ chi tiết + link tải file.
+    Component CHỈ quản lý trạng thái hiển thị theo phản hồi API, không tự
+    quyết định gì thêm về bảo mật/logic — toàn bộ nghiệp vụ nằm ở
+    src/app/api/portal/{search,confirm,verify-otp}. */
 export default function ContractLookupForm() {
   const [ui, setUi] = useState<UiState>({ step: "idle" });
   const [query, setQuery] = useState("");
+  const [confirmValue, setConfirmValue] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const resetToIdle = () => {
+    setUi({ step: "idle" });
+    setQuery("");
+    setConfirmValue("");
+    setOtp("");
+  };
 
   const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
@@ -46,14 +68,49 @@ export default function ContractLookupForm() {
         body: JSON.stringify({ query: query.trim() }),
       });
       const data = await res.json();
-      if (data.status === "otp_sent") {
-        setUi({ step: "otp", sessionId: data.sessionId, companyNameMasked: data.companyNameMasked, emailMasked: data.emailMasked });
-      } else if (data.status === "no_email") {
-        setUi({ step: "no_email", companyNameMasked: data.companyNameMasked });
+      if (data.status === "found") {
+        setUi({
+          step: "confirm",
+          sessionId: data.sessionId,
+          companyNameMasked: data.companyNameMasked,
+          startDate: data.startDate,
+          endDate: data.endDate,
+          phoneMasked: data.phoneMasked,
+          emailMasked: data.emailMasked,
+        });
+      } else if (data.status === "no_contact_info") {
+        setUi({ step: "dead_end", companyNameMasked: data.companyNameMasked, message: data.message });
       } else {
-        // not_found / rate_limited / error đều chỉ cần hiện thông báo, ở
-        // lại bước nhập (không có state riêng cho từng loại).
+        // not_found / rate_limited / error — ở lại bước nhập, chỉ hiện thông báo
         setErrorMessage(data.message || "Có lỗi xảy ra, vui lòng thử lại.");
+      }
+    } catch {
+      setErrorMessage("Không kết nối được máy chủ, vui lòng thử lại.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleConfirm = async (e: FormEvent) => {
+    if (ui.step !== "confirm") return;
+    e.preventDefault();
+    if (!confirmValue.trim() || loading) return;
+    setLoading(true);
+    setErrorMessage(null);
+    try {
+      const res = await fetch("/api/portal/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: ui.sessionId, value: confirmValue.trim() }),
+      });
+      const data = await res.json();
+      if (data.status === "otp_sent") {
+        setUi({ step: "otp", sessionId: ui.sessionId, emailMasked: data.emailMasked });
+        setConfirmValue("");
+      } else if (data.status === "no_email" || data.status === "too_many_attempts" || data.status === "expired") {
+        setUi({ step: "dead_end", message: data.message });
+      } else {
+        setErrorMessage(data.message || "Số điện thoại hoặc email không khớp.");
       }
     } catch {
       setErrorMessage("Không kết nối được máy chủ, vui lòng thử lại.");
@@ -78,11 +135,8 @@ export default function ContractLookupForm() {
       if (data.status === "verified") {
         setUi({ step: "verified", record: data.record });
       } else if (data.status === "expired" || data.status === "too_many_attempts") {
-        setErrorMessage(data.message);
-        setUi({ step: "idle" });
-        setQuery("");
+        setUi({ step: "dead_end", message: data.message });
       } else {
-        // "invalid" — vẫn ở bước OTP, cho nhập lại
         setErrorMessage(data.message || "Mã xác minh không đúng.");
       }
     } catch {
@@ -120,13 +174,67 @@ export default function ContractLookupForm() {
         </form>
       )}
 
+      {ui.step === "confirm" && (
+        <form onSubmit={handleConfirm} className="space-y-4">
+          <div>
+            <h2 className="mb-1 text-[19px] font-bold text-navy">Xác nhận danh tính</h2>
+            <p className="text-[13.5px] text-body-text">
+              Tìm thấy công ty <span className="font-semibold text-ink">{ui.companyNameMasked}</span>.
+            </p>
+          </div>
+          <dl className="space-y-1.5 rounded-xl bg-bg-tint px-4 py-3 text-[13px]">
+            <div className="flex justify-between">
+              <dt className="text-body-text">Ngày bắt đầu</dt>
+              <dd className="font-medium text-ink">{formatDate(ui.startDate)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-body-text">Ngày kết thúc</dt>
+              <dd className="font-medium text-ink">{formatDate(ui.endDate)}</dd>
+            </div>
+            {ui.phoneMasked && (
+              <div className="flex justify-between">
+                <dt className="text-body-text">SĐT đã đăng ký</dt>
+                <dd className="font-medium text-ink">{ui.phoneMasked}</dd>
+              </div>
+            )}
+            {ui.emailMasked && (
+              <div className="flex justify-between">
+                <dt className="text-body-text">Email đã đăng ký</dt>
+                <dd className="font-medium text-ink">{ui.emailMasked}</dd>
+              </div>
+            )}
+          </dl>
+          <p className="text-[13px] text-body-text">
+            Nhập lại đầy đủ số điện thoại hoặc email đã đăng ký để xác nhận.
+          </p>
+          <input
+            type="text"
+            required
+            value={confirmValue}
+            onChange={(e) => setConfirmValue(e.target.value)}
+            placeholder="Số điện thoại hoặc email đầy đủ"
+            className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 focus:border-primary focus:outline-none"
+          />
+          {errorMessage && <p className="text-[13px] text-accent">{errorMessage}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex w-full items-center justify-center rounded-full bg-primary px-6 py-3.5 text-[15px] font-bold text-white transition-colors duration-200 hover:bg-primary-dark disabled:pointer-events-none disabled:opacity-60"
+          >
+            {loading ? "Đang xác nhận..." : "Xác nhận"}
+          </button>
+          <button type="button" onClick={resetToIdle} className="w-full text-center text-[13px] text-body-text underline">
+            Tra cứu lại
+          </button>
+        </form>
+      )}
+
       {ui.step === "otp" && (
         <form onSubmit={handleVerify} className="space-y-4">
           <div>
-            <h2 className="mb-1 text-[19px] font-bold text-navy">Xác minh mã OTP</h2>
+            <h2 className="mb-1 text-[19px] font-bold text-navy">Nhập mã xác minh</h2>
             <p className="text-[13.5px] text-body-text">
-              Tìm thấy công ty <span className="font-semibold text-ink">{ui.companyNameMasked}</span>. Mã xác minh
-              đã gửi tới <span className="font-semibold text-ink">{ui.emailMasked}</span>.
+              Mã xác minh đã gửi tới <span className="font-semibold text-ink">{ui.emailMasked}</span>.
             </p>
           </div>
           <input
@@ -147,33 +255,23 @@ export default function ContractLookupForm() {
           >
             {loading ? "Đang xác minh..." : "Xác minh"}
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              setUi({ step: "idle" });
-              setErrorMessage(null);
-              setQuery("");
-            }}
-            className="w-full text-center text-[13px] text-body-text underline"
-          >
+          <button type="button" onClick={resetToIdle} className="w-full text-center text-[13px] text-body-text underline">
             Tra cứu lại
           </button>
         </form>
       )}
 
-      {ui.step === "no_email" && (
+      {ui.step === "dead_end" && (
         <div className="space-y-4 text-center">
-          <h2 className="text-[19px] font-bold text-navy">Chưa có email xác minh</h2>
-          <p className="text-[13.5px] text-body-text">
-            Tìm thấy công ty <span className="font-semibold text-ink">{ui.companyNameMasked}</span>, nhưng hợp đồng
-            này chưa có email đăng ký để nhận mã xác minh. Vui lòng liên hệ CSKH để bổ sung email, sau đó quay lại
-            tra cứu.
-          </p>
+          <h2 className="text-[19px] font-bold text-navy">Cần hỗ trợ thêm</h2>
+          {ui.companyNameMasked && (
+            <p className="text-[13.5px] text-body-text">
+              Tìm thấy công ty <span className="font-semibold text-ink">{ui.companyNameMasked}</span>.
+            </p>
+          )}
+          <p className="text-[13.5px] text-body-text">{ui.message}</p>
           <div className="flex gap-3">
-            <a
-              href="tel:0898082188"
-              className="flex-1 rounded-full bg-accent px-4 py-3 text-[14px] font-bold text-white"
-            >
+            <a href="tel:0898082188" className="flex-1 rounded-full bg-accent px-4 py-3 text-[14px] font-bold text-white">
               Gọi CSKH
             </a>
             <a
@@ -185,14 +283,7 @@ export default function ContractLookupForm() {
               Chat Zalo
             </a>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              setUi({ step: "idle" });
-              setQuery("");
-            }}
-            className="w-full text-center text-[13px] text-body-text underline"
-          >
+          <button type="button" onClick={resetToIdle} className="w-full text-center text-[13px] text-body-text underline">
             Tra cứu lại
           </button>
         </div>
@@ -226,14 +317,7 @@ export default function ContractLookupForm() {
               ))}
             </div>
           )}
-          <button
-            type="button"
-            onClick={() => {
-              setUi({ step: "idle" });
-              setQuery("");
-            }}
-            className="w-full text-center text-[13px] text-body-text underline"
-          >
+          <button type="button" onClick={resetToIdle} className="w-full text-center text-[13px] text-body-text underline">
             Tra cứu hợp đồng khác
           </button>
         </div>

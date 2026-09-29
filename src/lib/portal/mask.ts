@@ -28,3 +28,16 @@ export function maskEmail(email: string): string {
   const revealCount = Math.min(2, Math.max(0, localPart.length - 1));
   return `${localPart.slice(0, revealCount)}***${domainPart}`;
 }
+
+/** VD "0901234567" -> "090*****67" — giữ 3 ký tự đầu + 2 ký tự cuối, che
+    toàn bộ phần giữa bằng đúng số dấu `*` tương ứng (không cố định 5 dấu,
+    để còn hợp lý với số có độ dài khác — VD số bàn có mã vùng). Số quá
+    ngắn (<=5 ký tự, hiếm gặp) che toàn bộ để không lộ gần hết. */
+export function maskPhone(phone: string): string {
+  const trimmed = phone.trim();
+  if (trimmed.length <= 5) return "*".repeat(trimmed.length);
+  const first = trimmed.slice(0, 3);
+  const last = trimmed.slice(-2);
+  const middleLength = trimmed.length - 5;
+  return `${first}${"*".repeat(middleLength)}${last}`;
+}

@@ -1,11 +1,11 @@
 import type { PortalRedisClient } from "./redisClient";
 import type { LookupSession } from "./types";
 
-/** "Phiên tra cứu" nối bước 1 (tìm thấy công ty) và bước 2 (xác minh OTP) —
-    client chỉ giữ `sessionId` ngẫu nhiên, KHÔNG giữ MST/tên đầy đủ, tránh
-    lộ thông tin thật trước khi qua được OTP. TTL 15 phút — đủ thời gian
-    nhận + nhập OTP (OTP tự nó có TTL ngắn hơn, 5-10 phút, xem otp.ts),
-    dài hơn 1 chút để không làm phiên hết hạn ngay trước khi OTP hết hạn. */
+/** "Phiên tra cứu" nối 3 mức hiển thị (xem chú thích đầy đủ ở types.ts) —
+    client chỉ giữ `sessionId` ngẫu nhiên, KHÔNG giữ MST/SĐT/email thật,
+    tránh lộ thông tin trước khi qua đủ các bước xác minh. TTL 15 phút —
+    đủ thời gian cho cả Mức 2 (nhập lại SĐT/email) lẫn Mức 3 (nhập OTP,
+    OTP tự nó có TTL ngắn hơn, xem otp.ts). */
 
 const SESSION_TTL_SECONDS = 15 * 60;
 
@@ -14,17 +14,21 @@ function sessionKey(sessionId: string): string {
 }
 
 export function generateSessionId(): string {
-  // crypto.randomUUID() có sẵn trong Node 19+/mọi runtime Vercel hiện tại —
-  // không cần thêm thư viện uuid.
   return crypto.randomUUID();
 }
 
 export async function createLookupSession(
   redis: PortalRedisClient,
-  data: Omit<LookupSession, "attempts" | "createdAt">
+  data: Pick<LookupSession, "mst" | "contractNumber" | "companyNameMasked" | "phoneFull" | "phoneMasked" | "emailFull" | "emailMasked">
 ): Promise<string> {
   const sessionId = generateSessionId();
-  const session: LookupSession = { ...data, attempts: 0, createdAt: Date.now() };
+  const session: LookupSession = {
+    ...data,
+    confirmed: false,
+    confirmAttempts: 0,
+    otpAttempts: 0,
+    createdAt: Date.now(),
+  };
   await redis.set(sessionKey(sessionId), JSON.stringify(session), { ex: SESSION_TTL_SECONDS });
   return sessionId;
 }
@@ -42,17 +46,19 @@ export async function getLookupSession(
   }
 }
 
-/** Tăng số lần thử sai OTP của phiên — GHI ĐÈ LẠI với cùng TTL còn lại
-    (không reset TTL về 15 phút, tránh 1 khách cố tình thử sai liên tục để
-    kéo dài phiên vô hạn). `remainingTtlSeconds` do route.ts tự tính từ
-    session đã đọc trước đó (createdAt), tránh thêm lệnh Redis TTL riêng. */
-export async function incrementLookupSessionAttempts(
+/** Ghi đè 1 phần phiên (VD tăng số lần thử, đánh dấu confirmed) — GIỮ
+    NGUYÊN TTL còn lại (không reset về 15 phút mỗi lần patch, tránh 1
+    khách cố tình thử sai liên tục để kéo dài phiên vô hạn).
+    `remainingTtlSeconds` do route.ts tự tính từ session đã đọc trước đó
+    (createdAt), tránh thêm lệnh Redis TTL riêng. */
+export async function patchLookupSession(
   redis: PortalRedisClient,
   sessionId: string,
   session: LookupSession,
+  patch: Partial<LookupSession>,
   remainingTtlSeconds: number
 ): Promise<LookupSession> {
-  const updated: LookupSession = { ...session, attempts: session.attempts + 1 };
+  const updated: LookupSession = { ...session, ...patch };
   await redis.set(sessionKey(sessionId), JSON.stringify(updated), {
     ex: Math.max(1, remainingTtlSeconds),
   });

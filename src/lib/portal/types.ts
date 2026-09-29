@@ -34,13 +34,25 @@ export type ContractRecord = {
   links: ContractLink[];
 };
 
+/** Phiên tra cứu — nối 3 mức hiển thị:
+      Mức 1 (search): tạo phiên, chỉ có các trường *Masked + *Full (server
+        dùng *Full để so khớp Mức 2, KHÔNG BAO GIỜ gửi *Full cho client).
+      Mức 2 (confirm): khách nhập lại SĐT/email ĐẦY ĐỦ, so với *Full — khớp
+        thì `confirmed=true` + tự gửi OTP tới `emailFull` (nếu có).
+      Mức 3 (verify-otp): CHỈ cho kiểm OTP khi `confirmed=true` (phòng thủ
+        thêm — thực tế OTP cũng chưa tồn tại trong Redis nếu chưa qua Mức
+        2, nhưng chặn tường minh ở đây rõ ràng hơn). */
 export type LookupSession = {
   mst: string;
   contractNumber: string;
   companyNameMasked: string;
-  email: string;
-  emailMasked: string;
-  attempts: number;
+  phoneFull: string | null;
+  phoneMasked: string | null;
+  emailFull: string | null;
+  emailMasked: string | null;
+  confirmed: boolean;
+  confirmAttempts: number;
+  otpAttempts: number;
   createdAt: number;
 };
 
