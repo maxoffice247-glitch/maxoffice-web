@@ -765,8 +765,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ tư vấn hỗ trợ nhanh chóng cho khách hàng khu vực Gò Vấp." },
     ],
     promotions: [
-      "Ký hợp đồng 12 tháng: tặng 2 tháng thuê, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Ký hợp đồng 24 tháng: tặng 4 tháng thuê, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Ký hợp đồng 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng thuê, (b) tặng 1 tháng + đổi GPKD",
+      "Ký hợp đồng 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng thuê, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Chợ Gò Vấp", desc: "Khu chợ truyền thống lớn, trung tâm sinh hoạt của khu vực." },
@@ -799,7 +799,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Chi nhánh có hỗ trợ kế toán thuế cho hộ kinh doanh không?", a: "Có. Dịch vụ kế toán thuế trọn gói từ 500.000đ/tháng được cung cấp đầy đủ tại đây." },
       { q: "Tôi có thể đặt lịch tham quan văn phòng Nguyễn Oanh không?", a: "Có. Bạn để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ tại Gò Vấp sẽ liên hệ xác nhận lịch tham quan phù hợp." },
       { q: "Văn phòng có chỗ đỗ xe cho khách vãng lai không?", a: "Có. Khu vực giữ xe máy và hỗ trợ đỗ ô tô ngay tại toà nhà." },
-      { q: "Ký hợp đồng dài hạn tại Nguyễn Oanh có khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí; nếu muốn, có thể chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới thay cho lựa chọn trên — áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 24 tháng được tặng 4 tháng thuê miễn phí, hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên." },
+      { q: "Ký hợp đồng dài hạn tại Nguyễn Oanh có khuyến mãi gì không?", a: "Có. Áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 12 tháng: chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Ký hợp đồng 24 tháng: chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Toà nhà hạng A, cơ sở vật chất tốt hơn hẳn các văn phòng ảo mình từng xem qua ở Gò Vấp — xứng đáng với mức giá.", initial: "L", name: "Ngọc Lan", role: "Giám đốc, Lan's Beauty Group" },
@@ -872,8 +872,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
     ],
     promotions: [
-      "Ký hợp đồng 12 tháng: tặng 2 tháng thuê, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Ký hợp đồng 24 tháng: tặng 4 tháng thuê, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Ký hợp đồng 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng thuê, (b) tặng 1 tháng + đổi GPKD",
+      "Ký hợp đồng 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng thuê, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Chỉ 5-10 phút di chuyển, thuận tiện đón đối tác, khách hàng quốc tế." },
@@ -904,7 +904,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 92 Yên Thế có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý, phù hợp đăng ký kinh doanh, đăng ký thuế cho mọi loại hình doanh nghiệp, kể cả doanh nghiệp có yếu tố nước ngoài." },
       { q: "Từ văn phòng Yên Thế di chuyển đến trung tâm Quận 1 mất bao lâu?", a: "Khoảng 15-20 phút qua trục Cộng Hoà — Trường Sơn hoặc qua vòng xoay Lăng Cha Cả, tuỳ thời điểm giao thông." },
       { q: "Tôi có thể nâng cấp từ gói BASE lên RISE sau khi ký hợp đồng không?", a: "Có. Bạn có thể nâng cấp gói bất kỳ lúc nào trong quá trình sử dụng để phù hợp với nhu cầu phát triển của doanh nghiệp." },
-      { q: "Ký hợp đồng dài hạn tại Yên Thế có khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí; nếu muốn, có thể chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới thay cho lựa chọn trên — áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 24 tháng được tặng 4 tháng thuê miễn phí, hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên." },
+      { q: "Ký hợp đồng dài hạn tại Yên Thế có khuyến mãi gì không?", a: "Có. Áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 12 tháng: chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Ký hợp đồng 24 tháng: chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Chi nhánh Yên Thế gần sân bay nên mình hay hẹn đối tác nước ngoài ở đây, rất tiện.", initial: "T", name: "Anh Tuấn", role: "Giám đốc, công ty logistics" },
@@ -947,8 +947,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
     ],
     promotions: [
-      "Ký hợp đồng 12 tháng: tặng 2 tháng thuê, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Ký hợp đồng 24 tháng: tặng 4 tháng thuê, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Ký hợp đồng 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng thuê, (b) tặng 1 tháng + đổi GPKD",
+      "Ký hợp đồng 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng thuê, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Giao lộ Bảy Hiền", desc: "Nút giao thông quan trọng, kết nối Cách Mạng Tháng 8, Trường Chinh, Lý Thường Kiệt." },
@@ -979,7 +979,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Từ văn phòng Cộng Hoà đến sân bay Tân Sơn Nhất mất bao lâu?", a: "Khoảng 10-15 phút di chuyển qua trục Trường Chinh hoặc Cộng Hoà, tuỳ thời điểm giao thông." },
       { q: "Địa chỉ 123 Cộng Hoà có hợp lệ để đăng ký kinh doanh không?", a: "Có. Địa chỉ này đáp ứng đầy đủ điều kiện pháp lý tại Phường Bảy Hiền, Quận Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
       { q: "Tôi có thể thuê phòng họp theo giờ tại chi nhánh này không?", a: "Có. Chi nhánh Cộng Hoà cung cấp phòng họp theo giờ, phù hợp tiếp đối tác hoặc tổ chức họp nhóm nhỏ." },
-      { q: "Ký hợp đồng dài hạn tại Cộng Hoà có khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí; nếu muốn, có thể chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới thay cho lựa chọn trên — áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 24 tháng được tặng 4 tháng thuê miễn phí, hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên." },
+      { q: "Ký hợp đồng dài hạn tại Cộng Hoà có khuyến mãi gì không?", a: "Có. Áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 12 tháng: chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Ký hợp đồng 24 tháng: chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Vị trí mặt tiền Cộng Hoà rất dễ tìm, đối tác đến lần đầu cũng không bị lạc.", initial: "P", name: "Hoài Phương", role: "Chủ xưởng may gia công" },
@@ -1019,8 +1019,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
     ],
     promotions: [
-      "Ký hợp đồng 12 tháng: tặng 2 tháng thuê, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Ký hợp đồng 24 tháng: tặng 4 tháng thuê, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Ký hợp đồng 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng thuê, (b) tặng 1 tháng + đổi GPKD",
+      "Ký hợp đồng 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng thuê, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Aeon Mall Tân Phú Celadon", desc: "Trung tâm thương mại lớn, thuận tiện tiếp khách và giải trí sau giờ làm." },
@@ -1051,7 +1051,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Từ văn phòng Tân Thắng di chuyển sang Tân Bình có xa không?", a: "Không xa. Trục Tân Sơn Nhì kết nối trực tiếp sang khu vực Tân Bình, thời gian di chuyển khoảng 10-15 phút." },
       { q: "Chi nhánh có không gian làm việc chung (coworking) không?", a: "Có. Chi nhánh Tân Thắng có khu vực chỗ ngồi làm việc chung, phù hợp cho freelancer hoặc đội nhóm nhỏ." },
       { q: "Tôi có thể đặt lịch tham quan văn phòng Tân Thắng trước khi ký hợp đồng không?", a: "Có. Đội ngũ MAX OFFICE tại Tân Thắng sẵn sàng sắp xếp lịch tham quan miễn phí theo thời gian thuận tiện của bạn — chỉ cần để lại thông tin qua form hoặc gọi hotline 089 8082 188." },
-      { q: "Ký hợp đồng dài hạn tại Tân Thắng có khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí; nếu muốn, có thể chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới thay cho lựa chọn trên — áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 24 tháng được tặng 4 tháng thuê miễn phí, hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên." },
+      { q: "Ký hợp đồng dài hạn tại Tân Thắng có khuyến mãi gì không?", a: "Có. Áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 12 tháng: chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Ký hợp đồng 24 tháng: chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Văn phòng gần Aeon Mall nên mình hay hẹn khách ăn trưa luôn, rất tiện.", initial: "H", name: "Thanh Hằng", role: "Chủ shop online" },
@@ -1161,8 +1161,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { icon: HeadsetIcon, title: "Hỗ trợ tận tâm", desc: "Đội ngũ lễ tân, vận hành luôn sẵn sàng hỗ trợ khách hàng." },
     ],
     promotions: [
-      "Ký hợp đồng 12 tháng: tặng 2 tháng thuê, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Ký hợp đồng 24 tháng: tặng 4 tháng thuê, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Ký hợp đồng 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng thuê, (b) tặng 1 tháng + đổi GPKD",
+      "Ký hợp đồng 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng thuê, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Công viên Hoàng Văn Thụ", desc: "Mảng xanh lớn của khu vực, chỉ vài phút di chuyển từ văn phòng." },
@@ -1193,7 +1193,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 06-08-10 Cửu Long có hợp lệ để đăng ký kinh doanh không?", a: "Có. Địa chỉ này đáp ứng đầy đủ điều kiện pháp lý để đăng ký kinh doanh, đăng ký thuế theo quy định hiện hành." },
       { q: "Khu vực xung quanh văn phòng Cửu Long có ồn ào không?", a: "Không. Đây là khu dân cư tương đối yên tĩnh, tách biệt với các trục đường lớn, phù hợp cho công việc cần sự tập trung." },
       { q: "Tôi có thể đến tham quan văn phòng Cửu Long trước khi ký hợp đồng không?", a: "Có. Bạn chỉ cần để lại thông tin qua form trên trang này hoặc gọi hotline 089 8082 188, đội ngũ sẽ sắp xếp lịch tham quan phù hợp." },
-      { q: "Ký hợp đồng dài hạn tại Cửu Long có khuyến mãi gì không?", a: "Có. Ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí; nếu muốn, có thể chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới thay cho lựa chọn trên — áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 24 tháng được tặng 4 tháng thuê miễn phí, hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên." },
+      { q: "Ký hợp đồng dài hạn tại Cửu Long có khuyến mãi gì không?", a: "Có. Áp dụng cho mọi gói văn phòng ảo tại chi nhánh. Ký hợp đồng 12 tháng: chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD) sang địa chỉ mới. Ký hợp đồng 24 tháng: chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Khu vực yên tĩnh, gần công viên nên mình thích ra đó ngồi làm việc buổi sáng trước khi vào văn phòng.", initial: "N", name: "Bảo Ngọc", role: "Freelancer thiết kế đồ hoạ" },
@@ -1235,8 +1235,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     ],
     promotions: [
       "Gói LITE/START — ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng thuê",
-      "Gói BASE trở lên — ký 12 tháng: tặng 2 tháng, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Gói BASE trở lên — ký 24 tháng: tặng 4 tháng, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Gói BASE trở lên, 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng, (b) tặng 1 tháng + đổi GPKD",
+      "Gói BASE trở lên, 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Sân bay quốc tế Tân Sơn Nhất", desc: "Văn phòng nằm sát ranh giới sân bay, thuận tiện đón khách quốc tế." },
@@ -1267,7 +1267,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ 1/12 Hoàng Việt có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Sơn Nhất, Quận Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế." },
       { q: "Chi nhánh có gần công viên để nghỉ ngơi giữa giờ làm không?", a: "Có. Công viên Gia Định nằm rất gần chi nhánh, phù hợp để nghỉ ngơi hoặc đi bộ giữa giờ làm việc." },
       { q: "Tôi có thể nâng cấp từ gói LITE lên START hoặc BASE sau này không?", a: "Có. Bạn có thể nâng cấp gói bất kỳ lúc nào để phù hợp với nhu cầu phát triển của doanh nghiệp." },
-      { q: "Ký hợp đồng dài hạn tại Hoàng Việt có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START, ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí. Với gói BASE trở lên, ký 12 tháng được tặng 2 tháng thuê miễn phí (hoặc chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh - GPKD thay cho lựa chọn trên), ký 24 tháng được tặng 4 tháng thuê miễn phí (hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên)." },
+      { q: "Ký hợp đồng dài hạn tại Hoàng Việt có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START (dưới 499.000đ/tháng): ký 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí, không có lựa chọn khác. Với gói BASE trở lên (từ 499.000đ/tháng): ký 12 tháng được chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD); ký 24 tháng được chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Mình mới mở công ty nên chọn gói LITE ở đây, giá rẻ mà vẫn đủ điều kiện đăng ký kinh doanh.", initial: "V", name: "Anh Vinh", role: "Founder công ty mới thành lập" },
@@ -1308,8 +1308,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     ],
     promotions: [
       "Gói LITE/START — ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng thuê",
-      "Gói BASE trở lên — ký 12 tháng: tặng 2 tháng, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Gói BASE trở lên — ký 24 tháng: tặng 4 tháng, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Gói BASE trở lên, 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng, (b) tặng 1 tháng + đổi GPKD",
+      "Gói BASE trở lên, 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Khu thời trang, may mặc Bàu Cát", desc: "Tập trung nhiều xưởng may, showroom thời trang thiết kế nổi tiếng." },
@@ -1340,7 +1340,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Địa chỉ này có hợp lệ để đăng ký kinh doanh không?", a: "Có. Đây là địa chỉ đầy đủ pháp lý tại Phường Tân Bình, phù hợp đăng ký kinh doanh và đăng ký thuế cho mọi loại hình doanh nghiệp." },
       { q: "Chi nhánh có không gian coworking không?", a: "Có. Chi nhánh Bàu Cát 2 có khu vực làm việc chung thoáng đãng, phù hợp cho freelancer hoặc đội nhóm nhỏ." },
       { q: "Tôi có thể đến tham quan văn phòng Bàu Cát 2 trước khi ký hợp đồng không?", a: "Có. Bạn có thể để lại thông tin qua form hoặc gọi trực tiếp hotline 089 8082 188 để được sắp xếp lịch tham quan miễn phí phù hợp." },
-      { q: "Ký hợp đồng dài hạn tại Bàu Cát 2 có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START, ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí. Với gói BASE trở lên, ký 12 tháng được tặng 2 tháng thuê miễn phí (hoặc chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh - GPKD thay cho lựa chọn trên), ký 24 tháng được tặng 4 tháng thuê miễn phí (hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên)." },
+      { q: "Ký hợp đồng dài hạn tại Bàu Cát 2 có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START (dưới 499.000đ/tháng): ký 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí, không có lựa chọn khác. Với gói BASE trở lên (từ 499.000đ/tháng): ký 12 tháng được chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD); ký 24 tháng được chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Mình mở xưởng may nhỏ gần đây nên đặt địa chỉ công ty luôn ở Bàu Cát cho tiện quản lý.", initial: "T", name: "Chị Thảo", role: "Chủ xưởng may thời trang" },
@@ -1380,8 +1380,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     ],
     promotions: [
       "Gói LITE/START — ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng thuê",
-      "Gói BASE trở lên — ký 12 tháng: tặng 2 tháng, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Gói BASE trở lên — ký 24 tháng: tặng 4 tháng, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Gói BASE trở lên, 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng, (b) tặng 1 tháng + đổi GPKD",
+      "Gói BASE trở lên, 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Trục Lê Văn Sỹ", desc: "Tuyến phố ẩm thực, mua sắm sầm uất nối Tân Bình với Quận 3." },
@@ -1412,7 +1412,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Khu vực xung quanh văn phòng Lam Sơn có quán ăn tiếp khách không?", a: "Có. Khu vực gần trục Lê Văn Sỹ tập trung nhiều quán ăn, cà phê phù hợp cho các buổi gặp gỡ đối tác không quá trang trọng." },
       { q: "Lam Sơn khác gì so với các chi nhánh khác cùng Phường Tân Sơn Hòa?", a: "Lam Sơn có lợi thế kết nối trực tiếp vào trục Lê Văn Sỹ — Cách Mạng Tháng 8, giúp di chuyển đến Quận 3, Quận 1 nhanh hơn mà không cần vòng qua các trục lớn khác." },
       { q: "Tôi có thể nâng cấp gói dịch vụ sau khi ký hợp đồng tại Lam Sơn không?", a: "Có. Bạn có thể nâng cấp từ LITE lên START hoặc BASE bất kỳ lúc nào để phù hợp với nhu cầu phát triển của doanh nghiệp." },
-      { q: "Ký hợp đồng dài hạn tại Lam Sơn có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START, ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí. Với gói BASE trở lên, ký 12 tháng được tặng 2 tháng thuê miễn phí (hoặc chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh - GPKD thay cho lựa chọn trên), ký 24 tháng được tặng 4 tháng thuê miễn phí (hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên)." },
+      { q: "Ký hợp đồng dài hạn tại Lam Sơn có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START (dưới 499.000đ/tháng): ký 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí, không có lựa chọn khác. Với gói BASE trở lên (từ 499.000đ/tháng): ký 12 tháng được chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD); ký 24 tháng được chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Văn phòng gần Lê Văn Sỹ nên mình hay hẹn khách ở mấy quán cà phê gần đó, không khí thoải mái hơn phòng họp.", initial: "A", name: "Gia An", role: "Chủ agency marketing nhỏ" },
@@ -1453,8 +1453,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     ],
     promotions: [
       "Gói LITE/START — ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng thuê",
-      "Gói BASE trở lên — ký 12 tháng: tặng 2 tháng, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Gói BASE trở lên — ký 24 tháng: tặng 4 tháng, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Gói BASE trở lên, 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng, (b) tặng 1 tháng + đổi GPKD",
+      "Gói BASE trở lên, 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Trục đường Trường Chinh", desc: "Cửa ngõ Tây Bắc thành phố, kết nối Quận 12, Hóc Môn." },
@@ -1485,7 +1485,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Văn phòng Hoàng Kế Viêm phù hợp với loại hình doanh nghiệp nào?", a: "Phù hợp nhất với doanh nghiệp nhỏ, hộ kinh doanh cá thể cần địa chỉ đăng ký hợp lệ với chi phí tiết kiệm, đặc biệt là các đơn vị thường xuyên giao dịch hoặc vận chuyển hàng hoá về hướng Quận 12, Hóc Môn." },
       { q: "Khu vực xung quanh văn phòng có yên tĩnh không?", a: "Có. Đây là khu dân cư sinh sống lâu năm, khá ổn định và yên tĩnh, phù hợp cho công việc cần sự tập trung." },
       { q: "Tôi có thể đến tham quan văn phòng Hoàng Kế Viêm trước khi ký hợp đồng không?", a: "Có. Hãy để lại thông tin qua form hoặc liên hệ hotline 089 8082 188, đội ngũ MAX OFFICE sẽ sắp xếp lịch tham quan miễn phí cho bạn." },
-      { q: "Ký hợp đồng dài hạn tại Hoàng Kế Viêm có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START, ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí. Với gói BASE trở lên, ký 12 tháng được tặng 2 tháng thuê miễn phí (hoặc chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh - GPKD thay cho lựa chọn trên), ký 24 tháng được tặng 4 tháng thuê miễn phí (hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên)." },
+      { q: "Ký hợp đồng dài hạn tại Hoàng Kế Viêm có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START (dưới 499.000đ/tháng): ký 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí, không có lựa chọn khác. Với gói BASE trở lên (từ 499.000đ/tháng): ký 12 tháng được chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD); ký 24 tháng được chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Công ty mình hay giao dịch với đối tác ở Quận 12 nên đặt văn phòng ở đây khá thuận tiện.", initial: "L", name: "Anh Lâm", role: "Giám đốc kinh doanh" },
@@ -1613,8 +1613,8 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
     ],
     promotions: [
       "Gói LITE/START — ký 12 tháng tặng 2 tháng, ký 24 tháng tặng 4 tháng thuê",
-      "Gói BASE trở lên — ký 12 tháng: tặng 2 tháng, hoặc tặng 1 tháng + miễn phí đổi GPKD",
-      "Gói BASE trở lên — ký 24 tháng: tặng 4 tháng, hoặc tặng 2 tháng + miễn phí đổi GPKD",
+      "Gói BASE trở lên, 12 tháng — Chọn 1 trong 2: (a) tặng 2 tháng, (b) tặng 1 tháng + đổi GPKD",
+      "Gói BASE trở lên, 24 tháng — Chọn 1 trong 2: (a) tặng 4 tháng, (b) tặng 2 tháng + đổi GPKD",
     ],
     nearbyItems: [
       { name: "Ga Sài Gòn", desc: "Nhà ga đường sắt trung tâm, chỉ cách chi nhánh vài phút di chuyển." },
@@ -1645,7 +1645,7 @@ export const LOCATIONS_DATA: Record<string, LocationData> = {
       { q: "Văn phòng CMT8 có gần Ga Sài Gòn không?", a: "Có. Chi nhánh nằm khá gần Ga Sài Gòn, thuận tiện nếu bạn hoặc đối tác di chuyển bằng đường sắt." },
       { q: "Từ văn phòng CMT8 đến trung tâm Quận 1 mất bao lâu?", a: "Khoảng 10-15 phút di chuyển qua trục Cách Mạng Tháng 8, tuỳ thời điểm giao thông." },
       { q: "Chi phí thuê văn phòng ảo tại CMT8 có rẻ hơn khu vực Quận 1 không?", a: "Có. Mức giá tại CMT8 áp dụng theo bảng giá chung của MAX OFFICE, không có phụ phí trung tâm như khu vực Quận 1, phù hợp cho doanh nghiệp muốn tối ưu chi phí mà vẫn gần trung tâm." },
-      { q: "Ký hợp đồng dài hạn tại CMT8 có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START, ký hợp đồng 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí. Với gói BASE trở lên, ký 12 tháng được tặng 2 tháng thuê miễn phí (hoặc chọn tặng 1 tháng thuê kèm miễn phí dịch vụ đổi giấy phép kinh doanh - GPKD thay cho lựa chọn trên), ký 24 tháng được tặng 4 tháng thuê miễn phí (hoặc chọn tặng 2 tháng thuê kèm miễn phí đổi GPKD thay cho lựa chọn trên)." },
+      { q: "Ký hợp đồng dài hạn tại CMT8 có khuyến mãi gì không?", a: "Có, mức ưu đãi khác nhau theo gói bạn chọn. Với gói LITE hoặc START (dưới 499.000đ/tháng): ký 12 tháng được tặng 2 tháng thuê miễn phí, ký 24 tháng được tặng 4 tháng thuê miễn phí, không có lựa chọn khác. Với gói BASE trở lên (từ 499.000đ/tháng): ký 12 tháng được chọn 1 trong 2 — (a) tặng 2 tháng thuê miễn phí, hoặc (b) tặng 1 tháng thuê miễn phí kèm miễn phí dịch vụ đổi giấy phép kinh doanh (GPKD); ký 24 tháng được chọn 1 trong 2 — (a) tặng 4 tháng thuê miễn phí, hoặc (b) tặng 2 tháng thuê miễn phí kèm miễn phí đổi GPKD." },
     ],
     testimonials: [
       { quote: "Văn phòng ngay mặt tiền CMT8 nên khách hàng dễ tìm, công ty mình trông chuyên nghiệp hơn hẳn.", initial: "B", name: "Anh Bình", role: "Giám đốc công ty dịch vụ" },

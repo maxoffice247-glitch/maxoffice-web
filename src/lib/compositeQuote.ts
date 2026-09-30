@@ -75,9 +75,17 @@ export const CUSTOM_SERVICE_META: Record<
  * dưới 499K chỉ có lựa chọn (a), gói từ 499K có thêm lựa chọn (b) đổi GPKD
  * nhưng không đổi số tháng tặng của (a)) — vì vậy khai báo được 1 mức chung
  * { 12: 2, 24: 4 } cho cả chi nhánh mà KHÔNG cần phân biệt theo `planKey`.
- * Lựa chọn (b) (ít tháng hơn + đổi GPKD) không biểu diễn được qua cơ chế
- * "số tháng tặng thêm" này — khách muốn dùng lựa chọn (b) thêm dòng "Thành
- * lập doanh nghiệp" (loại `thanh-lap-doanh-nghiep`) riêng vào báo giá.
+ *
+ * Lựa chọn (b) (ít tháng hơn + đổi GPKD) KHÔNG biểu diễn được qua cơ chế
+ * "số tháng tặng thêm" này (đây là 2 phương án loại trừ nhau, không phải 2
+ * dòng phí cộng dồn) — CỐ Ý không xây thêm UI chọn 1/2 cho từng dòng báo giá
+ * (thay đổi lớn, chưa cần thiết ở quy mô hiện tại). Thay vào đó, hàm dưới
+ * đây tự thêm 1 dòng ghi chú ngắn vào `label` khi gói ĐANG CHỌN có giá ≥499K
+ * tại 1 trong 10 chi nhánh này, để nhân viên biết còn lựa chọn (b) mà không
+ * cần chọn gì thêm trên form — khách muốn dùng lựa chọn (b) thì liên hệ tư
+ * vấn trực tiếp (không tính được số tiền cụ thể qua công cụ này vì phí đổi
+ * GPKD không nằm trong `SERVICES_DATA`/`virtualOfficePlans.ts` dưới dạng có
+ * thể tự động cộng vào báo giá).
  */
 const VO_LONG_TERM_PROMOS: Record<string, Partial<Record<MonthOption, number>>> = {
   "pham-van-dong": { 12: 3, 24: 7 },
@@ -94,18 +102,35 @@ const VO_LONG_TERM_PROMOS: Record<string, Partial<Record<MonthOption, number>>> 
   "nguyen-oanh": { 12: 2, 24: 4 },
 };
 
+/** Chỉ 10 chi nhánh này có lựa chọn (b) đổi GPKD ở mức giá ≥499K — Phạm Văn
+ * Đồng/Nguyễn Thế Truyện KHÔNG có khái niệm lựa chọn (b) này nên không đưa
+ * vào set, dù cũng nằm trong `VO_LONG_TERM_PROMOS` ở trên. */
+const LOCATIONS_WITH_GPKD_CHOICE = new Set([
+  "yen-the",
+  "cong-hoa",
+  "cuu-long",
+  "hoang-viet",
+  "bau-cat",
+  "lam-son",
+  "hoang-ke-viem",
+  "tan-thang",
+  "cmt8",
+  "nguyen-oanh",
+]);
+
 function vietnameseMonthPromo(
   locationSlug: string,
-  months: MonthOption
+  months: MonthOption,
+  planPrice: number
 ): { extraMonths: number; totalMonths: number; label: string } | undefined {
   const extraMonths = VO_LONG_TERM_PROMOS[locationSlug]?.[months];
   if (!extraMonths) return undefined;
   const totalMonths = months + extraMonths;
-  return {
-    extraMonths,
-    totalMonths,
-    label: `Ký hợp đồng ${months} tháng — tặng thêm ${extraMonths} tháng sử dụng (thanh toán ${months} tháng, sử dụng ${totalMonths} tháng)`,
-  };
+  const hasGpkdChoice = planPrice >= 499_000 && LOCATIONS_WITH_GPKD_CHOICE.has(locationSlug);
+  const label = hasGpkdChoice
+    ? `Ký hợp đồng ${months} tháng — tặng thêm ${extraMonths} tháng sử dụng (thanh toán ${months} tháng, sử dụng ${totalMonths} tháng), hoặc đổi sang miễn phí dịch vụ đổi GPKD — liên hệ tư vấn`
+    : `Ký hợp đồng ${months} tháng — tặng thêm ${extraMonths} tháng sử dụng (thanh toán ${months} tháng, sử dụng ${totalMonths} tháng)`;
+  return { extraMonths, totalMonths, label };
 }
 
 /** Giá tham khảo hiện có (mode "single" trong servicesData.ts) — dùng làm
@@ -227,7 +252,7 @@ export function resolveCompositeQuoteItem(
           baseAmount: plan.price,
           baseLabel: `${formatVoPrice(plan.price)}/tháng`,
           months: item.months,
-          promo: vietnameseMonthPromo(item.locationSlug, item.months),
+          promo: vietnameseMonthPromo(item.locationSlug, item.months, plan.price),
           vatRatePercent: 10,
         }),
       };
