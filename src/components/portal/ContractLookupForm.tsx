@@ -205,7 +205,8 @@ export default function ContractLookupForm() {
             )}
           </dl>
           <p className="text-[13px] text-body-text">
-            Nhập lại đầy đủ số điện thoại hoặc email đã đăng ký để xác nhận.
+            Để xem đầy đủ chi tiết hợp đồng (giá trị, ngày cụ thể, file hợp đồng), vui lòng xác nhận
+            đúng số điện thoại hoặc email đã đăng ký với MAX OFFICE:
           </p>
           <input
             type="text"
