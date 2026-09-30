@@ -2,25 +2,45 @@ import { NextResponse } from "next/server";
 import { getRedis } from "@/lib/portal/redisClient";
 import { markOrderPaidIfNotAlready } from "@/lib/portal/order";
 import { sendStaffNewOrderEmail } from "@/lib/portal/staffNotify";
+import { verifyHmacSignature, verifyUrlKey } from "@/lib/portal/sepayAuth";
 
-/** Webhook SePay cho VA riêng của portal (khác VA của GPKD) — xác thực
-    qua query string `?key=...` gắn thẳng vào URL đăng ký trên dashboard
-    SePay (KHÔNG phải header, theo đúng cách GPKD đã làm và xác nhận hoạt
-    động ổn định — Apps Script không đọc được header tuỳ ý nên GPKD chọn
-    cách này; Next.js đọc header được nhưng giữ nhất quán 1 cách cho cả 2
-    hệ thống dùng chung SePay). Payload `{content, transferAmount}` đã xác
-    nhận đúng field tên thật qua code GPKD, không phải đoán. */
+/** Webhook SePay cho VA riêng của portal (khác VA của GPKD) — chấp nhận
+    CẢ HAI cơ chế xác thực SePay hỗ trợ (xem sepayAuth.ts để biết lý do
+    HMAC mạnh hơn):
+      1. Query string `?key=...` (cách cũ, theo đúng GPKD).
+      2. Header `X-SePay-Signature`/`X-SePay-Timestamp` (HMAC-SHA256).
+    Chỉ cần MỘT trong hai đúng — cho phép bạn đổi cấu hình trên dashboard
+    SePay (URL key <-> HMAC) bất cứ lúc nào mà KHÔNG cần deploy lại code.
+    Payload `{content, transferAmount}` đã xác nhận đúng field tên thật
+    qua code GPKD, không phải đoán. */
 export async function POST(request: Request) {
+  // Đọc RAW TEXT trước — HMAC ký trên đúng BYTES gốc của request, không
+  // phải bản JSON.parse() rồi JSON.stringify() lại (SePay cảnh báo rõ:
+  // cách escape Unicode khác nhau giữa các ngôn ngữ có thể làm sai lệch
+  // chữ ký dù dữ liệu "giống nhau"). Parse JSON THỦ CÔNG từ chính rawBody
+  // này ở dưới, không gọi request.json() (sẽ đọc mất stream, không gọi
+  // lại .text() được nữa).
+  const rawBody = await request.text();
+
   const url = new URL(request.url);
   const keyParam = url.searchParams.get("key") || "";
-  const expectedKey = process.env.SEPAY_PORTAL_API_KEY;
-  if (!expectedKey || keyParam !== expectedKey) {
-    return NextResponse.json({ success: false, error: "Sai API key" }, { status: 401 });
+  const urlKeyOk = verifyUrlKey(keyParam, process.env.SEPAY_PORTAL_API_KEY);
+
+  const hmacResult = verifyHmacSignature(
+    rawBody,
+    request.headers.get("x-sepay-signature"),
+    request.headers.get("x-sepay-timestamp"),
+    process.env.SEPAY_PORTAL_WEBHOOK_SECRET
+  );
+
+  if (!urlKeyOk && hmacResult !== "ok") {
+    const reason = hmacResult === "missing_headers" ? "Sai API key" : `Xác thực HMAC thất bại (${hmacResult})`;
+    return NextResponse.json({ success: false, error: reason }, { status: 401 });
   }
 
   let payload: { content?: string; transferAmount?: number | string; amount?: number | string };
   try {
-    payload = await request.json();
+    payload = JSON.parse(rawBody);
   } catch (err) {
     return NextResponse.json({ success: false, error: (err as Error).message }, { status: 400 });
   }
