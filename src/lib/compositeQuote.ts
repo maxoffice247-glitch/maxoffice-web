@@ -67,13 +67,31 @@ export const CUSTOM_SERVICE_META: Record<
  *   tháng khi ký 24 tháng" (còn "tặng 12 tháng khi ký 36 tháng" nhưng 36
  *   tháng không nằm trong 3 mốc 6/12/24 đang hỗ trợ chọn).
  *
- * QUAN TRỌNG: ưu đãi này CHỈ ảnh hưởng số THÁNG SỬ DỤNG được tặng thêm
- * (thông tin hiển thị), KHÔNG làm giảm số tiền phải trả — khách vẫn thanh
- * toán đúng giá x số tháng đã chọn, chỉ được dùng lâu hơn miễn phí.
+ * 10 chi nhánh ưu đãi dài hạn theo mốc giá 499K (thêm sau, xem
+ * `locationsData.ts` field `promotions` của từng chi nhánh để biết đầy đủ cả
+ * 2 lựa chọn): quy tắc gốc là "12 tháng tặng 2 tháng HOẶC 1 tháng + miễn phí
+ * đổi GPKD", "24 tháng tặng 4 tháng HOẶC 2 tháng + miễn phí đổi GPKD" — SỐ
+ * THÁNG TẶNG Ở LỰA CHỌN (a) GIỐNG NHAU cho MỌI gói bất kể giá (LITE/START
+ * dưới 499K chỉ có lựa chọn (a), gói từ 499K có thêm lựa chọn (b) đổi GPKD
+ * nhưng không đổi số tháng tặng của (a)) — vì vậy khai báo được 1 mức chung
+ * { 12: 2, 24: 4 } cho cả chi nhánh mà KHÔNG cần phân biệt theo `planKey`.
+ * Lựa chọn (b) (ít tháng hơn + đổi GPKD) không biểu diễn được qua cơ chế
+ * "số tháng tặng thêm" này — khách muốn dùng lựa chọn (b) thêm dòng "Thành
+ * lập doanh nghiệp" (loại `thanh-lap-doanh-nghiep`) riêng vào báo giá.
  */
 const VO_LONG_TERM_PROMOS: Record<string, Partial<Record<MonthOption, number>>> = {
   "pham-van-dong": { 12: 3, 24: 7 },
   "nguyen-the-truyen": { 12: 2, 24: 6 },
+  "yen-the": { 12: 2, 24: 4 },
+  "cong-hoa": { 12: 2, 24: 4 },
+  "cuu-long": { 12: 2, 24: 4 },
+  "hoang-viet": { 12: 2, 24: 4 },
+  "bau-cat": { 12: 2, 24: 4 },
+  "lam-son": { 12: 2, 24: 4 },
+  "hoang-ke-viem": { 12: 2, 24: 4 },
+  "tan-thang": { 12: 2, 24: 4 },
+  cmt8: { 12: 2, 24: 4 },
+  "nguyen-oanh": { 12: 2, 24: 4 },
 };
 
 function vietnameseMonthPromo(
