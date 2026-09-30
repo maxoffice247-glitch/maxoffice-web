@@ -5,7 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { PhoneIcon, MenuIcon, CloseIcon, SearchIcon } from "./icons";
+import { PhoneIcon, MenuIcon, CloseIcon, SearchIcon, UserIcon } from "./icons";
 import Button from "./Button";
 import { useSearch } from "./SearchContext";
 import { NavIndicatorProvider, NavLink } from "./NavIndicator";
@@ -144,6 +144,27 @@ export default function Header() {
             >
               <SearchIcon className="h-[18px] w-[18px]" />
             </button>
+            {/* Điểm vào riêng cho khách hàng ĐÃ ký hợp đồng — CHỈ icon
+                (không kèm chữ), tách biệt trực quan khỏi 7 mục điều hướng
+                nội dung chính (Dịch vụ/Chi nhánh/Tiện ích...) vốn dành cho
+                khách MỚI đang tìm hiểu dịch vụ. Đã đo thực tế: khoảng trống
+                còn lại trong header ở 1240px (max-width, không đổi từ
+                1280px tới 1920px vì container có max-w-[1240px]) là ĐÚNG
+                102px — không đủ RỘNG RÃI để thêm 1 tab chữ đầy đủ "Khách
+                hàng" (~75-90px chữ + 28px gap ≈ 100-118px, sát mép/rủi ro
+                vỡ ở đúng ngưỡng 1280px) nên chọn phương án icon an toàn
+                hơn theo đúng ưu tiên đã đề xuất. title= làm tooltip (không
+                thay được cho aria-label với trình đọc màn hình). */}
+            <Link
+              href="/tien-ich/tra-cuu-hop-dong"
+              aria-label="Tra cứu hợp đồng khách hàng"
+              title="Tra cứu hợp đồng khách hàng"
+              className={`hidden h-9 w-9 items-center justify-center rounded-full transition-colors duration-300 sm:flex ${
+                solid ? "text-navy hover:bg-bg-tint" : "text-white hover:bg-white/10"
+              }`}
+            >
+              <UserIcon className="h-[18px] w-[18px]" />
+            </Link>
             <Button
               href="tel:0898082188"
               variant="primary"
@@ -228,6 +249,18 @@ export default function Header() {
               </div>
             );
           })}
+          {/* Tách riêng khỏi danh sách điều hướng nội dung chính ở trên
+              (dành cho khách MỚI tìm hiểu dịch vụ) — dòng kẻ trên +
+              màu chữ nhạt hơn để phân biệt rõ đây là lối tắt cho khách
+              ĐÃ CÓ hợp đồng, không phải 1 mục dịch vụ/tiện ích khác. */}
+          <Link
+            href="/tien-ich/tra-cuu-hop-dong"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-2.5 border-t border-white/10 py-4 text-lg font-semibold text-white/55 transition-colors hover:text-accent"
+          >
+            <UserIcon className="h-4 w-4" />
+            Tra cứu hợp đồng khách hàng
+          </Link>
           <a
             href="tel:0898082188"
             onClick={() => setMenuOpen(false)}

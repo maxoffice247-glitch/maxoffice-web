@@ -4,7 +4,7 @@ import { getClientIp } from "@/lib/portal/requestIp";
 import { checkAndRecordLookup } from "@/lib/portal/rateLimit";
 import { readContractRecordsCache } from "@/lib/portal/recordsCache";
 import { searchContract } from "@/lib/portal/search";
-import { maskCompanyName, maskEmail, maskPhone } from "@/lib/portal/mask";
+import { maskEmail, maskPhone } from "@/lib/portal/mask";
 import { createLookupSession } from "@/lib/portal/lookupSession";
 
 const MAX_QUERY_LENGTH = 40;
@@ -72,20 +72,22 @@ export async function POST(request: Request) {
   if (!record.phone && !record.email) {
     return NextResponse.json({
       status: "no_contact_info",
-      companyNameMasked: maskCompanyName(record.companyName),
+      companyName: record.companyName,
       message:
         "Hợp đồng này chưa có SĐT hoặc email đăng ký để xác minh danh tính. Vui lòng liên hệ CSKH để được hỗ trợ.",
     });
   }
 
-  const companyNameMasked = maskCompanyName(record.companyName);
+  // Tên công ty hiển thị ĐẦY ĐỦ, không che — không phải thông tin cần bảo
+  // mật (đã công khai qua chính MST dùng để tra cứu). Chỉ SĐT/email còn
+  // che theo tỉ lệ/mẫu đã chốt.
   const phoneMasked = record.phone ? maskPhone(record.phone) : null;
   const emailMasked = record.email ? maskEmail(record.email) : null;
 
   const sessionId = await createLookupSession(redis, {
     mst: record.mst,
     contractNumber: record.contractNumber,
-    companyNameMasked,
+    companyName: record.companyName,
     phoneFull: record.phone,
     phoneMasked,
     emailFull: record.email,
@@ -95,7 +97,7 @@ export async function POST(request: Request) {
   return NextResponse.json({
     status: "found",
     sessionId,
-    companyNameMasked,
+    companyName: record.companyName,
     startDate: record.startDate,
     endDate: record.endDate,
     phoneMasked,

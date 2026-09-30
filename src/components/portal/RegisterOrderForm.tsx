@@ -158,7 +158,10 @@ export default function RegisterOrderForm({ locations, plans }: Props) {
           >
             {plansForLocation.map((p) => (
               <option key={p.planKey} value={p.planKey}>
-                {p.planName} — {p.price.toLocaleString("vi-VN")}đ/{p.duration}
+                {/* p.duration đã tự có dấu "/" ở đầu (VD "/ tháng") — xem
+                    virtualOfficePlans.ts, không tự thêm "/" ở đây kẻo lặp
+                    ("đ//tháng") — lỗi hiển thị thật đã bắt được lúc test. */}
+                {p.planName} — {p.price.toLocaleString("vi-VN")}đ{p.duration}
               </option>
             ))}
           </select>

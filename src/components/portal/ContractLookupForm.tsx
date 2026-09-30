@@ -7,14 +7,14 @@ type StepIdle = { step: "idle" };
 type StepConfirm = {
   step: "confirm";
   sessionId: string;
-  companyNameMasked: string;
+  companyName: string;
   startDate: string | null;
   endDate: string | null;
   phoneMasked: string | null;
   emailMasked: string | null;
 };
 type StepOtp = { step: "otp"; sessionId: string; emailMasked: string };
-type StepDeadEnd = { step: "dead_end"; companyNameMasked?: string; message: string };
+type StepDeadEnd = { step: "dead_end"; companyName?: string; message: string };
 type StepVerified = {
   step: "verified";
   record: {
@@ -72,14 +72,14 @@ export default function ContractLookupForm() {
         setUi({
           step: "confirm",
           sessionId: data.sessionId,
-          companyNameMasked: data.companyNameMasked,
+          companyName: data.companyName,
           startDate: data.startDate,
           endDate: data.endDate,
           phoneMasked: data.phoneMasked,
           emailMasked: data.emailMasked,
         });
       } else if (data.status === "no_contact_info") {
-        setUi({ step: "dead_end", companyNameMasked: data.companyNameMasked, message: data.message });
+        setUi({ step: "dead_end", companyName: data.companyName, message: data.message });
       } else {
         // not_found / rate_limited / error — ở lại bước nhập, chỉ hiện thông báo
         setErrorMessage(data.message || "Có lỗi xảy ra, vui lòng thử lại.");
@@ -179,7 +179,7 @@ export default function ContractLookupForm() {
           <div>
             <h2 className="mb-1 text-[19px] font-bold text-navy">Xác nhận danh tính</h2>
             <p className="text-[13.5px] text-body-text">
-              Tìm thấy công ty <span className="font-semibold text-ink">{ui.companyNameMasked}</span>.
+              Tìm thấy công ty <span className="font-semibold text-ink">{ui.companyName}</span>.
             </p>
           </div>
           <dl className="space-y-1.5 rounded-xl bg-bg-tint px-4 py-3 text-[13px]">
@@ -264,9 +264,9 @@ export default function ContractLookupForm() {
       {ui.step === "dead_end" && (
         <div className="space-y-4 text-center">
           <h2 className="text-[19px] font-bold text-navy">Cần hỗ trợ thêm</h2>
-          {ui.companyNameMasked && (
+          {ui.companyName && (
             <p className="text-[13.5px] text-body-text">
-              Tìm thấy công ty <span className="font-semibold text-ink">{ui.companyNameMasked}</span>.
+              Tìm thấy công ty <span className="font-semibold text-ink">{ui.companyName}</span>.
             </p>
           )}
           <p className="text-[13.5px] text-body-text">{ui.message}</p>

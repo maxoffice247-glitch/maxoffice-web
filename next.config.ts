@@ -111,6 +111,15 @@ const nextConfig: NextConfig = {
         destination: "/tien-ich/tim-goi-phu-hop",
         permanent: true,
       })),
+      // /tra-cuu-hop-dong chuyển hẳn vào /tien-ich/tra-cuu-hop-dong (dùng
+      // chung layout/PageHero/Header chuẩn của nhóm /tien-ich/* — sửa lỗi
+      // header trắng-trên-trắng do URL cũ không có PageHero/dải tối đầu
+      // trang). Giữ redirect cho URL cũ có thể đã được chia sẻ.
+      {
+        source: "/tra-cuu-hop-dong/:path*",
+        destination: "/tien-ich/tra-cuu-hop-dong/:path*",
+        permanent: true,
+      },
     ];
   },
   async headers() {

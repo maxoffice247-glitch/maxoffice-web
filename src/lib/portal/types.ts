@@ -45,7 +45,7 @@ export type ContractRecord = {
 export type LookupSession = {
   mst: string;
   contractNumber: string;
-  companyNameMasked: string;
+  companyName: string;
   phoneFull: string | null;
   phoneMasked: string | null;
   emailFull: string | null;

@@ -19,7 +19,7 @@ export function generateSessionId(): string {
 
 export async function createLookupSession(
   redis: PortalRedisClient,
-  data: Pick<LookupSession, "mst" | "contractNumber" | "companyNameMasked" | "phoneFull" | "phoneMasked" | "emailFull" | "emailMasked">
+  data: Pick<LookupSession, "mst" | "contractNumber" | "companyName" | "phoneFull" | "phoneMasked" | "emailFull" | "emailMasked">
 ): Promise<string> {
   const sessionId = generateSessionId();
   const session: LookupSession = {
