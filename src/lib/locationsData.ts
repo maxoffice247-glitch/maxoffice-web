@@ -497,6 +497,31 @@ export function resolveTimedPromotions(
   return merged.length > 0 ? merged : undefined;
 }
 
+/**
+ * Lọc `promotions` (đã resolveTimedPromotions() xong) còn ĐÚNG dòng khớp 1
+ * gói cụ thể — dùng cho báo giá 1 GÓI (ảnh PNG đơn lẻ `quote-image/[slug]/
+ * [plan]` và ảnh PNG nhóm `quote-image/goi/[groupKey]`, cả 2 đều gắn với 1
+ * mức giá xác định), KHÁC với trang tổng chi nhánh (LocationServicesList) —
+ * nơi đó CỐ Ý hiện nguyên trạng, đủ mọi mức giá, để khách xem toàn cảnh
+ * trước khi chọn gói nên KHÔNG gọi hàm này.
+ *
+ * 5 chi nhánh Hoàng Việt/Bàu Cát 2/Lam Sơn/Hoàng Kế Viêm/CMT8 viết `promotions`
+ * CHUNG cho cả gói dưới/từ 499K (2 dòng "Gói LITE/START..."/"Gói BASE trở
+ * lên..." — xem trong LOCATIONS_DATA) vì trang tổng cần hiện đủ; hàm này chỉ
+ * giữ lại đúng dòng khớp `planPrice`, bỏ dòng của mức giá còn lại. Khớp theo
+ * ĐÚNG 2 tiền tố đã viết trong data (không suy luận) — các dòng khác (chi
+ * nhánh khác, ưu đãi toàn hệ thống UNIVERSAL_PROMOTIONS...) không khớp tiền
+ * tố nào nên giữ nguyên, không bị lọc nhầm.
+ */
+export function getPromotionsForPlanPrice(promotions: string[], planPrice: number): string[] {
+  const isBelow499k = planPrice < 499_000;
+  return promotions.filter((line) => {
+    if (line.startsWith("Gói LITE/START")) return isBelow499k;
+    if (line.startsWith("Gói BASE trở lên")) return !isBelow499k;
+    return true;
+  });
+}
+
 /* ---------------------------------------------------------------------- */
 /* Full location data                                                      */
 /* ---------------------------------------------------------------------- */

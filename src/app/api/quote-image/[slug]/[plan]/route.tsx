@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { getOfferedPlan, formatVoPrice } from "@/lib/planFinder";
-import { LOCATIONS_DATA, resolveTimedPromotions } from "@/lib/locationsData";
+import { LOCATIONS_DATA, resolveTimedPromotions, getPromotionsForPlanPrice } from "@/lib/locationsData";
 
 /**
  * Tạo ảnh báo giá 1 chi nhánh HOÀN TOÀN Ở SERVER (Satori/next-og), thay cho
@@ -148,7 +148,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
   const facadeSrc = facadeBuf ? `data:image/jpeg;base64,${facadeBuf.toString("base64")}` : null;
 
   const benefits = (location.benefits ?? []).slice(0, 4).map((b) => b.title);
-  const promotions = (resolveTimedPromotions(location.promotions) ?? []).slice(0, 4);
+  const promotions = getPromotionsForPlanPrice(resolveTimedPromotions(location.promotions) ?? [], plan.price).slice(0, 4);
   // KHÔNG cắt bớt (trước đây `.slice(0, 9)`) — mọi gói hiện có trong hệ
   // thống đều ≤10 mục lúc viết cắt này, nên không ai để ý BASE (10 mục)
   // đã âm thầm mất dòng cuối "Đánh giá sức khỏe doanh nghiệp (AI Biz

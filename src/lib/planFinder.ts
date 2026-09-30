@@ -18,7 +18,7 @@
  * virtualOfficePlans.ts. Hàm lặp qua LOCATIONS_LIST nên chi nhánh tạm ẩn
  * tự động bị loại.
  */
-import { LOCATIONS_LIST, LOCATIONS_DATA, resolveTimedPromotions } from "./locationsData";
+import { LOCATIONS_LIST, LOCATIONS_DATA, resolveTimedPromotions, getPromotionsForPlanPrice } from "./locationsData";
 import {
   getPlansForLocation,
   PHAM_VAN_DONG_VO_PLANS,
@@ -357,7 +357,10 @@ export function getGroupedPlans(): PlanGroup[] {
       name: plan.locationName,
       shortAddress: loc?.shortAddress ?? "",
       area: plan.area,
-      promotions: resolveTimedPromotions(LOCATIONS_DATA[plan.locationSlug]?.promotions),
+      promotions: getPromotionsForPlanPrice(
+        resolveTimedPromotions(LOCATIONS_DATA[plan.locationSlug]?.promotions) ?? [],
+        plan.price
+      ),
     });
     bySignature.set(sig, entry);
   }
