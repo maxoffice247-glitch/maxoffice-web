@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import type { ContractLink } from "@/lib/portal/types";
+import type { ContractLink, ContractStatus } from "@/lib/portal/types";
 
 type StepIdle = { step: "idle" };
 type StepConfirm = {
@@ -12,6 +12,9 @@ type StepConfirm = {
   endDate: string | null;
   phoneMasked: string | null;
   emailMasked: string | null;
+  contractStatus: ContractStatus;
+  contractStatusLabel: string;
+  daysRemaining: number | null;
 };
 type StepOtp = { step: "otp"; sessionId: string; emailMasked: string };
 type StepDeadEnd = { step: "dead_end"; companyName?: string; message: string };
@@ -77,6 +80,9 @@ export default function ContractLookupForm() {
           endDate: data.endDate,
           phoneMasked: data.phoneMasked,
           emailMasked: data.emailMasked,
+          contractStatus: data.contractStatus,
+          contractStatusLabel: data.contractStatusLabel,
+          daysRemaining: data.daysRemaining,
         });
       } else if (data.status === "no_contact_info") {
         setUi({ step: "dead_end", companyName: data.companyName, message: data.message });
@@ -190,6 +196,24 @@ export default function ContractLookupForm() {
             <div className="flex justify-between">
               <dt className="text-body-text">Ngày kết thúc</dt>
               <dd className="font-medium text-ink">{formatDate(ui.endDate)}</dd>
+            </div>
+            <div className="flex items-center justify-between">
+              <dt className="text-body-text">Tình trạng hợp đồng</dt>
+              <dd>
+                <span
+                  className={`rounded-full px-2.5 py-1 text-[12px] font-bold whitespace-nowrap ${
+                    ui.contractStatus === "active"
+                      ? "bg-green-50 text-green-700"
+                      : ui.contractStatus === "pending_payment"
+                        ? "bg-amber/12 text-amber-dark"
+                        : "bg-accent/10 text-accent"
+                  }`}
+                >
+                  {ui.contractStatus === "active" && ui.daysRemaining !== null
+                    ? `${ui.contractStatusLabel} — còn ${ui.daysRemaining} ngày`
+                    : ui.contractStatusLabel}
+                </span>
+              </dd>
             </div>
             {ui.phoneMasked && (
               <div className="flex justify-between">

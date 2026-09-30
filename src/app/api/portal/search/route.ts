@@ -5,6 +5,7 @@ import { checkAndRecordLookup } from "@/lib/portal/rateLimit";
 import { readContractRecordsCache } from "@/lib/portal/recordsCache";
 import { searchContract } from "@/lib/portal/search";
 import { maskEmail, maskPhone } from "@/lib/portal/mask";
+import { CONTRACT_STATUS_LABEL, daysRemaining } from "@/lib/portal/contractStatus";
 import { createLookupSession } from "@/lib/portal/lookupSession";
 
 const MAX_QUERY_LENGTH = 40;
@@ -102,5 +103,13 @@ export async function POST(request: Request) {
     endDate: record.endDate,
     phoneMasked,
     emailMasked,
+    // Trạng thái hợp đồng — dùng ĐÚNG kết quả đã tính sẵn ở record.status
+    // (statusFromMocGia/statusFromTruSoChinh trong sheetsSource.ts), không
+    // tính lại logic mới ở đây. daysRemaining tính lúc request (không lấy
+    // từ cache) để luôn đúng "hôm nay", chỉ có giá trị khi contractStatus
+    // là "active" (2 trạng thái còn lại hiển thị nhãn, không kèm số ngày).
+    contractStatus: record.status,
+    contractStatusLabel: CONTRACT_STATUS_LABEL[record.status],
+    daysRemaining: record.status === "active" ? daysRemaining(record.endDate, new Date()) : null,
   });
 }

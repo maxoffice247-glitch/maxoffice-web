@@ -37,3 +37,18 @@ export const CONTRACT_STATUS_LABEL: Record<ContractStatus, string> = {
   expired: "Đã hết hạn",
   pending_payment: "Chờ thanh toán, chưa có hiệu lực",
 };
+
+/** Số ngày còn lại từ HÔM NAY (không tính giờ/phút) đến hết ngày kết thúc
+    (bao gồm cả chính ngày kết thúc, vd. còn 0 ngày = hết hạn đúng hôm nay)
+    — chỉ có ý nghĩa khi hiển thị cùng status "active", dùng cho dòng "Đang
+    có hiệu lực — còn N ngày" ở Mức 1. Trả về null nếu không có endDate để
+    tính, KHÔNG đoán bừa 1 con số. `today` truyền vào để test được xác định,
+    giống quy ước của isPastEndDate() ở trên. */
+export function daysRemaining(endDateIso: string | null, today: Date): number | null {
+  if (!endDateIso) return null;
+  const end = new Date(endDateIso + "T23:59:59");
+  const startOfToday = new Date(today);
+  startOfToday.setHours(0, 0, 0, 0);
+  const diffMs = end.getTime() - startOfToday.getTime();
+  return Math.max(0, Math.ceil(diffMs / (24 * 60 * 60 * 1000)));
+}
