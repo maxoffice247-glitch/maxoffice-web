@@ -222,8 +222,18 @@ export default function ContractLookupForm() {
           <div>
             <h2 className="mb-1 text-[19px] font-bold text-navy">Xác nhận danh tính</h2>
           </div>
-          <dl className="space-y-2.5 rounded-xl bg-bg-tint px-4 py-3 text-[13px]">
-            <InfoRow icon={BuildingIcon} label="Tên công ty" value={ui.companyName} />
+          {/* Lưới 2 cột TỪ md TRỞ LÊN — "Tên công ty" (giá trị dài, không
+              đoán trước được độ dài) luôn chiếm TRỌN hàng (md:col-span-2)
+              bất kể ngắn/dài, 4 dòng còn lại (giá trị luôn ngắn: ngày/trạng
+              thái/SĐT/email) để grid TỰ auto-flow xếp 2/hàng theo thứ tự
+              DOM — không ghép cặp cứng theo index, để tự đúng dù chi nhánh
+              có cả SĐT lẫn email (5 dòng ngắn) hay chỉ 1 trong 2 (hợp đồng
+              lẻ ở cuối, chấp nhận được). Dưới md: grid-cols-1 nên mọi dòng
+              tự xếp dọc 1 cột, giữ nguyên hành vi mobile đã test ổn. Mỗi ô
+              vẫn label-trên/giá-trị-dưới (InfoRow) để không tái lặp lỗi vỡ
+              dòng cũ nếu giá trị 1 ô bất ngờ dài hơn dự kiến. */}
+          <dl className="grid grid-cols-1 gap-x-4 gap-y-2.5 rounded-xl bg-bg-tint px-4 py-3 text-[13px] md:grid-cols-2">
+            <InfoRow className="md:col-span-2" icon={BuildingIcon} label="Tên công ty" value={ui.companyName} />
             <InfoRow icon={CalendarIcon} label="Ngày bắt đầu" value={formatDate(ui.startDate)} />
             <InfoRow icon={CalendarIcon} label="Ngày kết thúc" value={formatDate(ui.endDate)} />
             <div className="flex flex-col gap-0.5">
@@ -233,7 +243,7 @@ export default function ContractLookupForm() {
               </dt>
               <dd>
                 <span
-                  className={`inline-block rounded-full px-2.5 py-1 text-[12px] font-bold whitespace-nowrap ${
+                  className={`inline-block rounded-full px-2.5 py-1 text-[12px] font-bold ${
                     ui.contractStatus === "active"
                       ? "bg-green-50 text-green-700"
                       : ui.contractStatus === "pending_payment"
@@ -433,13 +443,17 @@ function InfoRow({
   icon: Icon,
   label,
   value,
+  className = "",
 }: {
   icon: ComponentType<{ className?: string }>;
   label: string;
   value: string;
+  /** VD "md:col-span-2" cho dòng giá trị dài (Tên công ty) chiếm trọn
+      hàng trong lưới 2 cột ở desktop — xem dl cha. */
+  className?: string;
 }) {
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className={`flex flex-col gap-0.5 ${className}`}>
       <dt className="flex items-center gap-1.5 text-body-text">
         <Icon className="h-4 w-4 shrink-0" />
         {label}
