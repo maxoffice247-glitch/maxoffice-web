@@ -199,18 +199,18 @@ export default function ContractLookupForm() {
           <div>
             <h2 className="mb-1 text-[19px] font-bold text-navy">Xác nhận danh tính</h2>
           </div>
-          <dl className="space-y-1.5 rounded-xl bg-bg-tint px-4 py-3 text-[13px]">
+          <dl className="space-y-2.5 rounded-xl bg-bg-tint px-4 py-3 text-[13px]">
             <InfoRow icon={BuildingIcon} label="Tên công ty" value={ui.companyName} />
             <InfoRow icon={CalendarIcon} label="Ngày bắt đầu" value={formatDate(ui.startDate)} />
             <InfoRow icon={CalendarIcon} label="Ngày kết thúc" value={formatDate(ui.endDate)} />
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col gap-0.5">
               <dt className="flex items-center gap-1.5 text-body-text">
                 <CheckCircleIcon className="h-4 w-4 shrink-0" />
                 Tình trạng hợp đồng
               </dt>
               <dd>
                 <span
-                  className={`rounded-full px-2.5 py-1 text-[12px] font-bold whitespace-nowrap ${
+                  className={`inline-block rounded-full px-2.5 py-1 text-[12px] font-bold whitespace-nowrap ${
                     ui.contractStatus === "active"
                       ? "bg-green-50 text-green-700"
                       : ui.contractStatus === "pending_payment"
@@ -395,7 +395,17 @@ function Row({ label, value }: { label: string; value: string }) {
 
 /** Dòng thông tin ở Mức 1 (khối kết quả tra cứu ban đầu) kèm icon nhỏ đầu
     dòng — CHỦ Ý không dùng linh vật/hình minh hoạ ở đây, chỉ icon đường nét
-    đơn sắc, giữ tông nghiêm túc phù hợp nội dung hợp đồng/pháp lý. */
+    đơn sắc, giữ tông nghiêm túc phù hợp nội dung hợp đồng/pháp lý.
+
+    Label LUÔN ở trên, giá trị LUÔN ở dưới (xếp chồng, không đặt cạnh nhau
+    trên cùng 1 hàng) — ÁP DỤNG ĐỒNG NHẤT cho mọi dòng, kể cả dòng badge
+    "Tình trạng hợp đồng" ngay dưới. Trước đây dùng `flex justify-between`
+    (label trái/giá trị phải cùng hàng) chỉ ổn với giá trị NGẮN — tên công
+    ty dài (VD "CÔNG TY TNHH THẾ GIỚI CỬA ĐẸP ADOOR") làm riêng dòng đó bị
+    wrap xuống 2 hàng trong khi các dòng giá trị ngắn khác vẫn 1 hàng, tạo
+    bố cục không nhất quán giữa các dòng tuỳ độ dài nội dung. Xếp chồng loại
+    bỏ hẳn sự phụ thuộc này — giá trị dài bao nhiêu cũng tự wrap gọn bên
+    dưới label mà không ảnh hưởng layout dòng khác. */
 function InfoRow({
   icon: Icon,
   label,
@@ -406,12 +416,12 @@ function InfoRow({
   value: string;
 }) {
   return (
-    <div className="flex justify-between gap-3">
+    <div className="flex flex-col gap-0.5">
       <dt className="flex items-center gap-1.5 text-body-text">
         <Icon className="h-4 w-4 shrink-0" />
         {label}
       </dt>
-      <dd className="text-right font-medium text-ink">{value}</dd>
+      <dd className="font-medium text-ink">{value}</dd>
     </div>
   );
 }
