@@ -156,7 +156,7 @@ export default function Header() {
                 hơn theo đúng ưu tiên đã đề xuất. title= làm tooltip (không
                 thay được cho aria-label với trình đọc màn hình). */}
             <Link
-              href="/tien-ich/tra-cuu-hop-dong"
+              href="/tra-cuu-hop-dong"
               aria-label="Tra cứu hợp đồng khách hàng"
               title="Tra cứu hợp đồng khách hàng"
               className={`hidden h-9 w-9 items-center justify-center rounded-full transition-colors duration-300 sm:flex ${
@@ -254,7 +254,7 @@ export default function Header() {
               màu chữ nhạt hơn để phân biệt rõ đây là lối tắt cho khách
               ĐÃ CÓ hợp đồng, không phải 1 mục dịch vụ/tiện ích khác. */}
           <Link
-            href="/tien-ich/tra-cuu-hop-dong"
+            href="/tra-cuu-hop-dong"
             onClick={() => setMenuOpen(false)}
             className="flex items-center gap-2.5 border-t border-white/10 py-4 text-lg font-semibold text-white/55 transition-colors hover:text-accent"
           >
