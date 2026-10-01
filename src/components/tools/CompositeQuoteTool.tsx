@@ -345,7 +345,7 @@ export default function CompositeQuoteTool() {
                 <span className="block text-[13.5px] font-bold text-navy">Hiện mã QR chuyển khoản</span>
                 <span className="block text-[12px] text-body-text">
                   Tắt mặc định. Khi bật, ảnh báo giá có thêm mã QR VietQR chuyển khoản, số tiền gợi ý điền sẵn là
-                  khoản lớn nhất trong báo giá.
+                  tổng cộng tất cả dịch vụ đã tra được giá trong báo giá.
                 </span>
               </span>
             </label>

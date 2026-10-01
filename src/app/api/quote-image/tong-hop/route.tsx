@@ -395,19 +395,18 @@ export async function POST(req: Request) {
   for (const bucket of BUCKET_ORDER) byBucket.set(bucket, []);
   for (const line of resolvedLines) byBucket.get(line.bucket)!.push(line);
 
-  // Số tiền gợi ý điền trên QR (nếu bật) — khối TỔNG LỚN NHẤT trong các
-  // khối đang có (mỗi khối 1 đơn vị/thời điểm thanh toán khác nhau, không
-  // gộp được thành 1 con số chung nên chọn khối lớn nhất làm đại diện, xem
-  // báo cáo cuối phiên làm việc để biết lý do chọn cách này).
-  let qrAmount: number | null = null;
-  for (const bucket of BUCKET_ORDER) {
-    const lines = byBucket.get(bucket)!;
-    if (lines.length === 0) continue;
-    const summable = lines.filter((l) => l.breakdown != null);
-    if (summable.length !== lines.length) continue;
-    const total = summable.reduce((sum, l) => sum + (l.breakdown?.total ?? 0), 0);
-    if (qrAmount == null || total > qrAmount) qrAmount = total;
-  }
+  // Số tiền gợi ý điền trên QR (nếu bật) — CỘNG DỒN "Thành tiền" của TẤT CẢ
+  // dòng dịch vụ đã tra được giá, bất kể thuộc khối/đơn vị tính phí nào.
+  // (Trước đây chỉ lấy khối có tổng LỚN NHẤT làm đại diện — với lý do các
+  // khối khác đơn vị/thời điểm thanh toán nên không gộp được — nhưng thực tế
+  // khách thường thanh toán 1 lần cho toàn bộ báo giá khi ký hợp đồng, nên
+  // sửa lại theo đúng yêu cầu: cộng dồn hết để QR không thiếu tiền khi báo
+  // giá có từ 2 dịch vụ trở lên. Dòng "custom" gõ tay không tách được số cụ
+  // thể (breakdown null, VD "Liên hệ báo giá") vẫn bị bỏ qua khỏi tổng này
+  // vì không có con số để cộng — KHÔNG phải lỗi, nhân viên tự biết cộng thêm
+  // khi báo giá cho khách).
+  const qrSummableTotal = resolvedLines.reduce((sum, l) => sum + (l.breakdown?.total ?? 0), 0);
+  const qrAmount: number | null = qrSummableTotal > 0 ? qrSummableTotal : null;
 
   // KHÔNG tin thẳng body.qrAccountKey — chỉ chấp nhận khi khớp đúng 1 trong
   // các key đã khai báo sẵn ở VIETQR_ACCOUNTS, rơi về tài khoản mặc định

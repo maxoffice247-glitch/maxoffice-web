@@ -80,15 +80,17 @@ export function vietQrAccountLabel(accountKey: VietQrAccountKey): string {
 }
 
 /**
- * Nội dung chuyển khoản (`addInfo`) — xác nhận với chủ site trước khi làm:
- * "{tên khách hoặc SĐT hoặc 'Khach hang MAX OFFICE'} thanh toan phi dich vu"
- * (KHÔNG kèm tên dịch vụ cụ thể — quyết định rõ ràng, không phải thiếu sót).
- * Ưu tiên tên khách > SĐT > nhãn chung, để bên nhận tiền còn cách đối chiếu
- * đúng giao dịch của đúng khách khi có nhiều đơn chuyển cùng lúc, ngay cả
- * khi nhân viên không nhập tên khách hàng trên form.
+ * Nội dung chuyển khoản (`addInfo`) —
+ * "{tên công ty hoặc tên khách hoặc SĐT hoặc 'Khach hang MAX OFFICE'} thanh
+ * toan phi dich vu" (KHÔNG kèm tên dịch vụ cụ thể — quyết định rõ ràng,
+ * không phải thiếu sót). Ưu tiên TÊN CÔNG TY > tên khách > SĐT > nhãn chung
+ * — đổi từ ưu tiên SĐT sang tên công ty theo yêu cầu, vì đây là khoản thanh
+ * toán dịch vụ cho công ty, tên công ty giúp đối chiếu đúng giao dịch rõ
+ * ràng hơn số điện thoại cá nhân khi có nhiều đơn chuyển cùng lúc.
  */
-export function buildQrNote(customer?: { name?: string; phone?: string }): string {
-  const identifier = customer?.name?.trim() || customer?.phone?.trim() || "Khach hang MAX OFFICE";
+export function buildQrNote(customer?: { name?: string; phone?: string; companyName?: string }): string {
+  const identifier =
+    customer?.companyName?.trim() || customer?.name?.trim() || customer?.phone?.trim() || "Khach hang MAX OFFICE";
   return `${identifier} thanh toan phi dich vu`;
 }
 
