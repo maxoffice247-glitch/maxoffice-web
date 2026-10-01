@@ -144,18 +144,34 @@ const LOCATIONS_WITH_GPKD_CHOICE = new Set([
   "nguyen-oanh",
 ]);
 
-function vietnameseMonthPromo(
+/**
+ * `label` SONG NGỮ (khác "Bằng chữ"/khuyến mãi cố định dạng key-tra-sẵn — câu
+ * này GHÉP ĐỘNG nhiều biến số tháng/loại ưu đãi nên không đưa vào
+ * quoteImageDictionary.ts được, phải tự dựng cả 2 ngôn ngữ ngay tại đây).
+ * TRƯỚC ĐÂY bản tiếng Anh OMIT hẳn khối này — ĐỔI LẠI theo yêu cầu: đây là
+ * ưu đãi có giá trị tiền thật (tặng tháng/miễn phí đổi GPKD), khác "Bằng
+ * chữ" (chỉ là cách trình bày, bỏ không mất thông tin) nên PHẢI dịch, không
+ * được bỏ. Bản tiếng Anh là Claude tự đề xuất — CẦN RÀ SOÁT trước khi dùng
+ * với khách thật (xem báo cáo cuối phiên).
+ */
+function monthPromo(
   locationSlug: string,
   months: MonthOption,
-  planPrice: number
+  planPrice: number,
+  lang: QuoteLang
 ): { extraMonths: number; totalMonths: number; label: string } | undefined {
   const extraMonths = VO_LONG_TERM_PROMOS[locationSlug]?.[months];
   if (!extraMonths) return undefined;
   const totalMonths = months + extraMonths;
   const hasGpkdChoice = planPrice >= 499_000 && LOCATIONS_WITH_GPKD_CHOICE.has(locationSlug);
-  const label = hasGpkdChoice
-    ? `Ký hợp đồng ${months} tháng — tặng thêm ${extraMonths} tháng sử dụng (thanh toán ${months} tháng, sử dụng ${totalMonths} tháng), hoặc đổi sang miễn phí dịch vụ đổi GPKD — liên hệ tư vấn`
-    : `Ký hợp đồng ${months} tháng — tặng thêm ${extraMonths} tháng sử dụng (thanh toán ${months} tháng, sử dụng ${totalMonths} tháng)`;
+  const label =
+    lang === "en"
+      ? hasGpkdChoice
+        ? `Sign a ${months}-month contract — get ${extraMonths} extra months free (pay for ${months} months, use for ${totalMonths} months), or swap for a free business-license-change service — contact us for details`
+        : `Sign a ${months}-month contract — get ${extraMonths} extra months free (pay for ${months} months, use for ${totalMonths} months)`
+      : hasGpkdChoice
+        ? `Ký hợp đồng ${months} tháng — tặng thêm ${extraMonths} tháng sử dụng (thanh toán ${months} tháng, sử dụng ${totalMonths} tháng), hoặc đổi sang miễn phí dịch vụ đổi GPKD — liên hệ tư vấn`
+        : `Ký hợp đồng ${months} tháng — tặng thêm ${extraMonths} tháng sử dụng (thanh toán ${months} tháng, sử dụng ${totalMonths} tháng)`;
   return { extraMonths, totalMonths, label };
 }
 
@@ -317,7 +333,7 @@ export function resolveCompositeQuoteItem(
           baseAmount: plan.price,
           baseLabel: `${formatQuoteCurrency(plan.price, lang)}${qt("perMonthSuffix", lang)}`,
           months: item.months,
-          promo: lang === "en" ? undefined : vietnameseMonthPromo(item.locationSlug, item.months, plan.price),
+          promo: monthPromo(item.locationSlug, item.months, plan.price, lang),
           vatRatePercent: 10,
         }),
       };

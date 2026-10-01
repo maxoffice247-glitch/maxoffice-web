@@ -11,12 +11,17 @@
  * 1 chỗ) để rà soát nhanh hơn thay vì phải mở từng file.
  *
  * CỐ Ý KHÔNG dịch: tên chi nhánh, địa chỉ (theo đúng yêu cầu — địa chỉ
- * không dịch), dòng "Bằng chữ" (không có quy ước tiếng Anh tương đương
- * trên hoá đơn, OMIT hẳn ở bản tiếng Anh thay vì tự chế), và nhãn ưu đãi
- * ký hợp đồng dài hạn (`breakdown.promo.label` — câu tiếng Việt động ghép
- * từ nhiều biến số ở compositeQuote.ts, CHƯA có bản tiếng Anh tương ứng;
- * OMIT hẳn khối badge khuyến mãi ở bản tiếng Anh thay vì hiện tiếng Việt
- * lẫn vào ảnh tiếng Anh — cần xác nhận thêm nếu muốn dịch đầy đủ sau này).
+ * không dịch), và dòng "Bằng chữ" (không có quy ước tiếng Anh tương đương
+ * trên hoá đơn, OMIT hẳn ở bản tiếng Anh — đây chỉ là cách TRÌNH BÀY lại
+ * đúng con số đã hiện, bỏ không mất thông tin).
+ *
+ * Nhãn ưu đãi ký hợp đồng dài hạn (`breakdown.promo.label`) KHÔNG nằm trong
+ * dictionary này — câu tiếng Việt ghép động nhiều biến số (số tháng/loại ưu
+ * đãi) nên được dịch trực tiếp tại nơi tạo ra nó, xem `monthPromo()` trong
+ * compositeQuote.ts. Khác "Bằng chữ", đây LÀ thông tin giá trị thực (khách
+ * được tặng tháng/miễn phí đổi GPKD khi ký dài hạn) nên PHẢI dịch, KHÔNG
+ * được bỏ ở bản tiếng Anh — quyết định này đã sửa lại sau khi chủ site rà
+ * soát bản nháp ban đầu (trước đó Claude tự ý omit, là quyết định SAI).
  */
 
 export type QuoteLang = "vi" | "en";
@@ -32,7 +37,7 @@ export const QUOTE_DICT = {
   subtotalLabel: { vi: "Tạm tính (chưa VAT)", en: "Subtotal (excl. VAT)" },
   totalLabel: { vi: "Thành tiền", en: "Total" },
   monthsUnit: { vi: "tháng", en: "months" },
-  scanToPayTitle: { vi: "Quét mã để chuyển khoản", en: "Scan to pay via bank transfer" },
+  scanToPayTitle: { vi: "Quét mã để chuyển khoản", en: "Scan to Pay" },
   suggestedAmountLabel: { vi: "Số tiền gợi ý", en: "Suggested amount" },
   hotlineLabel: { vi: "Hotline", en: "Hotline" },
   contactNowLabel: { vi: "Liên hệ tư vấn ngay", en: "Contact us now" },
@@ -91,8 +96,8 @@ export const QUOTE_DICT = {
   // 3 biến thể tiêu đề khối QR — chỉ dùng tiêu đề "phân biệt" khi ảnh có ĐỦ 2
   // mã QR cùng lúc; nếu chỉ có 1 mã QR (như trước khi có thu hộ), vẫn dùng
   // đúng "scanToPayTitle" cũ, không đổi hành vi/nhãn cũ.
-  scanToPayMaxOfficeTitle: { vi: "Quét mã để chuyển khoản — Dịch vụ MAX OFFICE", en: "Scan to pay — MAX OFFICE Services" },
-  scanToPayThuHoTitle: { vi: "Quét mã để chuyển khoản — Dịch vụ thu hộ", en: "Scan to pay — Pass-through Services" },
+  scanToPayMaxOfficeTitle: { vi: "Quét mã để chuyển khoản — Dịch vụ MAX OFFICE", en: "Scan to Pay — MAX OFFICE Services" },
+  scanToPayThuHoTitle: { vi: "Quét mã để chuyển khoản — Dịch vụ thu hộ", en: "Scan to Pay — Pass-through Services" },
   // Cảnh báo LUÔN hiện dưới QR thu hộ (dù chỉ 1 hay cả 2 QR) — tài khoản CÁ
   // NHÂN của đơn vị cung cấp, không phải tài khoản MAX OFFICE.
   thuHoQrNote: {
