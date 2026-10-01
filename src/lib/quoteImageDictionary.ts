@@ -81,6 +81,14 @@ export const QUOTE_DICT = {
   // tổng cộng này thành "...DỊCH VỤ MAX OFFICE" để không gây hiểu lầm là đã
   // gồm cả tiền thu hộ (xem route.tsx — 2 khoản này tách sổ hoàn toàn).
   grandTotalMaxOfficeLabel: { vi: "TỔNG CỘNG DỊCH VỤ MAX OFFICE", en: "TOTAL MAX OFFICE SERVICES" },
+  // Khi báo giá có CẢ 2 nhóm (MAX OFFICE + thu hộ), thêm 1 dòng tổng GỘP CẢ
+  // 2 khoản (dùng chung "grandTotalLabel" ở trên — cùng ý nghĩa "toàn bộ báo
+  // giá") ngay dưới 2 khối tổng riêng, kèm ghi chú nhỏ là trả qua 2 kênh
+  // khác nhau — tránh khách hiểu nhầm có 1 khoản duy nhất cần chuyển.
+  overallTotalSplitNote: {
+    vi: "Thanh toán qua 2 kênh riêng biệt bên dưới — không phải 1 khoản chuyển duy nhất",
+    en: "Paid via 2 separate channels below — not a single transfer",
+  },
   // 2 category "thu hộ" — tiền 2 dịch vụ này KHÔNG vào tài khoản MAX OFFICE
   // (xem THU_HO_ACCOUNT trong vietQr.ts).
   categoryChuKySo: { vi: "Chữ ký số", en: "Digital Signature" },
@@ -93,11 +101,12 @@ export const QUOTE_DICT = {
     en: "Pass-through Services (Digital Signature & E-Invoice)",
   },
   bucketThuHoTotal: { vi: "Tổng dịch vụ thu hộ", en: "Total Pass-through Services" },
-  // 3 biến thể tiêu đề khối QR — chỉ dùng tiêu đề "phân biệt" khi ảnh có ĐỦ 2
-  // mã QR cùng lúc; nếu chỉ có 1 mã QR (như trước khi có thu hộ), vẫn dùng
-  // đúng "scanToPayTitle" cũ, không đổi hành vi/nhãn cũ.
-  scanToPayMaxOfficeTitle: { vi: "Quét mã để chuyển khoản — Dịch vụ MAX OFFICE", en: "Scan to Pay — MAX OFFICE Services" },
-  scanToPayThuHoTitle: { vi: "Quét mã để chuyển khoản — Dịch vụ thu hộ", en: "Scan to Pay — Pass-through Services" },
+  // Nhãn NGẮN cho tiêu đề mỗi cột khi 2 mã QR xếp NGANG cạnh nhau (không lặp
+  // lại "Quét mã để chuyển khoản" trong từng cột — dòng đó dùng CHUNG 1 lần
+  // phía trên 2 cột, qua chính "scanToPayTitle"). Khi chỉ có 1 mã QR (không
+  // đổi hành vi cũ), vẫn dùng đúng "scanToPayTitle" làm tiêu đề duy nhất.
+  scanToPayMaxOfficeTitle: { vi: "Dịch vụ MAX OFFICE", en: "MAX OFFICE Services" },
+  scanToPayThuHoTitle: { vi: "Dịch vụ thu hộ", en: "Pass-through Services" },
   // Cảnh báo LUÔN hiện dưới QR thu hộ (dù chỉ 1 hay cả 2 QR) — tài khoản CÁ
   // NHÂN của đơn vị cung cấp, không phải tài khoản MAX OFFICE.
   thuHoQrNote: {

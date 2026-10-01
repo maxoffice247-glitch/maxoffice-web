@@ -74,14 +74,28 @@ const INLINE_WORDS_H = 22; // dòng "Bằng chữ" gắn ngay dưới 1 dòng đ
 const HEADER_H = 148;
 const FOOTER_H = 176;
 const CUSTOMER_ROW_H = 26;
-const QR_BLOCK_H = 232; // khối QR ĐẦU TIÊN (hoặc duy nhất) — marginTop 32 tính trong này
-const QR_BLOCK_STACKED_H = 220; // khối QR THỨ 2 xếp ngay dưới (marginTop 20 thay vì 32, thấp hơn 12)
+const QR_BLOCK_H = 232; // khối QR NGANG đầy đủ (ảnh trái, chữ phải) — dùng khi CHỈ 1 trong 2 QR hiện
 const THU_HO_QR_NOTE_H = 20; // dòng cảnh báo "chuyển vào TK đơn vị cung cấp..." dưới QR thu hộ (fontSize 12, 1 dòng)
+// Hàng 2 QR xếp NGANG cạnh nhau (QrPaymentRow, khi CẢ 2 cùng hiện) — đo thực
+// tế bằng pixel (không đoán, xem báo cáo cuối phiên): tiêu đề chung "Quét
+// mã..." + 2 cột cao bằng nhau theo cột cao nhất (cột thu hộ có thêm dòng
+// cảnh báo đỏ, thường xuống 2 dòng).
+const QR_ROW_H = 365;
 
 const GRAND_TOTAL_TOP_MARGIN = 32; // giống SECTION_TOP_MARGIN, cùng nhịp cách giữa các khối
 const GRAND_TOTAL_BOX_H = 80; // padding "22px 26px" (44) + nội dung cao nhất (font 30, line-height ~36)
 const GRAND_TOTAL_WORDS_H = 20; // "Bằng chữ" 1 dòng, fontSize 13 — đo thực tế thấp hơn mốc 26 dùng cho SECTION_WORDS_H
 const GRAND_TOTAL_NOTE_H = 18;
+
+// Dòng "TỔNG CỘNG TOÀN BỘ BÁO GIÁ" gộp CẢ 2 nhóm — chỉ hiện khi có đủ cả 2
+// (xem showOverallTotal trong POST()). Cùng cỡ box với GRAND_TOTAL_BOX_H
+// nhưng nền accent (đỏ) thay vì navy để phân biệt rõ với khối "Tổng cộng
+// DỊCH VỤ MAX OFFICE" đứng ngay phía trên (navy) — tránh 2 khối liền kề giống
+// hệt nhau gây rối mắt.
+const OVERALL_TOTAL_TOP_MARGIN = 32;
+const OVERALL_TOTAL_BOX_H = 80;
+const OVERALL_TOTAL_SPLIT_NOTE_H = 18;
+const OVERALL_TOTAL_WORDS_H = 20;
 
 const BUCKET_META: Record<QuoteBucket, { titleKey: QuoteDictKey; icon: string; totalKey: QuoteDictKey }> = {
   "thue-vpa": { titleKey: "bucketVpaTitle", icon: "🏢", totalKey: "bucketVpaTotal" },
@@ -445,6 +459,54 @@ function GrandTotal({
   );
 }
 
+function overallTotalHeight(show: boolean, lang: QuoteLang): number {
+  if (!show) return 0;
+  return (
+    OVERALL_TOTAL_TOP_MARGIN +
+    OVERALL_TOTAL_BOX_H +
+    6 +
+    OVERALL_TOTAL_SPLIT_NOTE_H +
+    (lang === "vi" ? 4 + OVERALL_TOTAL_WORDS_H : 0)
+  );
+}
+
+/** Dòng tổng GỘP CẢ 2 nhóm — CHỈ hiện khi báo giá có ĐỦ CẢ "Dịch vụ MAX
+ * OFFICE" lẫn "Dịch vụ thu hộ" (nếu chỉ có 1 nhóm, khối tổng của nhóm đó
+ * — GrandTotal hoặc box tổng trong Section bucket "thu-ho" — đã đủ, hiện
+ * thêm dòng này là trùng lặp không cần thiết, xem showOverallTotal ở
+ * POST()). Dùng chung nhãn "grandTotalLabel" (TỔNG CỘNG TOÀN BỘ BÁO GIÁ) vì
+ * cùng ý nghĩa — đây MỚI thật sự là tổng của TOÀN BỘ báo giá, khác
+ * GrandTotal ở trên chỉ tính riêng phần MAX OFFICE. */
+function OverallTotal({ amount, lang }: { amount: number; lang: QuoteLang }) {
+  return (
+    <div
+      style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: OVERALL_TOTAL_TOP_MARGIN }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderRadius: 16,
+          backgroundColor: QUOTE_COLOR.accent,
+          padding: "22px 26px",
+        }}
+      >
+        <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: "#fff" }}>{qt("grandTotalLabel", lang)}</div>
+        <div style={{ display: "flex", fontSize: 30, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(amount, lang)}</div>
+      </div>
+      <div style={{ display: "flex", marginTop: 6, paddingLeft: 4, fontSize: 12, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>
+        {qt("overallTotalSplitNote", lang)}
+      </div>
+      {lang === "vi" && (
+        <div style={{ display: "flex", marginTop: 4, paddingLeft: 4 }}>
+          <AmountInWords amount={amount} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** Tách 2 nhóm tổng theo TÀI KHOẢN NHẬN TIỀN — "Dịch vụ MAX OFFICE" (4
  * bucket thường) vs "Dịch vụ thu hộ" (bucket "thu-ho", xem comment
  * QuoteBucket trong compositeQuote.ts). Dùng CHUNG ở cả khối "Tổng cộng"
@@ -487,22 +549,29 @@ async function fetchQrDataUri(url: string): Promise<string | null> {
  * tính theo DỮ LIỆU ĐÃ TẢI XONG (`maxOfficeQrDataUri`/`thuHoQrDataUri`), không
  * phải theo "có bật showQr không" — nếu 1 trong 2 lần fetch ảnh QR thất bại
  * (lỗi img.vietqr.io), khối đó không render thì cũng KHÔNG được cộng chiều
- * cao, tránh để dư khoảng trắng. QR thu hộ luôn cộng thêm THU_HO_QR_NOTE_H
- * (dòng cảnh báo riêng), bất kể đứng vị trí 1 hay 2. */
+ * cao, tránh để dư khoảng trắng.
+ *
+ * CẢ 2 CÙNG CÓ (2 QR): xếp NGANG cạnh nhau (QrPaymentRow) — chỉ còn 1 hàng,
+ * dùng QR_ROW_H (đo thực tế bằng pixel, xem báo cáo cuối phiên) thay vì cộng
+ * 2 khối dọc như thiết kế cũ. CHỈ 1 TRONG 2: vẫn dùng khối ngang đầy đủ cũ
+ * (QrPaymentBlock, QR_BLOCK_H) — không đổi bố cục/hành vi khi chỉ có 1 QR. */
 function qrSectionHeight(maxOfficeQrDataUri: string | null, thuHoQrDataUri: string | null): number {
-  let h = 0;
-  if (maxOfficeQrDataUri) h += QR_BLOCK_H;
-  if (thuHoQrDataUri) h += (maxOfficeQrDataUri ? QR_BLOCK_STACKED_H : QR_BLOCK_H) + THU_HO_QR_NOTE_H;
-  return h;
+  if (maxOfficeQrDataUri && thuHoQrDataUri) return QR_ROW_H;
+  if (maxOfficeQrDataUri) return QR_BLOCK_H;
+  if (thuHoQrDataUri) return QR_BLOCK_H + THU_HO_QR_NOTE_H;
+  return 0;
 }
 
+/** Khối QR NGANG đầy đủ (ảnh trái, chữ phải, full-width) — dùng khi CHỈ 1
+ * trong 2 nhóm có QR (giữ NGUYÊN bố cục cũ, không đổi khi không có thu hộ,
+ * xem yêu cầu "vẫn chỉ 1 QR như cũ"). Khi CẢ 2 cùng có, dùng QrPaymentRow
+ * (2 cột) bên dưới thay vì 2 khối này xếp chồng. */
 function QrPaymentBlock({
   dataUri,
   title,
   accountLabel,
   amount,
   lang,
-  isFirst,
   extraNote,
 }: {
   dataUri: string;
@@ -510,7 +579,6 @@ function QrPaymentBlock({
   accountLabel: string;
   amount: number | null;
   lang: QuoteLang;
-  isFirst: boolean;
   extraNote?: string;
 }) {
   return (
@@ -520,7 +588,7 @@ function QrPaymentBlock({
         alignItems: "center",
         gap: 24,
         margin: `0 ${MARGIN_X}px`,
-        marginTop: isFirst ? 32 : 20,
+        marginTop: 32,
         borderRadius: 16,
         backgroundColor: QUOTE_COLOR.bgTint,
         padding: 24,
@@ -541,6 +609,98 @@ function QrPaymentBlock({
             {extraNote}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+/** 1 cột trong QrPaymentRow — QR ở trên, nhãn nhóm + tài khoản + số tiền +
+ * ghi chú ở dưới, TẤT CẢ CĂN GIỮA trong phạm vi cột (khác QrPaymentBlock
+ * căn trái/ngang). `flex: 1` để 2 cột chia đều chiều rộng còn lại. */
+function QrPaymentColumn({
+  dataUri,
+  groupLabel,
+  accountLabel,
+  amount,
+  lang,
+  extraNote,
+}: {
+  dataUri: string;
+  groupLabel: string;
+  accountLabel: string;
+  amount: number | null;
+  lang: QuoteLang;
+  extraNote?: string;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flex: 1,
+        flexDirection: "column",
+        alignItems: "center",
+        borderRadius: 16,
+        backgroundColor: QUOTE_COLOR.bgTint,
+        padding: "20px 16px",
+      }}
+    >
+      <div style={{ display: "flex", fontSize: 14, fontWeight: 700, color: QUOTE_COLOR.navy, textAlign: "center" }}>
+        {groupLabel}
+      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={dataUri}
+        alt=""
+        width={140}
+        height={140}
+        style={{ marginTop: 10, borderRadius: 8, backgroundColor: "#fff" }}
+      />
+      <div style={{ display: "flex", marginTop: 10, fontSize: 13, color: QUOTE_COLOR.bodyText, textAlign: "center" }}>
+        {accountLabel}
+      </div>
+      {amount != null && (
+        <div style={{ display: "flex", marginTop: 2, fontSize: 13, color: QUOTE_COLOR.bodyText, textAlign: "center" }}>
+          {qt("suggestedAmountLabel", lang)}: {formatQuoteCurrency(amount, lang)}
+        </div>
+      )}
+      {extraNote && (
+        <div
+          style={{
+            display: "flex",
+            marginTop: 8,
+            fontSize: 11,
+            fontWeight: 700,
+            color: QUOTE_COLOR.accent,
+            textAlign: "center",
+          }}
+        >
+          {extraNote}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Hàng 2 QR xếp NGANG — 1 tiêu đề CHUNG "Quét mã để chuyển khoản" phía
+ * trên (không lặp lại trong từng cột), rồi 2 QrPaymentColumn cạnh nhau.
+ * CHỈ render khi CẢ 2 nhóm cùng có QR (xem nơi gọi ở POST()). */
+function QrPaymentRow({
+  left,
+  right,
+  lang,
+}: {
+  left: { dataUri: string; groupLabel: string; accountLabel: string; amount: number | null };
+  right: { dataUri: string; groupLabel: string; accountLabel: string; amount: number | null; extraNote: string };
+  lang: QuoteLang;
+}) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: 32 }}>
+      <div style={{ display: "flex", fontSize: 17, fontWeight: 700, color: QUOTE_COLOR.navy, marginBottom: 16 }}>
+        {qt("scanToPayTitle", lang)}
+      </div>
+      <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
+        <QrPaymentColumn {...left} lang={lang} />
+        <QrPaymentColumn {...right} lang={lang} />
       </div>
     </div>
   );
@@ -604,6 +764,11 @@ export async function POST(req: Request) {
   const maxOfficeQrAmount = groupQrAmount(maxOfficeLines);
   const thuHoQrAmount = groupQrAmount(thuHoLines);
 
+  // Dòng tổng GỘP CẢ 2 nhóm — CHỈ hiện khi CẢ 2 nhóm đều có số tiền (nếu chỉ
+  // 1 nhóm, khối tổng của nhóm đó đã đủ, xem OverallTotal()).
+  const showOverallTotal = maxOfficeQrAmount != null && thuHoQrAmount != null;
+  const overallTotalAmount = (maxOfficeQrAmount ?? 0) + (thuHoQrAmount ?? 0);
+
   // KHÔNG tin thẳng body.qrAccountKey — chỉ chấp nhận khi khớp đúng 1 trong
   // các key đã khai báo sẵn ở VIETQR_ACCOUNTS, rơi về tài khoản mặc định
   // (đúng hành vi trước khi có nhiều tài khoản) nếu thiếu hoặc sai key. CHỈ
@@ -644,6 +809,7 @@ export async function POST(req: Request) {
     customerBlockH +
     BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!, lang), 0) +
     grandTotalHeight(maxOfficeLines, lang) +
+    overallTotalHeight(showOverallTotal, lang) +
     qrSectionHeight(maxOfficeQrDataUri, thuHoQrDataUri) +
     FOOTER_H;
 
@@ -703,27 +869,47 @@ export async function POST(req: Request) {
 
         <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} hasThuHo={hasThuHo} />
 
-        {maxOfficeQrDataUri && (
-          <QrPaymentBlock
-            dataUri={maxOfficeQrDataUri}
-            title={qt(thuHoQrDataUri ? "scanToPayMaxOfficeTitle" : "scanToPayTitle", lang)}
-            accountLabel={vietQrAccountLabel(qrAccountKey)}
-            amount={maxOfficeQrAmount}
-            lang={lang}
-            isFirst={true}
-          />
-        )}
+        {showOverallTotal && <OverallTotal amount={overallTotalAmount} lang={lang} />}
 
-        {thuHoQrDataUri && (
-          <QrPaymentBlock
-            dataUri={thuHoQrDataUri}
-            title={qt("scanToPayThuHoTitle", lang)}
-            accountLabel={thuHoAccountLabel()}
-            amount={thuHoQrAmount}
+        {maxOfficeQrDataUri && thuHoQrDataUri ? (
+          <QrPaymentRow
+            left={{
+              dataUri: maxOfficeQrDataUri,
+              groupLabel: qt("scanToPayMaxOfficeTitle", lang),
+              accountLabel: vietQrAccountLabel(qrAccountKey),
+              amount: maxOfficeQrAmount,
+            }}
+            right={{
+              dataUri: thuHoQrDataUri,
+              groupLabel: qt("scanToPayThuHoTitle", lang),
+              accountLabel: thuHoAccountLabel(),
+              amount: thuHoQrAmount,
+              extraNote: qt("thuHoQrNote", lang),
+            }}
             lang={lang}
-            isFirst={!maxOfficeQrDataUri}
-            extraNote={qt("thuHoQrNote", lang)}
           />
+        ) : (
+          <>
+            {maxOfficeQrDataUri && (
+              <QrPaymentBlock
+                dataUri={maxOfficeQrDataUri}
+                title={qt("scanToPayTitle", lang)}
+                accountLabel={vietQrAccountLabel(qrAccountKey)}
+                amount={maxOfficeQrAmount}
+                lang={lang}
+              />
+            )}
+            {thuHoQrDataUri && (
+              <QrPaymentBlock
+                dataUri={thuHoQrDataUri}
+                title={qt("scanToPayTitle", lang)}
+                accountLabel={thuHoAccountLabel()}
+                amount={thuHoQrAmount}
+                lang={lang}
+                extraNote={qt("thuHoQrNote", lang)}
+              />
+            )}
+          </>
         )}
 
         <QuoteFooterRow lang={lang} />
