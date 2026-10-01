@@ -57,12 +57,17 @@ export default function ContractLookupForm() {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // Chỉ true khi lỗi là "not_found" (gộp cả "ambiguous", xem search.ts —
+  // CHỦ Ý hiện y hệt not_found) — rate_limited/error KHÔNG hiện nút liên hệ
+  // này vì không liên quan tới việc hợp đồng có tồn tại hay không.
+  const [showContactCta, setShowContactCta] = useState(false);
 
   const resetToIdle = () => {
     setUi({ step: "idle" });
     setQuery("");
     setConfirmValue("");
     setOtp("");
+    setShowContactCta(false);
   };
 
   const handleSearch = async (e: FormEvent) => {
@@ -70,6 +75,7 @@ export default function ContractLookupForm() {
     if (!query.trim() || loading) return;
     setLoading(true);
     setErrorMessage(null);
+    setShowContactCta(false);
     try {
       const res = await fetch("/api/portal/search", {
         method: "POST",
@@ -96,9 +102,11 @@ export default function ContractLookupForm() {
       } else {
         // not_found / rate_limited / error — ở lại bước nhập, chỉ hiện thông báo
         setErrorMessage(data.message || "Có lỗi xảy ra, vui lòng thử lại.");
+        setShowContactCta(data.status === "not_found");
       }
     } catch {
       setErrorMessage("Không kết nối được máy chủ, vui lòng thử lại.");
+      setShowContactCta(false);
     } finally {
       setLoading(false);
     }
@@ -184,6 +192,21 @@ export default function ContractLookupForm() {
             className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 focus:border-primary focus:outline-none"
           />
           {errorMessage && <p className="text-[13px] text-accent">{errorMessage}</p>}
+          {showContactCta && (
+            <div className="flex gap-3">
+              <a href="tel:0898082188" className="flex-1 rounded-full bg-accent px-4 py-3 text-center text-[14px] font-bold text-white">
+                Gọi CSKH
+              </a>
+              <a
+                href="https://zalo.me/0898082188"
+                target="_blank"
+                rel="noopener"
+                className="flex-1 rounded-full bg-[#0068FF] px-4 py-3 text-center text-[14px] font-bold text-white"
+              >
+                Chat Zalo
+              </a>
+            </div>
+          )}
           <button
             type="submit"
             disabled={loading}
