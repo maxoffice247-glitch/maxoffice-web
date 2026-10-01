@@ -52,6 +52,7 @@ const SERVICE_TYPE_OPTIONS: { value: ServiceTypeKey; label: string }[] = [
   { value: "van-phong-tron-goi", label: "Văn phòng trọn gói" },
   { value: "cho-ngoi-linh-dong", label: "Chỗ ngồi linh động" },
   { value: "phong-hop", label: "Phòng họp theo giờ" },
+  { value: "khac", label: "Dịch vụ khác (tự nhập)" },
 ];
 
 const MAX_ROWS = 12;
@@ -139,6 +140,7 @@ function rowToItem(row: QuoteRow): CompositeQuoteItem | null {
     case "van-phong-tron-goi":
     case "cho-ngoi-linh-dong":
     case "phong-hop":
+    case "khac":
       return row.customPrice.trim()
         ? { type: "custom", serviceSlug: row.serviceType, label: row.customLabel, price: row.customPrice }
         : null;
@@ -640,24 +642,28 @@ function QuoteRowEditor({
 
       {(row.serviceType === "van-phong-tron-goi" ||
         row.serviceType === "cho-ngoi-linh-dong" ||
-        row.serviceType === "phong-hop") && (
+        row.serviceType === "phong-hop" ||
+        row.serviceType === "khac") && (
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
             <label htmlFor={`${uid}-label`} className={labelClass}>
-              Mô tả (không bắt buộc)
+              {row.serviceType === "khac" ? "Tên dịch vụ" : "Mô tả (không bắt buộc)"}
             </label>
             <input
               id={`${uid}-label`}
               type="text"
               value={row.customLabel}
               onChange={(e) => onUpdate({ customLabel: e.target.value })}
-              placeholder={CUSTOM_SERVICE_META[row.serviceType].name}
+              placeholder={
+                row.serviceType === "khac" ? "VD: Dịch vụ phiên dịch tại văn phòng" : CUSTOM_SERVICE_META[row.serviceType].name
+              }
               className={`${inputClass} bg-white`}
             />
           </div>
           <div>
             <label htmlFor={`${uid}-price`} className={labelClass}>
-              Giá {CUSTOM_SERVICE_META[row.serviceType].unitLabel} — chưa có bảng giá cố định, tự nhập
+              Giá{CUSTOM_SERVICE_META[row.serviceType].unitLabel ? ` ${CUSTOM_SERVICE_META[row.serviceType].unitLabel}` : ""} —
+              chưa có bảng giá cố định, tự nhập
             </label>
             <input
               id={`${uid}-price`}

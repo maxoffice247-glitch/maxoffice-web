@@ -12,8 +12,9 @@
  * nhận giá trực tiếp từ input. Route API gọi đúng hàm này ở phía server nên
  * dù client (hoặc ai đó gọi thẳng API bằng tay) có cố gửi kèm 1 field "giá"
  * giả cho 3 loại này, giá trị đó cũng bị bỏ qua hoàn toàn. Chỉ loại
- * "custom" (3 dịch vụ chưa có bảng giá cấu trúc) mới nhận giá tự do từ
- * client, vì bản chất không có gì trong hệ thống để tra.
+ * "custom" (3 dịch vụ chưa có bảng giá cấu trúc + "Dịch vụ khác" tự nhập tự
+ * do) mới nhận giá tự do từ client, vì bản chất không có gì trong hệ thống
+ * để tra.
  *
  * VAT + SỐ THÁNG (bổ sung sau — xem lịch sử trò chuyện): mỗi dòng có 1
  * `breakdown` đầy đủ Giá gốc -> (Số tháng, chỉ VPA) -> Tạm tính -> VAT ->
@@ -25,7 +26,7 @@ import { getOfferedPlan } from "./planFinder";
 import { SERVICES_DATA } from "./servicesData";
 import { qt, formatQuoteCurrency, type QuoteLang, type QuoteDictKey } from "./quoteImageDictionary";
 
-export type CustomServiceSlug = "van-phong-tron-goi" | "cho-ngoi-linh-dong" | "phong-hop";
+export type CustomServiceSlug = "van-phong-tron-goi" | "cho-ngoi-linh-dong" | "phong-hop" | "khac";
 
 /** Đơn vị tính phí — quyết định dòng này rơi vào khối nào trên ảnh báo giá.
  * "thue-vpa" TÁCH RIÊNG khỏi "thang" (dù cả 2 đều là chi phí định kỳ) vì kể
@@ -45,9 +46,15 @@ export const CUSTOM_SERVICE_META: Record<
   "van-phong-tron-goi": { name: "Văn phòng trọn gói", bucket: "thang", unitLabel: "/tháng", vatRatePercent: 10 },
   "cho-ngoi-linh-dong": { name: "Chỗ ngồi linh động", bucket: "thang", unitLabel: "/tháng", vatRatePercent: 10 },
   "phong-hop": { name: "Phòng họp theo giờ", bucket: "gio", unitLabel: "/giờ", vatRatePercent: 10 },
+  // "Dịch vụ khác" — tự nhập HOÀN TOÀN (cả tên lẫn giá), dùng khi nhân viên
+  // cần báo giá 1 dịch vụ chưa có trên web/chưa có bảng giá cấu trúc nào ở
+  // trên (VD dịch vụ mới, dịch vụ gộp tạm thời theo yêu cầu riêng của khách).
+  // Mặc định khối "Chi phí một lần" (mot-lan) — phù hợp đa số trường hợp phát
+  // sinh lẻ; nếu là chi phí định kỳ, nhân viên tự ghi rõ trong mô tả.
+  khac: { name: "Dịch vụ khác", bucket: "mot-lan", unitLabel: "", vatRatePercent: 10 },
 };
 
-/** Tra tên tiếng Anh cho 3 dịch vụ "custom" qua đúng dictionary dùng cho ảnh
+/** Tra tên tiếng Anh cho 4 dịch vụ "custom" qua đúng dictionary dùng cho ảnh
  * báo giá (quoteImageDictionary.ts) — tránh khai báo trùng bản dịch ở 2 nơi.
  * Không gộp vào CUSTOM_SERVICE_META vì field `name` ở đó còn dùng cho thông
  * báo nội bộ (lỗi nhập liệu...) luôn ở tiếng Việt, không phụ thuộc `lang`. */
@@ -55,6 +62,7 @@ const CUSTOM_SERVICE_DICT_KEY: Record<CustomServiceSlug, QuoteDictKey> = {
   "van-phong-tron-goi": "customVanPhongTronGoi",
   "cho-ngoi-linh-dong": "customChoNgoiLinhDong",
   "phong-hop": "customPhongHop",
+  khac: "customKhac",
 };
 
 /**
@@ -146,10 +154,13 @@ function vietnameseMonthPromo(
 
 /** Giá tham khảo hiện có (mode "single" trong servicesData.ts) — dùng làm
  * giá trị PREFILL gợi ý cho nhân viên khi chọn 1 trong 3 dịch vụ chưa có
- * bảng giá cấu trúc, không phải giá cố định (nhân viên sửa lại tự do). */
+ * bảng giá cấu trúc (không áp dụng cho "Dịch vụ khác" tự nhập tự do), không
+ * phải giá cố định (nhân viên sửa lại tự do).
+ * "khac" (Dịch vụ khác) KHÔNG có trang riêng trong servicesData.ts — luôn trả
+ * về rỗng, không có gợi ý giá nào để prefill (đúng bản chất tự nhập hoàn toàn). */
 export function getCustomServiceReferencePrice(slug: CustomServiceSlug): string {
-  const pricing = SERVICES_DATA[slug].pricing;
-  return pricing.mode === "single" ? pricing.price : "";
+  const pricing = SERVICES_DATA[slug]?.pricing;
+  return pricing?.mode === "single" ? pricing.price : "";
 }
 
 export type CompositeQuoteCustomer = {
@@ -345,7 +356,13 @@ export function resolveCompositeQuoteItem(
       const categoryName = qt(CUSTOM_SERVICE_DICT_KEY[item.serviceSlug], lang);
       const title = item.label.trim() || categoryName;
       const baseAmount = parseVndAmount(priceText);
-      const unitSuffix = meta.bucket === "gio" ? qt("perHourSuffix", lang) : qt("perMonthSuffix", lang);
+      // Hậu tố đơn vị tiếng Anh suy ra TRỰC TIẾP từ unitLabel tiếng Việt
+      // (không suy từ bucket) — "khac" có bucket "mot-lan" nhưng unitLabel
+      // rỗng (chi phí 1 lần, không có hậu tố nào), nếu suy theo bucket như 3
+      // dịch vụ custom cũ (chỉ có "thang"/"gio") sẽ SAI thành "/month" cho cả
+      // dòng một lần — đã xác nhận lỗi này qua ảnh test tiếng Anh thật.
+      const unitSuffix =
+        meta.unitLabel === "/giờ" ? qt("perHourSuffix", lang) : meta.unitLabel === "/tháng" ? qt("perMonthSuffix", lang) : "";
       if (baseAmount == null) {
         // Giá gõ tay không tách được số cụ thể (VD "Liên hệ báo giá") —
         // vẫn cho tạo báo giá, chỉ không tính được VAT/tổng cho dòng này.

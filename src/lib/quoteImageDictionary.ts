@@ -57,11 +57,21 @@ export const QUOTE_DICT = {
   customVanPhongTronGoi: { vi: "Văn phòng trọn gói", en: "Serviced Office" },
   customChoNgoiLinhDong: { vi: "Chỗ ngồi linh động", en: "Flexible Seating" },
   customPhongHop: { vi: "Phòng họp theo giờ", en: "Meeting Room (hourly)" },
+  // Dịch vụ "custom" thứ 4 — tự nhập hoàn toàn (tên + giá), dùng khi khách
+  // cần 1 dịch vụ chưa có trên web/chưa có bảng giá cấu trúc nào ở trên.
+  customKhac: { vi: "Dịch vụ khác", en: "Other Service" },
   // 3 hậu tố đơn vị gắn sau giá/baseLabel (compositeQuote.ts) — dùng CHUNG
   // cho cả 2 ngôn ngữ qua qt() thay vì hardcode riêng từng nơi.
   perMonthSuffix: { vi: "/tháng", en: "/month" },
   perHourSuffix: { vi: "/giờ", en: "/hour" },
   perQuarterSuffix: { vi: "/quý", en: "/quarter" },
+  // Tổng cộng toàn bộ báo giá (gộp mọi khối/đơn vị tính phí) — hiện khi báo
+  // giá có từ 2 dòng tra được giá trở lên, xem route.tsx.
+  grandTotalLabel: { vi: "TỔNG CỘNG TOÀN BỘ BÁO GIÁ", en: "GRAND TOTAL" },
+  grandTotalExcludedNote: {
+    vi: "* Chưa gồm các dịch vụ báo giá riêng ở trên (chưa tách được số cụ thể)",
+    en: "* Excludes custom-quoted items above (no fixed amount yet)",
+  },
 } as const satisfies Record<string, Record<QuoteLang, string>>;
 
 export type QuoteDictKey = keyof typeof QUOTE_DICT;

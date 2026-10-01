@@ -43,7 +43,8 @@ import { qt, formatQuoteCurrency, vatLabel, type QuoteLang, type QuoteDictKey } 
  * nhận (chi nhánh, gói, số tháng)/(gói)/(nhóm, khoảng hoá đơn) rồi tự tra
  * giá thật ở server qua resolveCompositeQuoteItem() (xem compositeQuote.ts).
  * Chỉ loại "custom" (Văn phòng trọn gói/Chỗ ngồi linh động/Phòng họp — chưa
- * có bảng giá cấu trúc để tra) mới nhận giá tự do do nhân viên gõ tay.
+ * có bảng giá cấu trúc để tra — và "Dịch vụ khác" tự nhập tự do khi cần báo
+ * giá 1 dịch vụ chưa có trên web) mới nhận giá tự do do nhân viên gõ tay.
  *
  * KHÔNG đọc ảnh mặt tiền chi nhánh (khác route [slug]/[plan]) — báo giá
  * tổng hợp tập trung vào liệt kê dịch vụ + giá, không giới thiệu 1 chi
@@ -71,6 +72,11 @@ const HEADER_H = 148;
 const FOOTER_H = 176;
 const CUSTOMER_ROW_H = 26;
 const QR_BLOCK_H = 232;
+
+const GRAND_TOTAL_TOP_MARGIN = 32; // giống SECTION_TOP_MARGIN, cùng nhịp cách giữa các khối
+const GRAND_TOTAL_BOX_H = 80; // padding "22px 26px" (44) + nội dung cao nhất (font 30, line-height ~36)
+const GRAND_TOTAL_WORDS_H = 26;
+const GRAND_TOTAL_NOTE_H = 20;
 
 const BUCKET_META: Record<QuoteBucket, { titleKey: QuoteDictKey; icon: string; totalKey: QuoteDictKey }> = {
   "thue-vpa": { titleKey: "bucketVpaTitle", icon: "🏢", totalKey: "bucketVpaTotal" },
@@ -108,7 +114,8 @@ function isValidItemShape(item: unknown): item is CompositeQuoteItem {
       return (
         (it.serviceSlug === "van-phong-tron-goi" ||
           it.serviceSlug === "cho-ngoi-linh-dong" ||
-          it.serviceSlug === "phong-hop") &&
+          it.serviceSlug === "phong-hop" ||
+          it.serviceSlug === "khac") &&
         typeof it.label === "string" &&
         isNonEmptyString(it.price)
       );
@@ -347,6 +354,63 @@ function sectionHeight(lines: ResolvedQuoteLine[], lang: QuoteLang): number {
   return SECTION_TOP_MARGIN + SECTION_HEADER_H + 16 + rowsHeight + extra;
 }
 
+/** Chỉ tính ra số khi có TỪ 2 DÒNG TRA ĐƯỢC GIÁ TRỞ LÊN trong TOÀN BỘ báo
+ * giá (bất kể khác khối/đơn vị tính phí) — nếu chỉ có 1 dòng duy nhất, số
+ * này trùng y hệt "Thành tiền" của chính dòng đó nên không hiện lại cho đỡ
+ * thừa. Dòng "custom" gõ tay không tách được số cụ thể (breakdown null) bị
+ * loại khỏi tổng này — không có con số để cộng — và được ghi chú rõ bên dưới
+ * tổng để không gây hiểu lầm là đã tính đủ. */
+function computeGrandTotal(resolvedLines: ResolvedQuoteLine[]) {
+  const summableLines = resolvedLines.filter((l) => l.breakdown != null);
+  const total = summableLines.reduce((sum, l) => sum + (l.breakdown?.total ?? 0), 0);
+  const show = summableLines.length >= 2;
+  const hasExcluded = show && summableLines.length < resolvedLines.length;
+  return { total, show, hasExcluded };
+}
+
+function grandTotalHeight(resolvedLines: ResolvedQuoteLine[], lang: QuoteLang): number {
+  const { show, hasExcluded } = computeGrandTotal(resolvedLines);
+  if (!show) return 0;
+  return (
+    GRAND_TOTAL_TOP_MARGIN +
+    GRAND_TOTAL_BOX_H +
+    (lang === "vi" ? 8 + GRAND_TOTAL_WORDS_H : 0) +
+    (hasExcluded ? 6 + GRAND_TOTAL_NOTE_H : 0)
+  );
+}
+
+function GrandTotal({ resolvedLines, lang }: { resolvedLines: ResolvedQuoteLine[]; lang: QuoteLang }) {
+  const { total, show, hasExcluded } = computeGrandTotal(resolvedLines);
+  if (!show) return null;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: GRAND_TOTAL_TOP_MARGIN }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderRadius: 16,
+          backgroundColor: QUOTE_COLOR.navy,
+          padding: "22px 26px",
+        }}
+      >
+        <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: "#fff" }}>{qt("grandTotalLabel", lang)}</div>
+        <div style={{ display: "flex", fontSize: 30, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(total, lang)}</div>
+      </div>
+      {lang === "vi" && (
+        <div style={{ display: "flex", marginTop: 8, paddingLeft: 4 }}>
+          <AmountInWords amount={total} />
+        </div>
+      )}
+      {hasExcluded && (
+        <div style={{ display: "flex", marginTop: 6, paddingLeft: 4, fontSize: 12, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>
+          {qt("grandTotalExcludedNote", lang)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export async function POST(req: Request) {
   let body: CompositeQuoteRequestBody;
   try {
@@ -397,16 +461,15 @@ export async function POST(req: Request) {
 
   // Số tiền gợi ý điền trên QR (nếu bật) — CỘNG DỒN "Thành tiền" của TẤT CẢ
   // dòng dịch vụ đã tra được giá, bất kể thuộc khối/đơn vị tính phí nào.
-  // (Trước đây chỉ lấy khối có tổng LỚN NHẤT làm đại diện — với lý do các
-  // khối khác đơn vị/thời điểm thanh toán nên không gộp được — nhưng thực tế
-  // khách thường thanh toán 1 lần cho toàn bộ báo giá khi ký hợp đồng, nên
-  // sửa lại theo đúng yêu cầu: cộng dồn hết để QR không thiếu tiền khi báo
-  // giá có từ 2 dịch vụ trở lên. Dòng "custom" gõ tay không tách được số cụ
-  // thể (breakdown null, VD "Liên hệ báo giá") vẫn bị bỏ qua khỏi tổng này
-  // vì không có con số để cộng — KHÔNG phải lỗi, nhân viên tự biết cộng thêm
-  // khi báo giá cho khách).
-  const qrSummableTotal = resolvedLines.reduce((sum, l) => sum + (l.breakdown?.total ?? 0), 0);
-  const qrAmount: number | null = qrSummableTotal > 0 ? qrSummableTotal : null;
+  // Dùng CHUNG 1 phép tính với khối "Tổng cộng toàn bộ báo giá" hiện trên ảnh
+  // (computeGrandTotal) để 2 con số này LUÔN khớp nhau, không lệch. (Trước
+  // đây chỉ lấy khối có tổng LỚN NHẤT làm đại diện — với lý do các khối khác
+  // đơn vị/thời điểm thanh toán nên không gộp được — nhưng thực tế khách
+  // thường thanh toán 1 lần cho toàn bộ báo giá khi ký hợp đồng, nên sửa lại
+  // theo đúng yêu cầu: cộng dồn hết để QR không thiếu tiền khi báo giá có từ
+  // 2 dịch vụ trở lên.)
+  const { total: overallTotal } = computeGrandTotal(resolvedLines);
+  const qrAmount: number | null = overallTotal > 0 ? overallTotal : null;
 
   // KHÔNG tin thẳng body.qrAccountKey — chỉ chấp nhận khi khớp đúng 1 trong
   // các key đã khai báo sẵn ở VIETQR_ACCOUNTS, rơi về tài khoản mặc định
@@ -446,6 +509,7 @@ export async function POST(req: Request) {
     HEADER_H +
     customerBlockH +
     BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!, lang), 0) +
+    grandTotalHeight(resolvedLines, lang) +
     (qrDataUri ? QR_BLOCK_H : 0) +
     FOOTER_H;
 
@@ -503,9 +567,7 @@ export async function POST(req: Request) {
           <Section key={bucket} bucket={bucket} lines={byBucket.get(bucket)!} lang={lang} />
         ))}
 
-        {/* Không có dòng "Tổng cộng" gộp cả 4 khối — cố ý, vì đơn vị tính
-            khác nhau (đ thuê VPA theo kỳ hạn đã chọn, đ/tháng, đ một lần,
-            đ/giờ) không thể cộng chung thành 1 con số có ý nghĩa. */}
+        <GrandTotal resolvedLines={resolvedLines} lang={lang} />
 
         {qrDataUri && (
           <div
