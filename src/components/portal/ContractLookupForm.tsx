@@ -233,9 +233,9 @@ export default function ContractLookupForm() {
               vẫn label-trên/giá-trị-dưới (InfoRow) để không tái lặp lỗi vỡ
               dòng cũ nếu giá trị 1 ô bất ngờ dài hơn dự kiến. */}
           <dl className="grid grid-cols-1 gap-x-4 gap-y-2.5 rounded-xl bg-bg-tint px-4 py-3 text-[13px] md:grid-cols-2">
-            <InfoRow className="md:col-span-2" icon={BuildingIcon} label="Tên công ty" value={ui.companyName} />
+            <InfoRow className="md:col-span-2" align="center" icon={BuildingIcon} label="Tên công ty" value={ui.companyName} />
             <InfoRow icon={CalendarIcon} label="Ngày bắt đầu" value={formatDate(ui.startDate)} />
-            <InfoRow icon={CalendarIcon} label="Ngày kết thúc" value={formatDate(ui.endDate)} />
+            <InfoRow align="right" icon={CalendarIcon} label="Ngày kết thúc" value={formatDate(ui.endDate)} />
             <div className="flex flex-col gap-0.5">
               <dt className="flex items-center gap-1.5 text-body-text">
                 <CheckCircleIcon className="h-4 w-4 shrink-0" />
@@ -257,8 +257,20 @@ export default function ContractLookupForm() {
                 </span>
               </dd>
             </div>
-            {ui.phoneMasked && <InfoRow icon={PhoneIcon} label="SĐT đã đăng ký" value={ui.phoneMasked} />}
-            {ui.emailMasked && <InfoRow icon={MailIcon} label="Email đã đăng ký" value={ui.emailMasked} />}
+            {ui.phoneMasked && <InfoRow align="right" icon={PhoneIcon} label="SĐT đã đăng ký" value={ui.phoneMasked} />}
+            {ui.emailMasked && (
+              <InfoRow
+                // Nếu có cả SĐT lẫn email: SĐT đã chiếm vị trí cột phải
+                // (dòng chẵn thứ 4 trong lưới), email rơi xuống hàng mới ở
+                // CỘT TRÁI (lẻ) -> giữ "left". Nếu KHÔNG có SĐT, email tự
+                // nhảy lên đúng vị trí cột phải (dòng chẵn thứ 4) -> phải
+                // "right" để khớp đúng mép phải, không đoán cố định 1 phía.
+                align={ui.phoneMasked ? "left" : "right"}
+                icon={MailIcon}
+                label="Email đã đăng ký"
+                value={ui.emailMasked}
+              />
+            )}
           </dl>
           {/* Nút "Gia hạn hợp đồng" khi sắp/đã hết hạn — hiện ở Mức 1 (trước
               khi xác minh) vì đây là nơi khách nhìn thấy đầu tiên, kể cả khi
@@ -444,6 +456,7 @@ function InfoRow({
   label,
   value,
   className = "",
+  align = "left",
 }: {
   icon: ComponentType<{ className?: string }>;
   label: string;
@@ -451,14 +464,28 @@ function InfoRow({
   /** VD "md:col-span-2" cho dòng giá trị dài (Tên công ty) chiếm trọn
       hàng trong lưới 2 cột ở desktop — xem dl cha. */
   className?: string;
+  /** "left" (mặc định, cột trái của lưới 2 cột — sát mép trái khung) |
+      "right" (cột phải — sát mép PHẢI khung, không phải mép trái của
+      chính ô đó, để đối xứng với cột trái qua khoảng gap ở giữa, giống
+      `justify-content: space-between` cho cả khung thay vì từng ô tự căn
+      lẻ) | "center" (riêng "Tên công ty", span trọn 2 cột — căn giữa cho
+      cân đối dù giá trị 1 hay 2 dòng). CHỈ áp dụng từ `md` trở lên (dùng
+      tiền tố `md:` cho mọi class căn chỉnh) — dưới `md` lưới về lại
+      grid-cols-1 nên PHẢI giữ nguyên căn trái mặc định cho mọi dòng, nếu
+      không "Ngày kết thúc"/"SĐT"/"Tên công ty" sẽ bị đẩy lệch phải/giữa dù
+      đang xếp dọc 1 cột full-width — đã bắt lỗi này khi test mobile. */
+  align?: "left" | "right" | "center";
 }) {
+  const alignClass = align === "right" ? "md:items-end" : align === "center" ? "md:items-center" : "";
+  const justifyClass = align === "right" ? "md:justify-end" : align === "center" ? "md:justify-center" : "";
+  const textClass = align === "right" ? "md:text-right" : align === "center" ? "md:text-center" : "";
   return (
-    <div className={`flex flex-col gap-0.5 ${className}`}>
-      <dt className="flex items-center gap-1.5 text-body-text">
+    <div className={`flex flex-col gap-0.5 ${alignClass} ${className}`}>
+      <dt className={`flex items-center gap-1.5 text-body-text ${justifyClass}`}>
         <Icon className="h-4 w-4 shrink-0" />
         {label}
       </dt>
-      <dd className="font-medium text-ink">{value}</dd>
+      <dd className={`font-medium text-ink ${textClass}`}>{value}</dd>
     </div>
   );
 }
