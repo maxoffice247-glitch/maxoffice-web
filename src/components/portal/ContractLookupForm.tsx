@@ -243,7 +243,7 @@ export default function ContractLookupForm() {
               </dt>
               <dd>
                 <span
-                  className={`inline-block rounded-full px-2.5 py-1 text-[12px] font-bold ${
+                  className={`inline-block rounded-full px-2.5 py-1 text-center text-[12px] leading-snug font-bold ${
                     ui.contractStatus === "active"
                       ? "bg-green-50 text-green-700"
                       : ui.contractStatus === "pending_payment"
@@ -251,9 +251,22 @@ export default function ContractLookupForm() {
                         : "bg-accent/10 text-accent"
                   }`}
                 >
-                  {ui.contractStatus === "active" && ui.daysRemaining !== null
-                    ? `${ui.contractStatusLabel} — còn ${ui.daysRemaining} ngày`
-                    : ui.contractStatusLabel}
+                  {/* Xuống dòng THẬT (2 <span className="block">) thay vì
+                      nối 1 câu dài bằng dấu "—" rồi để trình duyệt tự ngắt
+                      khi hết chỗ — cách cũ có thể gãy NGANG GIỮA cụm số
+                      ("...còn / 309 ngày"), xấu và khó đọc. 2 dòng cố định
+                      luôn tách đúng ở ranh giới 2 ý nghĩa (trạng thái / số
+                      ngày), không phụ thuộc độ rộng khung chứa. CHỈ áp dụng
+                      cho "active" kèm số ngày — các trạng thái khác (Đã hết
+                      hạn/Chờ thanh toán...) giữ nguyên 1 dòng như cũ. */}
+                  {ui.contractStatus === "active" && ui.daysRemaining !== null ? (
+                    <>
+                      <span className="block">{ui.contractStatusLabel}</span>
+                      <span className="block">Còn {ui.daysRemaining} ngày</span>
+                    </>
+                  ) : (
+                    ui.contractStatusLabel
+                  )}
                 </span>
               </dd>
             </div>
