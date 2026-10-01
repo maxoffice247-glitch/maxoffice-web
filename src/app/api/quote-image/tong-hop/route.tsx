@@ -25,6 +25,7 @@ import {
   isVietQrAccountKey,
   DEFAULT_VIETQR_ACCOUNT_KEY,
 } from "@/lib/vietQr";
+import { qt, formatQuoteCurrency, vatLabel, type QuoteLang, type QuoteDictKey } from "@/lib/quoteImageDictionary";
 
 /**
  * Ảnh "Báo giá tổng hợp" — 1 ảnh PNG gộp NHIỀU dịch vụ khác nhau (VD: gói
@@ -71,11 +72,11 @@ const FOOTER_H = 176;
 const CUSTOMER_ROW_H = 26;
 const QR_BLOCK_H = 232;
 
-const BUCKET_META: Record<QuoteBucket, { title: string; icon: string; totalLabel: string }> = {
-  "thue-vpa": { title: "Chi phí thuê Văn phòng ảo", icon: "🏢", totalLabel: "Tổng chi phí thuê Văn phòng ảo" },
-  thang: { title: "Chi phí dịch vụ hàng tháng khác", icon: "📅", totalLabel: "Tổng chi phí dịch vụ hàng tháng khác" },
-  "mot-lan": { title: "Chi phí một lần", icon: "📄", totalLabel: "Tổng chi phí một lần" },
-  gio: { title: "Chi phí theo giờ", icon: "🕐", totalLabel: "Tổng chi phí theo giờ" },
+const BUCKET_META: Record<QuoteBucket, { titleKey: QuoteDictKey; icon: string; totalKey: QuoteDictKey }> = {
+  "thue-vpa": { titleKey: "bucketVpaTitle", icon: "🏢", totalKey: "bucketVpaTotal" },
+  thang: { titleKey: "bucketThangTitle", icon: "📅", totalKey: "bucketThangTotal" },
+  "mot-lan": { titleKey: "bucketMotLanTitle", icon: "📄", totalKey: "bucketMotLanTotal" },
+  gio: { titleKey: "bucketGioTitle", icon: "🕐", totalKey: "bucketGioTotal" },
 };
 const BUCKET_ORDER: QuoteBucket[] = ["thue-vpa", "thang", "mot-lan", "gio"];
 
@@ -116,10 +117,6 @@ function isValidItemShape(item: unknown): item is CompositeQuoteItem {
   }
 }
 
-function formatVnd(n: number): string {
-  return n.toLocaleString("vi-VN") + "đ";
-}
-
 /** Ước lượng chiều cao 1 dòng dịch vụ — PHẢI khớp đúng với JSX của
  * ItemRow() bên dưới (từng khối cộng thêm ở đây cũng phải tồn tại tương
  * ứng trong render), theo đúng nguyên tắc đã áp dụng ở 2 route quote-image
@@ -150,7 +147,7 @@ function BreakdownLine({ label, value, strong }: { label: string; value: string;
   );
 }
 
-function ItemRow({ line }: { line: ResolvedQuoteLine }) {
+function ItemRow({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang }) {
   const secondLine = line.subtitle ? `${line.category} · ${line.subtitle}` : line.category;
   // Dòng "custom" khi bỏ trống mô tả có title === category (xem
   // compositeQuote.ts) — ẩn hẳn dòng phụ trong trường hợp đó thay vì hiện
@@ -224,11 +221,17 @@ function ItemRow({ line }: { line: ResolvedQuoteLine }) {
 
       <div style={{ display: "flex", flexDirection: "column", marginTop: BREAKDOWN_TOP_MARGIN, gap: 4 }}>
         <BreakdownLine
-          label="Đơn giá"
-          value={showSubtotalLine ? `${breakdown.baseLabel} × ${breakdown.months} tháng` : breakdown.baseLabel}
+          label={qt("unitPriceLabel", lang)}
+          value={
+            showSubtotalLine
+              ? `${breakdown.baseLabel} × ${breakdown.months} ${qt("monthsUnit", lang)}`
+              : breakdown.baseLabel
+          }
         />
-        {showSubtotalLine && <BreakdownLine label="Tạm tính (chưa VAT)" value={formatVnd(breakdown.subtotal)} />}
-        <BreakdownLine label={`VAT ${breakdown.vatRatePercent}%`} value={formatVnd(breakdown.vatAmount)} />
+        {showSubtotalLine && (
+          <BreakdownLine label={qt("subtotalLabel", lang)} value={formatQuoteCurrency(breakdown.subtotal, lang)} />
+        )}
+        <BreakdownLine label={vatLabel(breakdown.vatRatePercent)} value={formatQuoteCurrency(breakdown.vatAmount, lang)} />
       </div>
 
       <div
@@ -241,15 +244,19 @@ function ItemRow({ line }: { line: ResolvedQuoteLine }) {
           paddingTop: 12,
         }}
       >
-        <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: QUOTE_COLOR.navy }}>Thành tiền</div>
+        <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: QUOTE_COLOR.navy }}>{qt("totalLabel", lang)}</div>
         <div style={{ display: "flex", fontSize: 22, fontWeight: 800, color: QUOTE_COLOR.accent }}>
-          {formatVnd(breakdown.total)}
+          {formatQuoteCurrency(breakdown.total, lang)}
         </div>
       </div>
     </div>
   );
 }
 
+/** "Bằng chữ" — CHỈ render ở bản tiếng Việt (gọi component này) — bản tiếng
+ * Anh KHÔNG có dòng này (xem comment đầu quoteImageDictionary.ts), nên nơi
+ * gọi (Section) đã tự bỏ qua hoàn toàn khi lang === "en", không truyền
+ * `lang` xuống đây. */
 function AmountInWords({ amount }: { amount: number }) {
   const words = amountToVietnameseWords(amount);
   if (!words) return null;
@@ -260,14 +267,15 @@ function AmountInWords({ amount }: { amount: number }) {
   );
 }
 
-function Section({ bucket, lines }: { bucket: QuoteBucket; lines: ResolvedQuoteLine[] }) {
+function Section({ bucket, lines, lang }: { bucket: QuoteBucket; lines: ResolvedQuoteLine[]; lang: QuoteLang }) {
   if (lines.length === 0) return null;
   const meta = BUCKET_META[bucket];
   const summable = lines.filter((l) => l.breakdown != null);
   const allSummable = summable.length === lines.length && summable.length > 0;
   const total = allSummable ? summable.reduce((sum, l) => sum + (l.breakdown?.total ?? 0), 0) : null;
   const showBoxedTotal = allSummable && lines.length >= 2 && total != null;
-  const showInlineWords = allSummable && lines.length === 1 && total != null;
+  const showInlineWords = lang === "vi" && allSummable && lines.length === 1 && total != null;
+  const showWordsInBox = lang === "vi" && showBoxedTotal;
 
   return (
     <div
@@ -279,11 +287,11 @@ function Section({ bucket, lines }: { bucket: QuoteBucket; lines: ResolvedQuoteL
       }}
     >
       <div style={{ display: "flex", fontSize: 20, fontWeight: 700, color: QUOTE_COLOR.navy, marginBottom: 16 }}>
-        {meta.icon} {meta.title}
+        {meta.icon} {qt(meta.titleKey, lang)}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: ROW_GAP }}>
         {lines.map((line, i) => (
-          <ItemRow key={i} line={line} />
+          <ItemRow key={i} line={line} lang={lang} />
         ))}
       </div>
       {showInlineWords && total != null && (
@@ -304,31 +312,37 @@ function Section({ bucket, lines }: { bucket: QuoteBucket; lines: ResolvedQuoteL
             }}
           >
             <div style={{ display: "flex", fontSize: 16, fontWeight: 700, color: QUOTE_COLOR.navy }}>
-              {meta.totalLabel}
+              {qt(meta.totalKey, lang)}
             </div>
             <div style={{ display: "flex", fontSize: 26, fontWeight: 800, color: QUOTE_COLOR.primary }}>
-              {formatVnd(total)}
+              {formatQuoteCurrency(total, lang)}
             </div>
           </div>
-          <div style={{ display: "flex", marginTop: 8, paddingLeft: 4 }}>
-            <AmountInWords amount={total} />
-          </div>
+          {showWordsInBox && (
+            <div style={{ display: "flex", marginTop: 8, paddingLeft: 4 }}>
+              <AmountInWords amount={total} />
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 }
 
-function sectionHeight(lines: ResolvedQuoteLine[]): number {
+function sectionHeight(lines: ResolvedQuoteLine[], lang: QuoteLang): number {
   if (lines.length === 0) return 0;
   const rowsHeight = lines.reduce((sum, l) => sum + estimateRowHeight(l), 0) + (lines.length - 1) * ROW_GAP;
   const summable = lines.filter((l) => l.breakdown != null);
   const allSummable = summable.length === lines.length && summable.length > 0;
+  // Dòng "Bằng chữ" CHỈ tồn tại ở bản tiếng Việt (xem Section()) — bản tiếng
+  // Anh không cộng thêm SECTION_WORDS_H/INLINE_WORDS_H vào chiều cao.
   const extra =
     allSummable && lines.length >= 2
-      ? 16 + SECTION_TOTAL_BOX_H + 8 + SECTION_WORDS_H
+      ? 16 + SECTION_TOTAL_BOX_H + (lang === "en" ? 0 : 8 + SECTION_WORDS_H)
       : allSummable && lines.length === 1
-        ? 8 + INLINE_WORDS_H
+        ? lang === "en"
+          ? 0
+          : 8 + INLINE_WORDS_H
         : 0;
   return SECTION_TOP_MARGIN + SECTION_HEADER_H + 16 + rowsHeight + extra;
 }
@@ -348,12 +362,18 @@ export async function POST(req: Request) {
     return new Response("Chỉ hỗ trợ tối đa 12 dòng dịch vụ trong 1 báo giá.", { status: 400 });
   }
 
+  // Ngôn ngữ ảnh xuất ra — mặc định "vi" khi thiếu/giá trị lạ (client
+  // cũ/lỗi gửi field này vẫn ra đúng ảnh tiếng Việt như trước khi có tính
+  // năng song ngữ). Form nhập liệu luôn tiếng Việt, field này KHÔNG ảnh
+  // hưởng gì đến việc tra giá — chỉ đổi nhãn hiển thị trên ảnh.
+  const lang: QuoteLang = body.lang === "en" ? "en" : "vi";
+
   const resolvedLines: ResolvedQuoteLine[] = [];
   for (const item of body.items) {
     if (!isValidItemShape(item)) {
       return new Response("Có dòng dịch vụ với dữ liệu không hợp lệ trong request.", { status: 400 });
     }
-    const result = resolveCompositeQuoteItem(item);
+    const result = resolveCompositeQuoteItem(item, lang);
     if ("error" in result) {
       return new Response(result.error, { status: 400 });
     }
@@ -363,10 +383,12 @@ export async function POST(req: Request) {
   const customer = body.customer;
   const customerRows: { label: string; value: string }[] = [];
   if (customer) {
-    if (isNonEmptyString(customer.name)) customerRows.push({ label: "Khách hàng", value: customer.name.trim() });
-    if (isNonEmptyString(customer.phone)) customerRows.push({ label: "Điện thoại", value: customer.phone.trim() });
+    if (isNonEmptyString(customer.name))
+      customerRows.push({ label: qt("customerNameLabel", lang), value: customer.name.trim() });
+    if (isNonEmptyString(customer.phone))
+      customerRows.push({ label: qt("customerPhoneLabel", lang), value: customer.phone.trim() });
     if (isNonEmptyString(customer.companyName))
-      customerRows.push({ label: "Tên công ty dự kiến", value: customer.companyName.trim() });
+      customerRows.push({ label: qt("customerCompanyLabel", lang), value: customer.companyName.trim() });
   }
 
   const byBucket = new Map<QuoteBucket, ResolvedQuoteLine[]>();
@@ -416,7 +438,7 @@ export async function POST(req: Request) {
 
   const [fonts, logoSrc] = await Promise.all([loadQuoteImageFonts(), loadQuoteImageLogo()]);
 
-  const dateLabel = `Ngày tạo: ${new Date().toLocaleDateString("vi-VN")}`;
+  const dateLabel = `${qt("dateLabelPrefix", lang)}: ${new Date().toLocaleDateString(lang === "en" ? "en-US" : "vi-VN")}`;
 
   const customerBlockH =
     customerRows.length > 0 ? 24 + 40 + 30 + customerRows.length * CUSTOMER_ROW_H : 0;
@@ -424,7 +446,7 @@ export async function POST(req: Request) {
   const height =
     HEADER_H +
     customerBlockH +
-    BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!), 0) +
+    BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!, lang), 0) +
     (qrDataUri ? QR_BLOCK_H : 0) +
     FOOTER_H;
 
@@ -440,7 +462,7 @@ export async function POST(req: Request) {
           fontFamily: "Inter",
         }}
       >
-        <QuoteHeaderRow logoSrc={logoSrc} badgeLabel="Báo giá tổng hợp" dateLabel={dateLabel} />
+        <QuoteHeaderRow logoSrc={logoSrc} badgeLabel={qt("badgeLabel", lang)} dateLabel={dateLabel} />
 
         {customerRows.length > 0 && (
           <div
@@ -465,7 +487,7 @@ export async function POST(req: Request) {
                 textTransform: "uppercase",
               }}
             >
-              Thông tin khách hàng
+              {qt("customerInfoTitle", lang)}
             </div>
             <div style={{ display: "flex", flexDirection: "column", marginTop: 10, gap: 6 }}>
               {customerRows.map((row) => (
@@ -479,7 +501,7 @@ export async function POST(req: Request) {
         )}
 
         {BUCKET_ORDER.map((bucket) => (
-          <Section key={bucket} bucket={bucket} lines={byBucket.get(bucket)!} />
+          <Section key={bucket} bucket={bucket} lines={byBucket.get(bucket)!} lang={lang} />
         ))}
 
         {/* Không có dòng "Tổng cộng" gộp cả 4 khối — cố ý, vì đơn vị tính
@@ -503,21 +525,21 @@ export async function POST(req: Request) {
             <img src={qrDataUri} alt="" width={160} height={160} style={{ borderRadius: 8, backgroundColor: "#fff" }} />
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", fontSize: 17, fontWeight: 700, color: QUOTE_COLOR.navy }}>
-                Quét mã để chuyển khoản
+                {qt("scanToPayTitle", lang)}
               </div>
               <div style={{ display: "flex", marginTop: 6, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
                 {vietQrAccountLabel(qrAccountKey)}
               </div>
               {qrAmount != null && (
                 <div style={{ display: "flex", marginTop: 2, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
-                  Số tiền gợi ý: {formatVnd(qrAmount)}
+                  {qt("suggestedAmountLabel", lang)}: {formatQuoteCurrency(qrAmount, lang)}
                 </div>
               )}
             </div>
           </div>
         )}
 
-        <QuoteFooterRow />
+        <QuoteFooterRow lang={lang} />
       </div>
     ),
     {

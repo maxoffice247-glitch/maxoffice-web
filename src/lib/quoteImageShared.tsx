@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { qt, type QuoteLang } from "./quoteImageDictionary";
 
 /**
  * Phần dùng chung (màu, load font/logo, header/footer) CHỈ cho route ảnh
@@ -111,7 +112,7 @@ export function QuoteHeaderRow({
   );
 }
 
-export function QuoteFooterRow() {
+export function QuoteFooterRow({ lang = "vi" }: { lang?: QuoteLang } = {}) {
   return (
     <div
       style={{
@@ -127,7 +128,7 @@ export function QuoteFooterRow() {
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", fontSize: 22, fontWeight: 800, color: QUOTE_COLOR.navy }}>
-          Hotline: 089 8082 188
+          {qt("hotlineLabel", lang)}: 089 8082 188
         </div>
         <div style={{ display: "flex", marginTop: 4, fontSize: 16, color: QUOTE_COLOR.bodyText }}>
           maxoffice.vn
@@ -144,7 +145,7 @@ export function QuoteFooterRow() {
           color: "#fff",
         }}
       >
-        Liên hệ tư vấn ngay
+        {qt("contactNowLabel", lang)}
       </div>
     </div>
   );

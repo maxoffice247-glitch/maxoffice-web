@@ -67,8 +67,14 @@ type DualPricing = {
 
 type Tier = {
   name: string;
+  /** Bản dịch tạm do Claude tự đề xuất — dùng cho ảnh báo giá tổng hợp
+      tiếng Anh (CompositeQuoteTool), CẦN RÀ SOÁT trước khi dùng cho khách
+      thật. Không dùng ở trang dịch vụ (trang đó luôn tiếng Việt). */
+  nameEn?: string;
   price: string;
   unit: string;
+  /** Bản dịch tạm, cùng mục đích/lưu ý như nameEn ở trên. */
+  unitEn?: string;
   desc: string;
   features: string[];
   featured?: boolean;
@@ -103,9 +109,19 @@ type MatrixPricing = {
 };
 
 export type AccountingGroupKey = "A" | "B" | "C";
-export type AccountingGroup = { key: AccountingGroupKey; label: string; desc: string };
+export type AccountingGroup = {
+  key: AccountingGroupKey;
+  label: string;
+  /** Bản dịch tạm do Claude tự đề xuất — dùng cho ảnh báo giá tổng hợp
+      tiếng Anh (CompositeQuoteTool), CẦN RÀ SOÁT trước khi dùng cho khách
+      thật. Không dùng ở trang dịch vụ (trang đó luôn tiếng Việt). */
+  labelEn?: string;
+  desc: string;
+};
 export type AccountingTierRow = {
   range: string;
+  /** Bản dịch tạm, cùng mục đích/lưu ý như AccountingGroup.labelEn ở trên. */
+  rangeEn?: string;
   prices: Record<AccountingGroupKey, string>;
 };
 export type AccountingSurcharge = {

@@ -43,6 +43,12 @@ export type OfferedPlan = {
   /** Key riêng của gói trong hệ giá của nó (vd. "base", "m-start", "sgp-silver") — kết hợp với locationSlug là duy nhất toàn hệ thống. */
   planKey: string;
   planName: string;
+  /** Tên tiếng Anh của gói — CHỈ khác `planName` ở hệ giá CƠ BẢN/NÂNG CAO/
+      CAO CẤP (Trường Chinh, xem TruongChinhPlan.nameEn — bản dịch tạm, cần
+      rà soát). Mọi hệ giá khác để `undefined`, nơi dùng tự fallback về
+      `planName` (đã là tên kiểu thương hiệu tiếng Anh sẵn, VD "LITE",
+      "GOLD", không cần field riêng). */
+  planNameEn?: string;
   price: number;
   duration: string;
   /** Danh sách tính năng đầy đủ, đã gộp cả các trường cấu trúc riêng (bảng tên, phòng họp...) của từng hệ giá thành 1 danh sách thống nhất. */
@@ -163,6 +169,7 @@ export function getAllOfferedPlans(): OfferedPlan[] {
           area,
           planKey: p.key,
           planName: p.name,
+          planNameEn: p.nameEn,
           price: p.price,
           duration: p.duration,
           features: p.features,

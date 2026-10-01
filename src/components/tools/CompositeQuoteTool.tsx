@@ -18,6 +18,7 @@ import {
   type CustomServiceSlug,
   type MonthOption,
 } from "@/lib/compositeQuote";
+import type { QuoteLang } from "@/lib/quoteImageDictionary";
 import {
   VIETQR_ACCOUNT_KEYS,
   DEFAULT_VIETQR_ACCOUNT_KEY,
@@ -175,6 +176,11 @@ export default function CompositeQuoteTool() {
   // Mặc định đúng tài khoản đã dùng TRƯỚC khi có tính năng chọn nhiều tài
   // khoản — không đổi hành vi cũ nếu nhân viên không chủ động đổi lựa chọn.
   const [qrAccountKey, setQrAccountKey] = useState<VietQrAccountKey>(DEFAULT_VIETQR_ACCOUNT_KEY);
+  // Ngôn ngữ của ẢNH XUẤT RA — mặc định "vi" (hành vi y hệt trước khi có
+  // tính năng song ngữ nếu nhân viên không chủ động đổi). CHỈ ảnh hưởng ảnh
+  // PNG cuối cùng, KHÔNG đổi ngôn ngữ form nhập liệu này (luôn tiếng Việt)
+  // và KHÔNG đổi bản xem trước từng dòng bên dưới (preview luôn tiếng Việt).
+  const [lang, setLang] = useState<QuoteLang>("vi");
   const [rows, setRows] = useState<QuoteRow[]>(() => [createEmptyRow()]);
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
@@ -217,7 +223,7 @@ export default function CompositeQuoteTool() {
       const res = await fetch("/api/quote-image/tong-hop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customer, items, showQr, qrAccountKey }),
+        body: JSON.stringify({ customer, items, showQr, qrAccountKey, lang }),
       });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
@@ -367,6 +373,32 @@ export default function CompositeQuoteTool() {
                 </div>
               </div>
             )}
+          </div>
+
+          <div className="mb-6 rounded-xl border border-line bg-bg-tint p-4">
+            <span className="mb-2 block text-[12px] font-bold text-body-text">Ngôn ngữ xuất báo giá</span>
+            <div className="flex flex-wrap gap-2">
+              {(
+                [
+                  { value: "vi", label: "Tiếng Việt" },
+                  { value: "en", label: "English" },
+                ] as const
+              ).map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  aria-pressed={lang === opt.value}
+                  onClick={() => setLang(opt.value)}
+                  className={`rounded-full border-[1.5px] px-4 py-2 text-[12.5px] font-bold transition-all duration-200 ${
+                    lang === opt.value
+                      ? "border-primary bg-primary text-white"
+                      : "border-line bg-white text-body-text hover:border-primary/40"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <button

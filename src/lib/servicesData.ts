@@ -572,8 +572,12 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       tiers: [
         {
           name: "Gói 1 — Cơ bản",
+          // Bản dịch tạm (Claude tự đề xuất) — CẦN RÀ SOÁT, dùng cho ảnh báo
+          // giá tổng hợp tiếng Anh, xem báo cáo cuối phiên thêm song ngữ.
+          nameEn: "Package 1 — Basic",
           price: "1.299.000đ",
           unit: "kèm Văn phòng ảo · giá thường 1.500.000đ · 5-7 ngày",
+          unitEn: "incl. Virtual Office · regular price 1,500,000 VND · 5-7 days",
           desc: "Đầy đủ giấy tờ pháp lý cơ bản để chính thức có giấy phép và bắt đầu hoạt động.",
           features: [
             "Giấy chứng nhận đăng ký doanh nghiệp",
@@ -584,8 +588,11 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
         },
         {
           name: "Gói 2 — Đầy đủ",
+          // Bản dịch tạm (Claude tự đề xuất) — CẦN RÀ SOÁT, cùng lưu ý như trên.
+          nameEn: "Package 2 — Full",
           price: "2.800.000đ",
           unit: "trọn gói · 5-7 ngày",
+          unitEn: "all-inclusive · 5-7 days",
           desc: "Tất cả hạng mục Gói 1, cộng thêm thủ tục thuế và hoá đơn điện tử để vận hành ngay.",
           features: [
             "Tất cả hạng mục trong Gói 1",
@@ -678,33 +685,40 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
     pricing: {
       mode: "accounting",
       tableUnit: "Phí trung bình/tháng",
+      // nameEn/rangeEn dưới đây: bản dịch tạm (Claude tự đề xuất), CẦN RÀ
+      // SOÁT trước khi dùng cho khách thật — chỉ dùng cho ảnh báo giá tổng
+      // hợp tiếng Anh, xem báo cáo cuối phiên thêm song ngữ. Trang dịch vụ
+      // /dich-vu/ke-toan-thue luôn hiển thị tiếng Việt, không đọc field này.
       groups: [
         {
           key: "A",
           label: "Nhóm A — Thương mại",
+          labelEn: "Group A — Trading",
           desc: "Công ty chỉ có hoá đơn/chứng từ thương mại.",
         },
         {
           key: "B",
           label: "Nhóm B — TM + Dịch vụ",
+          labelEn: "Group B — Trading + Services",
           desc: "Công ty có hoá đơn/chứng từ thương mại kết hợp dịch vụ.",
         },
         {
           key: "C",
           label: "Nhóm C — SX/XD/Khai thác",
+          labelEn: "Group C — Manufacturing/Construction/Mining",
           desc: "Công ty thương mại - dịch vụ sản xuất, xây dựng, xây lắp, khai thác.",
         },
       ],
       tiers: [
-        { range: "Không phát sinh", prices: { A: "500.000đ", B: "500.000đ", C: "500.000đ" } },
-        { range: "1-30 hoá đơn", prices: { A: "700.000đ", B: "800.000đ", C: "1.000.000đ" } },
-        { range: "30-50 hoá đơn", prices: { A: "900.000đ", B: "1.200.000đ", C: "1.500.000đ" } },
-        { range: "50-70 hoá đơn", prices: { A: "1.300.000đ", B: "1.500.000đ", C: "2.000.000đ" } },
-        { range: "70-100 hoá đơn", prices: { A: "1.700.000đ", B: "2.100.000đ", C: "2.500.000đ" } },
-        { range: "100-130 hoá đơn", prices: { A: "2.100.000đ", B: "2.500.000đ", C: "3.000.000đ" } },
-        { range: "130-150 hoá đơn", prices: { A: "2.400.000đ", B: "2.800.000đ", C: "3.500.000đ" } },
-        { range: "150-180 hoá đơn", prices: { A: "2.700.000đ", B: "3.100.000đ", C: "4.000.000đ" } },
-        { range: "180-200 hoá đơn", prices: { A: "3.000.000đ", B: "3.400.000đ", C: "4.500.000đ" } },
+        { range: "Không phát sinh", rangeEn: "No invoices", prices: { A: "500.000đ", B: "500.000đ", C: "500.000đ" } },
+        { range: "1-30 hoá đơn", rangeEn: "1-30 invoices", prices: { A: "700.000đ", B: "800.000đ", C: "1.000.000đ" } },
+        { range: "30-50 hoá đơn", rangeEn: "30-50 invoices", prices: { A: "900.000đ", B: "1.200.000đ", C: "1.500.000đ" } },
+        { range: "50-70 hoá đơn", rangeEn: "50-70 invoices", prices: { A: "1.300.000đ", B: "1.500.000đ", C: "2.000.000đ" } },
+        { range: "70-100 hoá đơn", rangeEn: "70-100 invoices", prices: { A: "1.700.000đ", B: "2.100.000đ", C: "2.500.000đ" } },
+        { range: "100-130 hoá đơn", rangeEn: "100-130 invoices", prices: { A: "2.100.000đ", B: "2.500.000đ", C: "3.000.000đ" } },
+        { range: "130-150 hoá đơn", rangeEn: "130-150 invoices", prices: { A: "2.400.000đ", B: "2.800.000đ", C: "3.500.000đ" } },
+        { range: "150-180 hoá đơn", rangeEn: "150-180 invoices", prices: { A: "2.700.000đ", B: "3.100.000đ", C: "4.000.000đ" } },
+        { range: "180-200 hoá đơn", rangeEn: "180-200 invoices", prices: { A: "3.000.000đ", B: "3.400.000đ", C: "4.500.000đ" } },
       ],
       surcharges: [
         {

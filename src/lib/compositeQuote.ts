@@ -21,8 +21,9 @@
  * tách được số cụ thể (VD nhân viên gõ "Liên hệ báo giá") — khi đó hiện
  * đúng text đã nhập, không tính VAT, không cộng vào tổng khối.
  */
-import { getOfferedPlan, formatVoPrice } from "./planFinder";
+import { getOfferedPlan } from "./planFinder";
 import { SERVICES_DATA } from "./servicesData";
+import { qt, formatQuoteCurrency, type QuoteLang, type QuoteDictKey } from "./quoteImageDictionary";
 
 export type CustomServiceSlug = "van-phong-tron-goi" | "cho-ngoi-linh-dong" | "phong-hop";
 
@@ -44,6 +45,16 @@ export const CUSTOM_SERVICE_META: Record<
   "van-phong-tron-goi": { name: "Văn phòng trọn gói", bucket: "thang", unitLabel: "/tháng", vatRatePercent: 10 },
   "cho-ngoi-linh-dong": { name: "Chỗ ngồi linh động", bucket: "thang", unitLabel: "/tháng", vatRatePercent: 10 },
   "phong-hop": { name: "Phòng họp theo giờ", bucket: "gio", unitLabel: "/giờ", vatRatePercent: 10 },
+};
+
+/** Tra tên tiếng Anh cho 3 dịch vụ "custom" qua đúng dictionary dùng cho ảnh
+ * báo giá (quoteImageDictionary.ts) — tránh khai báo trùng bản dịch ở 2 nơi.
+ * Không gộp vào CUSTOM_SERVICE_META vì field `name` ở đó còn dùng cho thông
+ * báo nội bộ (lỗi nhập liệu...) luôn ở tiếng Việt, không phụ thuộc `lang`. */
+const CUSTOM_SERVICE_DICT_KEY: Record<CustomServiceSlug, QuoteDictKey> = {
+  "van-phong-tron-goi": "customVanPhongTronGoi",
+  "cho-ngoi-linh-dong": "customChoNgoiLinhDong",
+  "phong-hop": "customPhongHop",
 };
 
 /**
@@ -163,6 +174,10 @@ export type CompositeQuoteRequestBody = {
    * phụ thuộc vietQr.ts; route.tsx tự validate qua isVietQrAccountKey()
    * trước khi dùng, không tin trực tiếp giá trị client gửi. */
   qrAccountKey?: string;
+  /** Ngôn ngữ của ẢNH XUẤT RA — mặc định "vi" khi không gửi (client cũ/thiếu
+   * field vẫn hoạt động đúng như trước). Form nhập liệu LUÔN tiếng Việt,
+   * field này chỉ quyết định nhãn/tên hiển thị trên ảnh PNG cuối cùng. */
+  lang?: QuoteLang;
   items: CompositeQuoteItem[];
 };
 
@@ -230,7 +245,8 @@ function buildBreakdown(params: {
 }
 
 export function resolveCompositeQuoteItem(
-  item: CompositeQuoteItem
+  item: CompositeQuoteItem,
+  lang: QuoteLang = "vi"
 ): ResolvedQuoteLine | ResolveItemError {
   switch (item.type) {
     case "van-phong-ao": {
@@ -243,16 +259,20 @@ export function resolveCompositeQuoteItem(
       if (!MONTH_OPTIONS.includes(item.months)) {
         return { error: `Số tháng "${item.months}" không hợp lệ — chỉ hỗ trợ 6, 12 hoặc 24 tháng.` };
       }
+      // "Gói X" (vi) vs "X Package" (en) — thứ tự từ khác nhau giữa 2 ngôn
+      // ngữ nên ghép trực tiếp ở đây thay vì 1 khoá dict chung (xem comment
+      // đầu quoteImageDictionary.ts).
+      const planDisplayName = lang === "en" ? plan.planNameEn ?? plan.planName : plan.planName;
       return {
-        category: "Văn phòng ảo",
-        title: `Gói ${plan.planName}`,
+        category: qt("categoryVanPhongAo", lang),
+        title: lang === "en" ? `${planDisplayName} Package` : `Gói ${planDisplayName}`,
         subtitle: plan.locationName,
         bucket: "thue-vpa",
         breakdown: buildBreakdown({
           baseAmount: plan.price,
-          baseLabel: `${formatVoPrice(plan.price)}/tháng`,
+          baseLabel: `${formatQuoteCurrency(plan.price, lang)}${qt("perMonthSuffix", lang)}`,
           months: item.months,
-          promo: vietnameseMonthPromo(item.locationSlug, item.months, plan.price),
+          promo: lang === "en" ? undefined : vietnameseMonthPromo(item.locationSlug, item.months, plan.price),
           vatRatePercent: 10,
         }),
       };
@@ -273,13 +293,13 @@ export function resolveCompositeQuoteItem(
         return { error: "Không đọc được giá Thành lập doanh nghiệp từ dữ liệu hệ thống." };
       }
       return {
-        category: "Thành lập doanh nghiệp",
-        title: tier.name,
-        subtitle: tier.unit,
+        category: qt("categoryThanhLapDoanhNghiep", lang),
+        title: lang === "en" ? tier.nameEn ?? tier.name : tier.name,
+        subtitle: lang === "en" ? tier.unitEn ?? tier.unit : tier.unit,
         bucket: "mot-lan",
         breakdown: buildBreakdown({
           baseAmount,
-          baseLabel: tier.price,
+          baseLabel: lang === "en" ? formatQuoteCurrency(baseAmount, "en") : tier.price,
           vatRatePercent: 8,
         }),
       };
@@ -301,15 +321,15 @@ export function resolveCompositeQuoteItem(
         return { error: "Không đọc được giá Kế toán & thuế từ dữ liệu hệ thống." };
       }
       return {
-        category: "Kế toán & thuế",
-        title: group.label,
+        category: qt("categoryKeToanThue", lang),
+        title: lang === "en" ? group.labelEn ?? group.label : group.label,
         // row.range đã tự chứa "hoá đơn" (VD: "1-30 hoá đơn", ngoại lệ
         // "Không phát sinh") — chỉ nối thêm "/quý", KHÔNG lặp lại "hoá đơn".
-        subtitle: `${row.range}/quý`,
+        subtitle: `${lang === "en" ? row.rangeEn ?? row.range : row.range}${qt("perQuarterSuffix", lang)}`,
         bucket: "thang",
         breakdown: buildBreakdown({
           baseAmount,
-          baseLabel: `${price}/tháng`,
+          baseLabel: `${lang === "en" ? formatQuoteCurrency(baseAmount, "en") : price}${qt("perMonthSuffix", lang)}`,
           // Tạm áp 10% (nhóm dịch vụ văn phòng/dịch vụ chung) — CHƯA có xác
           // nhận cuối cùng từ chủ site, xem báo cáo cuối phiên làm việc.
           vatRatePercent: 10,
@@ -322,13 +342,17 @@ export function resolveCompositeQuoteItem(
       if (!meta) return { error: "Loại dịch vụ tuỳ chỉnh không hợp lệ." };
       const priceText = item.price.trim();
       if (!priceText) return { error: `Vui lòng nhập giá cho dòng "${meta.name}".` };
-      const title = item.label.trim() || meta.name;
+      const categoryName = qt(CUSTOM_SERVICE_DICT_KEY[item.serviceSlug], lang);
+      const title = item.label.trim() || categoryName;
       const baseAmount = parseVndAmount(priceText);
+      const unitSuffix = meta.bucket === "gio" ? qt("perHourSuffix", lang) : qt("perMonthSuffix", lang);
       if (baseAmount == null) {
         // Giá gõ tay không tách được số cụ thể (VD "Liên hệ báo giá") —
         // vẫn cho tạo báo giá, chỉ không tính được VAT/tổng cho dòng này.
+        // Lưu ý: text gõ tay này KHÔNG được dịch tự động (nhân viên tự gõ
+        // tiếng Anh nếu cần khi chọn xuất bản tiếng Anh).
         return {
-          category: meta.name,
+          category: categoryName,
           title,
           subtitle: undefined,
           bucket: meta.bucket,
@@ -337,13 +361,13 @@ export function resolveCompositeQuoteItem(
         };
       }
       return {
-        category: meta.name,
+        category: categoryName,
         title,
         subtitle: undefined,
         bucket: meta.bucket,
         breakdown: buildBreakdown({
           baseAmount,
-          baseLabel: `${priceText}${meta.unitLabel}`,
+          baseLabel: lang === "en" ? `${formatQuoteCurrency(baseAmount, "en")}${unitSuffix}` : `${priceText}${meta.unitLabel}`,
           vatRatePercent: meta.vatRatePercent,
         }),
       };

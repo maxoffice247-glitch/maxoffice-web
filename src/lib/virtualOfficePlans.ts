@@ -638,6 +638,13 @@ export type TruongChinhPlanKey = "co-ban" | "nang-cao" | "cao-cap";
 export type TruongChinhPlan = {
   key: TruongChinhPlanKey;
   name: string;
+  /** Tên tiếng Anh — BẢN DỊCH TẠM do Claude tự đề xuất, CẦN CHỦ SITE RÀ
+      SOÁT trước khi dùng cho khách thật (xem báo cáo cuối phiên làm việc
+      thêm tính năng song ngữ báo giá tổng hợp). CHỈ hệ giá này cần field
+      này — mọi hệ giá VPA khác (LITE-RISE, M-START/BASE/ORIGIN, LEAN/
+      GROWING/SCALE-UP, BASIC/STANDARD/PRIME, SILVER/GOLD/PREMIUM, W-BASE/
+      W-PRO) đã dùng tên kiểu thương hiệu tiếng Anh sẵn, không cần dịch. */
+  nameEn: string;
   price: number;
   duration: string;
   /** Liệt kê ĐẦY ĐỦ từng mục — kể cả mục đã có ở gói thấp hơn — không dùng
@@ -650,6 +657,7 @@ export const TRUONG_CHINH_VO_PLANS: TruongChinhPlan[] = [
   {
     key: "co-ban",
     name: "CƠ BẢN",
+    nameEn: "BASIC",
     price: 299000,
     duration: "/ tháng",
     features: [
@@ -667,6 +675,7 @@ export const TRUONG_CHINH_VO_PLANS: TruongChinhPlan[] = [
   {
     key: "nang-cao",
     name: "NÂNG CAO",
+    nameEn: "ADVANCED",
     price: 479000,
     duration: "/ tháng",
     features: [
@@ -687,6 +696,7 @@ export const TRUONG_CHINH_VO_PLANS: TruongChinhPlan[] = [
   {
     key: "cao-cap",
     name: "CAO CẤP",
+    nameEn: "PREMIUM",
     price: 779000,
     duration: "/ tháng",
     features: [
