@@ -10,6 +10,15 @@ import { createLookupSession } from "@/lib/portal/lookupSession";
 
 const MAX_QUERY_LENGTH = 40;
 
+// Mật khẩu tra cứu DÙNG CHUNG cho TOÀN BỘ nhóm "moc-gia" (sheet DU_LIEU
+// không có cột SĐT/email — xem báo cáo đã rà toàn bộ cột A-Z — nên không
+// có cách nào xác minh qua OTP). Đổi từ phương án "mật khẩu riêng từng
+// dòng" (cột AA tự thêm) sang 1 giá trị DUY NHẤT đọc từ biến môi trường —
+// không cần ghi thêm cột nào vào Sheets (API key hiện chỉ đọc, không ghi
+// được). Đặt giá trị thật khác mặc định qua biến môi trường
+// PORTAL_MOC_GIA_SHARED_PASSWORD trên Vercel/.env.local khi cần đổi.
+const MOC_GIA_SHARED_PASSWORD = process.env.PORTAL_MOC_GIA_SHARED_PASSWORD || "Camonquykhach";
+
 /** Mức 1 — tìm kiếm. CHƯA gửi OTP ở bước này (đổi so với thiết kế trước) —
     chỉ hiện thông tin che 1 phần + ngày hợp đồng (không nhạy cảm, hiển thị
     đầy đủ để khách yên tâm đã tìm đúng) để khách sang Mức 2 xác nhận SĐT/
@@ -68,11 +77,14 @@ export async function POST(request: Request) {
   const { record } = outcome;
 
   const hasContact = Boolean(record.phone || record.email);
-  const hasLookupPassword = Boolean(record.lookupPassword);
+  // MỌI record nguồn "moc-gia" đều dùng được mật khẩu chung (không phân
+  // biệt từng dòng) — nguồn "tru-so-chinh" không có cơ chế này.
+  const hasLookupPassword = record.source === "moc-gia";
 
-  // Không có CẢ SĐT/email LẪN mật khẩu tra cứu riêng -> không còn cách nào
+  // Không có CẢ SĐT/email LẪN mật khẩu tra cứu chung -> không còn cách nào
   // để xác minh danh tính (Mức 2 lẫn Mức 3 đều bế tắc) -> báo CSKH ngay,
-  // không tạo phiên tra cứu vì không còn bước nào để làm tiếp.
+  // không tạo phiên tra cứu vì không còn bước nào để làm tiếp. Trong thực
+  // tế hiện chỉ xảy ra với nguồn "tru-so-chinh" thiếu cả SĐT lẫn email.
   if (!hasContact && !hasLookupPassword) {
     return NextResponse.json({
       status: "no_contact_info",
@@ -90,9 +102,9 @@ export async function POST(request: Request) {
 
   // 2 cơ chế xác minh Mức 2 LOẠI TRỪ NHAU theo dữ liệu record — "contact"
   // (SĐT/email -> OTP, luồng cũ) khi có ít nhất 1 trong 2; "password" (nhóm
-  // Mộc Gia không có SĐT/email, MAX tự cấp mật khẩu riêng gửi ngoài hệ
-  // thống) chỉ khi KHÔNG có contact nhưng CÓ mật khẩu. Không có trường hợp
-  // vừa có contact vừa dùng mật khẩu (contact luôn ưu tiên nếu có).
+  // Mộc Gia không có SĐT/email, dùng mật khẩu CHUNG ở trên) chỉ khi KHÔNG
+  // có contact. Không có trường hợp vừa có contact vừa dùng mật khẩu
+  // (contact luôn ưu tiên nếu có).
   const confirmMethod: "contact" | "password" = hasContact ? "contact" : "password";
 
   const sessionId = await createLookupSession(redis, {
@@ -103,7 +115,7 @@ export async function POST(request: Request) {
     phoneMasked,
     emailFull: hasContact ? record.email : null,
     emailMasked,
-    lookupPasswordFull: confirmMethod === "password" ? record.lookupPassword : null,
+    lookupPasswordFull: confirmMethod === "password" ? MOC_GIA_SHARED_PASSWORD : null,
   });
 
   return NextResponse.json({

@@ -31,13 +31,6 @@ export type ContractRecord = {
   statusRaw: string;
   email: string | null;
   phone: string | null;
-  /** Mật khẩu tra cứu riêng — CHỈ áp dụng cho nguồn "moc-gia" (cột "Mật
-      khẩu tra cứu" tự thêm trong sheet DU_LIEU, nhân viên điền tay khi
-      khách không có SĐT/email để xác minh qua OTP). Luôn null với nguồn
-      "tru-so-chinh" (không có cột này). Null/rỗng nếu nhân viên chưa điền
-      — khi đó, nếu record cũng không có phone/email, Mức 1 báo CSKH như
-      trước, KHÔNG tự đoán/tạo mật khẩu. */
-  lookupPassword: string | null;
   links: ContractLink[];
 };
 
@@ -57,10 +50,13 @@ export type LookupSession = {
   phoneMasked: string | null;
   emailFull: string | null;
   emailMasked: string | null;
-  /** Mật khẩu tra cứu ĐẦY ĐỦ (từ record.lookupPassword) — CHỈ khác null
-      khi record KHÔNG có cả phone lẫn email (xem search/route.ts: nhánh
-      "password" của Mức 1). Không bao giờ vừa có contact vừa có giá trị
-      này — 2 cơ chế xác minh loại trừ nhau theo đúng dữ liệu record. */
+  /** Mật khẩu tra cứu DÙNG CHUNG cho toàn bộ nhóm "moc-gia" (biến môi
+      trường PORTAL_MOC_GIA_SHARED_PASSWORD, xem search/route.ts) — CHỈ
+      khác null khi record thuộc nguồn "moc-gia" VÀ KHÔNG có cả phone lẫn
+      email (nhánh "password" của Mức 1). Không bao giờ vừa có contact vừa
+      có giá trị này — 2 cơ chế xác minh loại trừ nhau theo đúng dữ liệu
+      record. KHÔNG phải mật khẩu riêng từng công ty — mọi phiên "password"
+      đều lưu CÙNG 1 giá trị. */
   lookupPasswordFull: string | null;
   confirmed: boolean;
   confirmAttempts: number;

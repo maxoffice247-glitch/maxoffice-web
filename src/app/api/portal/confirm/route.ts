@@ -20,12 +20,14 @@ const MAX_CONFIRM_ATTEMPTS = 5;
          LUÔN gửi tới email ĐÃ LƯU SẴN (`emailFull`), không phải giá trị
          khách vừa gõ, kể cả khi khách xác nhận thành công bằng SĐT.
       b. Nhánh "password" (session có lookupPasswordFull, KHÔNG có contact
-         — nhóm Mộc Gia không có SĐT/email, MAX tự cấp mật khẩu riêng gửi
-         khách NGOÀI hệ thống): so khớp TRỰC TIẾP (không hash — quy mô nhỏ,
-         mật khẩu do MAX cấp chứ không phải khách tự đặt) với giá trị đã
-         lưu. Khớp đúng -> BỎ QUA OTP, vào thẳng Mức 3 luôn (không có email
-         nào để gửi OTP tới; biết đúng mật khẩu riêng của đúng hợp đồng đã
-         là bằng chứng xác thực đủ ở quy mô này).
+         — nhóm Mộc Gia không có SĐT/email ở sheet nguồn): so khớp TRỰC
+         TIẾP (không hash — quy mô nhỏ) với 1 mật khẩu DÙNG CHUNG cho toàn
+         bộ nhóm Mộc Gia (biến môi trường PORTAL_MOC_GIA_SHARED_PASSWORD,
+         xem search/route.ts — không phải mật khẩu riêng từng công ty).
+         Khớp đúng -> BỎ QUA OTP, vào thẳng Mức 3 luôn (không có email nào
+         để gửi OTP tới; mật khẩu chung + MST tra đúng đã là đủ xác thực ở
+         quy mô này — không phải bí mật tuyệt đối riêng từng khách, chỉ
+         nhằm ngăn người ngoài đoán mò/dò quét hàng loạt).
     Cả 2 nhánh dùng CHUNG bộ đếm `confirmAttempts`/`MAX_CONFIRM_ATTEMPTS`
     (đúng yêu cầu "dùng lại cơ chế đếm lần thử đã có"), không tách bộ đếm
     riêng cho nhánh mật khẩu. */

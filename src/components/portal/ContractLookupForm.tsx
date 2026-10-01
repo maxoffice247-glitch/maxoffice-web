@@ -9,9 +9,9 @@ type StepConfirm = {
   step: "confirm";
   sessionId: string;
   /** "contact" (SĐT/email -> OTP, luồng gốc) hoặc "password" (nhóm Mộc
-      Gia không có SĐT/email, MAX tự cấp mật khẩu riêng gửi khách NGOÀI hệ
-      thống — khớp đúng vào thẳng Mức 3, không qua OTP). Quyết định TOÀN BỘ
-      nhánh nào hiển thị ở form xác nhận bên dưới. */
+      Gia không có SĐT/email, dùng 1 mật khẩu DÙNG CHUNG cho cả nhóm — khớp
+      đúng vào thẳng Mức 3, không qua OTP). Quyết định TOÀN BỘ nhánh nào
+      hiển thị ở form xác nhận bên dưới. */
   confirmMethod: "contact" | "password";
   companyName: string;
   startDate: string | null;
@@ -227,10 +227,28 @@ export default function ContractLookupForm() {
             {ui.phoneMasked && <InfoRow icon={PhoneIcon} label="SĐT đã đăng ký" value={ui.phoneMasked} />}
             {ui.emailMasked && <InfoRow icon={MailIcon} label="Email đã đăng ký" value={ui.emailMasked} />}
           </dl>
+          {/* Nút "Gia hạn hợp đồng" khi sắp/đã hết hạn — hiện ở Mức 1 (trước
+              khi xác minh) vì đây là nơi khách nhìn thấy đầu tiên, kể cả khi
+              chưa muốn xác nhận SĐT/email/mật khẩu ngay. BẢN TẠM: chỉ mở
+              Zalo hotline để nhân viên tư vấn thủ công — CHƯA xây luồng tự
+              chọn số tháng + thanh toán SePay (cần tài khoản ngân hàng mới
+              trước). Khi có luồng tự phục vụ, thay href này bằng link tới
+              trang đăng ký gia hạn mới, không phải sửa chỗ khác. */}
+          {(ui.contractStatus === "expired" ||
+            (ui.contractStatus === "active" && ui.daysRemaining !== null && ui.daysRemaining <= 30)) && (
+            <a
+              href="https://zalo.me/0898082188"
+              target="_blank"
+              rel="noopener"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#0068FF] px-6 py-3.5 text-[15px] font-bold text-white transition-opacity duration-200 hover:opacity-90"
+            >
+              Gia hạn hợp đồng
+            </a>
+          )}
           {ui.confirmMethod === "password" ? (
             <p className="text-[13px] text-body-text">
               Để xem đầy đủ chi tiết hợp đồng (giá trị, ngày cụ thể, file hợp đồng), vui lòng nhập
-              đúng mật khẩu tra cứu MAX OFFICE đã cung cấp riêng cho bạn:
+              đúng mật khẩu tra cứu MAX OFFICE đã thông báo:
             </p>
           ) : (
             <p className="text-[13px] text-body-text">
@@ -248,9 +266,7 @@ export default function ContractLookupForm() {
               value={confirmValue}
               onChange={(e) => setConfirmValue(e.target.value)}
               placeholder={
-                ui.confirmMethod === "password"
-                  ? "Nhập mật khẩu MAX OFFICE đã cung cấp cho bạn"
-                  : "Số điện thoại hoặc email đầy đủ"
+                ui.confirmMethod === "password" ? "Nhập mật khẩu tra cứu MAX OFFICE đã thông báo" : "Số điện thoại hoặc email đầy đủ"
               }
               className={`w-full rounded-xl border border-line bg-white py-3 text-[14.5px] text-ink placeholder:text-body-text/60 focus:border-primary focus:outline-none ${
                 ui.confirmMethod === "password" ? "pr-4 pl-10" : "px-4"
