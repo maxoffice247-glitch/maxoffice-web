@@ -13,8 +13,13 @@ export const SHEET_SOURCES = {
     sheetName: "DU_LIEU",
     // Cột đã xác nhận: C Tên công ty, D Số hợp đồng, E MST, F Tòa nhà thuê,
     // H Từ ngày, I Đến ngày, Q Tổng giá trị (đã gồm VAT), T Thanh toán,
-    // X Link hợp đồng. Lấy A:X để có đủ tới cột X.
-    range: "DU_LIEU!A3:X",
+    // X Link hợp đồng. Đã rà TOÀN BỘ cột A-Z (header thật): sheet này KHÔNG
+    // có cột SĐT/email nào — khách nguồn Mộc Gia không có cách xác minh
+    // qua OTP. Cột AA "Mật khẩu tra cứu" MỚI THÊM (nhân viên tự điền tay
+    // cho từng hợp đồng cần dùng, hệ thống chỉ ĐỌC) làm cơ chế xác minh
+    // thay thế — xem contractStatus liên quan ở search/route.ts. Mở rộng
+    // range thêm 1 cột (A:AA, trước đây A:X) để đọc được cột này.
+    range: "DU_LIEU!A3:AA",
   },
   truSoChinh: {
     spreadsheetId: "1iTDwrraikciwP0k-5dXhlMb1qPfH1cebYhekpFgPc54",
@@ -112,6 +117,7 @@ export function mapMocGiaRow(row: string[], today: Date): ContractRecord | null 
   const totalValue = parseVnNumber(cell(row, 16)); // Q
   const paymentStatusRaw = cell(row, 19); // T
   const linkUrl = cell(row, 23); // X
+  const lookupPassword = cell(row, 26) || null; // AA — "Mật khẩu tra cứu", nhân viên tự điền tay
 
   return {
     source: "moc-gia",
@@ -127,6 +133,7 @@ export function mapMocGiaRow(row: string[], today: Date): ContractRecord | null 
     statusRaw: paymentStatusRaw,
     email: null, // sheet Mộc Gia không có cột email
     phone: null, // không có cột SĐT ở DU_LIEU
+    lookupPassword,
     links: linkUrl ? [{ label: "Hợp đồng (PDF)", url: linkUrl }] : [],
   };
 }
@@ -160,6 +167,7 @@ export function mapTruSoChinhRow(row: string[], today: Date): ContractRecord | n
     statusRaw,
     email: null, // điền sau khi JOIN
     phone,
+    lookupPassword: null, // cột "Mật khẩu tra cứu" chỉ có ở sheet Mộc Gia
     links: [], // điền sau khi JOIN
   };
 }

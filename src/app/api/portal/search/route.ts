@@ -67,10 +67,13 @@ export async function POST(request: Request) {
 
   const { record } = outcome;
 
-  // Không có CẢ SĐT lẫn email trong dữ liệu -> không có cách nào để xác
-  // minh danh tính (Mức 2 lẫn Mức 3 đều bế tắc) -> báo CSKH ngay, không
-  // tạo phiên tra cứu vì không còn bước nào để làm tiếp.
-  if (!record.phone && !record.email) {
+  const hasContact = Boolean(record.phone || record.email);
+  const hasLookupPassword = Boolean(record.lookupPassword);
+
+  // Không có CẢ SĐT/email LẪN mật khẩu tra cứu riêng -> không còn cách nào
+  // để xác minh danh tính (Mức 2 lẫn Mức 3 đều bế tắc) -> báo CSKH ngay,
+  // không tạo phiên tra cứu vì không còn bước nào để làm tiếp.
+  if (!hasContact && !hasLookupPassword) {
     return NextResponse.json({
       status: "no_contact_info",
       companyName: record.companyName,
@@ -85,19 +88,28 @@ export async function POST(request: Request) {
   const phoneMasked = record.phone ? maskPhone(record.phone) : null;
   const emailMasked = record.email ? maskEmail(record.email) : null;
 
+  // 2 cơ chế xác minh Mức 2 LOẠI TRỪ NHAU theo dữ liệu record — "contact"
+  // (SĐT/email -> OTP, luồng cũ) khi có ít nhất 1 trong 2; "password" (nhóm
+  // Mộc Gia không có SĐT/email, MAX tự cấp mật khẩu riêng gửi ngoài hệ
+  // thống) chỉ khi KHÔNG có contact nhưng CÓ mật khẩu. Không có trường hợp
+  // vừa có contact vừa dùng mật khẩu (contact luôn ưu tiên nếu có).
+  const confirmMethod: "contact" | "password" = hasContact ? "contact" : "password";
+
   const sessionId = await createLookupSession(redis, {
     mst: record.mst,
     contractNumber: record.contractNumber,
     companyName: record.companyName,
-    phoneFull: record.phone,
+    phoneFull: hasContact ? record.phone : null,
     phoneMasked,
-    emailFull: record.email,
+    emailFull: hasContact ? record.email : null,
     emailMasked,
+    lookupPasswordFull: confirmMethod === "password" ? record.lookupPassword : null,
   });
 
   return NextResponse.json({
     status: "found",
     sessionId,
+    confirmMethod,
     companyName: record.companyName,
     startDate: record.startDate,
     endDate: record.endDate,

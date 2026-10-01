@@ -7,9 +7,7 @@ import {
   patchLookupSession,
 } from "@/lib/portal/lookupSession";
 import { MAX_OTP_ATTEMPTS, verifyOtp } from "@/lib/portal/otp";
-import { readContractRecordsCache } from "@/lib/portal/recordsCache";
-import { CONTRACT_STATUS_LABEL } from "@/lib/portal/contractStatus";
-import { normalizeContractNumber, normalizeMst } from "@/lib/portal/normalize";
+import { loadVerifiedRecordResponse } from "@/lib/portal/verifiedRecord";
 
 /** Mức 3 — xác minh OTP, CHỈ cho phép khi phiên đã qua Mức 2
     (`session.confirmed === true`). Về lý thuyết OTP cũng chưa tồn tại
@@ -89,12 +87,7 @@ export async function POST(request: Request) {
   // lưu trong phiên (không lưu sẵn cả bản ghi trong session để tránh dữ
   // liệu cũ nếu cache được làm mới giữa lúc khách đang nhập OTP).
   await deleteLookupSession(redis, sessionId);
-  const cache = await readContractRecordsCache(redis);
-  const record = cache?.records.find(
-    (r) =>
-      normalizeMst(r.mst) === normalizeMst(session.mst) ||
-      normalizeContractNumber(r.contractNumber) === normalizeContractNumber(session.contractNumber)
-  );
+  const record = await loadVerifiedRecordResponse(redis, session);
   if (!record) {
     return NextResponse.json(
       { status: "error", message: "Có lỗi khi tải lại thông tin hợp đồng. Vui lòng tra cứu lại." },
@@ -102,18 +95,5 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({
-    status: "verified",
-    record: {
-      companyName: record.companyName,
-      mst: record.mstDisplay,
-      contractNumber: record.contractNumber,
-      branch: record.branch,
-      startDate: record.startDate,
-      endDate: record.endDate,
-      totalValue: record.totalValue,
-      statusLabel: CONTRACT_STATUS_LABEL[record.status],
-      links: record.links,
-    },
-  });
+  return NextResponse.json({ status: "verified", record });
 }

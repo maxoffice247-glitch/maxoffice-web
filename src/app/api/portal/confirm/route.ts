@@ -8,15 +8,27 @@ import {
 } from "@/lib/portal/lookupSession";
 import { normalizeEmail, normalizePhone } from "@/lib/portal/normalize";
 import { generateOtpCode, sendOtpEmail, storeOtp } from "@/lib/portal/otp";
+import { loadVerifiedRecordResponse } from "@/lib/portal/verifiedRecord";
 
 const MAX_CONFIRM_ATTEMPTS = 5;
 
-/** Mức 2 — khách nhập lại TOÀN BỘ SĐT hoặc email (không đoán ký tự bị
-    che), so khớp CHÍNH XÁC với giá trị đầy đủ đã lưu trong phiên (server
-    lấy sẵn từ dữ liệu gốc lúc Mức 1, KHÔNG đọc lại Sheets/cache ở đây).
-    Khớp bằng SĐT hay email đều được — nhưng OTP LUÔN gửi tới email ĐÃ LƯU
-    SẴN trong dữ liệu (`emailFull`), không phải giá trị khách vừa gõ, kể
-    cả khi khách xác nhận thành công bằng SĐT. */
+/** Mức 2 — 2 nhánh xác minh LOẠI TRỪ NHAU theo dữ liệu đã lưu trong phiên
+    từ Mức 1 (xem search/route.ts):
+      a. Nhánh "contact" (session có phoneFull/emailFull — luồng gốc):
+         khách nhập lại TOÀN BỘ SĐT hoặc email, so khớp CHÍNH XÁC với giá
+         trị đầy đủ đã lưu. Khớp bằng SĐT hay email đều được — nhưng OTP
+         LUÔN gửi tới email ĐÃ LƯU SẴN (`emailFull`), không phải giá trị
+         khách vừa gõ, kể cả khi khách xác nhận thành công bằng SĐT.
+      b. Nhánh "password" (session có lookupPasswordFull, KHÔNG có contact
+         — nhóm Mộc Gia không có SĐT/email, MAX tự cấp mật khẩu riêng gửi
+         khách NGOÀI hệ thống): so khớp TRỰC TIẾP (không hash — quy mô nhỏ,
+         mật khẩu do MAX cấp chứ không phải khách tự đặt) với giá trị đã
+         lưu. Khớp đúng -> BỎ QUA OTP, vào thẳng Mức 3 luôn (không có email
+         nào để gửi OTP tới; biết đúng mật khẩu riêng của đúng hợp đồng đã
+         là bằng chứng xác thực đủ ở quy mô này).
+    Cả 2 nhánh dùng CHUNG bộ đếm `confirmAttempts`/`MAX_CONFIRM_ATTEMPTS`
+    (đúng yêu cầu "dùng lại cơ chế đếm lần thử đã có"), không tách bộ đếm
+    riêng cho nhánh mật khẩu. */
 export async function POST(request: Request) {
   let body: { sessionId?: string; value?: string };
   try {
@@ -28,7 +40,7 @@ export async function POST(request: Request) {
   const sessionId = (body.sessionId || "").trim();
   const value = (body.value || "").trim();
   if (!sessionId || !value) {
-    return NextResponse.json({ status: "error", message: "Vui lòng nhập số điện thoại hoặc email" }, { status: 400 });
+    return NextResponse.json({ status: "error", message: "Vui lòng nhập thông tin xác nhận" }, { status: 400 });
   }
 
   const redis = getRedis();
@@ -45,10 +57,14 @@ export async function POST(request: Request) {
     });
   }
 
-  const matchesPhone = session.phoneFull !== null && normalizePhone(value) === normalizePhone(session.phoneFull);
-  const matchesEmail = session.emailFull !== null && normalizeEmail(value) === normalizeEmail(session.emailFull);
+  const usesPassword = session.lookupPasswordFull !== null;
 
-  if (!matchesPhone && !matchesEmail) {
+  const isMatch = usesPassword
+    ? value === session.lookupPasswordFull
+    : (session.phoneFull !== null && normalizePhone(value) === normalizePhone(session.phoneFull)) ||
+      (session.emailFull !== null && normalizeEmail(value) === normalizeEmail(session.emailFull));
+
+  if (!isMatch) {
     const remainingTtl = lookupSessionRemainingTtlSeconds(session);
     const updated = await patchLookupSession(
       redis,
@@ -68,12 +84,27 @@ export async function POST(request: Request) {
     return NextResponse.json({
       status: "invalid",
       attemptsLeft,
-      message: `Số điện thoại hoặc email không khớp. Còn ${attemptsLeft} lần thử.`,
+      message: usesPassword
+        ? `Mật khẩu không đúng. Còn ${attemptsLeft} lần thử.`
+        : `Số điện thoại hoặc email không khớp. Còn ${attemptsLeft} lần thử.`,
     });
   }
 
-  // Khớp SĐT hoặc email — nhưng nếu KHÔNG có email trong dữ liệu thì
-  // không có nơi để gửi OTP -> bế tắc, báo CSKH, KHÔNG hiện chi tiết.
+  // Nhánh mật khẩu: khớp đúng -> vào thẳng Mức 3, không qua OTP.
+  if (usesPassword) {
+    await deleteLookupSession(redis, sessionId);
+    const record = await loadVerifiedRecordResponse(redis, session);
+    if (!record) {
+      return NextResponse.json(
+        { status: "error", message: "Có lỗi khi tải lại thông tin hợp đồng. Vui lòng tra cứu lại." },
+        { status: 500 }
+      );
+    }
+    return NextResponse.json({ status: "verified", record });
+  }
+
+  // Nhánh contact: khớp SĐT hoặc email — nhưng nếu KHÔNG có email trong dữ
+  // liệu thì không có nơi để gửi OTP -> bế tắc, báo CSKH, KHÔNG hiện chi tiết.
   if (!session.emailFull) {
     await deleteLookupSession(redis, sessionId);
     return NextResponse.json({

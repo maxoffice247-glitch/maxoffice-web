@@ -1,12 +1,18 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type ComponentType, type FormEvent } from "react";
 import type { ContractLink, ContractStatus } from "@/lib/portal/types";
+import { BuildingIcon, CalendarIcon, CheckCircleIcon, KeyIcon, MailIcon, PhoneIcon } from "@/components/icons";
 
 type StepIdle = { step: "idle" };
 type StepConfirm = {
   step: "confirm";
   sessionId: string;
+  /** "contact" (SĐT/email -> OTP, luồng gốc) hoặc "password" (nhóm Mộc
+      Gia không có SĐT/email, MAX tự cấp mật khẩu riêng gửi khách NGOÀI hệ
+      thống — khớp đúng vào thẳng Mức 3, không qua OTP). Quyết định TOÀN BỘ
+      nhánh nào hiển thị ở form xác nhận bên dưới. */
+  confirmMethod: "contact" | "password";
   companyName: string;
   startDate: string | null;
   endDate: string | null;
@@ -75,6 +81,7 @@ export default function ContractLookupForm() {
         setUi({
           step: "confirm",
           sessionId: data.sessionId,
+          confirmMethod: data.confirmMethod,
           companyName: data.companyName,
           startDate: data.startDate,
           endDate: data.endDate,
@@ -113,10 +120,17 @@ export default function ContractLookupForm() {
       if (data.status === "otp_sent") {
         setUi({ step: "otp", sessionId: ui.sessionId, emailMasked: data.emailMasked });
         setConfirmValue("");
+      } else if (data.status === "verified") {
+        // Nhánh mật khẩu (confirmMethod "password") — khớp đúng bỏ qua
+        // OTP, vào thẳng Mức 3 luôn.
+        setUi({ step: "verified", record: data.record });
+        setConfirmValue("");
       } else if (data.status === "no_email" || data.status === "too_many_attempts" || data.status === "expired") {
         setUi({ step: "dead_end", message: data.message });
       } else {
-        setErrorMessage(data.message || "Số điện thoại hoặc email không khớp.");
+        setErrorMessage(
+          data.message || (ui.confirmMethod === "password" ? "Mật khẩu không đúng." : "Số điện thoại hoặc email không khớp.")
+        );
       }
     } catch {
       setErrorMessage("Không kết nối được máy chủ, vui lòng thử lại.");
@@ -184,21 +198,16 @@ export default function ContractLookupForm() {
         <form onSubmit={handleConfirm} className="space-y-4">
           <div>
             <h2 className="mb-1 text-[19px] font-bold text-navy">Xác nhận danh tính</h2>
-            <p className="text-[13.5px] text-body-text">
-              Tìm thấy công ty <span className="font-semibold text-ink">{ui.companyName}</span>.
-            </p>
           </div>
           <dl className="space-y-1.5 rounded-xl bg-bg-tint px-4 py-3 text-[13px]">
-            <div className="flex justify-between">
-              <dt className="text-body-text">Ngày bắt đầu</dt>
-              <dd className="font-medium text-ink">{formatDate(ui.startDate)}</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-body-text">Ngày kết thúc</dt>
-              <dd className="font-medium text-ink">{formatDate(ui.endDate)}</dd>
-            </div>
-            <div className="flex items-center justify-between">
-              <dt className="text-body-text">Tình trạng hợp đồng</dt>
+            <InfoRow icon={BuildingIcon} label="Tên công ty" value={ui.companyName} />
+            <InfoRow icon={CalendarIcon} label="Ngày bắt đầu" value={formatDate(ui.startDate)} />
+            <InfoRow icon={CalendarIcon} label="Ngày kết thúc" value={formatDate(ui.endDate)} />
+            <div className="flex items-center justify-between gap-3">
+              <dt className="flex items-center gap-1.5 text-body-text">
+                <CheckCircleIcon className="h-4 w-4 shrink-0" />
+                Tình trạng hợp đồng
+              </dt>
               <dd>
                 <span
                   className={`rounded-full px-2.5 py-1 text-[12px] font-bold whitespace-nowrap ${
@@ -215,31 +224,39 @@ export default function ContractLookupForm() {
                 </span>
               </dd>
             </div>
-            {ui.phoneMasked && (
-              <div className="flex justify-between">
-                <dt className="text-body-text">SĐT đã đăng ký</dt>
-                <dd className="font-medium text-ink">{ui.phoneMasked}</dd>
-              </div>
-            )}
-            {ui.emailMasked && (
-              <div className="flex justify-between">
-                <dt className="text-body-text">Email đã đăng ký</dt>
-                <dd className="font-medium text-ink">{ui.emailMasked}</dd>
-              </div>
-            )}
+            {ui.phoneMasked && <InfoRow icon={PhoneIcon} label="SĐT đã đăng ký" value={ui.phoneMasked} />}
+            {ui.emailMasked && <InfoRow icon={MailIcon} label="Email đã đăng ký" value={ui.emailMasked} />}
           </dl>
-          <p className="text-[13px] text-body-text">
-            Để xem đầy đủ chi tiết hợp đồng (giá trị, ngày cụ thể, file hợp đồng), vui lòng xác nhận
-            đúng số điện thoại hoặc email đã đăng ký với MAX OFFICE:
-          </p>
-          <input
-            type="text"
-            required
-            value={confirmValue}
-            onChange={(e) => setConfirmValue(e.target.value)}
-            placeholder="Số điện thoại hoặc email đầy đủ"
-            className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 focus:border-primary focus:outline-none"
-          />
+          {ui.confirmMethod === "password" ? (
+            <p className="text-[13px] text-body-text">
+              Để xem đầy đủ chi tiết hợp đồng (giá trị, ngày cụ thể, file hợp đồng), vui lòng nhập
+              đúng mật khẩu tra cứu MAX OFFICE đã cung cấp riêng cho bạn:
+            </p>
+          ) : (
+            <p className="text-[13px] text-body-text">
+              Để xem đầy đủ chi tiết hợp đồng (giá trị, ngày cụ thể, file hợp đồng), vui lòng xác nhận
+              đúng số điện thoại hoặc email đã đăng ký với MAX OFFICE:
+            </p>
+          )}
+          <div className="relative">
+            {ui.confirmMethod === "password" && (
+              <KeyIcon className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-body-text/60" />
+            )}
+            <input
+              type={ui.confirmMethod === "password" ? "password" : "text"}
+              required
+              value={confirmValue}
+              onChange={(e) => setConfirmValue(e.target.value)}
+              placeholder={
+                ui.confirmMethod === "password"
+                  ? "Nhập mật khẩu MAX OFFICE đã cung cấp cho bạn"
+                  : "Số điện thoại hoặc email đầy đủ"
+              }
+              className={`w-full rounded-xl border border-line bg-white py-3 text-[14.5px] text-ink placeholder:text-body-text/60 focus:border-primary focus:outline-none ${
+                ui.confirmMethod === "password" ? "pr-4 pl-10" : "px-4"
+              }`}
+            />
+          </div>
           {errorMessage && <p className="text-[13px] text-accent">{errorMessage}</p>}
           <button
             type="submit"
@@ -355,6 +372,29 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between gap-4 border-b border-line/60 py-1.5">
       <dt className="text-body-text">{label}</dt>
+      <dd className="text-right font-medium text-ink">{value}</dd>
+    </div>
+  );
+}
+
+/** Dòng thông tin ở Mức 1 (khối kết quả tra cứu ban đầu) kèm icon nhỏ đầu
+    dòng — CHỦ Ý không dùng linh vật/hình minh hoạ ở đây, chỉ icon đường nét
+    đơn sắc, giữ tông nghiêm túc phù hợp nội dung hợp đồng/pháp lý. */
+function InfoRow({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex justify-between gap-3">
+      <dt className="flex items-center gap-1.5 text-body-text">
+        <Icon className="h-4 w-4 shrink-0" />
+        {label}
+      </dt>
       <dd className="text-right font-medium text-ink">{value}</dd>
     </div>
   );
