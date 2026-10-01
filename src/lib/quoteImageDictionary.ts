@@ -72,6 +72,33 @@ export const QUOTE_DICT = {
     vi: "* Chưa gồm các dịch vụ báo giá riêng ở trên (chưa tách được số cụ thể)",
     en: "* Excludes custom-quoted items above (no fixed amount yet)",
   },
+  // Khi báo giá CÓ CẢ dịch vụ thu hộ (Chữ ký số/Hoá đơn điện tử), đổi nhãn
+  // tổng cộng này thành "...DỊCH VỤ MAX OFFICE" để không gây hiểu lầm là đã
+  // gồm cả tiền thu hộ (xem route.tsx — 2 khoản này tách sổ hoàn toàn).
+  grandTotalMaxOfficeLabel: { vi: "TỔNG CỘNG DỊCH VỤ MAX OFFICE", en: "TOTAL MAX OFFICE SERVICES" },
+  // 2 category "thu hộ" — tiền 2 dịch vụ này KHÔNG vào tài khoản MAX OFFICE
+  // (xem THU_HO_ACCOUNT trong vietQr.ts).
+  categoryChuKySo: { vi: "Chữ ký số", en: "Digital Signature" },
+  categoryHoaDonDienTu: { vi: "Hoá đơn điện tử", en: "E-Invoice" },
+  // Bucket "thu-ho" thứ 5 (QuoteBucket trong compositeQuote.ts) — gộp chung
+  // Chữ ký số + Hoá đơn điện tử vào 1 khối riêng, tách khỏi 4 khối "Dịch vụ
+  // MAX OFFICE" hiện có.
+  bucketThuHoTitle: {
+    vi: "Dịch vụ thu hộ (Chữ ký số & Hoá đơn điện tử)",
+    en: "Pass-through Services (Digital Signature & E-Invoice)",
+  },
+  bucketThuHoTotal: { vi: "Tổng dịch vụ thu hộ", en: "Total Pass-through Services" },
+  // 3 biến thể tiêu đề khối QR — chỉ dùng tiêu đề "phân biệt" khi ảnh có ĐỦ 2
+  // mã QR cùng lúc; nếu chỉ có 1 mã QR (như trước khi có thu hộ), vẫn dùng
+  // đúng "scanToPayTitle" cũ, không đổi hành vi/nhãn cũ.
+  scanToPayMaxOfficeTitle: { vi: "Quét mã để chuyển khoản — Dịch vụ MAX OFFICE", en: "Scan to pay — MAX OFFICE Services" },
+  scanToPayThuHoTitle: { vi: "Quét mã để chuyển khoản — Dịch vụ thu hộ", en: "Scan to pay — Pass-through Services" },
+  // Cảnh báo LUÔN hiện dưới QR thu hộ (dù chỉ 1 hay cả 2 QR) — tài khoản CÁ
+  // NHÂN của đơn vị cung cấp, không phải tài khoản MAX OFFICE.
+  thuHoQrNote: {
+    vi: "Chuyển vào TK đơn vị cung cấp Chữ ký số/Hoá đơn điện tử, KHÔNG phải TK MAX OFFICE",
+    en: "Pay to the Digital Signature/E-Invoice provider's account, NOT a MAX OFFICE account",
+  },
 } as const satisfies Record<string, Record<QuoteLang, string>>;
 
 export type QuoteDictKey = keyof typeof QUOTE_DICT;

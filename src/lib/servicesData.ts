@@ -792,3 +792,55 @@ export function getServiceBySlug(slug: string): ServiceData | undefined {
 export function getAllServiceSlugs(): string[] {
   return Object.keys(SERVICES_DATA);
 }
+
+/**
+ * Chữ ký số + Hoá đơn điện tử — giá do chủ site cung cấp trực tiếp (KHÔNG tự
+ * suy đoán, xem lịch sử trò chuyện). CỐ Ý KHÔNG đưa 2 mục này vào
+ * `SERVICES_DATA` ở trên: `SERVICES_DATA` là nguồn DUY NHẤT dựng sitemap
+ * (`src/app/sitemap.ts` lặp `Object.keys(SERVICES_DATA)` ra URL
+ * `/services/<slug>`) và mỗi key ở đó đều có 1 trang riêng thật sự tại
+ * `src/app/services/<slug>/page.tsx` — thêm 2 mục này vào sẽ khiến sitemap
+ * quảng cáo 2 URL 404 (chưa có trang `/services/chu-ky-so`,
+ * `/services/hoa-don-dien-tu`, và việc dựng 2 trang dịch vụ đầy đủ không nằm
+ * trong yêu cầu lần này — chỉ cần dữ liệu giá cho công cụ Báo giá tổng hợp).
+ * 2 dịch vụ này là "THU HỘ" cho đơn vị cung cấp bên ngoài — xem
+ * src/lib/vietQr.ts (THU_HO_ACCOUNT) và src/app/api/quote-image/tong-hop/route.tsx.
+ */
+export type ChuKySoTier = {
+  key: string;
+  duration: string;
+  durationEn: string;
+  price: string;
+  vatRatePercent: number;
+};
+
+export const CHU_KY_SO_TIERS: ChuKySoTier[] = [
+  { key: "1-nam", duration: "1 năm", durationEn: "1 year", price: "950.000đ", vatRatePercent: 10 },
+  { key: "2-nam", duration: "2 năm", durationEn: "2 years", price: "1.300.000đ", vatRatePercent: 10 },
+  { key: "3-nam", duration: "3 năm", durationEn: "3 years", price: "1.500.000đ", vatRatePercent: 10 },
+];
+
+export type HoaDonDienTuTier = {
+  key: string;
+  quantity: string;
+  quantityEn: string;
+  price: string;
+  vatRatePercent: number;
+};
+
+/** Đủ 10 mức theo đúng bảng gốc chủ site cung cấp (lưu ý: chủ site ghi nhãn
+ * "9 mức" trong yêu cầu nhưng liệt kê 10 cặp số lượng-giá ở bảng đối chiếu
+ * cuối — đã dùng đúng 10 mức theo bảng đối chiếu, xem báo cáo cuối phiên để
+ * đối chiếu lại nếu có sai lệch). */
+export const HOA_DON_DIEN_TU_TIERS: HoaDonDienTuTier[] = [
+  { key: "100", quantity: "100 số", quantityEn: "100 invoices", price: "300.000đ", vatRatePercent: 10 },
+  { key: "300", quantity: "300 số", quantityEn: "300 invoices", price: "500.000đ", vatRatePercent: 10 },
+  { key: "500", quantity: "500 số", quantityEn: "500 invoices", price: "830.000đ", vatRatePercent: 10 },
+  { key: "1000", quantity: "1.000 số", quantityEn: "1,000 invoices", price: "1.350.000đ", vatRatePercent: 10 },
+  { key: "2000", quantity: "2.000 số", quantityEn: "2,000 invoices", price: "1.500.000đ", vatRatePercent: 10 },
+  { key: "3000", quantity: "3.000 số", quantityEn: "3,000 invoices", price: "1.800.000đ", vatRatePercent: 10 },
+  { key: "5000", quantity: "5.000 số", quantityEn: "5,000 invoices", price: "2.400.000đ", vatRatePercent: 10 },
+  { key: "11000", quantity: "11.000 số", quantityEn: "11,000 invoices", price: "4.000.000đ", vatRatePercent: 10 },
+  { key: "20000", quantity: "20.000 số", quantityEn: "20,000 invoices", price: "5.500.000đ", vatRatePercent: 10 },
+  { key: "50000", quantity: "50.000 số", quantityEn: "50,000 invoices", price: "10.000.000đ", vatRatePercent: 10 },
+];

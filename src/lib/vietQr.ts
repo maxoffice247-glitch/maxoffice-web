@@ -39,6 +39,25 @@ export function isVietQrAccountKey(value: unknown): value is VietQrAccountKey {
   return typeof value === "string" && Object.hasOwn(VIETQR_ACCOUNTS, value);
 }
 
+/**
+ * Tài khoản THU HỘ — CỐ ĐỊNH, KHÔNG cho nhân viên/khách chọn như
+ * VIETQR_ACCOUNTS ở trên (2 tài khoản CÔNG TY). MAX OFFICE chỉ THU HỘ cho
+ * đơn vị cung cấp Chữ ký số/Hoá đơn điện tử (xem compositeQuote.ts,
+ * servicesData.ts CHU_KY_SO_TIERS/HOA_DON_DIEN_TU_TIERS) — tiền 2 dịch vụ
+ * này PHẢI vào tài khoản CÁ NHÂN này, tuyệt đối không gộp chung/đổi sang tài
+ * khoản công ty, nên khai báo tách biệt hẳn khỏi VIETQR_ACCOUNTS thay vì
+ * thêm 1 key nữa vào đó (tránh nhầm lẫn khi liệt kê tài khoản "chọn được").
+ */
+export const THU_HO_ACCOUNT = {
+  bankCode: "TCB",
+  accountNumber: "5555668899",
+  accountName: "DUONG MANH HUNG",
+} as const;
+
+export function thuHoAccountLabel(): string {
+  return `${THU_HO_ACCOUNT.bankCode} — ${THU_HO_ACCOUNT.accountNumber} — ${THU_HO_ACCOUNT.accountName}`;
+}
+
 /** Bỏ dấu tiếng Việt cho nội dung chuyển khoản (`addInfo`) — 1 số app ngân
  * hàng hiển thị lỗi font hoặc cắt bớt nội dung có dấu trong QR chuyển
  * khoản, bỏ dấu để đảm bảo hiển thị đúng trên mọi app. */
@@ -62,8 +81,13 @@ function stripDiacritics(text: string): string {
  * `note`: nội dung chuyển khoản — bỏ dấu, giới hạn độ dài để tương thích
  * rộng với các app ngân hàng.
  */
-export function buildVietQrImageUrl(accountKey: VietQrAccountKey, amount: number | null, note: string): string {
-  const account = VIETQR_ACCOUNTS[accountKey];
+type VietQrAccountInfo = { bankCode: string; accountNumber: string; accountName: string };
+
+/** Phần dùng chung thật sự dựng URL ảnh QR — nhận thẳng 1 account object
+ * thay vì key, để dùng được cho CẢ VIETQR_ACCOUNTS (tra qua key, xem hàm
+ * buildVietQrImageUrl bên dưới) LẪN THU_HO_ACCOUNT (không có key, cố định
+ * duy nhất 1 tài khoản, không nằm trong VIETQR_ACCOUNTS). */
+export function buildVietQrImageUrlForAccount(account: VietQrAccountInfo, amount: number | null, note: string): string {
   const base = `https://img.vietqr.io/image/${account.bankCode}-${account.accountNumber}-qr_only.png`;
   const params = new URLSearchParams();
   if (amount != null && Number.isFinite(amount) && amount > 0) {
@@ -74,6 +98,10 @@ export function buildVietQrImageUrl(accountKey: VietQrAccountKey, amount: number
   return `${base}?${params.toString()}`;
 }
 
+export function buildVietQrImageUrl(accountKey: VietQrAccountKey, amount: number | null, note: string): string {
+  return buildVietQrImageUrlForAccount(VIETQR_ACCOUNTS[accountKey], amount, note);
+}
+
 export function vietQrAccountLabel(accountKey: VietQrAccountKey): string {
   const account = VIETQR_ACCOUNTS[accountKey];
   return `${account.bankCode} — ${account.accountNumber} — ${account.accountName}`;
@@ -81,17 +109,28 @@ export function vietQrAccountLabel(accountKey: VietQrAccountKey): string {
 
 /**
  * Nội dung chuyển khoản (`addInfo`) —
- * "{tên công ty hoặc tên khách hoặc SĐT hoặc 'Khach hang MAX OFFICE'} thanh
- * toan phi dich vu" (KHÔNG kèm tên dịch vụ cụ thể — quyết định rõ ràng,
- * không phải thiếu sót). Ưu tiên TÊN CÔNG TY > tên khách > SĐT > nhãn chung
- * — đổi từ ưu tiên SĐT sang tên công ty theo yêu cầu, vì đây là khoản thanh
- * toán dịch vụ cho công ty, tên công ty giúp đối chiếu đúng giao dịch rõ
- * ràng hơn số điện thoại cá nhân khi có nhiều đơn chuyển cùng lúc.
+ * "{tên công ty hoặc tên khách hoặc SĐT hoặc 'Khach hang MAX OFFICE'}
+ * {purpose}" (mặc định "thanh toan phi dich vu" — KHÔNG kèm tên dịch vụ cụ
+ * thể, quyết định rõ ràng, không phải thiếu sót). Ưu tiên TÊN CÔNG TY > tên
+ * khách > SĐT > nhãn chung — vì đây là khoản thanh toán dịch vụ cho công ty,
+ * tên công ty giúp đối chiếu đúng giao dịch rõ ràng hơn số điện thoại cá
+ * nhân khi có nhiều đơn chuyển cùng lúc.
+ *
+ * `purpose` tuỳ chỉnh được — dùng cho QR THU HỘ (Chữ ký số/Hoá đơn điện tử,
+ * xem route.tsx) với nội dung khác QR dịch vụ MAX OFFICE thường, dù vẫn
+ * cùng 1 thứ tự ưu tiên định danh khách ở trên. QR dịch vụ MAX OFFICE còn
+ * cho nhân viên SỬA ĐÈ lên toàn bộ chuỗi trả về của hàm này (xem
+ * CompositeQuoteTool.tsx/body.qrNote ở route.tsx) — QR thu hộ thì KHÔNG,
+ * luôn tự sinh qua hàm này để nhân viên không vô tình sửa sai nội dung
+ * chuyển cho bên thứ ba.
  */
-export function buildQrNote(customer?: { name?: string; phone?: string; companyName?: string }): string {
+export function buildQrNote(
+  customer?: { name?: string; phone?: string; companyName?: string },
+  purpose: string = "thanh toan phi dich vu"
+): string {
   const identifier =
     customer?.companyName?.trim() || customer?.name?.trim() || customer?.phone?.trim() || "Khach hang MAX OFFICE";
-  return `${identifier} thanh toan phi dich vu`;
+  return `${identifier} ${purpose}`;
 }
 
 /**

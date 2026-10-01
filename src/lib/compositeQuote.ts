@@ -23,7 +23,7 @@
  * đúng text đã nhập, không tính VAT, không cộng vào tổng khối.
  */
 import { getOfferedPlan } from "./planFinder";
-import { SERVICES_DATA } from "./servicesData";
+import { SERVICES_DATA, CHU_KY_SO_TIERS, HOA_DON_DIEN_TU_TIERS } from "./servicesData";
 import { qt, formatQuoteCurrency, type QuoteLang, type QuoteDictKey } from "./quoteImageDictionary";
 
 export type CustomServiceSlug = "van-phong-tron-goi" | "cho-ngoi-linh-dong" | "phong-hop" | "khac";
@@ -33,8 +33,15 @@ export type CustomServiceSlug = "van-phong-tron-goi" | "cho-ngoi-linh-dong" | "p
  * từ khi thêm lựa chọn số tháng, "Thành tiền" của dòng VPA là 1 khoản TRẢ
  * MỘT LẦN cho trọn kỳ hạn đã chọn (6/12/24 tháng) — không còn cùng bản chất
  * "mỗi tháng trả 1 lần" như Kế toán & thuế/Trọn gói/Coworking (vẫn ở
- * "thang"), gộp chung sẽ gây hiểu nhầm đơn vị thời gian. */
-export type QuoteBucket = "thue-vpa" | "thang" | "mot-lan" | "gio";
+ * "thang"), gộp chung sẽ gây hiểu nhầm đơn vị thời gian.
+ *
+ * "thu-ho" KHÁC HẲN 4 bucket còn lại — không phải phân biệt theo ĐƠN VỊ THỜI
+ * GIAN mà theo TÀI KHOẢN NHẬN TIỀN: Chữ ký số/Hoá đơn điện tử là MAX OFFICE
+ * thu hộ cho đơn vị cung cấp ngoài, tiền phải vào tài khoản CÁ NHÂN riêng
+ * (THU_HO_ACCOUNT trong vietQr.ts), không được gộp chung với 4 bucket "Dịch
+ * vụ MAX OFFICE" — route.tsx dựa vào field `bucket === "thu-ho"` để tách
+ * nhóm tổng + QR riêng, xem comment ở route.tsx. */
+export type QuoteBucket = "thue-vpa" | "thang" | "mot-lan" | "gio" | "thu-ho";
 
 export const MONTH_OPTIONS = [6, 12, 24] as const;
 export type MonthOption = (typeof MONTH_OPTIONS)[number];
@@ -173,18 +180,45 @@ export type CompositeQuoteItem =
   | { type: "van-phong-ao"; locationSlug: string; planKey: string; months: MonthOption }
   | { type: "thanh-lap-doanh-nghiep"; tier: "goi-1" | "goi-2" }
   | { type: "ke-toan-thue"; group: "A" | "B" | "C"; rangeIndex: number }
-  | { type: "custom"; serviceSlug: CustomServiceSlug; label: string; price: string };
+  | {
+      type: "custom";
+      serviceSlug: CustomServiceSlug;
+      label: string;
+      price: string;
+      /** % VAT nhân viên TỰ CHỌN cho dòng tự nhập này — khác 3 loại có cấu
+       * trúc sẵn (VPA/GPKD/Kế toán, VAT luôn cố định theo dữ liệu hệ thống,
+       * client không can thiệp được), vì "custom" vốn đã không có bảng giá
+       * nào để tra, mức VAT cũng cần nhân viên tự xác nhận theo đúng thực tế
+       * dịch vụ đang báo giá. undefined -> rơi về CUSTOM_SERVICE_META[serviceSlug].vatRatePercent
+       * (hành vi y hệt trước khi có lựa chọn này). route.tsx tự validate số
+       * trong khoảng 0-100 trước khi dùng. */
+      vatRatePercent?: number;
+    }
+  | { type: "chu-ky-so"; tierKey: string }
+  | { type: "hoa-don-dien-tu"; tierKey: string };
 
 export type CompositeQuoteRequestBody = {
   customer?: CompositeQuoteCustomer;
   /** Khách có yêu cầu hiện mã QR chuyển khoản trên ảnh không — mặc định
-   * false ở phía client; server đọc lại đúng field này (không đoán). */
+   * false ở phía client; server đọc lại đúng field này (không đoán). Khi
+   * true VÀ báo giá có dịch vụ thu hộ (Chữ ký số/Hoá đơn điện tử), route.tsx
+   * tự thêm QR THỨ 2 (tài khoản cố định THU_HO_ACCOUNT) — field này vẫn chỉ
+   * có 1 công tắc chung, không cần 2 field bật/tắt riêng cho 2 QR. */
   showQr?: boolean;
   /** Key tài khoản nhận trong VIETQR_ACCOUNTS (xem vietQr.ts) — kiểu string
    * lỏng ở đây (không import VietQrAccountKey) để compositeQuote.ts không
    * phụ thuộc vietQr.ts; route.tsx tự validate qua isVietQrAccountKey()
-   * trước khi dùng, không tin trực tiếp giá trị client gửi. */
+   * trước khi dùng, không tin trực tiếp giá trị client gửi. CHỈ áp dụng cho
+   * QR "Dịch vụ MAX OFFICE" — QR thu hộ luôn dùng THU_HO_ACCOUNT cố định,
+   * không đọc field này. */
   qrAccountKey?: string;
+  /** Nội dung chuyển khoản (`addInfo`) do nhân viên TỰ SỬA — khi có giá trị
+   * (chuỗi không rỗng), route.tsx dùng ĐÚNG giá trị này thay vì tự sinh qua
+   * buildQrNote() (vietQr.ts). CHỈ áp dụng cho QR "Dịch vụ MAX OFFICE" — QR
+   * thu hộ KHÔNG đọc field này, luôn tự sinh (xem buildQrNote() để biết lý
+   * do). undefined/rỗng -> giữ hành vi tự sinh cũ (client cũ không gửi field
+   * này vẫn hoạt động y hệt trước). */
+  qrNote?: string;
   /** Ngôn ngữ của ẢNH XUẤT RA — mặc định "vi" khi không gửi (client cũ/thiếu
    * field vẫn hoạt động đúng như trước). Form nhập liệu LUÔN tiếng Việt,
    * field này chỉ quyết định nhãn/tên hiển thị trên ảnh PNG cuối cùng. */
@@ -356,6 +390,9 @@ export function resolveCompositeQuoteItem(
       const categoryName = qt(CUSTOM_SERVICE_DICT_KEY[item.serviceSlug], lang);
       const title = item.label.trim() || categoryName;
       const baseAmount = parseVndAmount(priceText);
+      // % VAT nhân viên tự chọn (xem comment ở CompositeQuoteItem) — rơi về
+      // mức mặc định của loại dịch vụ nếu không gửi kèm.
+      const vatRatePercent = item.vatRatePercent ?? meta.vatRatePercent;
       // Hậu tố đơn vị tiếng Anh suy ra TRỰC TIẾP từ unitLabel tiếng Việt
       // (không suy từ bucket) — "khac" có bucket "mot-lan" nhưng unitLabel
       // rỗng (chi phí 1 lần, không có hậu tố nào), nếu suy theo bucket như 3
@@ -385,7 +422,43 @@ export function resolveCompositeQuoteItem(
         breakdown: buildBreakdown({
           baseAmount,
           baseLabel: lang === "en" ? `${formatQuoteCurrency(baseAmount, "en")}${unitSuffix}` : `${priceText}${meta.unitLabel}`,
-          vatRatePercent: meta.vatRatePercent,
+          vatRatePercent,
+        }),
+      };
+    }
+
+    case "chu-ky-so": {
+      const tier = CHU_KY_SO_TIERS.find((t) => t.key === item.tierKey);
+      if (!tier) return { error: `Không tìm thấy mốc thời hạn "${item.tierKey}" của Chữ ký số.` };
+      const baseAmount = parseVndAmount(tier.price);
+      if (baseAmount == null) return { error: "Không đọc được giá Chữ ký số từ dữ liệu hệ thống." };
+      return {
+        category: qt("categoryChuKySo", lang),
+        title: lang === "en" ? tier.durationEn : tier.duration,
+        subtitle: undefined,
+        bucket: "thu-ho",
+        breakdown: buildBreakdown({
+          baseAmount,
+          baseLabel: lang === "en" ? formatQuoteCurrency(baseAmount, "en") : tier.price,
+          vatRatePercent: tier.vatRatePercent,
+        }),
+      };
+    }
+
+    case "hoa-don-dien-tu": {
+      const tier = HOA_DON_DIEN_TU_TIERS.find((t) => t.key === item.tierKey);
+      if (!tier) return { error: `Không tìm thấy mốc số lượng "${item.tierKey}" của Hoá đơn điện tử.` };
+      const baseAmount = parseVndAmount(tier.price);
+      if (baseAmount == null) return { error: "Không đọc được giá Hoá đơn điện tử từ dữ liệu hệ thống." };
+      return {
+        category: qt("categoryHoaDonDienTu", lang),
+        title: lang === "en" ? tier.quantityEn : tier.quantity,
+        subtitle: undefined,
+        bucket: "thu-ho",
+        breakdown: buildBreakdown({
+          baseAmount,
+          baseLabel: lang === "en" ? formatQuoteCurrency(baseAmount, "en") : tier.price,
+          vatRatePercent: tier.vatRatePercent,
         }),
       };
     }
@@ -414,4 +487,16 @@ export function getAccountingGroupOptions() {
 export function getAccountingRangeOptions() {
   const pricing = SERVICES_DATA["ke-toan-thue"].pricing;
   return pricing.mode === "accounting" ? pricing.tiers : [];
+}
+
+/** Tuỳ chọn mốc thời hạn Chữ ký số cho dropdown/pill — đọc thẳng từ
+ * CHU_KY_SO_TIERS (servicesData.ts) nên không lệch giá nếu sửa sau này. */
+export function getChuKySoTierOptions(): { key: string; duration: string; price: string }[] {
+  return CHU_KY_SO_TIERS.map((t) => ({ key: t.key, duration: t.duration, price: t.price }));
+}
+
+/** Tuỳ chọn mốc số lượng Hoá đơn điện tử cho dropdown — đọc thẳng từ
+ * HOA_DON_DIEN_TU_TIERS (servicesData.ts). */
+export function getHoaDonDienTuTierOptions(): { key: string; quantity: string; price: string }[] {
+  return HOA_DON_DIEN_TU_TIERS.map((t) => ({ key: t.key, quantity: t.quantity, price: t.price }));
 }

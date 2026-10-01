@@ -12,6 +12,8 @@ import {
   getAccountingGroupOptions,
   getAccountingRangeOptions,
   getCustomServiceReferencePrice,
+  getChuKySoTierOptions,
+  getHoaDonDienTuTierOptions,
   CUSTOM_SERVICE_META,
   MONTH_OPTIONS,
   type CompositeQuoteItem,
@@ -23,6 +25,7 @@ import {
   VIETQR_ACCOUNT_KEYS,
   DEFAULT_VIETQR_ACCOUNT_KEY,
   vietQrAccountLabel,
+  buildQrNote,
   type VietQrAccountKey,
 } from "@/lib/vietQr";
 
@@ -43,12 +46,20 @@ function formatVnd(n: number): string {
  * điểm khác biệt cố ý, không phải thiếu sót.
  */
 
-type ServiceTypeKey = "van-phong-ao" | "thanh-lap-doanh-nghiep" | "ke-toan-thue" | CustomServiceSlug;
+type ServiceTypeKey =
+  | "van-phong-ao"
+  | "thanh-lap-doanh-nghiep"
+  | "ke-toan-thue"
+  | "chu-ky-so"
+  | "hoa-don-dien-tu"
+  | CustomServiceSlug;
 
 const SERVICE_TYPE_OPTIONS: { value: ServiceTypeKey; label: string }[] = [
   { value: "van-phong-ao", label: "Văn phòng ảo" },
   { value: "thanh-lap-doanh-nghiep", label: "Thành lập doanh nghiệp" },
   { value: "ke-toan-thue", label: "Kế toán & thuế" },
+  { value: "chu-ky-so", label: "Chữ ký số" },
+  { value: "hoa-don-dien-tu", label: "Hoá đơn điện tử" },
   { value: "van-phong-tron-goi", label: "Văn phòng trọn gói" },
   { value: "cho-ngoi-linh-dong", label: "Chỗ ngồi linh động" },
   { value: "phong-hop", label: "Phòng họp theo giờ" },
@@ -57,12 +68,15 @@ const SERVICE_TYPE_OPTIONS: { value: ServiceTypeKey; label: string }[] = [
 
 const MAX_ROWS = 12;
 
-// Trivial, đọc thẳng từ servicesData.ts (2 gói GPKD, 3 nhóm + 9 mức kế toán)
-// — không cần useMemo như getAllOfferedPlans() (lặp qua toàn bộ chi nhánh, xem
-// bên dưới), gọi 1 lần ở module scope là đủ.
+// Trivial, đọc thẳng từ servicesData.ts (2 gói GPKD, 3 nhóm + 9 mức kế toán,
+// 3 mốc Chữ ký số + 10 mốc Hoá đơn điện tử) — không cần useMemo như
+// getAllOfferedPlans() (lặp qua toàn bộ chi nhánh, xem bên dưới), gọi 1 lần
+// ở module scope là đủ.
 const GPKD_TIERS = getGpkdTierOptions();
 const ACCOUNTING_GROUPS = getAccountingGroupOptions();
 const ACCOUNTING_RANGES = getAccountingRangeOptions();
+const CHU_KY_SO_TIERS = getChuKySoTierOptions();
+const HOA_DON_DIEN_TU_TIERS = getHoaDonDienTuTierOptions();
 
 let rowIdCounter = 0;
 function nextRowId(): string {
@@ -84,6 +98,14 @@ type QuoteRow = {
   rangeIndex: number;
   customLabel: string;
   customPrice: string;
+  /** % VAT CHỈ dùng cho loại "custom" (tự nhập) — nhân viên tự chọn đúng
+   * mức áp dụng thay vì mặc định cứng 10% như trước (xem compositeQuote.ts,
+   * CompositeQuoteItem["custom"].vatRatePercent). */
+  customVat: number;
+  /** key trong CHU_KY_SO_TIERS/HOA_DON_DIEN_TU_TIERS — rỗng khi chưa chọn
+   * loại dịch vụ tương ứng. */
+  chuKySoTierKey: string;
+  hoaDonTierKey: string;
 };
 
 function createEmptyRow(): QuoteRow {
@@ -98,6 +120,9 @@ function createEmptyRow(): QuoteRow {
     rangeIndex: 0,
     customLabel: "",
     customPrice: "",
+    customVat: 10,
+    chuKySoTierKey: "",
+    hoaDonTierKey: "",
   };
 }
 
@@ -124,7 +149,19 @@ function applyServiceTypeDefaults(row: QuoteRow, type: ServiceTypeKey, firstLoca
   if (type === "ke-toan-thue") {
     return { ...row, serviceType: type, group: "A", rangeIndex: 0 };
   }
-  return { ...row, serviceType: type, customLabel: "", customPrice: getCustomServiceReferencePrice(type) };
+  if (type === "chu-ky-so") {
+    return { ...row, serviceType: type, chuKySoTierKey: CHU_KY_SO_TIERS[0]?.key ?? "" };
+  }
+  if (type === "hoa-don-dien-tu") {
+    return { ...row, serviceType: type, hoaDonTierKey: HOA_DON_DIEN_TU_TIERS[0]?.key ?? "" };
+  }
+  return {
+    ...row,
+    serviceType: type,
+    customLabel: "",
+    customPrice: getCustomServiceReferencePrice(type),
+    customVat: CUSTOM_SERVICE_META[type].vatRatePercent,
+  };
 }
 
 function rowToItem(row: QuoteRow): CompositeQuoteItem | null {
@@ -137,12 +174,22 @@ function rowToItem(row: QuoteRow): CompositeQuoteItem | null {
       return { type: "thanh-lap-doanh-nghiep", tier: row.tier };
     case "ke-toan-thue":
       return { type: "ke-toan-thue", group: row.group, rangeIndex: row.rangeIndex };
+    case "chu-ky-so":
+      return row.chuKySoTierKey ? { type: "chu-ky-so", tierKey: row.chuKySoTierKey } : null;
+    case "hoa-don-dien-tu":
+      return row.hoaDonTierKey ? { type: "hoa-don-dien-tu", tierKey: row.hoaDonTierKey } : null;
     case "van-phong-tron-goi":
     case "cho-ngoi-linh-dong":
     case "phong-hop":
     case "khac":
       return row.customPrice.trim()
-        ? { type: "custom", serviceSlug: row.serviceType, label: row.customLabel, price: row.customPrice }
+        ? {
+            type: "custom",
+            serviceSlug: row.serviceType,
+            label: row.customLabel,
+            price: row.customPrice,
+            vatRatePercent: row.customVat,
+          }
         : null;
     default:
       return null;
@@ -178,6 +225,13 @@ export default function CompositeQuoteTool() {
   // Mặc định đúng tài khoản đã dùng TRƯỚC khi có tính năng chọn nhiều tài
   // khoản — không đổi hành vi cũ nếu nhân viên không chủ động đổi lựa chọn.
   const [qrAccountKey, setQrAccountKey] = useState<VietQrAccountKey>(DEFAULT_VIETQR_ACCOUNT_KEY);
+  // Nội dung chuyển khoản — null nghĩa là "chưa sửa tay", khi đó LUÔN hiện
+  // đúng gợi ý tự sinh (cập nhật theo thông tin khách hàng mới nhất). Ngay
+  // khi nhân viên gõ bất kỳ gì vào ô này (kể cả xoá trắng), chuyển sang chuỗi
+  // thật và KHÔNG tự động ghi đè nữa — đúng yêu cầu "prefill gợi ý, sửa đè
+  // được". CHỈ áp dụng cho QR "Dịch vụ MAX OFFICE" (xem route.tsx) — QR thu
+  // hộ (Chữ ký số/Hoá đơn điện tử) luôn tự sinh, không có ô sửa riêng.
+  const [qrNoteManual, setQrNoteManual] = useState<string | null>(null);
   // Ngôn ngữ của ẢNH XUẤT RA — mặc định "vi" (hành vi y hệt trước khi có
   // tính năng song ngữ nếu nhân viên không chủ động đổi). CHỈ ảnh hưởng ảnh
   // PNG cuối cùng, KHÔNG đổi ngôn ngữ form nhập liệu này (luôn tiếng Việt)
@@ -212,6 +266,15 @@ export default function CompositeQuoteTool() {
   );
   const canSubmit = items.length > 0 && status !== "generating";
 
+  // Gợi ý tự sinh — CÙNG logic ưu tiên Tên công ty > Tên khách > SĐT > mặc
+  // định đang dùng ở server (buildQrNote() trong vietQr.ts, import thẳng từ
+  // đó để không lặp lại logic ở 2 nơi dễ lệch nhau).
+  const autoQrNote = useMemo(
+    () => buildQrNote({ name: customerName, phone: customerPhone, companyName: customerCompany }),
+    [customerName, customerPhone, customerCompany]
+  );
+  const qrNote = qrNoteManual ?? autoQrNote;
+
   const handleGenerate = async () => {
     if (items.length === 0) return;
     setStatus("generating");
@@ -225,7 +288,7 @@ export default function CompositeQuoteTool() {
       const res = await fetch("/api/quote-image/tong-hop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customer, items, showQr, qrAccountKey, lang }),
+        body: JSON.stringify({ customer, items, showQr, qrAccountKey, qrNote: qrNote.trim() || undefined, lang }),
       });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
@@ -347,7 +410,9 @@ export default function CompositeQuoteTool() {
                 <span className="block text-[13.5px] font-bold text-navy">Hiện mã QR chuyển khoản</span>
                 <span className="block text-[12px] text-body-text">
                   Tắt mặc định. Khi bật, ảnh báo giá có thêm mã QR VietQR chuyển khoản, số tiền gợi ý điền sẵn là
-                  tổng cộng tất cả dịch vụ đã tra được giá trong báo giá.
+                  tổng cộng tất cả dịch vụ đã tra được giá trong báo giá. Nếu báo giá có Chữ ký số/Hoá đơn điện tử,
+                  ảnh sẽ tự thêm 1 mã QR thứ 2 riêng (tài khoản thu hộ cố định) — xem mục &ldquo;Chữ ký
+                  số&rdquo;/&ldquo;Hoá đơn điện tử&rdquo; bên dưới.
                 </span>
               </span>
             </label>
@@ -372,6 +437,18 @@ export default function CompositeQuoteTool() {
                       {vietQrAccountLabel(key)}
                     </button>
                   ))}
+                </div>
+                <div className="mt-3.5">
+                  <label className={labelClass}>
+                    Nội dung chuyển khoản — tự động gợi ý theo thông tin khách hàng, có thể sửa đè (VD khi khách đang
+                    làm GPKD, chưa có tên công ty)
+                  </label>
+                  <input
+                    type="text"
+                    value={qrNote}
+                    onChange={(e) => setQrNoteManual(e.target.value)}
+                    className={`${inputClass} bg-white`}
+                  />
                 </div>
               </div>
             )}
@@ -640,6 +717,49 @@ function QuoteRowEditor({
         </div>
       )}
 
+      {row.serviceType === "chu-ky-so" && (
+        <div className="mt-3">
+          <label className={labelClass}>Thời hạn</label>
+          <div className="flex flex-wrap gap-2">
+            {CHU_KY_SO_TIERS.map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                aria-pressed={row.chuKySoTierKey === t.key}
+                onClick={() => onUpdate({ chuKySoTierKey: t.key })}
+                className={`rounded-full border-[1.5px] px-4 py-2 text-[12.5px] font-bold transition-all duration-200 ${
+                  row.chuKySoTierKey === t.key
+                    ? "border-primary bg-primary text-white"
+                    : "border-line bg-white text-body-text hover:border-primary/40"
+                }`}
+              >
+                {t.duration} — {t.price}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {row.serviceType === "hoa-don-dien-tu" && (
+        <div className="mt-3">
+          <label htmlFor={`${uid}-hddt`} className={labelClass}>
+            Số lượng hoá đơn
+          </label>
+          <select
+            id={`${uid}-hddt`}
+            value={row.hoaDonTierKey}
+            onChange={(e) => onUpdate({ hoaDonTierKey: e.target.value })}
+            className={`${selectClass} bg-white`}
+          >
+            {HOA_DON_DIEN_TU_TIERS.map((t) => (
+              <option key={t.key} value={t.key}>
+                {t.quantity} — {t.price}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {(row.serviceType === "van-phong-tron-goi" ||
         row.serviceType === "cho-ngoi-linh-dong" ||
         row.serviceType === "phong-hop" ||
@@ -671,6 +791,21 @@ function QuoteRowEditor({
               value={row.customPrice}
               onChange={(e) => onUpdate({ customPrice: e.target.value })}
               placeholder="VD: 4.500.000đ"
+              className={`${inputClass} bg-white`}
+            />
+          </div>
+          <div>
+            <label htmlFor={`${uid}-vat`} className={labelClass}>
+              VAT (%) — tự chọn đúng mức áp dụng cho dịch vụ này
+            </label>
+            <input
+              id={`${uid}-vat`}
+              type="number"
+              min={0}
+              max={100}
+              step={0.1}
+              value={row.customVat}
+              onChange={(e) => onUpdate({ customVat: Number(e.target.value) })}
               className={`${inputClass} bg-white`}
             />
           </div>

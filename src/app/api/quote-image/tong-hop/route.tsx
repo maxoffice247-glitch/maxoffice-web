@@ -19,8 +19,11 @@ import {
 import { amountToVietnameseWords } from "@/lib/numberToWords";
 import {
   buildVietQrImageUrl,
+  buildVietQrImageUrlForAccount,
   buildQrNote,
   vietQrAccountLabel,
+  thuHoAccountLabel,
+  THU_HO_ACCOUNT,
   detectImageMimeType,
   isVietQrAccountKey,
   DEFAULT_VIETQR_ACCOUNT_KEY,
@@ -71,20 +74,26 @@ const INLINE_WORDS_H = 22; // dòng "Bằng chữ" gắn ngay dưới 1 dòng đ
 const HEADER_H = 148;
 const FOOTER_H = 176;
 const CUSTOMER_ROW_H = 26;
-const QR_BLOCK_H = 232;
+const QR_BLOCK_H = 232; // khối QR ĐẦU TIÊN (hoặc duy nhất) — marginTop 32 tính trong này
+const QR_BLOCK_STACKED_H = 220; // khối QR THỨ 2 xếp ngay dưới (marginTop 20 thay vì 32, thấp hơn 12)
+const THU_HO_QR_NOTE_H = 20; // dòng cảnh báo "chuyển vào TK đơn vị cung cấp..." dưới QR thu hộ (fontSize 12, 1 dòng)
 
 const GRAND_TOTAL_TOP_MARGIN = 32; // giống SECTION_TOP_MARGIN, cùng nhịp cách giữa các khối
 const GRAND_TOTAL_BOX_H = 80; // padding "22px 26px" (44) + nội dung cao nhất (font 30, line-height ~36)
-const GRAND_TOTAL_WORDS_H = 26;
-const GRAND_TOTAL_NOTE_H = 20;
+const GRAND_TOTAL_WORDS_H = 20; // "Bằng chữ" 1 dòng, fontSize 13 — đo thực tế thấp hơn mốc 26 dùng cho SECTION_WORDS_H
+const GRAND_TOTAL_NOTE_H = 18;
 
 const BUCKET_META: Record<QuoteBucket, { titleKey: QuoteDictKey; icon: string; totalKey: QuoteDictKey }> = {
   "thue-vpa": { titleKey: "bucketVpaTitle", icon: "🏢", totalKey: "bucketVpaTotal" },
   thang: { titleKey: "bucketThangTitle", icon: "📅", totalKey: "bucketThangTotal" },
   "mot-lan": { titleKey: "bucketMotLanTitle", icon: "📄", totalKey: "bucketMotLanTotal" },
   gio: { titleKey: "bucketGioTitle", icon: "🕐", totalKey: "bucketGioTotal" },
+  // Luôn xếp CUỐI CÙNG — xem comment QuoteBucket trong compositeQuote.ts:
+  // đây là nhóm tách theo TÀI KHOẢN NHẬN TIỀN (thu hộ bên thứ ba), không
+  // phải theo đơn vị thời gian như 4 khối trên.
+  "thu-ho": { titleKey: "bucketThuHoTitle", icon: "🧾", totalKey: "bucketThuHoTotal" },
 };
-const BUCKET_ORDER: QuoteBucket[] = ["thue-vpa", "thang", "mot-lan", "gio"];
+const BUCKET_ORDER: QuoteBucket[] = ["thue-vpa", "thang", "mot-lan", "gio", "thu-ho"];
 
 function isNonEmptyString(v: unknown): v is string {
   return typeof v === "string" && v.trim().length > 0;
@@ -117,8 +126,14 @@ function isValidItemShape(item: unknown): item is CompositeQuoteItem {
           it.serviceSlug === "phong-hop" ||
           it.serviceSlug === "khac") &&
         typeof it.label === "string" &&
-        isNonEmptyString(it.price)
+        isNonEmptyString(it.price) &&
+        (it.vatRatePercent === undefined ||
+          (typeof it.vatRatePercent === "number" && it.vatRatePercent >= 0 && it.vatRatePercent <= 100))
       );
+    case "chu-ky-so":
+      return isNonEmptyString(it.tierKey);
+    case "hoa-don-dien-tu":
+      return isNonEmptyString(it.tierKey);
     default:
       return false;
   }
@@ -354,22 +369,28 @@ function sectionHeight(lines: ResolvedQuoteLine[], lang: QuoteLang): number {
   return SECTION_TOP_MARGIN + SECTION_HEADER_H + 16 + rowsHeight + extra;
 }
 
-/** Chỉ tính ra số khi có TỪ 2 DÒNG TRA ĐƯỢC GIÁ TRỞ LÊN trong TOÀN BỘ báo
- * giá (bất kể khác khối/đơn vị tính phí) — nếu chỉ có 1 dòng duy nhất, số
- * này trùng y hệt "Thành tiền" của chính dòng đó nên không hiện lại cho đỡ
- * thừa. Dòng "custom" gõ tay không tách được số cụ thể (breakdown null) bị
- * loại khỏi tổng này — không có con số để cộng — và được ghi chú rõ bên dưới
- * tổng để không gây hiểu lầm là đã tính đủ. */
-function computeGrandTotal(resolvedLines: ResolvedQuoteLine[]) {
-  const summableLines = resolvedLines.filter((l) => l.breakdown != null);
+/** Chỉ tính ra số khi có TỪ 2 DÒNG TRA ĐƯỢC GIÁ TRỞ LÊN trong danh sách
+ * truyền vào — nếu chỉ có 1 dòng duy nhất, số này trùng y hệt "Thành tiền"
+ * của chính dòng đó nên không hiện lại cho đỡ thừa. Dòng "custom" gõ tay
+ * không tách được số cụ thể (breakdown null) bị loại khỏi tổng này — không
+ * có con số để cộng — và được ghi chú rõ bên dưới tổng để không gây hiểu
+ * lầm là đã tính đủ.
+ *
+ * NHẬN 1 DANH SÁCH DÒNG TUỲ Ý (không mặc định toàn bộ resolvedLines) — khối
+ * "Tổng cộng" hiện trên ảnh CHỈ tính các dòng "Dịch vụ MAX OFFICE" (loại trừ
+ * bucket "thu-ho"), vì tiền thu hộ KHÔNG vào tài khoản MAX OFFICE, gộp vào
+ * đây sẽ gây hiểu lầm nghiêm trọng về số tiền công ty thực nhận — xem
+ * splitByPaymentGroup() và nơi gọi ở POST(). */
+function computeGrandTotal(lines: ResolvedQuoteLine[]) {
+  const summableLines = lines.filter((l) => l.breakdown != null);
   const total = summableLines.reduce((sum, l) => sum + (l.breakdown?.total ?? 0), 0);
   const show = summableLines.length >= 2;
-  const hasExcluded = show && summableLines.length < resolvedLines.length;
+  const hasExcluded = show && summableLines.length < lines.length;
   return { total, show, hasExcluded };
 }
 
-function grandTotalHeight(resolvedLines: ResolvedQuoteLine[], lang: QuoteLang): number {
-  const { show, hasExcluded } = computeGrandTotal(resolvedLines);
+function grandTotalHeight(maxOfficeLines: ResolvedQuoteLine[], lang: QuoteLang): number {
+  const { show, hasExcluded } = computeGrandTotal(maxOfficeLines);
   if (!show) return 0;
   return (
     GRAND_TOTAL_TOP_MARGIN +
@@ -379,8 +400,19 @@ function grandTotalHeight(resolvedLines: ResolvedQuoteLine[], lang: QuoteLang): 
   );
 }
 
-function GrandTotal({ resolvedLines, lang }: { resolvedLines: ResolvedQuoteLine[]; lang: QuoteLang }) {
-  const { total, show, hasExcluded } = computeGrandTotal(resolvedLines);
+/** `hasThuHo`: báo giá có đang CÙNG LÚC chứa dịch vụ thu hộ không — CHỈ đổi
+ * nhãn hiển thị (để không gây hiểu lầm là tổng này đã gồm cả tiền thu hộ),
+ * không đổi cách tính (luôn chỉ tính `maxOfficeLines` truyền vào). */
+function GrandTotal({
+  maxOfficeLines,
+  lang,
+  hasThuHo,
+}: {
+  maxOfficeLines: ResolvedQuoteLine[];
+  lang: QuoteLang;
+  hasThuHo: boolean;
+}) {
+  const { total, show, hasExcluded } = computeGrandTotal(maxOfficeLines);
   if (!show) return null;
   return (
     <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: GRAND_TOTAL_TOP_MARGIN }}>
@@ -394,7 +426,9 @@ function GrandTotal({ resolvedLines, lang }: { resolvedLines: ResolvedQuoteLine[
           padding: "22px 26px",
         }}
       >
-        <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: "#fff" }}>{qt("grandTotalLabel", lang)}</div>
+        <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: "#fff" }}>
+          {qt(hasThuHo ? "grandTotalMaxOfficeLabel" : "grandTotalLabel", lang)}
+        </div>
         <div style={{ display: "flex", fontSize: 30, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(total, lang)}</div>
       </div>
       {lang === "vi" && (
@@ -407,6 +441,107 @@ function GrandTotal({ resolvedLines, lang }: { resolvedLines: ResolvedQuoteLine[
           {qt("grandTotalExcludedNote", lang)}
         </div>
       )}
+    </div>
+  );
+}
+
+/** Tách 2 nhóm tổng theo TÀI KHOẢN NHẬN TIỀN — "Dịch vụ MAX OFFICE" (4
+ * bucket thường) vs "Dịch vụ thu hộ" (bucket "thu-ho", xem comment
+ * QuoteBucket trong compositeQuote.ts). Dùng CHUNG ở cả khối "Tổng cộng"
+ * hiện trên ảnh LẪN tính số tiền 2 mã QR, để không bao giờ lệch nhau. */
+function splitByPaymentGroup(resolvedLines: ResolvedQuoteLine[]) {
+  const maxOfficeLines = resolvedLines.filter((l) => l.bucket !== "thu-ho");
+  const thuHoLines = resolvedLines.filter((l) => l.bucket === "thu-ho");
+  return { maxOfficeLines, thuHoLines };
+}
+
+/** Tổng "Thành tiền" cộng dồn của 1 nhóm — dùng làm số tiền gợi ý cho đúng
+ * mã QR của nhóm đó. null khi không có dòng nào tính được số (QR vẫn hiện
+ * được, chỉ không tự điền số tiền — xem buildVietQrImageUrl). */
+function groupQrAmount(lines: ResolvedQuoteLine[]): number | null {
+  const total = lines.reduce((sum, l) => sum + (l.breakdown?.total ?? 0), 0);
+  return total > 0 ? total : null;
+}
+
+/** Tải ảnh QR + chuyển base64 — DÙNG CHUNG cho cả 2 mã QR (trước đây chỉ có
+ * 1 khối try/catch inline, tách thành hàm để không lặp lại nguyên khối logic
+ * dò magic bytes khi thêm QR thu hộ). */
+async function fetchQrDataUri(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const buf = await res.arrayBuffer();
+    // QUAN TRỌNG: KHÔNG tin đuôi URL (".png") lẫn header Content-Type của
+    // response — đã xác nhận bằng byte thật rằng img.vietqr.io khai
+    // "image/png" nhưng dữ liệu THẬT SỰ là JPEG (magic bytes FF D8 FF). Gán
+    // sai MIME vào data URI khiến Satori render ra ảnh trắng trơn, im lặng
+    // không báo lỗi gì — phải tự dò magic bytes (xem vietQr.ts).
+    const contentType = detectImageMimeType(buf);
+    return `data:${contentType};base64,${Buffer.from(buf).toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
+
+/** Chiều cao phần QR — khớp ĐÚNG với số khối QR thực tế sẽ render (0/1/2),
+ * tính theo DỮ LIỆU ĐÃ TẢI XONG (`maxOfficeQrDataUri`/`thuHoQrDataUri`), không
+ * phải theo "có bật showQr không" — nếu 1 trong 2 lần fetch ảnh QR thất bại
+ * (lỗi img.vietqr.io), khối đó không render thì cũng KHÔNG được cộng chiều
+ * cao, tránh để dư khoảng trắng. QR thu hộ luôn cộng thêm THU_HO_QR_NOTE_H
+ * (dòng cảnh báo riêng), bất kể đứng vị trí 1 hay 2. */
+function qrSectionHeight(maxOfficeQrDataUri: string | null, thuHoQrDataUri: string | null): number {
+  let h = 0;
+  if (maxOfficeQrDataUri) h += QR_BLOCK_H;
+  if (thuHoQrDataUri) h += (maxOfficeQrDataUri ? QR_BLOCK_STACKED_H : QR_BLOCK_H) + THU_HO_QR_NOTE_H;
+  return h;
+}
+
+function QrPaymentBlock({
+  dataUri,
+  title,
+  accountLabel,
+  amount,
+  lang,
+  isFirst,
+  extraNote,
+}: {
+  dataUri: string;
+  title: string;
+  accountLabel: string;
+  amount: number | null;
+  lang: QuoteLang;
+  isFirst: boolean;
+  extraNote?: string;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 24,
+        margin: `0 ${MARGIN_X}px`,
+        marginTop: isFirst ? 32 : 20,
+        borderRadius: 16,
+        backgroundColor: QUOTE_COLOR.bgTint,
+        padding: 24,
+      }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={dataUri} alt="" width={160} height={160} style={{ borderRadius: 8, backgroundColor: "#fff" }} />
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", fontSize: 17, fontWeight: 700, color: QUOTE_COLOR.navy }}>{title}</div>
+        <div style={{ display: "flex", marginTop: 6, fontSize: 14, color: QUOTE_COLOR.bodyText }}>{accountLabel}</div>
+        {amount != null && (
+          <div style={{ display: "flex", marginTop: 2, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
+            {qt("suggestedAmountLabel", lang)}: {formatQuoteCurrency(amount, lang)}
+          </div>
+        )}
+        {extraNote && (
+          <div style={{ display: "flex", marginTop: 6, fontSize: 12, fontWeight: 700, color: QUOTE_COLOR.accent }}>
+            {extraNote}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -459,44 +594,43 @@ export async function POST(req: Request) {
   for (const bucket of BUCKET_ORDER) byBucket.set(bucket, []);
   for (const line of resolvedLines) byBucket.get(line.bucket)!.push(line);
 
-  // Số tiền gợi ý điền trên QR (nếu bật) — CỘNG DỒN "Thành tiền" của TẤT CẢ
-  // dòng dịch vụ đã tra được giá, bất kể thuộc khối/đơn vị tính phí nào.
-  // Dùng CHUNG 1 phép tính với khối "Tổng cộng toàn bộ báo giá" hiện trên ảnh
-  // (computeGrandTotal) để 2 con số này LUÔN khớp nhau, không lệch. (Trước
-  // đây chỉ lấy khối có tổng LỚN NHẤT làm đại diện — với lý do các khối khác
-  // đơn vị/thời điểm thanh toán nên không gộp được — nhưng thực tế khách
-  // thường thanh toán 1 lần cho toàn bộ báo giá khi ký hợp đồng, nên sửa lại
-  // theo đúng yêu cầu: cộng dồn hết để QR không thiếu tiền khi báo giá có từ
-  // 2 dịch vụ trở lên.)
-  const { total: overallTotal } = computeGrandTotal(resolvedLines);
-  const qrAmount: number | null = overallTotal > 0 ? overallTotal : null;
+  // Tách 2 nhóm tổng theo TÀI KHOẢN NHẬN TIỀN (xem comment splitByPaymentGroup
+  // + QuoteBucket trong compositeQuote.ts) — "Dịch vụ MAX OFFICE" dùng khối
+  // "Tổng cộng" + QR tài khoản công ty hiện có, "Dịch vụ thu hộ" (Chữ ký
+  // số/Hoá đơn điện tử) có khối tổng + QR RIÊNG, tài khoản cố định
+  // THU_HO_ACCOUNT, KHÔNG được gộp lẫn với tiền MAX OFFICE.
+  const { maxOfficeLines, thuHoLines } = splitByPaymentGroup(resolvedLines);
+  const hasThuHo = thuHoLines.length > 0;
+  const maxOfficeQrAmount = groupQrAmount(maxOfficeLines);
+  const thuHoQrAmount = groupQrAmount(thuHoLines);
 
   // KHÔNG tin thẳng body.qrAccountKey — chỉ chấp nhận khi khớp đúng 1 trong
   // các key đã khai báo sẵn ở VIETQR_ACCOUNTS, rơi về tài khoản mặc định
-  // (đúng hành vi trước khi có nhiều tài khoản) nếu thiếu hoặc sai key.
+  // (đúng hành vi trước khi có nhiều tài khoản) nếu thiếu hoặc sai key. CHỈ
+  // áp dụng cho QR "Dịch vụ MAX OFFICE" — QR thu hộ luôn dùng THU_HO_ACCOUNT
+  // cố định, không đọc field này.
   const qrAccountKey = isVietQrAccountKey(body.qrAccountKey) ? body.qrAccountKey : DEFAULT_VIETQR_ACCOUNT_KEY;
 
-  let qrDataUri: string | null = null;
-  if (body.showQr) {
-    try {
-      const qrUrl = buildVietQrImageUrl(qrAccountKey, qrAmount, buildQrNote(customer));
-      const qrRes = await fetch(qrUrl);
-      if (qrRes.ok) {
-        const buf = await qrRes.arrayBuffer();
-        // QUAN TRỌNG: KHÔNG tin đuôi URL (".png") lẫn header Content-Type
-        // của response — đã xác nhận bằng byte thật rằng img.vietqr.io khai
-        // "image/png" nhưng dữ liệu THẬT SỰ là JPEG (magic bytes FF D8 FF).
-        // Gán sai MIME vào data URI khiến Satori render ra ảnh trắng trơn,
-        // im lặng không báo lỗi gì — phải tự dò magic bytes (xem vietQr.ts).
-        const contentType = detectImageMimeType(buf);
-        qrDataUri = `data:${contentType};base64,${Buffer.from(buf).toString("base64")}`;
-      }
-      // qrRes không ok -> bỏ qua QR, không chặn tạo báo giá vì lỗi ở dịch
-      // vụ ngoài (img.vietqr.io).
-    } catch {
-      qrDataUri = null;
-    }
-  }
+  // Nội dung chuyển khoản do nhân viên tự sửa (nếu có) — CHỈ áp dụng QR "Dịch
+  // vụ MAX OFFICE"; QR thu hộ luôn tự sinh, không đọc field này (xem
+  // buildQrNote() trong vietQr.ts để biết lý do).
+  const maxOfficeQrNote = isNonEmptyString(body.qrNote) ? body.qrNote.trim() : buildQrNote(customer);
+
+  const showMaxOfficeQr = Boolean(body.showQr) && maxOfficeQrAmount != null;
+  const showThuHoQr = Boolean(body.showQr) && thuHoQrAmount != null;
+
+  const [maxOfficeQrDataUri, thuHoQrDataUri] = await Promise.all([
+    showMaxOfficeQr ? fetchQrDataUri(buildVietQrImageUrl(qrAccountKey, maxOfficeQrAmount, maxOfficeQrNote)) : null,
+    showThuHoQr
+      ? fetchQrDataUri(
+          buildVietQrImageUrlForAccount(
+            THU_HO_ACCOUNT,
+            thuHoQrAmount,
+            buildQrNote(customer, "thanh toan ho chu ky so/hoa don dien tu")
+          )
+        )
+      : null,
+  ]);
 
   const [fonts, logoSrc] = await Promise.all([loadQuoteImageFonts(), loadQuoteImageLogo()]);
 
@@ -509,8 +643,8 @@ export async function POST(req: Request) {
     HEADER_H +
     customerBlockH +
     BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!, lang), 0) +
-    grandTotalHeight(resolvedLines, lang) +
-    (qrDataUri ? QR_BLOCK_H : 0) +
+    grandTotalHeight(maxOfficeLines, lang) +
+    qrSectionHeight(maxOfficeQrDataUri, thuHoQrDataUri) +
     FOOTER_H;
 
   return new ImageResponse(
@@ -567,37 +701,29 @@ export async function POST(req: Request) {
           <Section key={bucket} bucket={bucket} lines={byBucket.get(bucket)!} lang={lang} />
         ))}
 
-        <GrandTotal resolvedLines={resolvedLines} lang={lang} />
+        <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} hasThuHo={hasThuHo} />
 
-        {qrDataUri && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 24,
-              margin: `0 ${MARGIN_X}px`,
-              marginTop: 32,
-              borderRadius: 16,
-              backgroundColor: QUOTE_COLOR.bgTint,
-              padding: 24,
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={qrDataUri} alt="" width={160} height={160} style={{ borderRadius: 8, backgroundColor: "#fff" }} />
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", fontSize: 17, fontWeight: 700, color: QUOTE_COLOR.navy }}>
-                {qt("scanToPayTitle", lang)}
-              </div>
-              <div style={{ display: "flex", marginTop: 6, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
-                {vietQrAccountLabel(qrAccountKey)}
-              </div>
-              {qrAmount != null && (
-                <div style={{ display: "flex", marginTop: 2, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
-                  {qt("suggestedAmountLabel", lang)}: {formatQuoteCurrency(qrAmount, lang)}
-                </div>
-              )}
-            </div>
-          </div>
+        {maxOfficeQrDataUri && (
+          <QrPaymentBlock
+            dataUri={maxOfficeQrDataUri}
+            title={qt(thuHoQrDataUri ? "scanToPayMaxOfficeTitle" : "scanToPayTitle", lang)}
+            accountLabel={vietQrAccountLabel(qrAccountKey)}
+            amount={maxOfficeQrAmount}
+            lang={lang}
+            isFirst={true}
+          />
+        )}
+
+        {thuHoQrDataUri && (
+          <QrPaymentBlock
+            dataUri={thuHoQrDataUri}
+            title={qt("scanToPayThuHoTitle", lang)}
+            accountLabel={thuHoAccountLabel()}
+            amount={thuHoQrAmount}
+            lang={lang}
+            isFirst={!maxOfficeQrDataUri}
+            extraNote={qt("thuHoQrNote", lang)}
+          />
         )}
 
         <QuoteFooterRow lang={lang} />
