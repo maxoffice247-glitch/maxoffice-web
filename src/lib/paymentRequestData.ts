@@ -254,8 +254,12 @@ function isValidDay(n: unknown): n is number {
   return typeof n === "number" && Number.isInteger(n) && n >= 1 && n <= 31;
 }
 
+/** Pad số 0 CHỈ ở bước hiển thị cuối cùng này (ngày 5 -> "05") — ô nhập liệu
+ * phía client KHÔNG pad khi đang gõ (xem MoneyInput/ô Ngày lập phiếu ở
+ * PaymentRequestTool.tsx), tránh lỗi tự chèn số 0 giữa lúc gõ đã gặp trước
+ * đây. */
 function issueDateLabel(ngayLap: number, thang: number, nam: number): string {
-  return `TPHCM, Ngày ${ngayLap} tháng ${thang} năm ${nam}`;
+  return `TPHCM, Ngày ${String(ngayLap).padStart(2, "0")} tháng ${thang} năm ${nam}`;
 }
 
 function debtLine(congNoDauKy: number, moTa: string, periodLabel: string): PaymentRequestDebt | null {
@@ -350,27 +354,34 @@ function resolveMtkOrQe(
       : `Phí thuê tầng trệt từ ngày 01/${thang} - ${lastDay}/${thang}/${nam}`;
   const rentAmount = type === "qe-agency" ? qeAgencyMonthlyRent(thang, nam) : input.tienThue;
 
-  // 3 dòng A/B/C LUÔN hiện riêng biệt theo đúng cấu trúc phiếu thật (sheet
-  // gốc có vị trí dòng CỐ ĐỊNH cho thuê/xe/điện, không ẩn dòng nào dù giá
-  // trị tháng đó bằng 0) — CHỈ "Công nợ đầu kỳ" mới ẩn khi = 0 (đúng bản
-  // chất tự nhiên, không phải dòng cố định của phiếu).
-  const items: PaymentRequestLineItem[] = [
-    makeLine({ stt: 1, label: rentLabel, amount: rentAmount, vatPercent: RENT_VAT_PERCENT }),
-    makeLine({
-      stt: 2,
-      label: `Phí gửi xe tháng ${prevM}/${prevY}`,
-      detail: `${soXe} xe × ${formatVnd(PARKING_FEE_PER_CAR)}`,
-      amount: soXe * PARKING_FEE_PER_CAR,
-      vatPercent: OTHER_VAT_PERCENT,
-    }),
-    makeLine({
-      stt: 3,
-      label: `Điện sinh hoạt tháng ${prevM}/${prevY}`,
-      detail: `${chiSoDau.toLocaleString("vi-VN")} → ${chiSoCuoi.toLocaleString("vi-VN")} = ${kwh.toLocaleString("vi-VN")} kWh × ${formatVnd(donGiaDien)}/kWh`,
-      amount: dienAmount,
-      vatPercent: OTHER_VAT_PERCENT,
-    }),
-  ];
+  // Dòng xe/điện ẨN HẲN khi giá trị THỰC TẾ của đúng tháng đang lập phiếu
+  // bằng 0 (không hiện "0đ") — STT đánh lại LIÊN TỤC cho các dòng còn hiện
+  // (đổi quyết định so với trước: trước đây luôn hiện cả 3 dòng kể cả 0đ).
+  // Tiền thuê luôn hiện (không có khái niệm "thuê = 0").
+  const items: PaymentRequestLineItem[] = [makeLine({ stt: 1, label: rentLabel, amount: rentAmount, vatPercent: RENT_VAT_PERCENT })];
+  let stt = 2;
+  if (soXe > 0) {
+    items.push(
+      makeLine({
+        stt: stt++,
+        label: `Phí gửi xe tháng ${prevM}/${prevY}`,
+        detail: `${soXe} xe × ${formatVnd(PARKING_FEE_PER_CAR)}`,
+        amount: soXe * PARKING_FEE_PER_CAR,
+        vatPercent: OTHER_VAT_PERCENT,
+      })
+    );
+  }
+  if (kwh > 0) {
+    items.push(
+      makeLine({
+        stt: stt++,
+        label: `Điện sinh hoạt tháng ${prevM}/${prevY}`,
+        detail: `${chiSoDau.toLocaleString("vi-VN")} → ${chiSoCuoi.toLocaleString("vi-VN")} = ${kwh.toLocaleString("vi-VN")} kWh × ${formatVnd(donGiaDien)}/kWh`,
+        amount: dienAmount,
+        vatPercent: OTHER_VAT_PERCENT,
+      })
+    );
+  }
 
   const debt = debtLine(congNoDauKy, moTaCongNo, `tháng ${prevM}/${prevY}`);
   const grandTotal = items.reduce((sum, it) => sum + it.total, 0) + (debt?.amount ?? 0);
@@ -407,7 +418,9 @@ function resolveTayBacCul(
   const { month: prevM, year: prevY } = prevMonth(thang, nam);
   const roomLabel = company.diaDiem.split(",")[0];
 
-  // 2 dòng A/B LUÔN hiện riêng biệt (xem comment tương tự ở resolveMtkOrQe).
+  // TB/CUL KHÁC resolveMtkOrQe/resolveKoolog: 2 dòng thuê/xe LUÔN hiện đủ,
+  // KHÔNG ẩn dòng xe dù soXe = 0 — xác nhận rõ ràng theo yêu cầu (2 công ty
+  // này không có khái niệm "điện", giữ nguyên cấu trúc cố định 2 dòng).
   const items: PaymentRequestLineItem[] = [
     makeLine({ stt: 1, label: `Phí thuê ${roomLabel.charAt(0).toLowerCase()}${roomLabel.slice(1)} tháng ${thang}/${nam}`, amount: tienThue, vatPercent: RENT_VAT_PERCENT }),
     makeLine({
@@ -463,8 +476,9 @@ function resolveKoolog(input: Extract<PaymentRequestInput, { type: "koolog" }>):
 
   // Tiền thuê: GIỮ NGUYÊN logic ×3 cho cả quý — CHỈ field này còn nhân,
   // không đổi theo yêu cầu (khác xe/điện khoán, nay nhập thẳng tổng quý).
-  // 3 dòng A/B/C LUÔN hiện riêng biệt (xem comment tương tự ở
-  // resolveMtkOrQe) — kể cả khi số xe/điện khoán quý đó bằng 0.
+  // Dòng xe/điện khoán ẨN khi = 0 cho đúng quý đang lập — CÙNG quy tắc với
+  // resolveMtkOrQe (KOOLOG có khái niệm "điện" nên xếp cùng nhóm với
+  // MTK/QE, khác nhóm Tây Bắc/CUL không có điện).
   const rentQuarterAmount = tienThueThang * 3;
   const items: PaymentRequestLineItem[] = [
     makeLine({
@@ -475,22 +489,31 @@ function resolveKoolog(input: Extract<PaymentRequestInput, { type: "koolog" }>):
       amount: rentQuarterAmount,
       vatPercent: RENT_VAT_PERCENT,
     }),
-    makeLine({
-      stt: 2,
-      label: `Phí gửi xe ${periodLabel}`,
-      labelEn: `Parking fee ${periodLabelEn}`,
-      detail: `${soXeCaQuy} xe (cả quý) × ${formatVnd(PARKING_FEE_PER_CAR)}`,
-      amount: soXeCaQuy * PARKING_FEE_PER_CAR,
-      vatPercent: OTHER_VAT_PERCENT,
-    }),
-    makeLine({
-      stt: 3,
-      label: `Phụ thu điện sinh hoạt ${periodLabel}`,
-      labelEn: `Electricity surcharge ${periodLabelEn}`,
-      amount: dienKhoanCaQuy,
-      vatPercent: OTHER_VAT_PERCENT,
-    }),
   ];
+  let stt = 2;
+  if (soXeCaQuy > 0) {
+    items.push(
+      makeLine({
+        stt: stt++,
+        label: `Phí gửi xe ${periodLabel}`,
+        labelEn: `Parking fee ${periodLabelEn}`,
+        detail: `${soXeCaQuy} xe (cả quý) × ${formatVnd(PARKING_FEE_PER_CAR)}`,
+        amount: soXeCaQuy * PARKING_FEE_PER_CAR,
+        vatPercent: OTHER_VAT_PERCENT,
+      })
+    );
+  }
+  if (dienKhoanCaQuy > 0) {
+    items.push(
+      makeLine({
+        stt: stt++,
+        label: `Phụ thu điện sinh hoạt ${periodLabel}`,
+        labelEn: `Electricity surcharge ${periodLabelEn}`,
+        amount: dienKhoanCaQuy,
+        vatPercent: OTHER_VAT_PERCENT,
+      })
+    );
+  }
 
   const debt = debtLine(congNoDauKy, moTaCongNo, periodLabel);
   const grandTotal = items.reduce((sum, it) => sum + it.total, 0) + (debt?.amount ?? 0);

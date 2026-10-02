@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useRef, useState, type ChangeEvent } from "react";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import { PlusIcon, CloseIcon, DownloadIcon, SpinnerIcon } from "../icons";
@@ -40,7 +40,11 @@ const CURRENT_QUARTER = (Math.floor((CURRENT_MONTH - 1) / 3) + 1) as 1 | 2 | 3 |
 type FormState =
   | {
       type: "mtk";
-      ngayLap: number;
+      /** Chuỗi THÔ (không phải number) — cho phép gõ/xoá tự do, không bị tự
+       * động pad/ép định dạng giữa lúc gõ (lỗi đã gặp với input type="number"
+       * trước đây). Chỉ pad số 0 lúc hiển thị RA ẢNH/PDF cuối cùng, xem
+       * issueDateLabel() trong paymentRequestData.ts. */
+      ngayLap: string;
       thang: number;
       nam: number;
       tienThue: string;
@@ -53,7 +57,11 @@ type FormState =
     }
   | {
       type: "qe-agency";
-      ngayLap: number;
+      /** Chuỗi THÔ (không phải number) — cho phép gõ/xoá tự do, không bị tự
+       * động pad/ép định dạng giữa lúc gõ (lỗi đã gặp với input type="number"
+       * trước đây). Chỉ pad số 0 lúc hiển thị RA ẢNH/PDF cuối cùng, xem
+       * issueDateLabel() trong paymentRequestData.ts. */
+      ngayLap: string;
       thang: number;
       nam: number;
       congNoDauKy: string;
@@ -65,7 +73,11 @@ type FormState =
     }
   | {
       type: "tay-bac";
-      ngayLap: number;
+      /** Chuỗi THÔ (không phải number) — cho phép gõ/xoá tự do, không bị tự
+       * động pad/ép định dạng giữa lúc gõ (lỗi đã gặp với input type="number"
+       * trước đây). Chỉ pad số 0 lúc hiển thị RA ẢNH/PDF cuối cùng, xem
+       * issueDateLabel() trong paymentRequestData.ts. */
+      ngayLap: string;
       thang: number;
       nam: number;
       tienThue: string;
@@ -74,7 +86,11 @@ type FormState =
     }
   | {
       type: "cul";
-      ngayLap: number;
+      /** Chuỗi THÔ (không phải number) — cho phép gõ/xoá tự do, không bị tự
+       * động pad/ép định dạng giữa lúc gõ (lỗi đã gặp với input type="number"
+       * trước đây). Chỉ pad số 0 lúc hiển thị RA ẢNH/PDF cuối cùng, xem
+       * issueDateLabel() trong paymentRequestData.ts. */
+      ngayLap: string;
       thang: number;
       nam: number;
       tienThue: string;
@@ -83,7 +99,11 @@ type FormState =
     }
   | {
       type: "koolog";
-      ngayLap: number;
+      /** Chuỗi THÔ (không phải number) — cho phép gõ/xoá tự do, không bị tự
+       * động pad/ép định dạng giữa lúc gõ (lỗi đã gặp với input type="number"
+       * trước đây). Chỉ pad số 0 lúc hiển thị RA ẢNH/PDF cuối cùng, xem
+       * issueDateLabel() trong paymentRequestData.ts. */
+      ngayLap: string;
       thang: number;
       nam: number;
       quy: 1 | 2 | 3 | 4;
@@ -99,7 +119,11 @@ type FormState =
       diaChi: string;
       mst: string;
       sdt: string;
-      ngayLap: number;
+      /** Chuỗi THÔ (không phải number) — cho phép gõ/xoá tự do, không bị tự
+       * động pad/ép định dạng giữa lúc gõ (lỗi đã gặp với input type="number"
+       * trước đây). Chỉ pad số 0 lúc hiển thị RA ẢNH/PDF cuối cùng, xem
+       * issueDateLabel() trong paymentRequestData.ts. */
+      ngayLap: string;
       thang: number;
       nam: number;
       noiDungVv: string;
@@ -108,7 +132,7 @@ type FormState =
     };
 
 function createDefaultForm(type: PaymentRequestCompanyKey | "khac"): FormState {
-  const base = { ngayLap: CURRENT_DAY, thang: CURRENT_MONTH, nam: CURRENT_YEAR };
+  const base = { ngayLap: String(CURRENT_DAY), thang: CURRENT_MONTH, nam: CURRENT_YEAR };
   if (type === "mtk") {
     return {
       type,
@@ -187,6 +211,13 @@ function toDecimal(s: string): number {
  * trả null nếu field tiền THUÊ bắt buộc còn rỗng (chưa đủ điều kiện tính) —
  * các field khác (công nợ/xe/điện) rỗng coi như 0, không chặn preview. */
 function formToInput(form: FormState): PaymentRequestInput | null {
+  // "Ngày lập phiếu" rỗng/không hợp lệ -> chặn preview (giống field tiền
+  // thuê bắt buộc) — số thật được parse Ở ĐÂY (không phải lúc gõ), đúng field
+  // này chung cho mọi loại công ty nên check 1 lần trước khi tách nhánh.
+  if (!form.ngayLap.trim()) return null;
+  const ngayLap = Number(form.ngayLap);
+  if (!Number.isInteger(ngayLap)) return null;
+
   if (form.type === "mtk" || form.type === "qe-agency") {
     const congNoDauKy = toInt(form.congNoDauKy);
     const soXe = toInt(form.soXe);
@@ -197,15 +228,15 @@ function formToInput(form: FormState): PaymentRequestInput | null {
     if (form.type === "mtk") {
       if (!form.tienThue.trim()) return null;
       const tienThue = toInt(form.tienThue);
-      return { type: "mtk", ngayLap: form.ngayLap, thang: form.thang, nam: form.nam, tienThue, congNoDauKy, moTaCongNo: form.moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien };
+      return { type: "mtk", ngayLap, thang: form.thang, nam: form.nam, tienThue, congNoDauKy, moTaCongNo: form.moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien };
     }
-    return { type: "qe-agency", ngayLap: form.ngayLap, thang: form.thang, nam: form.nam, congNoDauKy, moTaCongNo: form.moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien };
+    return { type: "qe-agency", ngayLap, thang: form.thang, nam: form.nam, congNoDauKy, moTaCongNo: form.moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien };
   } else if (form.type === "tay-bac" || form.type === "cul") {
     if (!form.tienThue.trim()) return null;
     const tienThue = toInt(form.tienThue);
     const congNoDauKy = toInt(form.congNoDauKy);
     const soXe = toInt(form.soXe);
-    return { type: form.type, ngayLap: form.ngayLap, thang: form.thang, nam: form.nam, tienThue, congNoDauKy, soXe };
+    return { type: form.type, ngayLap, thang: form.thang, nam: form.nam, tienThue, congNoDauKy, soXe };
   } else if (form.type === "koolog") {
     if (!form.tienThueThang.trim()) return null;
     const tienThueThang = toInt(form.tienThueThang);
@@ -214,7 +245,7 @@ function formToInput(form: FormState): PaymentRequestInput | null {
     const dienKhoanCaQuy = toInt(form.dienKhoanCaQuy);
     return {
       type: "koolog",
-      ngayLap: form.ngayLap,
+      ngayLap,
       thang: form.thang,
       nam: form.nam,
       quy: form.quy,
@@ -235,7 +266,7 @@ function formToInput(form: FormState): PaymentRequestInput | null {
       diaChi: form.diaChi,
       mst: form.mst,
       sdt: form.sdt,
-      ngayLap: form.ngayLap,
+      ngayLap,
       thang: form.thang,
       nam: form.nam,
       noiDungVv: form.noiDungVv,
@@ -247,6 +278,72 @@ function formToInput(form: FormState): PaymentRequestInput | null {
 
 function formatVnd(n: number): string {
   return `${n.toLocaleString("vi-VN")}đ`;
+}
+
+/** Chèn dấu "." phân cách hàng nghìn CHỈ ĐỂ HIỂN THỊ (VD "36.300.000") —
+ * không đổi giá trị thật, chỉ đổi cách trình bày trong ô nhập, giúp phát
+ * hiện ngay khi gõ nhầm thiếu/thừa số 0 ở số tiền lớn (VD 10.000.000 vs
+ * 100.000.000). State/tính toán vẫn luôn là chuỗi số thuần (toInt() ở trên
+ * tự strip dấu "." nên không cần đổi gì ở logic tính). */
+function formatThousands(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+/** Ô nhập tiền có dấu phân cách hàng nghìn tự động — tự giữ đúng vị trí con
+ * trỏ khi gõ/xoá GIỮA CHỪNG số (không chỉ gõ nối ở cuối), vì format lại
+ * toàn bộ chuỗi mỗi lần gõ sẽ tự đẩy con trỏ ra cuối nếu không tính lại thủ
+ * công — đếm số CHỮ SỐ (không tính dấu chấm) đứng trước con trỏ ở giá trị
+ * cũ, rồi đặt lại con trỏ ở đúng vị trí có cùng số chữ số đứng trước trong
+ * chuỗi đã format mới. */
+function MoneyInput({
+  value,
+  onChange,
+  placeholder,
+  className,
+}: {
+  value: string;
+  onChange: (raw: string) => void;
+  placeholder?: string;
+  className?: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const el = e.target;
+    const cursorPos = el.selectionStart ?? el.value.length;
+    const digitsBeforeCursor = el.value.slice(0, cursorPos).replace(/\D/g, "").length;
+    const rawDigits = el.value.replace(/\D/g, "");
+    onChange(rawDigits);
+    requestAnimationFrame(() => {
+      const input = ref.current;
+      if (!input) return;
+      const formatted = formatThousands(rawDigits);
+      let seen = 0;
+      let newPos = formatted.length;
+      for (let i = 0; i < formatted.length; i++) {
+        if (/\d/.test(formatted[i])) seen++;
+        if (seen === digitsBeforeCursor) {
+          newPos = i + 1;
+          break;
+        }
+      }
+      if (digitsBeforeCursor === 0) newPos = 0;
+      input.setSelectionRange(newPos, newPos);
+    });
+  };
+
+  return (
+    <input
+      ref={ref}
+      type="text"
+      inputMode="numeric"
+      value={formatThousands(value)}
+      onChange={handleChange}
+      placeholder={placeholder}
+      className={className}
+    />
+  );
 }
 
 const selectClass =
@@ -386,11 +483,10 @@ export default function PaymentRequestTool() {
             <div>
               <label className={labelClass}>Ngày lập phiếu</label>
               <input
-                type="number"
-                min={1}
-                max={31}
+                type="text"
+                inputMode="numeric"
                 value={form.ngayLap}
-                onChange={(e) => update({ ngayLap: Number(e.target.value) })}
+                onChange={(e) => update({ ngayLap: e.target.value.replace(/\D/g, "") })}
                 className={inputClass}
               />
             </div>
@@ -444,7 +540,7 @@ export default function PaymentRequestTool() {
               {form.type === "mtk" ? (
                 <div>
                   <label className={labelClass}>Tiền thuê (chưa VAT)</label>
-                  <input type="text" inputMode="numeric" value={form.tienThue} onChange={(e) => update({ tienThue: e.target.value })} placeholder="VD: 36300000" className={inputClass} />
+                  <MoneyInput value={form.tienThue} onChange={(raw) => update({ tienThue: raw })} placeholder="VD: 36.300.000" className={inputClass} />
                 </div>
               ) : (
                 <div>
@@ -472,11 +568,11 @@ export default function PaymentRequestTool() {
               </div>
               <div>
                 <label className={labelClass}>Đơn giá điện (đ/kWh)</label>
-                <input type="text" inputMode="numeric" value={form.donGiaDien} onChange={(e) => update({ donGiaDien: e.target.value })} className={inputClass} />
+                <MoneyInput value={form.donGiaDien} onChange={(raw) => update({ donGiaDien: raw })} className={inputClass} />
               </div>
               <div>
                 <label className={labelClass}>Công nợ đầu kỳ</label>
-                <input type="text" inputMode="numeric" value={form.congNoDauKy} onChange={(e) => update({ congNoDauKy: e.target.value })} className={inputClass} />
+                <MoneyInput value={form.congNoDauKy} onChange={(raw) => update({ congNoDauKy: raw })} className={inputClass} />
               </div>
               <div className="sm:col-span-2">
                 <label className={labelClass}>Mô tả công nợ đầu kỳ (chỉ hiện khi công nợ &gt; 0)</label>
@@ -489,7 +585,7 @@ export default function PaymentRequestTool() {
             <div className="mb-6 grid grid-cols-1 gap-3.5 sm:grid-cols-2">
               <div>
                 <label className={labelClass}>Tiền thuê (chưa VAT)</label>
-                <input type="text" inputMode="numeric" value={form.tienThue} onChange={(e) => update({ tienThue: e.target.value })} className={inputClass} />
+                <MoneyInput value={form.tienThue} onChange={(raw) => update({ tienThue: raw })} className={inputClass} />
               </div>
               <div>
                 <label className={labelClass}>Số lượng xe gửi tháng trước</label>
@@ -497,7 +593,7 @@ export default function PaymentRequestTool() {
               </div>
               <div className="sm:col-span-2">
                 <label className={labelClass}>Công nợ đầu kỳ</label>
-                <input type="text" inputMode="numeric" value={form.congNoDauKy} onChange={(e) => update({ congNoDauKy: e.target.value })} className={inputClass} />
+                <MoneyInput value={form.congNoDauKy} onChange={(raw) => update({ congNoDauKy: raw })} className={inputClass} />
               </div>
             </div>
           )}
@@ -506,7 +602,7 @@ export default function PaymentRequestTool() {
             <div className="mb-6 grid grid-cols-1 gap-3.5 sm:grid-cols-2">
               <div>
                 <label className={labelClass}>Tiền thuê / tháng (chưa VAT) — tự nhân 3 cho cả quý</label>
-                <input type="text" inputMode="numeric" value={form.tienThueThang} onChange={(e) => update({ tienThueThang: e.target.value })} className={inputClass} />
+                <MoneyInput value={form.tienThueThang} onChange={(raw) => update({ tienThueThang: raw })} className={inputClass} />
               </div>
               <div>
                 <label className={labelClass}>Số lượng xe (cả quý) — nhập thẳng tổng, không nhân</label>
@@ -514,11 +610,11 @@ export default function PaymentRequestTool() {
               </div>
               <div>
                 <label className={labelClass}>Điện khoán (cả quý, chưa VAT) — nhập thẳng tổng, không nhân</label>
-                <input type="text" inputMode="numeric" value={form.dienKhoanCaQuy} onChange={(e) => update({ dienKhoanCaQuy: e.target.value })} className={inputClass} />
+                <MoneyInput value={form.dienKhoanCaQuy} onChange={(raw) => update({ dienKhoanCaQuy: raw })} className={inputClass} />
               </div>
               <div>
                 <label className={labelClass}>Công nợ đầu kỳ</label>
-                <input type="text" inputMode="numeric" value={form.congNoDauKy} onChange={(e) => update({ congNoDauKy: e.target.value })} className={inputClass} />
+                <MoneyInput value={form.congNoDauKy} onChange={(raw) => update({ congNoDauKy: raw })} className={inputClass} />
               </div>
               <div className="sm:col-span-2">
                 <label className={labelClass}>Mô tả công nợ đầu kỳ (chỉ hiện khi công nợ &gt; 0)</label>
@@ -570,13 +666,11 @@ export default function PaymentRequestTool() {
                         }
                         className={`${inputClass} bg-white`}
                       />
-                      <input
-                        type="text"
-                        inputMode="numeric"
+                      <MoneyInput
                         placeholder="Số tiền chưa VAT"
                         value={row.soTien}
-                        onChange={(e) =>
-                          update({ items: form.items.map((it, idx) => (idx === i ? { ...it, soTien: e.target.value } : it)) } as Partial<FormState>)
+                        onChange={(raw) =>
+                          update({ items: form.items.map((it, idx) => (idx === i ? { ...it, soTien: raw } : it)) } as Partial<FormState>)
                         }
                         className={`${inputClass} bg-white`}
                       />
