@@ -112,6 +112,28 @@ export function QuoteHeaderRow({
   );
 }
 
+/** Icon web/email NHỎ, SVG INLINE (không tải ảnh ngoài, không thêm request)
+ * — dùng fill tường minh thay vì stroke/currentColor để tương thích chắc
+ * chắn với Satori (đã test render thật qua route.tsx trước khi chốt). */
+function WebIcon({ color }: { color: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" style={{ display: "flex" }}>
+      <circle cx="12" cy="12" r="9" fill="none" stroke={color} strokeWidth="2" />
+      <path d="M3 12 H21" fill="none" stroke={color} strokeWidth="2" />
+      <path d="M12 3 C7 3 7 21 12 21 C17 21 17 3 12 3" fill="none" stroke={color} strokeWidth="2" />
+    </svg>
+  );
+}
+
+function EmailIcon({ color }: { color: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" style={{ display: "flex" }}>
+      <rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke={color} strokeWidth="2" />
+      <path d="M3 6 L12 13 L21 6" fill="none" stroke={color} strokeWidth="2" />
+    </svg>
+  );
+}
+
 export function QuoteFooterRow({ lang = "vi" }: { lang?: QuoteLang } = {}) {
   return (
     <div
@@ -130,8 +152,13 @@ export function QuoteFooterRow({ lang = "vi" }: { lang?: QuoteLang } = {}) {
         <div style={{ display: "flex", fontSize: 22, fontWeight: 800, color: QUOTE_COLOR.navy }}>
           {qt("hotlineLabel", lang)}: 089 8082 188
         </div>
-        <div style={{ display: "flex", marginTop: 4, fontSize: 16, color: QUOTE_COLOR.bodyText }}>
-          maxoffice.vn
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
+          <WebIcon color={QUOTE_COLOR.bodyText} />
+          www.maxoffice.vn
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
+          <EmailIcon color={QUOTE_COLOR.bodyText} />
+          cskh@maxoffice.vn
         </div>
       </div>
       <div

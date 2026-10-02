@@ -56,8 +56,18 @@ import { qt, formatQuoteCurrency, vatLabel, type QuoteLang, type QuoteDictKey } 
 export const runtime = "nodejs";
 
 const ROW_PADDING_Y = 40; // "20px 22px" -> 40 tổng theo chiều dọc
-const TITLE_H = 26;
-const SUBTITLE_H = 22;
+// Dòng tiêu đề GỘP (tên gói + loại dịch vụ + địa chỉ/mô tả phụ, xem
+// mergeTitleLine()) — 1 dòng nếu đủ ngắn, tự nhiên wrap 2 dòng nếu dài (VD
+// tên chi nhánh dài). Ngưỡng ký tự hiệu chỉnh bằng pixel thật (xem báo cáo
+// cuối phiên) — y hệt cách PROMO_BADGE_H đã ước lượng trước đó.
+const MERGED_TITLE_LINE_H = 24;
+// Ký tự, ở ~940px rộng (khung ItemRow) — đo thực tế bằng pixel (không đoán):
+// 65/95/111 ký tự đều vừa đúng 1 dòng (tên chi nhánh dài nhất thực tế ghép
+// VPA chỉ ~65 ký tự — không bao giờ wrap với dữ liệu thật), 160 ký tự
+// (nhãn "Dịch vụ khác" tự nhập cực dài) wrap tới 3 dòng. Chọn ngưỡng AN
+// TOÀN (thà ước lượng dư 1 dòng còn hơn thiếu — thiếu sẽ cắt nội dung).
+const MERGED_TITLE_WRAP_THRESHOLD = 100;
+const MERGED_TITLE_WRAP_THRESHOLD_3_LINES = 150; // nhãn tự nhập cực dài, hiếm khi xảy ra với dữ liệu có cấu trúc
 const PROMO_BADGE_H = 44; // đủ cho 1 dòng text dài (~90 ký tự) ở 940px rộng
 const BREAKDOWN_LINE_H = 24;
 const BREAKDOWN_TOP_MARGIN = 10;
@@ -72,7 +82,7 @@ const SECTION_WORDS_H = 26; // dòng "Bằng chữ" dưới khối tổng
 const INLINE_WORDS_H = 22; // dòng "Bằng chữ" gắn ngay dưới 1 dòng đơn lẻ (không box)
 
 const HEADER_H = 148;
-const FOOTER_H = 176;
+const FOOTER_H = 216; // +40 so với trước — thêm 2 dòng web/email mới (xem QuoteFooterRow), hiệu chỉnh bằng pixel thật
 const CUSTOMER_ROW_H = 26;
 const QR_BLOCK_H = 232; // khối QR NGANG đầy đủ (ảnh trái, chữ phải) — dùng khi CHỈ 1 trong 2 QR hiện
 const THU_HO_QR_NOTE_H = 20; // dòng cảnh báo "chuyển vào TK đơn vị cung cấp..." dưới QR thu hộ (fontSize 12, 1 dòng)
@@ -153,21 +163,51 @@ function isValidItemShape(item: unknown): item is CompositeQuoteItem {
   }
 }
 
+/** "Loại dịch vụ · địa chỉ/mô tả phụ" — DÙNG CHUNG giữa ItemRow() (render)
+ * và estimateRowHeight() (ước lượng chiều cao), tránh lệch 2 nơi. `show`
+ * false khi dòng phụ trùng y hệt title (VD "custom" bỏ trống mô tả) — ẩn
+ * hẳn thay vì lặp lại. */
+function computeSecondLine(line: ResolvedQuoteLine): { secondLine: string; show: boolean } {
+  const secondLine = line.subtitle ? `${line.category} · ${line.subtitle}` : line.category;
+  return { secondLine, show: secondLine !== line.title };
+}
+
+/** Gộp TÊN GÓI + LOẠI DỊCH VỤ + ĐỊA CHỈ/MÔ TẢ PHỤ thành 1 dòng tiêu đề DUY
+ * NHẤT (VD "Gói SILVER — Văn phòng ảo · 159C Đề Thám, Quận 1 (cũ)") thay vì
+ * 2 dòng riêng như trước — áp dụng ĐỒNG NHẤT cho mọi loại dịch vụ. Tự nhiên
+ * wrap xuống dòng 2 khi quá dài (không ép cứng 1 dòng), xem
+ * estimateMergedTitleLines() để biết cách ước lượng số dòng thực tế. */
+function mergedTitleText(line: ResolvedQuoteLine): { text: string; secondPart: string | null } {
+  const { secondLine, show } = computeSecondLine(line);
+  return show ? { text: `${line.title} — ${secondLine}`, secondPart: secondLine } : { text: line.title, secondPart: null };
+}
+
+/** Ước lượng 1 hay 2 dòng cho tiêu đề gộp — dựa theo TỔNG số ký tự (kể cả
+ * " — " nối) so với MERGED_TITLE_WRAP_THRESHOLD, hiệu chỉnh bằng pixel thật
+ * (xem báo cáo cuối phiên, test cả tên chi nhánh ngắn lẫn dài). */
+function estimateMergedTitleLines(line: ResolvedQuoteLine): 1 | 2 | 3 {
+  const { text } = mergedTitleText(line);
+  if (text.length > MERGED_TITLE_WRAP_THRESHOLD_3_LINES) return 3;
+  return text.length > MERGED_TITLE_WRAP_THRESHOLD ? 2 : 1;
+}
+
 /** Ước lượng chiều cao 1 dòng dịch vụ — PHẢI khớp đúng với JSX của
  * ItemRow() bên dưới (từng khối cộng thêm ở đây cũng phải tồn tại tương
  * ứng trong render), theo đúng nguyên tắc đã áp dụng ở 2 route quote-image
- * hiện có: tính trước bằng công thức vì Satori cần height cố định. */
+ * hiện có: tính trước bằng công thức vì Satori cần height cố định.
+ *
+ * breakdownLineCount LUÔN = 2 cho mọi loại dịch vụ (khác trước đây 2 hoặc
+ * 3 tuỳ có "Tạm tính" hay không) — Đơn giá+Tạm tính (nếu có) nay gộp CHUNG
+ * 1 dòng (DualBreakdownLine), nên dù có Tạm tính hay không, luôn còn đúng
+ * 2 dòng breakdown: [Đơn giá (+Tạm tính)] + [VAT]. */
 function estimateRowHeight(line: ResolvedQuoteLine): number {
   if (!line.breakdown) return FALLBACK_ROW_H;
-  const showSubtotalLine = line.breakdown.months != null;
-  const breakdownLineCount = 1 /* Đơn giá */ + (showSubtotalLine ? 1 : 0) /* Tạm tính */ + 1; /* VAT */
   return (
     ROW_PADDING_Y +
-    TITLE_H +
-    SUBTITLE_H +
+    estimateMergedTitleLines(line) * MERGED_TITLE_LINE_H +
     (line.breakdown.promo ? PROMO_BADGE_H : 0) +
     BREAKDOWN_TOP_MARGIN +
-    breakdownLineCount * BREAKDOWN_LINE_H +
+    2 * BREAKDOWN_LINE_H +
     TOTAL_ROW_H
   );
 }
@@ -183,12 +223,36 @@ function BreakdownLine({ label, value, strong }: { label: string; value: string;
   );
 }
 
+/** "Đơn giá" + "Tạm tính" GỘP CHUNG 1 dòng ngang (trái/phải) thay vì 2 dòng
+ * riêng như trước — CHỈ dùng khi dòng dịch vụ có cả 2 giá trị tách biệt
+ * (VPA có chọn số tháng, breakdown.months != null). Các loại dịch vụ khác
+ * (GPKD/Kế toán/custom/thu hộ) không có "Tạm tính" riêng nên vẫn chỉ hiện
+ * 1 giá trị Đơn giá — xem ItemRow(). */
+function DualBreakdownLine({
+  leftLabel,
+  leftValue,
+  rightLabel,
+  rightValue,
+}: {
+  leftLabel: string;
+  leftValue: string;
+  rightLabel: string;
+  rightValue: string;
+}) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
+      <div style={{ display: "flex", color: QUOTE_COLOR.bodyText }}>
+        {leftLabel}:<span style={{ marginLeft: 4, color: QUOTE_COLOR.ink }}>{leftValue}</span>
+      </div>
+      <div style={{ display: "flex", color: QUOTE_COLOR.bodyText }}>
+        {rightLabel}:<span style={{ marginLeft: 4, color: QUOTE_COLOR.ink }}>{rightValue}</span>
+      </div>
+    </div>
+  );
+}
+
 function ItemRow({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang }) {
-  const secondLine = line.subtitle ? `${line.category} · ${line.subtitle}` : line.category;
-  // Dòng "custom" khi bỏ trống mô tả có title === category (xem
-  // compositeQuote.ts) — ẩn hẳn dòng phụ trong trường hợp đó thay vì hiện
-  // lặp lại y hệt tiêu đề ngay bên dưới.
-  const showSecondLine = secondLine !== line.title;
+  const { secondLine, show: showSecondLine } = computeSecondLine(line);
 
   if (!line.breakdown) {
     // Giá tự nhập không tách được số cụ thể — giữ nguyên bố cục đơn giản
@@ -232,10 +296,14 @@ function ItemRow({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang }) {
         padding: "20px 22px",
       }}
     >
-      <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: QUOTE_COLOR.navy }}>{line.title}</div>
-      {showSecondLine && (
-        <div style={{ display: "flex", marginTop: 4, fontSize: 14, color: QUOTE_COLOR.bodyText }}>{secondLine}</div>
-      )}
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline" }}>
+        <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: QUOTE_COLOR.navy }}>{line.title}</div>
+        {showSecondLine && (
+          <div style={{ display: "flex", marginLeft: 8, fontSize: 14, fontWeight: 400, color: QUOTE_COLOR.bodyText }}>
+            {`— ${secondLine}`}
+          </div>
+        )}
+      </div>
 
       {breakdown.promo && (
         <div
@@ -256,16 +324,15 @@ function ItemRow({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang }) {
       )}
 
       <div style={{ display: "flex", flexDirection: "column", marginTop: BREAKDOWN_TOP_MARGIN, gap: 4 }}>
-        <BreakdownLine
-          label={qt("unitPriceLabel", lang)}
-          value={
-            showSubtotalLine
-              ? `${breakdown.baseLabel} × ${breakdown.months} ${qt("monthsUnit", lang)}`
-              : breakdown.baseLabel
-          }
-        />
-        {showSubtotalLine && (
-          <BreakdownLine label={qt("subtotalLabel", lang)} value={formatQuoteCurrency(breakdown.subtotal, lang)} />
+        {showSubtotalLine ? (
+          <DualBreakdownLine
+            leftLabel={qt("unitPriceLabel", lang)}
+            leftValue={`${breakdown.baseLabel} × ${breakdown.months} ${qt("monthsUnit", lang)}`}
+            rightLabel={qt("subtotalLabel", lang)}
+            rightValue={formatQuoteCurrency(breakdown.subtotal, lang)}
+          />
+        ) : (
+          <BreakdownLine label={qt("unitPriceLabel", lang)} value={breakdown.baseLabel} />
         )}
         <BreakdownLine label={vatLabel(breakdown.vatRatePercent)} value={formatQuoteCurrency(breakdown.vatAmount, lang)} />
       </div>
