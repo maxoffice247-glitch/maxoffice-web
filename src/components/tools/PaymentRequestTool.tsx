@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ChangeEvent } from "react";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import { PlusIcon, CloseIcon, DownloadIcon, SpinnerIcon } from "../icons";
@@ -381,7 +381,60 @@ export default function PaymentRequestTool() {
   // lại đúng tài khoản này (không phải lựa chọn mới nhất trên form), cùng
   // nguyên tắc với previewInput (đảm bảo PDF khớp đúng ảnh đang hiển thị).
   const [previewQrAccountKey, setPreviewQrAccountKey] = useState<VietQrAccountKey>(DEFAULT_VIETQR_ACCOUNT_KEY);
+  // "Nhớ" chỉ số điện cuối kỳ + số lượng xe của lần lập phiếu GẦN NHẤT cho
+  // công ty đang chọn (đọc từ Redis qua api/payment-request-history) — dùng
+  // để tự điền sẵn ô "Chỉ số điện đầu kỳ"/"Số lượng xe" VÀ hiện ghi chú nhỏ
+  // cho nhân viên biết đây là số tự động, không phải mặc định cứng. `null`
+  // = chưa từng lập phiếu cho công ty này (hoặc Redis lỗi) -> không hiện
+  // ghi chú gì, nhập tay như trước.
+  const [historyNote, setHistoryNote] = useState<{ soXe?: number; chiSoCuoi?: number } | null>(null);
   const uid = useId();
+
+  /** Lấy lịch sử BẤT ĐỒNG BỘ cho 1 công ty rồi điền thêm/ghi chú vào form
+   * SAU KHI fetch xong (thường rất nhanh, Redis) — form vẫn hiện giá trị
+   * mặc định rỗng ngay lập tức trước đó, không chờ fetch mới render được.
+   * Kiểm tra `prev.type !== type` trước khi áp dụng để tránh race condition
+   * nếu nhân viên đổi dropdown nhanh liên tiếp trong lúc đang chờ fetch —
+   * không áp nhầm lịch sử của công ty A vào form công ty B. */
+  const loadHistory = (type: PaymentRequestCompanyKey) => {
+    fetch(`/api/payment-request-history?company=${type}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { history?: { soXe?: number; chiSoCuoi?: number } | null } | null) => {
+        const history = data?.history;
+        if (!history) return;
+        setHistoryNote(history);
+        setForm((prev) => {
+          if (prev.type === "mtk" || prev.type === "qe-agency") {
+            if (prev.type !== type) return prev;
+            return {
+              ...prev,
+              chiSoDau: typeof history.chiSoCuoi === "number" ? String(history.chiSoCuoi) : prev.chiSoDau,
+              soXe: typeof history.soXe === "number" ? String(history.soXe) : prev.soXe,
+            };
+          }
+          if (prev.type === "tay-bac" || prev.type === "cul") {
+            if (prev.type !== type) return prev;
+            return { ...prev, soXe: typeof history.soXe === "number" ? String(history.soXe) : prev.soXe };
+          }
+          if (prev.type === "koolog") {
+            if (prev.type !== type) return prev;
+            return { ...prev, soXeCaQuy: typeof history.soXe === "number" ? String(history.soXe) : prev.soXeCaQuy };
+          }
+          return prev;
+        });
+      })
+      .catch(() => {
+        // Fetch lỗi (mạng, server...) -> coi như chưa có lịch sử, im lặng bỏ
+        // qua, nhân viên nhập tay như bình thường — không hiện lỗi gây rối.
+      });
+  };
+
+  // Tải lịch sử cho công ty MẶC ĐỊNH lúc mới mở trang (MTK) — changeCompany()
+  // chỉ chạy khi nhân viên CHỦ ĐỘNG đổi dropdown, không tự chạy cho lựa chọn
+  // ban đầu.
+  useEffect(() => {
+    loadHistory("mtk");
+  }, []);
 
   const changeCompany = (type: PaymentRequestCompanyKey | "khac") => {
     setForm(createDefaultForm(type));
@@ -391,6 +444,8 @@ export default function PaymentRequestTool() {
       return null;
     });
     setPreviewInput(null);
+    setHistoryNote(null);
+    if (type !== "khac") loadHistory(type);
   };
   const update = (patch: Partial<FormState>) => setForm((prev) => ({ ...prev, ...patch }) as FormState);
 
@@ -570,10 +625,18 @@ export default function PaymentRequestTool() {
               <div>
                 <label className={labelClass}>Số lượng xe gửi tháng trước</label>
                 <input type="text" inputMode="numeric" value={form.soXe} onChange={(e) => update({ soXe: e.target.value })} className={inputClass} />
+                {typeof historyNote?.soXe === "number" && (
+                  <p className="mt-1 text-[11px] text-body-text">Tháng trước: {historyNote.soXe} xe</p>
+                )}
               </div>
               <div>
                 <label className={labelClass}>Chỉ số điện đầu kỳ</label>
                 <input type="text" inputMode="decimal" value={form.chiSoDau} onChange={(e) => update({ chiSoDau: e.target.value })} className={inputClass} />
+                {typeof historyNote?.chiSoCuoi === "number" && (
+                  <p className="mt-1 text-[11px] text-body-text">
+                    Tự động lấy từ chỉ số cuối kỳ tháng trước — sửa được nếu đổi đồng hồ điện.
+                  </p>
+                )}
               </div>
               <div>
                 <label className={labelClass}>Chỉ số điện cuối kỳ</label>
@@ -603,6 +666,9 @@ export default function PaymentRequestTool() {
               <div>
                 <label className={labelClass}>Số lượng xe gửi tháng trước</label>
                 <input type="text" inputMode="numeric" value={form.soXe} onChange={(e) => update({ soXe: e.target.value })} className={inputClass} />
+                {typeof historyNote?.soXe === "number" && (
+                  <p className="mt-1 text-[11px] text-body-text">Tháng trước: {historyNote.soXe} xe</p>
+                )}
               </div>
               <div className="sm:col-span-2">
                 <label className={labelClass}>Công nợ đầu kỳ</label>
@@ -620,6 +686,9 @@ export default function PaymentRequestTool() {
               <div>
                 <label className={labelClass}>Số lượng xe (cả quý) — nhập thẳng tổng, không nhân</label>
                 <input type="text" inputMode="numeric" value={form.soXeCaQuy} onChange={(e) => update({ soXeCaQuy: e.target.value })} className={inputClass} />
+                {typeof historyNote?.soXe === "number" && (
+                  <p className="mt-1 text-[11px] text-body-text">Quý trước: {historyNote.soXe} xe</p>
+                )}
               </div>
               <div>
                 <label className={labelClass}>Điện khoán (cả quý, chưa VAT) — nhập thẳng tổng, không nhân</label>

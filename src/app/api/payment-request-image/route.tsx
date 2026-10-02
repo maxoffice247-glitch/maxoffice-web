@@ -21,6 +21,7 @@ import { buildVietQrImageUrl, vietQrAccountLabel, detectImageMimeType, isVietQrA
 import { isPaymentRequestAuthed } from "@/lib/paymentRequestAuthServer";
 import { pngBufferToSinglePagePdf } from "@/lib/pdfFromImage";
 import { getPaymentRequestCompanies } from "@/lib/paymentRequestCompanySheet";
+import { savePaymentRequestHistory } from "@/lib/paymentRequestHistory";
 
 /**
  * Ảnh "Đề nghị thanh toán" — công cụ NỘI BỘ cho 5 khách thuê SÀN/PHÒNG THẬT
@@ -448,6 +449,21 @@ export async function POST(req: Request) {
   const result = resolvePaymentRequest(body, companies);
   if ("error" in result) {
     return new Response(result.error, { status: 400 });
+  }
+
+  // "NHỚ" chỉ số điện cuối kỳ + số lượng xe VỪA DÙNG — SAU KHI tạo phiếu
+  // thành công (xem trước PNG hoặc tải PDF đều tính, cả 2 cùng gọi route
+  // này), để lần lập phiếu TIẾP THEO cho ĐÚNG công ty này tự điền sẵn (xem
+  // api/payment-request-history/route.tsx). KHÔNG áp dụng cho "Dịch vụ
+  // khác" (không có danh tính công ty cố định để gắn lịch sử). Lỗi Redis
+  // (nếu có) đã tự nuốt bên trong savePaymentRequestHistory(), không ảnh
+  // hưởng gì tới việc trả ảnh/PDF.
+  if (body.type === "mtk" || body.type === "qe-agency") {
+    await savePaymentRequestHistory(body.type, { soXe: body.soXe, chiSoCuoi: body.chiSoCuoi });
+  } else if (body.type === "tay-bac" || body.type === "cul") {
+    await savePaymentRequestHistory(body.type, { soXe: body.soXe });
+  } else if (body.type === "koolog") {
+    await savePaymentRequestHistory("koolog", { soXe: body.soXeCaQuy });
   }
 
   // Tài khoản QR nhân viên TỰ CHỌN trên form (nếu gửi hợp lệ) ghi đè tài
