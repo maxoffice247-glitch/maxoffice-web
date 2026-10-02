@@ -426,19 +426,25 @@ function resolveTayBacCul(
   const { month: prevM, year: prevY } = prevMonth(thang, nam);
   const roomLabel = company.diaDiem.split(",")[0];
 
-  // TB/CUL KHÁC resolveMtkOrQe/resolveKoolog: 2 dòng thuê/xe LUÔN hiện đủ,
-  // KHÔNG ẩn dòng xe dù soXe = 0 — xác nhận rõ ràng theo yêu cầu (2 công ty
-  // này không có khái niệm "điện", giữ nguyên cấu trúc cố định 2 dòng).
+  // ĐỒNG BỘ với resolveMtkOrQe/resolveKoolog (xác nhận lại theo yêu cầu):
+  // dòng xe ẨN khi soXe = 0 cho đúng tháng đang lập phiếu, STT đánh lại
+  // liên tục — áp dụng THỐNG NHẤT cho CẢ 5 công ty, không còn để TB/CUL
+  // riêng 1 kiểu (trước đây luôn hiện đủ 2 dòng kể cả "0đ"). Tiền thuê luôn
+  // hiện (không có khái niệm "thuê = 0").
   const items: PaymentRequestLineItem[] = [
     makeLine({ stt: 1, label: `Phí thuê ${roomLabel.charAt(0).toLowerCase()}${roomLabel.slice(1)} tháng ${thang}/${nam}`, amount: tienThue, vatPercent: RENT_VAT_PERCENT }),
-    makeLine({
-      stt: 2,
-      label: `Phí gửi xe tháng ${prevM}/${prevY}`,
-      detail: `${soXe} xe × ${formatVnd(PARKING_FEE_PER_CAR)}`,
-      amount: soXe * PARKING_FEE_PER_CAR,
-      vatPercent: OTHER_VAT_PERCENT,
-    }),
   ];
+  if (soXe > 0) {
+    items.push(
+      makeLine({
+        stt: 2,
+        label: `Phí gửi xe tháng ${prevM}/${prevY}`,
+        detail: `${soXe} xe × ${formatVnd(PARKING_FEE_PER_CAR)}`,
+        amount: soXe * PARKING_FEE_PER_CAR,
+        vatPercent: OTHER_VAT_PERCENT,
+      })
+    );
+  }
 
   // TB/CUL không có field "mô tả" riêng trong sheet gốc — chỉ 1 nhãn chung.
   const debt = debtLine(congNoDauKy, "", "");
