@@ -19,6 +19,7 @@ import { amountToVietnameseWords } from "@/lib/numberToWords";
 import { buildVietQrImageUrl, vietQrAccountLabel, detectImageMimeType } from "@/lib/vietQr";
 import { isPaymentRequestAuthed } from "@/lib/paymentRequestAuthServer";
 import { pngBufferToSinglePagePdf } from "@/lib/pdfFromImage";
+import { getPaymentRequestCompanies } from "@/lib/paymentRequestCompanySheet";
 
 /**
  * Ảnh "Đề nghị thanh toán" — công cụ NỘI BỘ cho 5 khách thuê SÀN/PHÒNG THẬT
@@ -432,7 +433,13 @@ export async function POST(req: Request) {
     return new Response("Loại công ty không hợp lệ.", { status: 400 });
   }
 
-  const result = resolvePaymentRequest(body);
+  // Đọc dữ liệu công ty MỚI NHẤT từ Google Sheets (có fallback về hardcode
+  // nếu Sheets lỗi/chưa đủ cột — xem paymentRequestCompanySheet.ts) — đây
+  // là bước DUY NHẤT cần dữ liệu công ty luôn mới nhất (ảnh/PDF xuất ra là
+  // kết quả cuối cùng gửi khách), khác bản xem trước nhanh phía client
+  // (PaymentRequestTool.tsx) vẫn dùng hardcode cho preview tức thì.
+  const companies = await getPaymentRequestCompanies();
+  const result = resolvePaymentRequest(body, companies);
   if ("error" in result) {
     return new Response(result.error, { status: 400 });
   }

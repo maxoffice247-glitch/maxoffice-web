@@ -91,18 +91,68 @@ function nextMonth(month: number, year: number): { month: number; year: number }
   return month === 12 ? { month: 1, year: year + 1 } : { month: month + 1, year };
 }
 
-type CompanyStaticInfo = {
+/**
+ * Thông tin TĨNH của 1 công ty — nguồn dữ liệu MẶC ĐỊNH là hardcode ở
+ * PAYMENT_REQUEST_COMPANIES bên dưới, nhưng route ảnh (server) GHI ĐÈ bằng
+ * dữ liệu đọc trực tiếp từ tab "⚙️ DANH_MUC_CONG_TY" (xem
+ * paymentRequestCompanySheet.ts) mỗi khi tab đó có cột/ô tương ứng — để sau
+ * này đổi khách/sửa SĐT-địa chỉ chỉ cần sửa trên Sheets, không cần sửa code.
+ *
+ * `contractParagraph`/`requestParagraph` KHÔNG còn là dữ liệu tĩnh lưu sẵn
+ * — nay LUÔN dựng động từ `buildContractParagraph()`/`buildRequestParagraph()`
+ * bên dưới, ghép từ các field thô (tên/số HĐ/ngày ký) để Sheets có thể chi
+ * phối đúng nội dung câu mà không cần ai gõ lại nguyên cả câu dài trên 1 ô
+ * (rủi ro gõ sai cấu trúc câu cao hơn hẳn so với chỉ sửa vài field ngắn).
+ */
+export type CompanyStaticInfo = {
   key: PaymentRequestCompanyKey;
+  /** Tên công ty ĐẦY ĐỦ (pháp lý) — dùng trong mọi câu trang trọng
+   * (contractParagraph/requestParagraph) VÀ dòng "Kính gửi:". */
   name: string;
+  /** Tên tiếng Anh — CHỈ cần khi công ty có bản song ngữ (hiện tại chỉ
+   * KOOLOG). undefined/rỗng -> KHÔNG render dòng tiếng Anh nào cả. */
+  nameEn?: string;
   mst: string;
   phone: string;
+  /** Dùng cho dòng "Địa điểm:" trên phiếu. */
   diaDiem: string;
-  /** 1 dòng (hầu hết công ty) hoặc 2 dòng VI+EN (chỉ KOOLOG — tab gốc duy
-   * nhất có đoạn giới thiệu song ngữ). */
-  contractParagraph: string[];
-  requestParagraph: string[];
+  /** Tên khu vực/phòng NGẮN GỌN dùng trong mô tả dòng tiền thuê của Tây
+   * Bắc/CUL/KOOLOG (VD "phòng P702", "phòng P701") — MTK/QE Agency có câu
+   * riêng, KHÔNG đọc field này. */
+  areaLabel: string;
+  contractNumber: string;
+  /** Định dạng DD/MM/YYYY, VD "18/05/2026". */
+  contractDate: string;
+  /** Để trống nếu số hợp đồng bản tiếng Anh GIỐNG bản tiếng Việt. */
+  contractNumberEn?: string;
+  /** Ghi ĐÚNG định dạng tiếng Anh thật (VD "May 21, 2024") — KHÔNG tự suy
+   * ra từ contractDate (khác định dạng hẳn, tự chuyển dễ sai). Để trống nếu
+   * giống bản tiếng Việt. */
+  contractDateEn?: string;
   qrNoteBase: string;
 };
+
+/** Đoạn "Căn cứ vào hợp đồng..." — ghép ĐỘNG từ field thô, KHÔNG lưu sẵn cả
+ * câu (xem comment CompanyStaticInfo). Bản tiếng Anh CHỈ xuất hiện khi công
+ * ty có `nameEn` (hiện tại chỉ KOOLOG). Sửa lỗi chính tả "MAX OFICE" (thiếu
+ * F) từng có trong câu gốc — đây là lỗi đánh máy tên công ty MẸ (MAX
+ * OFFICE), không phải dữ liệu riêng của công ty nào, không có lý do giữ lại
+ * khi đã tách thành câu mẫu dùng chung. */
+function buildContractParagraph(info: CompanyStaticInfo): string[] {
+  const vi = `Căn cứ vào hợp đồng thoả thuận thuê dịch vụ số ${info.contractNumber}, ký ngày ${info.contractDate} giữa CÔNG TY TNHH MAX OFFICE và ${info.name}.`;
+  if (!info.nameEn) return [vi];
+  const enNumber = info.contractNumberEn || info.contractNumber;
+  const enDate = info.contractDateEn || info.contractDate;
+  const en = `Based on the service rental agreement contract No. ${enNumber}, signed on ${enDate} between MAX OFFICE CO., LTD. and ${info.nameEn}.`;
+  return [vi, en];
+}
+
+function buildRequestParagraph(info: CompanyStaticInfo): string[] {
+  const vi = `Công ty chúng tôi kính đề nghị ${info.name} thanh toán các khoản sau:`;
+  if (!info.nameEn) return [vi];
+  const en = `Our company respectfully requests ${info.nameEn} to pay the following amounts:`;
+  return [vi, en];
+}
 
 const QR_ACCOUNT_NAMED_COMPANY: VietQrAccountKey = "1117777888";
 const QR_ACCOUNT_KHAC: VietQrAccountKey = "16868889";
@@ -114,12 +164,9 @@ export const PAYMENT_REQUEST_COMPANIES: Record<PaymentRequestCompanyKey, Company
     mst: "0302779329",
     phone: "0915 781 111",
     diaDiem: "Tầng trệt số 10 Sông Thao, Phường Tân Sơn Hoà, TP.HCM",
-    contractParagraph: [
-      "Căn cứ vào hợp đồng thoả thuận thuê dịch vụ số 2026F1/HĐTVP/MX-MTK, ký ngày 18/05/2026 giữa CÔNG TY TNHH MAX OFFICE và CÔNG TY CỔ PHẦN THƯƠNG MẠI - DỊCH VỤ MINH THÀNH KHANG.",
-    ],
-    requestParagraph: [
-      "Công ty chúng tôi kính đề nghị CÔNG TY CỔ PHẦN THƯƠNG MẠI - DỊCH VỤ MINH THÀNH KHANG thanh toán các khoản sau:",
-    ],
+    areaLabel: "tầng trệt",
+    contractNumber: "2026F1/HĐTVP/MX-MTK",
+    contractDate: "18/05/2026",
     // Sửa lỗi chính tả "MINH THANH KHANH" (thiếu G) trong sheet gốc.
     qrNoteBase: "MINH THANH KHANG",
   },
@@ -129,13 +176,12 @@ export const PAYMENT_REQUEST_COMPANIES: Record<PaymentRequestCompanyKey, Company
     mst: "0318634061",
     phone: "0975 038 502",
     diaDiem: "Phòng P702, Số 10 Sông Thao, Phường Tân Sơn Hoà, TP.HCM",
+    areaLabel: "phòng P702",
     // Số hợp đồng GIỐNG HỆT CUL trong sheet gốc — khả năng cao là lỗi
     // copy-paste của 2 công ty khác nhau, nhưng không có cơ sở để tự sửa
     // thành số nào khác nên giữ nguyên, xem comment đầu file.
-    contractParagraph: [
-      "Căn cứ vào hợp đồng thoả thuận thuê dịch vụ số S101-10ST/082024/HĐKT, ký ngày 01/08/2024 giữa CÔNG TY TNHH MAX OFFICE và CÔNG TY TNHH KHÁM PHÁ DU LỊCH TÂY BẮC.",
-    ],
-    requestParagraph: ["Công ty chúng tôi kính đề nghị CÔNG TY TNHH KHÁM PHÁ DU LỊCH TÂY BẮC thanh toán các khoản sau:"],
+    contractNumber: "S101-10ST/082024/HĐKT",
+    contractDate: "01/08/2024",
     qrNoteBase: "CTY TAY BAC",
   },
   cul: {
@@ -144,29 +190,34 @@ export const PAYMENT_REQUEST_COMPANIES: Record<PaymentRequestCompanyKey, Company
     mst: "4401103899",
     phone: "0396 998 477",
     diaDiem: "Phòng P702A, Số 10 Sông Thao, Phường Tân Sơn Hoà, TP.HCM",
-    contractParagraph: [
-      "Căn cứ vào hợp đồng thoả thuận thuê dịch vụ số S101-10ST/082024/HĐKT, ký ngày 01/08/2024 giữa CÔNG TY TNHH MAX OFFICE và CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CUL.",
-    ],
-    requestParagraph: ["Công ty chúng tôi kính đề nghị CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CUL thanh toán các khoản sau:"],
+    areaLabel: "phòng P702A",
+    contractNumber: "S101-10ST/082024/HĐKT",
+    contractDate: "01/08/2024",
     qrNoteBase: "CTY CUL",
   },
   koolog: {
     key: "koolog",
     name: "CÔNG TY TNHH KOOLOG INTERNATIONAL",
+    // Sheet gốc dùng 2 cách viết tiếng Anh khác nhau cho CÙNG 1 công ty ở 2
+    // đoạn văn khác nhau ("CO., LTD." ở đoạn hợp đồng, "COMPANY LIMITED" ở
+    // đoạn kính đề nghị) — chỉ là biến thể viết tắt, không phải dữ liệu
+    // khác nhau thật, nên CHỌN 1 cách dùng chung cho nhất quán khi đã tách
+    // thành câu mẫu tái sử dụng (khác số hợp đồng/ngày ký — những con số đó
+    // mới thật sự có thể khác nhau, giữ nguyên không tự chọn, xem dưới).
+    // KHÔNG có dấu "." cuối — buildContractParagraph() tự thêm dấu "." kết
+    // câu, để "CO., LTD" trong câu không bị lặp 2 dấu chấm liên tiếp.
+    nameEn: "KOOLOG INTERNATIONAL CO., LTD",
     mst: "2301265243",
     phone: "024 3201 3660",
     diaDiem: "Phòng P701, Số 10 Sông Thao, Phường Tân Sơn Hoà, TP.HCM",
+    areaLabel: "phòng P701",
     // Số hợp đồng VI/EN TỰ MÂU THUẪN ngay trong sheet gốc (S101 vs S102) —
     // giữ nguyên nội dung gốc, không tự chọn 1 trong 2 số, xem comment đầu
     // file.
-    contractParagraph: [
-      "Căn cứ vào hợp đồng thoả thuận thuê dịch vụ số S101-10ST/082024/HĐKT, ký ngày 21/05/2024 giữa CÔNG TY TNHH MAX OFFICE và CÔNG TY TNHH KOOLOG INTERNATIONAL.",
-      "Based on the service rental agreement contract No. S102-10ST/2024/HDKT, signed on May 21, 2024 between MAX OFICE CO., LTD. and KOOLOG INTERNATIONAL CO., LTD.",
-    ],
-    requestParagraph: [
-      "Công ty chúng tôi kính đề nghị CÔNG TY TNHH KOOLOG INTERNATIONAL thanh toán các khoản sau:",
-      "Our company respectfully requests KOOLOG INTERNATIONAL COMPANY LIMITED to pay the following amounts:",
-    ],
+    contractNumber: "S101-10ST/082024/HĐKT",
+    contractDate: "21/05/2024",
+    contractNumberEn: "S102-10ST/2024/HDKT",
+    contractDateEn: "May 21, 2024",
     qrNoteBase: "CTY KOOLOG",
   },
   "qe-agency": {
@@ -175,11 +226,9 @@ export const PAYMENT_REQUEST_COMPANIES: Record<PaymentRequestCompanyKey, Company
     mst: "0318734806",
     phone: "0901 890 811",
     diaDiem: "Phòng P704, Số 10 Sông Thao, Phường Tân Sơn Hoà, TP.HCM",
-    contractParagraph: [
-      "Căn cứ vào hợp đồng thoả thuận thuê dịch vụ số LN260707/HĐKT, ký ngày 10/08/2026 giữa CÔNG TY TNHH MAX OFFICE và CÔNG TY TNHH QE AGENCY.",
-    ],
-    // Sửa lỗi lặp "Kính gửi:" giữa câu trong sheet gốc.
-    requestParagraph: ["Công ty chúng tôi kính đề nghị CÔNG TY TNHH QE AGENCY thanh toán các khoản sau:"],
+    areaLabel: "phòng P704",
+    contractNumber: "LN260707/HĐKT",
+    contractDate: "10/08/2026",
     qrNoteBase: "CTY QE AGENCY",
   },
 };
@@ -331,7 +380,8 @@ export type PaymentRequestInput =
     };
 
 function resolveMtkOrQe(
-  input: Extract<PaymentRequestInput, { type: "mtk" | "qe-agency" }>
+  input: Extract<PaymentRequestInput, { type: "mtk" | "qe-agency" }>,
+  companies: Record<PaymentRequestCompanyKey, CompanyStaticInfo>
 ): PaymentRequestResult | PaymentRequestInputError {
   const { type, ngayLap, thang, nam, tienThue, congNoDauKy, moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien } = input;
   if (!isValidDay(ngayLap) || !isValidMonth(thang) || !isValidYear(nam)) {
@@ -343,7 +393,7 @@ function resolveMtkOrQe(
   if (!isFiniteNonNegative(chiSoDau) || !isFiniteNonNegative(chiSoCuoi) || chiSoCuoi < chiSoDau) {
     return { error: "Chỉ số điện cuối kỳ phải lớn hơn hoặc bằng chỉ số đầu kỳ." };
   }
-  const company = PAYMENT_REQUEST_COMPANIES[type];
+  const company = companies[type];
   const { month: prevM, year: prevY } = prevMonth(thang, nam);
   const lastDay = daysInMonth(thang, nam);
   const kwh = chiSoCuoi - chiSoDau;
@@ -400,8 +450,8 @@ function resolveMtkOrQe(
     mst: company.mst,
     phone: company.phone,
     diaDiem: company.diaDiem,
-    contractParagraph: company.contractParagraph,
-    requestParagraph: company.requestParagraph,
+    contractParagraph: buildContractParagraph(company),
+    requestParagraph: buildRequestParagraph(company),
     subjectLine: `(V/v Thanh toán tiền thuê văn phòng tháng ${thang}/${nam})`,
     issueDateLabel: issueDateLabel(ngayLap, thang, nam),
     debt,
@@ -413,7 +463,8 @@ function resolveMtkOrQe(
 }
 
 function resolveTayBacCul(
-  input: Extract<PaymentRequestInput, { type: "tay-bac" | "cul" }>
+  input: Extract<PaymentRequestInput, { type: "tay-bac" | "cul" }>,
+  companies: Record<PaymentRequestCompanyKey, CompanyStaticInfo>
 ): PaymentRequestResult | PaymentRequestInputError {
   const { type, ngayLap, thang, nam, tienThue, congNoDauKy, soXe } = input;
   if (!isValidDay(ngayLap) || !isValidMonth(thang) || !isValidYear(nam)) {
@@ -422,9 +473,8 @@ function resolveTayBacCul(
   if (!isFiniteNonNegative(tienThue) || !isFiniteNonNegative(congNoDauKy) || !isFiniteNonNegative(soXe)) {
     return { error: "Tiền thuê/Công nợ đầu kỳ/Số lượng xe phải là số không âm." };
   }
-  const company = PAYMENT_REQUEST_COMPANIES[type];
+  const company = companies[type];
   const { month: prevM, year: prevY } = prevMonth(thang, nam);
-  const roomLabel = company.diaDiem.split(",")[0];
 
   // ĐỒNG BỘ với resolveMtkOrQe/resolveKoolog (xác nhận lại theo yêu cầu):
   // dòng xe ẨN khi soXe = 0 cho đúng tháng đang lập phiếu, STT đánh lại
@@ -432,7 +482,7 @@ function resolveTayBacCul(
   // riêng 1 kiểu (trước đây luôn hiện đủ 2 dòng kể cả "0đ"). Tiền thuê luôn
   // hiện (không có khái niệm "thuê = 0").
   const items: PaymentRequestLineItem[] = [
-    makeLine({ stt: 1, label: `Phí thuê ${roomLabel.charAt(0).toLowerCase()}${roomLabel.slice(1)} tháng ${thang}/${nam}`, amount: tienThue, vatPercent: RENT_VAT_PERCENT }),
+    makeLine({ stt: 1, label: `Phí thuê ${company.areaLabel} tháng ${thang}/${nam}`, amount: tienThue, vatPercent: RENT_VAT_PERCENT }),
   ];
   if (soXe > 0) {
     items.push(
@@ -456,8 +506,8 @@ function resolveTayBacCul(
     mst: company.mst,
     phone: company.phone,
     diaDiem: company.diaDiem,
-    contractParagraph: company.contractParagraph,
-    requestParagraph: company.requestParagraph,
+    contractParagraph: buildContractParagraph(company),
+    requestParagraph: buildRequestParagraph(company),
     subjectLine: `(V/v Thanh toán tiền thuê văn phòng tháng ${thang}/${nam})`,
     issueDateLabel: issueDateLabel(ngayLap, thang, nam),
     debt,
@@ -468,7 +518,10 @@ function resolveTayBacCul(
   };
 }
 
-function resolveKoolog(input: Extract<PaymentRequestInput, { type: "koolog" }>): PaymentRequestResult | PaymentRequestInputError {
+function resolveKoolog(
+  input: Extract<PaymentRequestInput, { type: "koolog" }>,
+  companies: Record<PaymentRequestCompanyKey, CompanyStaticInfo>
+): PaymentRequestResult | PaymentRequestInputError {
   const { ngayLap, thang, nam, quy, tienThueThang, congNoDauKy, moTaCongNo, soXeCaQuy, dienKhoanCaQuy } = input;
   if (!isValidDay(ngayLap) || !isValidMonth(thang) || !isValidYear(nam)) {
     return { error: "Ngày lập phiếu/Tháng/Năm thanh toán không hợp lệ." };
@@ -484,20 +537,19 @@ function resolveKoolog(input: Extract<PaymentRequestInput, { type: "koolog" }>):
   ) {
     return { error: "Tiền thuê/Công nợ đầu kỳ/Số xe/Điện khoán phải là số không âm." };
   }
-  const company = PAYMENT_REQUEST_COMPANIES.koolog;
+  const company = companies.koolog;
   const periodLabel = `Quý ${quy}/${nam}`;
   const periodLabelEn = `Q${quy}/${nam}`;
 
   // Tiền thuê: GIỮ NGUYÊN logic ×3 cho cả quý — CHỈ field này còn nhân,
   // không đổi theo yêu cầu (khác xe/điện khoán, nay nhập thẳng tổng quý).
-  // Dòng xe/điện khoán ẨN khi = 0 cho đúng quý đang lập — CÙNG quy tắc với
-  // resolveMtkOrQe (KOOLOG có khái niệm "điện" nên xếp cùng nhóm với
-  // MTK/QE, khác nhóm Tây Bắc/CUL không có điện).
+  // Dòng xe/điện khoán ẨN khi = 0 cho đúng quý đang lập — ĐỒNG BỘ với toàn
+  // bộ 5 công ty (không còn ngoại lệ nào).
   const rentQuarterAmount = tienThueThang * 3;
   const items: PaymentRequestLineItem[] = [
     makeLine({
       stt: 1,
-      label: `Phí thuê phòng P701 ${periodLabel}`,
+      label: `Phí thuê ${company.areaLabel} ${periodLabel}`,
       labelEn: `Room P701 rental fee ${periodLabelEn}`,
       detail: `${formatVnd(tienThueThang)}/tháng × 3 tháng`,
       amount: rentQuarterAmount,
@@ -538,8 +590,8 @@ function resolveKoolog(input: Extract<PaymentRequestInput, { type: "koolog" }>):
     mst: company.mst,
     phone: company.phone,
     diaDiem: company.diaDiem,
-    contractParagraph: company.contractParagraph,
-    requestParagraph: company.requestParagraph,
+    contractParagraph: buildContractParagraph(company),
+    requestParagraph: buildRequestParagraph(company),
     subjectLine: `(V/v Thanh toán tiền thuê văn phòng ${periodLabel})`,
     issueDateLabel: issueDateLabel(ngayLap, thang, nam),
     debt,
@@ -593,16 +645,28 @@ function resolveKhac(input: Extract<PaymentRequestInput, { type: "khac" }>): Pay
   };
 }
 
-export function resolvePaymentRequest(input: PaymentRequestInput): PaymentRequestResult | PaymentRequestInputError {
+/**
+ * `companies` MẶC ĐỊNH là dữ liệu hardcode (PAYMENT_REQUEST_COMPANIES) —
+ * client gọi hàm này KHÔNG truyền tham số thứ 2 (xem PaymentRequestTool.tsx,
+ * chỉ dùng cho bản xem trước nhanh phía client, không cần dữ liệu Sheets
+ * mới nhất). Route ảnh (server) truyền company registry ĐÃ GHI ĐÈ bằng dữ
+ * liệu Sheets mới nhất (xem paymentRequestCompanySheet.ts) — đây là nơi DUY
+ * NHẤT cần dữ liệu công ty luôn mới nhất, vì ảnh/PDF xuất ra mới là kết quả
+ * cuối cùng gửi khách.
+ */
+export function resolvePaymentRequest(
+  input: PaymentRequestInput,
+  companies: Record<PaymentRequestCompanyKey, CompanyStaticInfo> = PAYMENT_REQUEST_COMPANIES
+): PaymentRequestResult | PaymentRequestInputError {
   switch (input.type) {
     case "mtk":
     case "qe-agency":
-      return resolveMtkOrQe(input);
+      return resolveMtkOrQe(input, companies);
     case "tay-bac":
     case "cul":
-      return resolveTayBacCul(input);
+      return resolveTayBacCul(input, companies);
     case "koolog":
-      return resolveKoolog(input);
+      return resolveKoolog(input, companies);
     case "khac":
       return resolveKhac(input);
   }
