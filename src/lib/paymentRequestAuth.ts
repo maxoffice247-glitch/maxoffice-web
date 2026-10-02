@@ -25,9 +25,15 @@ import { createHash } from "node:crypto";
 const PAYMENT_REQUEST_TOOL_PASSWORD = process.env.PAYMENT_REQUEST_TOOL_PASSWORD || "MaxOffice@2026";
 
 export const PAYMENT_REQUEST_AUTH_COOKIE = "prt_session";
-/** "Phiên tạm" theo đúng yêu cầu — 8 giờ (hết ca làm việc trong ngày là phải
- * nhập lại), không cần nhớ qua nhiều ngày như 1 tài khoản đăng nhập thật. */
-export const PAYMENT_REQUEST_SESSION_MAX_AGE = 60 * 60 * 8;
+/** 60 NGÀY (đổi từ 8 giờ ban đầu theo yêu cầu) — nhập đúng mật khẩu 1 lần
+ * trên 1 thiết bị/trình duyệt là dùng được lâu dài, không phải nhập lại mỗi
+ * lần mở trang, kể cả sau khi đóng hẳn trình duyệt (cookie thường, không
+ * phải cookie phiên — khác sessionStorage, vốn mất ngay khi đóng tab/trình
+ * duyệt nên KHÔNG dùng được cho yêu cầu "nhớ lâu dài" này). Mỗi thiết bị
+ * vẫn phải tự nhập riêng 1 lần (cookie không chia sẻ giữa các trình duyệt/
+ * thiết bị) — đúng bản chất, không phải thiếu sót. Hết hạn hoặc bị xoá
+ * cookie thủ công thì phải nhập lại. */
+export const PAYMENT_REQUEST_SESSION_MAX_AGE = 60 * 60 * 24 * 60;
 
 /** Giá trị lưu trong cookie là HASH 1 chiều của mật khẩu (không phải mật
  * khẩu gốc) — phòng trường hợp cookie vô tình lộ qua log/devtools vẫn không
