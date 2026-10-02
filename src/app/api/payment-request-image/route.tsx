@@ -17,6 +17,8 @@ import {
 } from "@/lib/paymentRequestData";
 import { amountToVietnameseWords } from "@/lib/numberToWords";
 import { buildVietQrImageUrl, vietQrAccountLabel, detectImageMimeType } from "@/lib/vietQr";
+import { isPaymentRequestAuthed } from "@/lib/paymentRequestAuthServer";
+import { pngBufferToSinglePagePdf } from "@/lib/pdfFromImage";
 
 /**
  * Ảnh "Đề nghị thanh toán" — công cụ NỘI BỘ cho 5 khách thuê SÀN/PHÒNG THẬT
@@ -402,12 +404,26 @@ async function fetchQrDataUri(url: string): Promise<string | null> {
 }
 
 export async function POST(req: Request) {
+  // Chặn gọi THẲNG API này mà không qua trang (lớp mật khẩu ở page.tsx chỉ
+  // chặn được UI, không chặn ai biết URL API gọi trực tiếp bằng tay/script)
+  // — xem paymentRequestAuth.ts.
+  if (!(await isPaymentRequestAuthed())) {
+    return new Response("Phiên đăng nhập đã hết hạn hoặc chưa đăng nhập — vui lòng tải lại trang và nhập lại mật khẩu.", {
+      status: 401,
+    });
+  }
+
   let body: unknown;
   try {
     body = await req.json();
   } catch {
     return new Response("Nội dung request không phải JSON hợp lệ.", { status: 400 });
   }
+
+  // `format` là field RIÊNG của request (không thuộc PaymentRequestInput) —
+  // đọc trước khi narrow type, isValidRequestShape() bỏ qua field thừa này
+  // nên không ảnh hưởng gì tới kiểm tra hình dạng bên dưới.
+  const format = body && typeof body === "object" && (body as Record<string, unknown>).format === "pdf" ? "pdf" : "png";
 
   if (!isValidRequestShape(body)) {
     return new Response("Dữ liệu request không hợp lệ.", { status: 400 });
@@ -441,7 +457,7 @@ export async function POST(req: Request) {
     SIGNATURE_H +
     FOOTER_H;
 
-  return new ImageResponse(
+  const pngResponse = new ImageResponse(
     (
       <div
         style={{
@@ -488,4 +504,21 @@ export async function POST(req: Request) {
       },
     }
   );
+
+  // Xem trước trên trang LUÔN là PNG (giữ nguyên hành vi cũ, không đổi) —
+  // chỉ khi client xin rõ `format:"pdf"` (nút "Tải xuống PDF") mới đóng gói
+  // lại thành PDF, dùng ĐÚNG byte PNG vừa render ở trên (xem pdfFromImage.ts
+  // — đảm bảo PDF khớp pixel-for-pixel với bản xem trước, không dựng lại
+  // layout lần 2 bằng thư viện khác).
+  if (format !== "pdf") return pngResponse;
+
+  const pngBuffer = Buffer.from(await pngResponse.arrayBuffer());
+  const pdfBytes = await pngBufferToSinglePagePdf(pngBuffer, CARD_WIDTH, height);
+  return new Response(new Uint8Array(pdfBytes), {
+    headers: {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename="de-nghi-thanh-toan-${result.companyKey}.pdf"`,
+      "Cache-Control": "no-store",
+    },
+  });
 }

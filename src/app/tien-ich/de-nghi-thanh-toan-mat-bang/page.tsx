@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import PageHero from "@/components/PageHero";
 import Breadcrumb from "@/components/Breadcrumb";
 import PaymentRequestTool from "@/components/tools/PaymentRequestTool";
+import { isPaymentRequestAuthed } from "@/lib/paymentRequestAuthServer";
+
+const LOCKED_PATH = "/tien-ich/de-nghi-thanh-toan-mat-bang-locked";
 
 /**
  * Trang công cụ NỘI BỘ "Đề nghị thanh toán" — KHÔNG dùng ToolPageTemplate
@@ -23,6 +27,15 @@ import PaymentRequestTool from "@/components/tools/PaymentRequestTool";
  * TOOL_GROUPS) — chỉ truy cập được qua đúng URL trực tiếp này.
  * `robots: noindex` thêm 1 lớp chắn nữa phòng trường hợp URL bị lộ/crawl
  * được qua đường khác (VD link nội bộ vô tình public).
+ *
+ * LỚP MẬT KHẨU — VIỆC GÁC CỔNG THẬT SỰ NẰM Ở src/proxy.ts (rewrite request
+ * CHƯA xác thực sang trang khoá riêng, đọc comment ở đó để biết lý do: chỉ
+ * if/else render trong CÙNG 1 file KHÔNG đủ, đã tự kiểm chứng bằng browser
+ * thật). `redirect()` ở đây CHỈ là lớp phòng thủ thứ 2 (phòng trường hợp
+ * matcher của proxy cấu hình sai/bị bỏ qua) — khi gọi, Next.js dừng render
+ * ngay lập tức và trả về response redirect thuần, KHÔNG render tiếp phần
+ * còn lại của component (bao gồm <PaymentRequestTool/>) nên vẫn an toàn dù
+ * đứng chung file.
  */
 export const metadata: Metadata = {
   title: "Đề nghị thanh toán (nội bộ) | MAX OFFICE",
@@ -30,7 +43,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function DeNghiThanhToanMatBangPage() {
+export default async function DeNghiThanhToanMatBangPage() {
+  const authed = await isPaymentRequestAuthed();
+  if (!authed) {
+    redirect(LOCKED_PATH);
+  }
+
   return (
     <main>
       <PageHero

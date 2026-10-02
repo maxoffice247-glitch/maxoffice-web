@@ -257,12 +257,28 @@ const labelClass = "mb-1.5 block text-[12px] font-bold text-body-text";
 
 export default function PaymentRequestTool() {
   const [form, setForm] = useState<FormState>(() => createDefaultForm("mtk"));
-  const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
+  // "previewing"/"downloading" tách riêng (không dùng chung 1 "generating")
+  // vì giờ đây là 2 lệnh gọi API riêng biệt (xem comment handlePreview/
+  // handleDownloadPdf) — tránh vô tình disable nhầm nút kia khi 1 nút đang
+  // chạy.
+  const [status, setStatus] = useState<"idle" | "previewing" | "downloading" | "error">("idle");
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  // Chụp lại ĐÚNG input đã dùng để tạo previewUrl hiện tại — nút "Tải xuống
+  // PDF" LUÔN gửi lại input này (không phải input mới nhất của form), đảm
+  // bảo file PDF tải về khớp 100% với ảnh đang hiện trên màn hình kể cả khi
+  // nhân viên đã sửa tiếp form sau khi xem trước mà CHƯA bấm xem trước lại.
+  const [previewInput, setPreviewInput] = useState<PaymentRequestInput | null>(null);
   const uid = useId();
 
-  const changeCompany = (type: PaymentRequestCompanyKey | "khac") => setForm(createDefaultForm(type));
+  const changeCompany = (type: PaymentRequestCompanyKey | "khac") => {
+    setForm(createDefaultForm(type));
+    setPreviewUrl((old) => {
+      if (old) URL.revokeObjectURL(old);
+      return null;
+    });
+    setPreviewInput(null);
+  };
   const update = (patch: Partial<FormState>) => setForm((prev) => ({ ...prev, ...patch }) as FormState);
 
   const input = useMemo(() => formToInput(form), [form]);
@@ -273,17 +289,20 @@ export default function PaymentRequestTool() {
   const qeComputedRent =
     form.type === "qe-agency" ? qeAgencyMonthlyRent(form.thang, form.nam) : null;
 
-  const canSubmit = previewResult != null && status !== "generating";
+  const canSubmit = previewResult != null && status === "idle";
 
-  const handleGenerate = async () => {
+  /** XEM TRƯỚC — giữ nguyên hành vi cũ: gọi API, nhận PNG, hiện ảnh ngay
+   * trên trang — KHÔNG tự tải file xuống (khác luồng cũ) để nhân viên xem
+   * lại cho đúng trước khi tải PDF chính thức ở nút riêng bên dưới. */
+  const handlePreview = async () => {
     if (!input) return;
-    setStatus("generating");
+    setStatus("previewing");
     setErrorDetail(null);
     try {
       const res = await fetch("/api/payment-request-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(input),
+        body: JSON.stringify({ ...input, format: "png" }),
       });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
@@ -294,9 +313,36 @@ export default function PaymentRequestTool() {
         if (old) URL.revokeObjectURL(old);
         return URL.createObjectURL(blob);
       });
+      setPreviewInput(input);
+      setStatus("idle");
+    } catch (err) {
+      setErrorDetail(err instanceof Error ? err.message : String(err));
+      setStatus("error");
+    }
+  };
+
+  /** TẢI PDF — gọi LẠI API với format:"pdf" (server dựng PDF từ ĐÚNG ảnh
+   * PNG vừa xem, xem pdfFromImage.ts) rồi mới tải file — dùng `previewInput`
+   * (snapshot lúc xem trước), KHÔNG dùng `input` hiện tại, để đảm bảo PDF
+   * luôn khớp đúng ảnh đang hiển thị dù form có bị sửa tiếp sau đó. */
+  const handleDownloadPdf = async () => {
+    if (!previewInput) return;
+    setStatus("downloading");
+    setErrorDetail(null);
+    try {
+      const res = await fetch("/api/payment-request-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...previewInput, format: "pdf" }),
+      });
+      if (!res.ok) {
+        const message = await res.text().catch(() => "");
+        throw new Error(message || `Server trả về lỗi ${res.status} khi tạo PDF.`);
+      }
+      const blob = await res.blob();
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = `de-nghi-thanh-toan-${form.type}-${Date.now()}.png`;
+      link.download = `de-nghi-thanh-toan-${previewInput.type}-${Date.now()}.pdf`;
       link.href = blobUrl;
       link.click();
       setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
@@ -601,25 +647,39 @@ export default function PaymentRequestTool() {
 
           <button
             type="button"
-            onClick={handleGenerate}
+            onClick={handlePreview}
             disabled={!canSubmit}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-bold text-white shadow-[0_8px_20px_rgba(220,53,48,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-dark disabled:pointer-events-none disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-[15px] font-bold text-white shadow-[0_8px_20px_rgba(21,101,192,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-dark disabled:pointer-events-none disabled:opacity-50"
           >
-            {status === "generating" ? <SpinnerIcon className="h-4 w-4" /> : <DownloadIcon className="h-4 w-4" />}
-            {status === "generating" ? "Đang tạo phiếu..." : "Tạo phiếu đề nghị thanh toán"}
+            {status === "previewing" && <SpinnerIcon className="h-4 w-4" />}
+            {status === "previewing" ? "Đang tạo bản xem trước..." : previewUrl ? "Tạo lại bản xem trước" : "Xem trước phiếu"}
           </button>
           {status === "error" && (
             <p className="mt-2 text-center text-[12.5px] text-accent">
-              Không tạo được ảnh, vui lòng thử lại.
+              Không thực hiện được, vui lòng thử lại.
               {errorDetail && <span className="block break-words text-[11px] text-body-text">({errorDetail})</span>}
             </p>
           )}
           {previewUrl && (
-            <div className="mt-5 overflow-hidden rounded-xl border border-line">
-              <p className="bg-bg-tint px-3 py-1.5 text-[11px] font-semibold text-body-text">Xem trước ảnh vừa tạo</p>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={previewUrl} alt="Xem trước phiếu đề nghị thanh toán vừa tạo" className="w-full" />
-            </div>
+            <>
+              <div className="mt-5 overflow-hidden rounded-xl border border-line">
+                <p className="bg-bg-tint px-3 py-1.5 text-[11px] font-semibold text-body-text">Xem trước phiếu</p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={previewUrl} alt="Xem trước phiếu đề nghị thanh toán vừa tạo" className="w-full" />
+              </div>
+              <button
+                type="button"
+                onClick={handleDownloadPdf}
+                disabled={status !== "idle"}
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-bold text-white shadow-[0_8px_20px_rgba(220,53,48,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-dark disabled:pointer-events-none disabled:opacity-50"
+              >
+                {status === "downloading" ? <SpinnerIcon className="h-4 w-4" /> : <DownloadIcon className="h-4 w-4" />}
+                {status === "downloading" ? "Đang tạo PDF..." : "Tải xuống PDF"}
+              </button>
+              <p className="mt-2 text-center text-[11.5px] text-body-text">
+                File PDF tải xuống luôn khớp đúng bản xem trước phía trên — nếu vừa sửa thông tin ở form, bấm &ldquo;Tạo lại bản xem trước&rdquo; để cập nhật trước khi tải.
+              </p>
+            </>
           )}
         </Reveal>
       </div>
