@@ -350,30 +350,27 @@ function resolveMtkOrQe(
       : `Phí thuê tầng trệt từ ngày 01/${thang} - ${lastDay}/${thang}/${nam}`;
   const rentAmount = type === "qe-agency" ? qeAgencyMonthlyRent(thang, nam) : input.tienThue;
 
-  const items: PaymentRequestLineItem[] = [makeLine({ stt: 1, label: rentLabel, amount: rentAmount, vatPercent: RENT_VAT_PERCENT })];
-  let stt = 2;
-  if (soXe > 0) {
-    items.push(
-      makeLine({
-        stt: stt++,
-        label: `Phí gửi xe tháng ${prevM}/${prevY}`,
-        detail: `${soXe} xe × ${formatVnd(PARKING_FEE_PER_CAR)}`,
-        amount: soXe * PARKING_FEE_PER_CAR,
-        vatPercent: OTHER_VAT_PERCENT,
-      })
-    );
-  }
-  if (kwh > 0) {
-    items.push(
-      makeLine({
-        stt: stt++,
-        label: `Điện sinh hoạt tháng ${prevM}/${prevY}`,
-        detail: `${chiSoDau.toLocaleString("vi-VN")} → ${chiSoCuoi.toLocaleString("vi-VN")} = ${kwh.toLocaleString("vi-VN")} kWh × ${formatVnd(donGiaDien)}/kWh`,
-        amount: dienAmount,
-        vatPercent: OTHER_VAT_PERCENT,
-      })
-    );
-  }
+  // 3 dòng A/B/C LUÔN hiện riêng biệt theo đúng cấu trúc phiếu thật (sheet
+  // gốc có vị trí dòng CỐ ĐỊNH cho thuê/xe/điện, không ẩn dòng nào dù giá
+  // trị tháng đó bằng 0) — CHỈ "Công nợ đầu kỳ" mới ẩn khi = 0 (đúng bản
+  // chất tự nhiên, không phải dòng cố định của phiếu).
+  const items: PaymentRequestLineItem[] = [
+    makeLine({ stt: 1, label: rentLabel, amount: rentAmount, vatPercent: RENT_VAT_PERCENT }),
+    makeLine({
+      stt: 2,
+      label: `Phí gửi xe tháng ${prevM}/${prevY}`,
+      detail: `${soXe} xe × ${formatVnd(PARKING_FEE_PER_CAR)}`,
+      amount: soXe * PARKING_FEE_PER_CAR,
+      vatPercent: OTHER_VAT_PERCENT,
+    }),
+    makeLine({
+      stt: 3,
+      label: `Điện sinh hoạt tháng ${prevM}/${prevY}`,
+      detail: `${chiSoDau.toLocaleString("vi-VN")} → ${chiSoCuoi.toLocaleString("vi-VN")} = ${kwh.toLocaleString("vi-VN")} kWh × ${formatVnd(donGiaDien)}/kWh`,
+      amount: dienAmount,
+      vatPercent: OTHER_VAT_PERCENT,
+    }),
+  ];
 
   const debt = debtLine(congNoDauKy, moTaCongNo, `tháng ${prevM}/${prevY}`);
   const grandTotal = items.reduce((sum, it) => sum + it.total, 0) + (debt?.amount ?? 0);
@@ -410,20 +407,17 @@ function resolveTayBacCul(
   const { month: prevM, year: prevY } = prevMonth(thang, nam);
   const roomLabel = company.diaDiem.split(",")[0];
 
+  // 2 dòng A/B LUÔN hiện riêng biệt (xem comment tương tự ở resolveMtkOrQe).
   const items: PaymentRequestLineItem[] = [
     makeLine({ stt: 1, label: `Phí thuê ${roomLabel.charAt(0).toLowerCase()}${roomLabel.slice(1)} tháng ${thang}/${nam}`, amount: tienThue, vatPercent: RENT_VAT_PERCENT }),
+    makeLine({
+      stt: 2,
+      label: `Phí gửi xe tháng ${prevM}/${prevY}`,
+      detail: `${soXe} xe × ${formatVnd(PARKING_FEE_PER_CAR)}`,
+      amount: soXe * PARKING_FEE_PER_CAR,
+      vatPercent: OTHER_VAT_PERCENT,
+    }),
   ];
-  if (soXe > 0) {
-    items.push(
-      makeLine({
-        stt: 2,
-        label: `Phí gửi xe tháng ${prevM}/${prevY}`,
-        detail: `${soXe} xe × ${formatVnd(PARKING_FEE_PER_CAR)}`,
-        amount: soXe * PARKING_FEE_PER_CAR,
-        vatPercent: OTHER_VAT_PERCENT,
-      })
-    );
-  }
 
   // TB/CUL không có field "mô tả" riêng trong sheet gốc — chỉ 1 nhãn chung.
   const debt = debtLine(congNoDauKy, "", "");
@@ -469,6 +463,8 @@ function resolveKoolog(input: Extract<PaymentRequestInput, { type: "koolog" }>):
 
   // Tiền thuê: GIỮ NGUYÊN logic ×3 cho cả quý — CHỈ field này còn nhân,
   // không đổi theo yêu cầu (khác xe/điện khoán, nay nhập thẳng tổng quý).
+  // 3 dòng A/B/C LUÔN hiện riêng biệt (xem comment tương tự ở
+  // resolveMtkOrQe) — kể cả khi số xe/điện khoán quý đó bằng 0.
   const rentQuarterAmount = tienThueThang * 3;
   const items: PaymentRequestLineItem[] = [
     makeLine({
@@ -479,31 +475,22 @@ function resolveKoolog(input: Extract<PaymentRequestInput, { type: "koolog" }>):
       amount: rentQuarterAmount,
       vatPercent: RENT_VAT_PERCENT,
     }),
+    makeLine({
+      stt: 2,
+      label: `Phí gửi xe ${periodLabel}`,
+      labelEn: `Parking fee ${periodLabelEn}`,
+      detail: `${soXeCaQuy} xe (cả quý) × ${formatVnd(PARKING_FEE_PER_CAR)}`,
+      amount: soXeCaQuy * PARKING_FEE_PER_CAR,
+      vatPercent: OTHER_VAT_PERCENT,
+    }),
+    makeLine({
+      stt: 3,
+      label: `Phụ thu điện sinh hoạt ${periodLabel}`,
+      labelEn: `Electricity surcharge ${periodLabelEn}`,
+      amount: dienKhoanCaQuy,
+      vatPercent: OTHER_VAT_PERCENT,
+    }),
   ];
-  let stt = 2;
-  if (soXeCaQuy > 0) {
-    items.push(
-      makeLine({
-        stt: stt++,
-        label: `Phí gửi xe ${periodLabel}`,
-        labelEn: `Parking fee ${periodLabelEn}`,
-        detail: `${soXeCaQuy} xe (cả quý) × ${formatVnd(PARKING_FEE_PER_CAR)}`,
-        amount: soXeCaQuy * PARKING_FEE_PER_CAR,
-        vatPercent: OTHER_VAT_PERCENT,
-      })
-    );
-  }
-  if (dienKhoanCaQuy > 0) {
-    items.push(
-      makeLine({
-        stt: stt++,
-        label: `Phụ thu điện sinh hoạt ${periodLabel}`,
-        labelEn: `Electricity surcharge ${periodLabelEn}`,
-        amount: dienKhoanCaQuy,
-        vatPercent: OTHER_VAT_PERCENT,
-      })
-    );
-  }
 
   const debt = debtLine(congNoDauKy, moTaCongNo, periodLabel);
   const grandTotal = items.reduce((sum, it) => sum + it.total, 0) + (debt?.amount ?? 0);
