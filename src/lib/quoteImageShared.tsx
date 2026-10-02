@@ -134,40 +134,45 @@ function EmailIcon({ color }: { color: string }) {
   );
 }
 
+/** Hotline — Web — Email — nút "Liên hệ ngay" GỘP CHUNG 1 HÀNG NGANG, dàn
+ * đều bằng justify-content:"space-between" (trước đây Hotline+Web+Email
+ * xếp DỌC 3 dòng bên trái, chỉ nút CTA bên phải — chiếm nhiều chiều cao
+ * hơn hẳn). CARD_WIDTH cố định 1080px (ảnh PNG tĩnh, không responsive) nên
+ * không cần lo "độ rộng khác nhau" — đã đo thực tế tổng độ rộng 4 phần tử
+ * ở cỡ chữ này đủ chỗ trong CONTENT_WIDTH (968px), không tràn/chồng lấn
+ * (xem báo cáo cuối phiên). */
 export function QuoteFooterRow({ lang = "vi" }: { lang?: QuoteLang } = {}) {
   return (
     <div
       style={{
         display: "flex",
         margin: `0 ${MARGIN_X}px`,
-        marginTop: 40,
+        marginTop: 32,
         alignItems: "center",
         justifyContent: "space-between",
         borderTop: `1px solid ${QUOTE_COLOR.line}`,
-        paddingTop: 28,
-        paddingBottom: 48,
+        paddingTop: 24,
+        paddingBottom: 40,
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex", fontSize: 22, fontWeight: 800, color: QUOTE_COLOR.navy }}>
-          {qt("hotlineLabel", lang)}: 089 8082 188
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
-          <WebIcon color={QUOTE_COLOR.bodyText} />
-          www.maxoffice.vn
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
-          <EmailIcon color={QUOTE_COLOR.bodyText} />
-          cskh@maxoffice.vn
-        </div>
+      <div style={{ display: "flex", fontSize: 18, fontWeight: 800, color: QUOTE_COLOR.navy }}>
+        {qt("hotlineLabel", lang)}: 089 8082 188
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: QUOTE_COLOR.bodyText }}>
+        <WebIcon color={QUOTE_COLOR.bodyText} />
+        www.maxoffice.vn
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: QUOTE_COLOR.bodyText }}>
+        <EmailIcon color={QUOTE_COLOR.bodyText} />
+        cskh@maxoffice.vn
       </div>
       <div
         style={{
           display: "flex",
           borderRadius: 9999,
           backgroundColor: QUOTE_COLOR.accent,
-          padding: "12px 24px",
-          fontSize: 16,
+          padding: "10px 20px",
+          fontSize: 14,
           fontWeight: 700,
           color: "#fff",
         }}

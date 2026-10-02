@@ -82,7 +82,7 @@ const SECTION_WORDS_H = 26; // dòng "Bằng chữ" dưới khối tổng
 const INLINE_WORDS_H = 22; // dòng "Bằng chữ" gắn ngay dưới 1 dòng đơn lẻ (không box)
 
 const HEADER_H = 148;
-const FOOTER_H = 216; // +40 so với trước — thêm 2 dòng web/email mới (xem QuoteFooterRow), hiệu chỉnh bằng pixel thật
+const FOOTER_H = 140; // Hotline/Web/Email/CTA gộp 1 hàng ngang (xem QuoteFooterRow) — hiệu chỉnh bằng pixel thật
 const CUSTOMER_ROW_H = 26;
 const QR_BLOCK_H = 232; // khối QR NGANG đầy đủ (ảnh trái, chữ phải) — dùng khi CHỈ 1 trong 2 QR hiện
 const THU_HO_QR_NOTE_H = 20; // dòng cảnh báo "chuyển vào TK đơn vị cung cấp..." dưới QR thu hộ (fontSize 12, 1 dòng)
@@ -93,7 +93,7 @@ const THU_HO_QR_NOTE_H = 20; // dòng cảnh báo "chuyển vào TK đơn vị c
 const QR_ROW_H = 365;
 
 const GRAND_TOTAL_TOP_MARGIN = 32; // giống SECTION_TOP_MARGIN, cùng nhịp cách giữa các khối
-const GRAND_TOTAL_BOX_H = 80; // padding "22px 26px" (44) + nội dung cao nhất (font 30, line-height ~36)
+const GRAND_TOTAL_BOX_H = 60; // thu gọn vừa nội dung (alignSelf:"flex-start") — padding "14px 20px" (28) + nội dung (font 24)
 const GRAND_TOTAL_WORDS_H = 20; // "Bằng chữ" 1 dòng, fontSize 13 — đo thực tế thấp hơn mốc 26 dùng cho SECTION_WORDS_H
 const GRAND_TOTAL_NOTE_H = 18;
 
@@ -103,7 +103,7 @@ const GRAND_TOTAL_NOTE_H = 18;
 // DỊCH VỤ MAX OFFICE" đứng ngay phía trên (navy) — tránh 2 khối liền kề giống
 // hệt nhau gây rối mắt.
 const OVERALL_TOTAL_TOP_MARGIN = 32;
-const OVERALL_TOTAL_BOX_H = 80;
+const OVERALL_TOTAL_BOX_H = 60; // thu gọn vừa nội dung, cùng cỡ với GRAND_TOTAL_BOX_H
 const OVERALL_TOTAL_SPLIT_NOTE_H = 18;
 const OVERALL_TOTAL_WORDS_H = 20;
 
@@ -500,17 +500,18 @@ function GrandTotal({
       <div
         style={{
           display: "flex",
+          alignSelf: "flex-start",
           alignItems: "center",
-          justifyContent: "space-between",
-          borderRadius: 16,
+          gap: 20,
+          borderRadius: 14,
           backgroundColor: QUOTE_COLOR.navy,
-          padding: "22px 26px",
+          padding: "14px 20px",
         }}
       >
-        <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: "#fff" }}>
+        <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: "#fff" }}>
           {qt(hasThuHo ? "grandTotalMaxOfficeLabel" : "grandTotalLabel", lang)}
         </div>
-        <div style={{ display: "flex", fontSize: 30, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(total, lang)}</div>
+        <div style={{ display: "flex", fontSize: 24, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(total, lang)}</div>
       </div>
       {lang === "vi" && (
         <div style={{ display: "flex", marginTop: 8, paddingLeft: 4 }}>
@@ -552,15 +553,16 @@ function OverallTotal({ amount, lang }: { amount: number; lang: QuoteLang }) {
       <div
         style={{
           display: "flex",
+          alignSelf: "flex-start",
           alignItems: "center",
-          justifyContent: "space-between",
-          borderRadius: 16,
+          gap: 20,
+          borderRadius: 14,
           backgroundColor: QUOTE_COLOR.accent,
-          padding: "22px 26px",
+          padding: "14px 20px",
         }}
       >
-        <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: "#fff" }}>{qt("grandTotalLabel", lang)}</div>
-        <div style={{ display: "flex", fontSize: 30, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(amount, lang)}</div>
+        <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: "#fff" }}>{qt("grandTotalLabel", lang)}</div>
+        <div style={{ display: "flex", fontSize: 24, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(amount, lang)}</div>
       </div>
       <div style={{ display: "flex", marginTop: 6, paddingLeft: 4, fontSize: 12, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>
         {qt("overallTotalSplitNote", lang)}
@@ -806,16 +808,21 @@ export async function POST(req: Request) {
     resolvedLines.push(result);
   }
 
+  // "Họ và tên" + "SĐT" GỘP CHUNG 1 DÒNG (cả 2 đều ngắn, không cần tách
+  // dòng riêng) — "Tên công ty" vẫn GIỮ dòng riêng (có thể dài, cần đủ chỗ
+  // tự xuống dòng). `nameAndPhoneParts` rỗng khi khách không điền cả 2;
+  // chỉ 1 phần tử khi điền đúng 1 trong 2 (vẫn hiện bình thường, không có
+  // gì để "gộp" trong trường hợp đó).
   const customer = body.customer;
-  const customerRows: { label: string; value: string }[] = [];
-  if (customer) {
-    if (isNonEmptyString(customer.name))
-      customerRows.push({ label: qt("customerNameLabel", lang), value: customer.name.trim() });
-    if (isNonEmptyString(customer.phone))
-      customerRows.push({ label: qt("customerPhoneLabel", lang), value: customer.phone.trim() });
-    if (isNonEmptyString(customer.companyName))
-      customerRows.push({ label: qt("customerCompanyLabel", lang), value: customer.companyName.trim() });
-  }
+  const nameAndPhoneParts: { label: string; value: string }[] = [];
+  if (isNonEmptyString(customer?.name))
+    nameAndPhoneParts.push({ label: qt("customerNameLabel", lang), value: customer.name.trim() });
+  if (isNonEmptyString(customer?.phone))
+    nameAndPhoneParts.push({ label: qt("customerPhoneLabel", lang), value: customer.phone.trim() });
+  const companyRow = isNonEmptyString(customer?.companyName)
+    ? { label: qt("customerCompanyLabel", lang), value: customer.companyName.trim() }
+    : null;
+  const customerLineCount = (nameAndPhoneParts.length > 0 ? 1 : 0) + (companyRow ? 1 : 0);
 
   const byBucket = new Map<QuoteBucket, ResolvedQuoteLine[]>();
   for (const bucket of BUCKET_ORDER) byBucket.set(bucket, []);
@@ -868,8 +875,7 @@ export async function POST(req: Request) {
 
   const dateLabel = `${qt("dateLabelPrefix", lang)}: ${new Date().toLocaleDateString(lang === "en" ? "en-US" : "vi-VN")}`;
 
-  const customerBlockH =
-    customerRows.length > 0 ? 24 + 40 + 30 + customerRows.length * CUSTOMER_ROW_H : 0;
+  const customerBlockH = customerLineCount > 0 ? 24 + 40 + 30 + customerLineCount * CUSTOMER_ROW_H : 0;
 
   const height =
     HEADER_H +
@@ -894,7 +900,7 @@ export async function POST(req: Request) {
       >
         <QuoteHeaderRow logoSrc={logoSrc} badgeLabel={qt("badgeLabel", lang)} dateLabel={dateLabel} />
 
-        {customerRows.length > 0 && (
+        {customerLineCount > 0 && (
           <div
             style={{
               display: "flex",
@@ -920,12 +926,22 @@ export async function POST(req: Request) {
               {qt("customerInfoTitle", lang)}
             </div>
             <div style={{ display: "flex", flexDirection: "column", marginTop: 10, gap: 6 }}>
-              {customerRows.map((row) => (
-                <div key={row.label} style={{ display: "flex", fontSize: 16, color: QUOTE_COLOR.ink }}>
-                  <span style={{ display: "flex", fontWeight: 700, marginRight: 6 }}>{row.label}:</span>
-                  {row.value}
+              {nameAndPhoneParts.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 24, fontSize: 16, color: QUOTE_COLOR.ink }}>
+                  {nameAndPhoneParts.map((part) => (
+                    <div key={part.label} style={{ display: "flex" }}>
+                      <span style={{ display: "flex", fontWeight: 700, marginRight: 6 }}>{part.label}:</span>
+                      {part.value}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+              {companyRow && (
+                <div style={{ display: "flex", fontSize: 16, color: QUOTE_COLOR.ink }}>
+                  <span style={{ display: "flex", fontWeight: 700, marginRight: 6 }}>{companyRow.label}:</span>
+                  {companyRow.value}
+                </div>
+              )}
             </div>
           </div>
         )}
