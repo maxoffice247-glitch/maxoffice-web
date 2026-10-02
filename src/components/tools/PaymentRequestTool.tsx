@@ -6,9 +6,9 @@ import Reveal from "../Reveal";
 import { PlusIcon, CloseIcon, DownloadIcon, SpinnerIcon } from "../icons";
 import {
   resolvePaymentRequest,
-  qeAgencyMonthlyRent,
   PAYMENT_REQUEST_COMPANY_OPTIONS,
   DEFAULT_ELECTRICITY_PRICE_PER_KWH,
+  QE_AGENCY_DEFAULT_RENT,
   type PaymentRequestCompanyKey,
   type PaymentRequestInput,
 } from "@/lib/paymentRequestData";
@@ -64,6 +64,10 @@ type FormState =
       ngayLap: string;
       thang: number;
       nam: number;
+      /** Tiền thuê CỐ ĐỊNH nhưng VẪN NHẬP TAY (như MTK/Tây Bắc/CUL) —
+       * KHÔNG còn tự tính theo ngày trong tháng (đã bỏ công thức prorating,
+       * hiểu sai yêu cầu ban đầu). Mặc định gợi ý QE_AGENCY_DEFAULT_RENT. */
+      tienThue: string;
       congNoDauKy: string;
       moTaCongNo: string;
       soXe: string;
@@ -150,6 +154,7 @@ function createDefaultForm(type: PaymentRequestCompanyKey | "khac"): FormState {
     return {
       type,
       ...base,
+      tienThue: String(QE_AGENCY_DEFAULT_RENT),
       congNoDauKy: "0",
       moTaCongNo: "",
       soXe: "0",
@@ -219,6 +224,8 @@ function formToInput(form: FormState): PaymentRequestInput | null {
   if (!Number.isInteger(ngayLap)) return null;
 
   if (form.type === "mtk" || form.type === "qe-agency") {
+    if (!form.tienThue.trim()) return null;
+    const tienThue = toInt(form.tienThue);
     const congNoDauKy = toInt(form.congNoDauKy);
     const soXe = toInt(form.soXe);
     const chiSoDau = toDecimal(form.chiSoDau);
@@ -226,11 +233,9 @@ function formToInput(form: FormState): PaymentRequestInput | null {
     const donGiaDien = toInt(form.donGiaDien);
     if ([chiSoDau, chiSoCuoi].some(Number.isNaN)) return null;
     if (form.type === "mtk") {
-      if (!form.tienThue.trim()) return null;
-      const tienThue = toInt(form.tienThue);
       return { type: "mtk", ngayLap, thang: form.thang, nam: form.nam, tienThue, congNoDauKy, moTaCongNo: form.moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien };
     }
-    return { type: "qe-agency", ngayLap, thang: form.thang, nam: form.nam, congNoDauKy, moTaCongNo: form.moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien };
+    return { type: "qe-agency", ngayLap, thang: form.thang, nam: form.nam, tienThue, congNoDauKy, moTaCongNo: form.moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien };
   } else if (form.type === "tay-bac" || form.type === "cul") {
     if (!form.tienThue.trim()) return null;
     const tienThue = toInt(form.tienThue);
@@ -383,9 +388,6 @@ export default function PaymentRequestTool() {
   const previewResult = preview && !("error" in preview) ? preview : null;
   const previewError = preview && "error" in preview ? preview.error : null;
 
-  const qeComputedRent =
-    form.type === "qe-agency" ? qeAgencyMonthlyRent(form.thang, form.nam) : null;
-
   const canSubmit = previewResult != null && status === "idle";
 
   /** XEM TRƯỚC — giữ nguyên hành vi cũ: gọi API, nhận PNG, hiện ảnh ngay
@@ -537,23 +539,22 @@ export default function PaymentRequestTool() {
 
           {(form.type === "mtk" || form.type === "qe-agency") && (
             <div className="mb-6 grid grid-cols-1 gap-3.5 sm:grid-cols-2">
-              {form.type === "mtk" ? (
-                <div>
-                  <label className={labelClass}>Tiền thuê (chưa VAT)</label>
-                  <MoneyInput value={form.tienThue} onChange={(raw) => update({ tienThue: raw })} placeholder="VD: 36.300.000" className={inputClass} />
-                </div>
-              ) : (
-                <div>
-                  <label className={labelClass}>Tiền thuê (chưa VAT) — tự động tính</label>
-                  <div className="flex items-center rounded-xl border border-line bg-bg-tint px-3.5 py-2.5 text-[13.5px] font-bold text-navy">
-                    {qeComputedRent != null ? formatVnd(qeComputedRent) : "—"}
-                  </div>
+              <div>
+                <label className={labelClass}>Tiền thuê (chưa VAT)</label>
+                <MoneyInput
+                  value={form.tienThue}
+                  onChange={(raw) => update({ tienThue: raw })}
+                  placeholder={form.type === "mtk" ? "VD: 36.300.000" : `VD: ${formatVnd(QE_AGENCY_DEFAULT_RENT).replace("đ", "")}`}
+                  className={inputClass}
+                />
+                {form.type === "qe-agency" && (
                   <p className="mt-1 text-[11px] text-body-text">
-                    QE Agency chỉ thuê từ ngày 10 tới hết tháng — tự tính theo công thức (8.500.000 ÷ số ngày trong
-                    tháng) × (số ngày trong tháng − 9), làm tròn tới đồng, cập nhật ngay khi đổi Tháng/Năm.
+                    Phiếu sẽ ghi chu kỳ thuê &ldquo;từ ngày 10/{form.thang}/{form.nam} - 10/
+                    {form.thang === 12 ? 1 : form.thang + 1}/{form.thang === 12 ? form.nam + 1 : form.nam}&rdquo; —
+                    tiền thuê cố định theo tháng, không tính theo số ngày.
                   </p>
-                </div>
-              )}
+                )}
+              </div>
               <div>
                 <label className={labelClass}>Số lượng xe gửi tháng trước</label>
                 <input type="text" inputMode="numeric" value={form.soXe} onChange={(e) => update({ soXe: e.target.value })} className={inputClass} />

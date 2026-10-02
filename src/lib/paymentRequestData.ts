@@ -55,13 +55,16 @@ export const RENT_VAT_PERCENT = 10;
  * đọc, xem báo cáo khảo sát). */
 export const OTHER_VAT_PERCENT = 8;
 export const DEFAULT_ELECTRICITY_PRICE_PER_KWH = 4500;
-/** Tiền thuê CẢ THÁNG (chưa VAT, chưa gồm điện/xe) của QE Agency nếu thuê
- * trọn tháng — công ty chỉ thực thuê từ ngày 10 tới hết tháng nên không bao
- * giờ trả đúng số này, chỉ dùng làm cơ sở tính theo tỷ lệ số ngày thực thuê
- * (xem qeAgencyMonthlyRent()). */
-export const QE_AGENCY_FULL_MONTH_RENT = 8_500_000;
-/** QE Agency chỉ thuê từ ngày này tới hết tháng — số ngày thực thuê trong
- * công thức = tổng số ngày của tháng − (QE_AGENCY_RENT_START_DAY − 1). */
+/** Tiền thuê CỐ ĐỊNH của QE Agency, MỌI THÁNG — giống cách xử lý flat-rate
+ * của Tây Bắc/CUL (không có công thức động nào theo ngày/tháng). ĐÃ BỎ HẲN
+ * công thức prorating theo số ngày trong tháng dùng trước đây (hiểu sai yêu
+ * cầu ban đầu — QE Agency chỉ khác các công ty khác ở CÁCH GHI CHU KỲ trên
+ * phiếu "10/MM - 10/MM+1", không phải ở cách tính tiền). Chỉ dùng làm giá
+ * trị MẶC ĐỊNH gợi ý trong form — vẫn cho sửa tay, nhất quán với Tiền thuê
+ * của Minh Thành Khang/Tây Bắc/CUL (đều là ô nhập tự do, không khoá cứng). */
+export const QE_AGENCY_DEFAULT_RENT = 8_500_000;
+/** Ngày bắt đầu chu kỳ thuê ghi trên phiếu QE Agency (chỉ còn dùng cho NHÃN
+ * hiển thị "10/MM - 10/MM+1", không còn liên quan gì tới cách tính tiền). */
 export const QE_AGENCY_RENT_START_DAY = 10;
 
 function formatVnd(n: number): string {
@@ -70,27 +73,22 @@ function formatVnd(n: number): string {
 
 /** Số ngày thật của 1 tháng/năm cụ thể — dùng `new Date(year, month, 0)`
  * (ngày 0 của tháng SAU = ngày cuối tháng hiện tại), TỰ ĐỘNG đúng cho tháng
- * 2 (28 hoặc 29 ngày năm nhuận) mà không cần bảng tra tháng hardcode nào. */
+ * 2 (28 hoặc 29 ngày năm nhuận) mà không cần bảng tra tháng hardcode nào.
+ * CHỈ còn dùng cho nhãn hiển thị của MTK ("01/MM - ngày cuối tháng/MM/YYYY")
+ * — KHÔNG còn liên quan gì tới tiền thuê QE Agency (đã bỏ công thức
+ * prorating theo số ngày). */
 export function daysInMonth(month: number, year: number): number {
   return new Date(year, month, 0).getDate();
 }
 
-/**
- * Công thức tiền thuê QE Agency theo đúng số ngày thực thuê trong tháng
- * (thuê từ ngày 10 tới hết tháng, KHÔNG BAO GIỜ nhập tay/hardcode):
- *   Thành tiền = (8.500.000 ÷ số_ngày_trong_tháng) × (số_ngày_trong_tháng − 9)
- * Làm tròn tới đồng (Math.round). Đã tự kiểm chứng khớp đúng số cũ trong
- * sheet gốc cho tháng 31 ngày: 8.500.000 ÷ 31 × 22 = 6.032.258,06... làm
- * tròn = 6.032.258đ (đúng số hardcode cũ tìm thấy trong sheet).
- */
-export function qeAgencyMonthlyRent(month: number, year: number): number {
-  const days = daysInMonth(month, year);
-  const rentedDays = days - (QE_AGENCY_RENT_START_DAY - 1);
-  return Math.round((QE_AGENCY_FULL_MONTH_RENT / days) * rentedDays);
-}
-
 function prevMonth(month: number, year: number): { month: number; year: number } {
   return month === 1 ? { month: 12, year: year - 1 } : { month: month - 1, year };
+}
+
+/** Tháng/năm kế tiếp — dùng cho nhãn chu kỳ thuê QE Agency ("10/MM -
+ * 10/MM+1"), tự xử lý đúng khi qua năm (tháng 12 -> tháng 1 năm sau). */
+function nextMonth(month: number, year: number): { month: number; year: number } {
+  return month === 12 ? { month: 1, year: year + 1 } : { month: month + 1, year };
 }
 
 type CompanyStaticInfo = {
@@ -308,6 +306,9 @@ export type PaymentRequestInput =
       ngayLap: number;
       thang: number;
       nam: number;
+      /** Tiền thuê CỐ ĐỊNH, nhập tay (không còn tự tính) — xem
+       * QE_AGENCY_DEFAULT_RENT ở trên. */
+      tienThue: number;
       congNoDauKy: number;
       moTaCongNo: string;
       soXe: number;
@@ -332,12 +333,12 @@ export type PaymentRequestInput =
 function resolveMtkOrQe(
   input: Extract<PaymentRequestInput, { type: "mtk" | "qe-agency" }>
 ): PaymentRequestResult | PaymentRequestInputError {
-  const { type, ngayLap, thang, nam, congNoDauKy, moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien } = input;
+  const { type, ngayLap, thang, nam, tienThue, congNoDauKy, moTaCongNo, soXe, chiSoDau, chiSoCuoi, donGiaDien } = input;
   if (!isValidDay(ngayLap) || !isValidMonth(thang) || !isValidYear(nam)) {
     return { error: "Ngày lập phiếu/Tháng/Năm thanh toán không hợp lệ." };
   }
-  if (!isFiniteNonNegative(congNoDauKy) || !isFiniteNonNegative(soXe) || !isFiniteNonNegative(donGiaDien)) {
-    return { error: "Công nợ đầu kỳ/Số lượng xe/Đơn giá điện phải là số không âm." };
+  if (!isFiniteNonNegative(tienThue) || !isFiniteNonNegative(congNoDauKy) || !isFiniteNonNegative(soXe) || !isFiniteNonNegative(donGiaDien)) {
+    return { error: "Tiền thuê/Công nợ đầu kỳ/Số lượng xe/Đơn giá điện phải là số không âm." };
   }
   if (!isFiniteNonNegative(chiSoDau) || !isFiniteNonNegative(chiSoCuoi) || chiSoCuoi < chiSoDau) {
     return { error: "Chỉ số điện cuối kỳ phải lớn hơn hoặc bằng chỉ số đầu kỳ." };
@@ -348,11 +349,18 @@ function resolveMtkOrQe(
   const kwh = chiSoCuoi - chiSoDau;
   const dienAmount = Math.round(kwh * donGiaDien);
 
+  // QE Agency: tiền thuê CỐ ĐỊNH nhập tay (không còn công thức prorating
+  // theo ngày) — CHỈ khác MTK ở NHÃN chu kỳ thuê ghi trên phiếu ("10/MM -
+  // 10/MM+1" thay vì "01/MM - ngày cuối tháng/MM"), tự qua năm đúng khi
+  // tháng hiện tại là 12.
   const rentLabel =
     type === "qe-agency"
-      ? `Phí thuê ${company.diaDiem.split(",")[0]} từ ngày ${QE_AGENCY_RENT_START_DAY}/${thang} - ${lastDay}/${thang}/${nam}`
+      ? (() => {
+          const { month: nextM, year: nextY } = nextMonth(thang, nam);
+          return `Phí thuê văn phòng từ ngày ${QE_AGENCY_RENT_START_DAY}/${thang}/${nam} - ${QE_AGENCY_RENT_START_DAY}/${nextM}/${nextY}`;
+        })()
       : `Phí thuê tầng trệt từ ngày 01/${thang} - ${lastDay}/${thang}/${nam}`;
-  const rentAmount = type === "qe-agency" ? qeAgencyMonthlyRent(thang, nam) : input.tienThue;
+  const rentAmount = tienThue;
 
   // Dòng xe/điện ẨN HẲN khi giá trị THỰC TẾ của đúng tháng đang lập phiếu
   // bằng 0 (không hiện "0đ") — STT đánh lại LIÊN TỤC cho các dòng còn hiện

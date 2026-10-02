@@ -119,13 +119,13 @@ function isValidRequestShape(body: unknown): body is PaymentRequestInput {
       isFiniteNumber(b.ngayLap) &&
       isFiniteNumber(b.thang) &&
       isFiniteNumber(b.nam) &&
+      isFiniteNumber(b.tienThue) &&
       isFiniteNumber(b.congNoDauKy) &&
       typeof b.moTaCongNo === "string" &&
       isFiniteNumber(b.soXe) &&
       isFiniteNumber(b.chiSoDau) &&
       isFiniteNumber(b.chiSoCuoi) &&
-      isFiniteNumber(b.donGiaDien) &&
-      (b.type === "qe-agency" || isFiniteNumber(b.tienThue))
+      isFiniteNumber(b.donGiaDien)
     );
   }
   if (b.type === "tay-bac" || b.type === "cul") {
