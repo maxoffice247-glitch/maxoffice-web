@@ -14,6 +14,7 @@ import {
   getCustomServiceReferencePrice,
   getChuKySoTierOptions,
   getHoaDonDienTuTierOptions,
+  buildCompositeQuoteFilename,
   CUSTOM_SERVICE_META,
   MONTH_OPTIONS,
   type CompositeQuoteItem,
@@ -295,7 +296,7 @@ export default function CompositeQuoteTool() {
         throw new Error(message || `Server trả về lỗi ${res.status} khi tạo ảnh báo giá.`);
       }
       const blob = await res.blob();
-      const filename = `bao-gia-tong-hop-${Date.now()}.png`;
+      const filename = buildCompositeQuoteFilename(customer);
       setPreviewUrl((old) => {
         if (old) URL.revokeObjectURL(old);
         return URL.createObjectURL(blob);

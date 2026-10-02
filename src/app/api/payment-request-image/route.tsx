@@ -10,13 +10,14 @@ import {
 } from "@/lib/quoteImageShared";
 import {
   resolvePaymentRequest,
+  buildPaymentRequestFilename,
   type PaymentRequestInput,
   type PaymentRequestLineItem,
   type PaymentRequestDebt,
   type PaymentRequestCompanyKey,
 } from "@/lib/paymentRequestData";
 import { amountToVietnameseWords } from "@/lib/numberToWords";
-import { buildVietQrImageUrl, vietQrAccountLabel, detectImageMimeType } from "@/lib/vietQr";
+import { buildVietQrImageUrl, vietQrAccountLabel, detectImageMimeType, isVietQrAccountKey } from "@/lib/vietQr";
 import { isPaymentRequestAuthed } from "@/lib/paymentRequestAuthServer";
 import { pngBufferToSinglePagePdf } from "@/lib/pdfFromImage";
 import { getPaymentRequestCompanies } from "@/lib/paymentRequestCompanySheet";
@@ -421,10 +422,15 @@ export async function POST(req: Request) {
     return new Response("Nội dung request không phải JSON hợp lệ.", { status: 400 });
   }
 
-  // `format` là field RIÊNG của request (không thuộc PaymentRequestInput) —
-  // đọc trước khi narrow type, isValidRequestShape() bỏ qua field thừa này
-  // nên không ảnh hưởng gì tới kiểm tra hình dạng bên dưới.
+  // `format`/`qrAccountKey` là field RIÊNG của request (không thuộc
+  // PaymentRequestInput) — đọc trước khi narrow type, isValidRequestShape()
+  // bỏ qua field thừa này nên không ảnh hưởng gì tới kiểm tra hình dạng bên
+  // dưới. `qrAccountKey` KHÔNG tin trực tiếp — chỉ chấp nhận khi khớp đúng 1
+  // trong 2 tài khoản đã khai báo sẵn (isVietQrAccountKey), nhân viên không
+  // tự gõ số tài khoản bất kỳ được — cùng nguyên tắc an toàn đã áp dụng ở
+  // CompositeQuoteTool/route.tsx.
   const format = body && typeof body === "object" && (body as Record<string, unknown>).format === "pdf" ? "pdf" : "png";
+  const requestedQrAccountKey = body && typeof body === "object" ? (body as Record<string, unknown>).qrAccountKey : undefined;
 
   if (!isValidRequestShape(body)) {
     return new Response("Dữ liệu request không hợp lệ.", { status: 400 });
@@ -444,8 +450,13 @@ export async function POST(req: Request) {
     return new Response(result.error, { status: 400 });
   }
 
+  // Tài khoản QR nhân viên TỰ CHỌN trên form (nếu gửi hợp lệ) ghi đè tài
+  // khoản mặc định theo loại công ty (result.qrAccountKey) — xem comment ở
+  // chỗ đọc requestedQrAccountKey phía trên.
+  const qrAccountKey = isVietQrAccountKey(requestedQrAccountKey) ? requestedQrAccountKey : result.qrAccountKey;
+
   const [fonts, logoSrc] = await Promise.all([loadQuoteImageFonts(), loadQuoteImageLogo()]);
-  const qrDataUri = await fetchQrDataUri(buildVietQrImageUrl(result.qrAccountKey, result.grandTotal, result.qrNote));
+  const qrDataUri = await fetchQrDataUri(buildVietQrImageUrl(qrAccountKey, result.grandTotal, result.qrNote));
 
   const height =
     HEADER_H +
@@ -497,7 +508,7 @@ export async function POST(req: Request) {
 
         <GrandTotalBox amount={result.grandTotal} />
         <AmountInWords amount={result.grandTotal} />
-        {qrDataUri && <QrBlock dataUri={qrDataUri} accountLabel={vietQrAccountLabel(result.qrAccountKey)} amount={result.grandTotal} />}
+        {qrDataUri && <QrBlock dataUri={qrDataUri} accountLabel={vietQrAccountLabel(qrAccountKey)} amount={result.grandTotal} />}
         <SignatureBlock />
         <QuoteFooterRow />
       </div>
@@ -524,7 +535,7 @@ export async function POST(req: Request) {
   return new Response(new Uint8Array(pdfBytes), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="de-nghi-thanh-toan-${result.companyKey}.pdf"`,
+      "Content-Disposition": `attachment; filename="${buildPaymentRequestFilename(body)}"`,
       "Cache-Control": "no-store",
     },
   });

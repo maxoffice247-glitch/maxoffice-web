@@ -44,6 +44,7 @@
  */
 import { parseVndAmount } from "./compositeQuote";
 import type { VietQrAccountKey } from "./vietQr";
+import { slugifyForFilename } from "./slugify";
 
 export type PaymentRequestCompanyKey = "mtk" | "tay-bac" | "cul" | "koolog" | "qe-agency";
 
@@ -670,4 +671,38 @@ export function resolvePaymentRequest(
     case "khac":
       return resolveKhac(input);
   }
+}
+
+/** Tên hiển thị NGẮN GỌN (không phải tên pháp lý đầy đủ) dùng để dựng tên
+ * file tải xuống — VD "Minh Thành Khang" -> "MINH-THANH-KHANG", KHÔNG dùng
+ * company.name (tên đầy đủ) vì sẽ ra tên file quá dài. */
+const COMPANY_SHORT_NAME_FOR_FILENAME: Record<PaymentRequestCompanyKey, string> = {
+  mtk: "Minh Thành Khang",
+  "tay-bac": "Tây Bắc",
+  cul: "CUL",
+  koolog: "KOOLOG",
+  "qe-agency": "QE Agency",
+};
+
+/**
+ * Tên file tải xuống — định dạng `DNTT-{TÊN-CÔNG-TY}-{KỲ}.pdf`:
+ * - Công ty tính theo THÁNG (MTK/Tây Bắc/CUL/QE Agency): kỳ = "T" + 2 số
+ *   tháng + 2 số cuối năm (VD tháng 10/2026 -> "T1026").
+ * - KOOLOG tính theo QUÝ: kỳ = "Q" + số quý + 2 số cuối năm (VD quý 1/2026
+ *   -> "Q126").
+ * - "Dịch vụ khác": tên khách tự nhập (slugify, cắt tối đa 30 ký tự) + kỳ
+ *   theo tháng (không có khái niệm quý).
+ */
+export function buildPaymentRequestFilename(input: PaymentRequestInput): string {
+  if (input.type === "khac") {
+    const companySlug = slugifyForFilename(input.tenKhachHang, 30);
+    const period = `T${String(input.thang).padStart(2, "0")}${String(input.nam).slice(-2)}`;
+    return `DNTT-${companySlug}-${period}.pdf`;
+  }
+  const companySlug = slugifyForFilename(COMPANY_SHORT_NAME_FOR_FILENAME[input.type]);
+  const period =
+    input.type === "koolog"
+      ? `Q${input.quy}${String(input.nam).slice(-2)}`
+      : `T${String(input.thang).padStart(2, "0")}${String(input.nam).slice(-2)}`;
+  return `DNTT-${companySlug}-${period}.pdf`;
 }

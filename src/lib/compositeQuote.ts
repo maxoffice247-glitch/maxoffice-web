@@ -25,6 +25,7 @@
 import { getOfferedPlan } from "./planFinder";
 import { SERVICES_DATA, CHU_KY_SO_TIERS, HOA_DON_DIEN_TU_TIERS } from "./servicesData";
 import { qt, formatQuoteCurrency, type QuoteLang, type QuoteDictKey } from "./quoteImageDictionary";
+import { slugifyForFilename } from "./slugify";
 
 export type CustomServiceSlug = "van-phong-tron-goi" | "cho-ngoi-linh-dong" | "phong-hop" | "khac";
 
@@ -515,4 +516,23 @@ export function getChuKySoTierOptions(): { key: string; duration: string; price:
  * HOA_DON_DIEN_TU_TIERS (servicesData.ts). */
 export function getHoaDonDienTuTierOptions(): { key: string; quantity: string; price: string }[] {
   return HOA_DON_DIEN_TU_TIERS.map((t) => ({ key: t.key, quantity: t.quantity, price: t.price }));
+}
+
+/**
+ * Tên file ảnh tải xuống — định dạng `BG-{TÊN-CÔNG-TY-VIẾT-TẮT}-{NGÀY}.png`:
+ * ưu tiên tên công ty dự kiến (cắt tối đa 25 ký tự), không có thì dùng tên
+ * khách hàng, không có cả 2 thì "KHACH-LE". Ngày = ngày TẠO báo giá (không
+ * có trường ngày riêng nào trong công cụ này để dùng thay).
+ *
+ * CHỈ đổi đuôi .png (không phải .pdf) — công cụ này CHƯA có tính năng xuất
+ * PDF (khác PaymentRequestTool), nên áp dụng quy ước tên file mới cho đúng
+ * định dạng file THẬT SỰ đang tải về.
+ */
+export function buildCompositeQuoteFilename(customer: CompositeQuoteCustomer, now: Date = new Date()): string {
+  const source = customer.companyName?.trim() || customer.name?.trim();
+  const slug = source ? slugifyForFilename(source, 25) : "KHACH-LE";
+  const dd = String(now.getDate()).padStart(2, "0");
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const yy = String(now.getFullYear()).slice(-2);
+  return `BG-${slug}-${dd}${mm}${yy}.png`;
 }

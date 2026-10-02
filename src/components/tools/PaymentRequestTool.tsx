@@ -6,12 +6,14 @@ import Reveal from "../Reveal";
 import { PlusIcon, CloseIcon, DownloadIcon, SpinnerIcon } from "../icons";
 import {
   resolvePaymentRequest,
+  buildPaymentRequestFilename,
   PAYMENT_REQUEST_COMPANY_OPTIONS,
   DEFAULT_ELECTRICITY_PRICE_PER_KWH,
   QE_AGENCY_DEFAULT_RENT,
   type PaymentRequestCompanyKey,
   type PaymentRequestInput,
 } from "@/lib/paymentRequestData";
+import { VIETQR_ACCOUNT_KEYS, DEFAULT_VIETQR_ACCOUNT_KEY, vietQrAccountLabel, type VietQrAccountKey } from "@/lib/vietQr";
 
 /**
  * Form nội bộ "Đề nghị thanh toán" — lập phiếu thanh toán cho 5 khách thuê
@@ -371,10 +373,19 @@ export default function PaymentRequestTool() {
   // bảo file PDF tải về khớp 100% với ảnh đang hiện trên màn hình kể cả khi
   // nhân viên đã sửa tiếp form sau khi xem trước mà CHƯA bấm xem trước lại.
   const [previewInput, setPreviewInput] = useState<PaymentRequestInput | null>(null);
+  // Tài khoản QR nhân viên TỰ CHỌN — mặc định hợp lý theo loại công ty
+  // (5 công ty đặt tên: tài khoản 1117777888 như trước đây; "Dịch vụ khác":
+  // tài khoản 16868889, đúng quy ước MẪU DỊCH VỤ KHÁC gốc) — sửa đổi tự do.
+  const [qrAccountKey, setQrAccountKey] = useState<VietQrAccountKey>(DEFAULT_VIETQR_ACCOUNT_KEY);
+  // Snapshot tài khoản ĐÃ DÙNG lúc xem trước — nút "Tải xuống PDF" luôn gửi
+  // lại đúng tài khoản này (không phải lựa chọn mới nhất trên form), cùng
+  // nguyên tắc với previewInput (đảm bảo PDF khớp đúng ảnh đang hiển thị).
+  const [previewQrAccountKey, setPreviewQrAccountKey] = useState<VietQrAccountKey>(DEFAULT_VIETQR_ACCOUNT_KEY);
   const uid = useId();
 
   const changeCompany = (type: PaymentRequestCompanyKey | "khac") => {
     setForm(createDefaultForm(type));
+    setQrAccountKey(type === "khac" ? "16868889" : "1117777888");
     setPreviewUrl((old) => {
       if (old) URL.revokeObjectURL(old);
       return null;
@@ -401,7 +412,7 @@ export default function PaymentRequestTool() {
       const res = await fetch("/api/payment-request-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...input, format: "png" }),
+        body: JSON.stringify({ ...input, format: "png", qrAccountKey }),
       });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
@@ -413,6 +424,7 @@ export default function PaymentRequestTool() {
         return URL.createObjectURL(blob);
       });
       setPreviewInput(input);
+      setPreviewQrAccountKey(qrAccountKey);
       setStatus("idle");
     } catch (err) {
       setErrorDetail(err instanceof Error ? err.message : String(err));
@@ -432,7 +444,7 @@ export default function PaymentRequestTool() {
       const res = await fetch("/api/payment-request-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...previewInput, format: "pdf" }),
+        body: JSON.stringify({ ...previewInput, format: "pdf", qrAccountKey: previewQrAccountKey }),
       });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
@@ -441,7 +453,7 @@ export default function PaymentRequestTool() {
       const blob = await res.blob();
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = `de-nghi-thanh-toan-${previewInput.type}-${Date.now()}.pdf`;
+      link.download = buildPaymentRequestFilename(previewInput);
       link.href = blobUrl;
       link.click();
       setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
@@ -711,6 +723,29 @@ export default function PaymentRequestTool() {
               </div>
             </div>
           )}
+
+          <div className="mb-6 rounded-xl border border-line bg-bg-tint p-4">
+            <span className="mb-2 block text-[12px] font-bold text-body-text">
+              Tài khoản nhận tiền QR — chỉ chọn từ danh sách, không tự nhập được
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {VIETQR_ACCOUNT_KEYS.map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  aria-pressed={qrAccountKey === key}
+                  onClick={() => setQrAccountKey(key)}
+                  className={`rounded-full border-[1.5px] px-3.5 py-2 text-[12.5px] font-bold transition-all duration-200 ${
+                    qrAccountKey === key
+                      ? "border-primary bg-primary text-white"
+                      : "border-line bg-white text-body-text hover:border-primary/40"
+                  }`}
+                >
+                  {vietQrAccountLabel(key)}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {previewResult && (
             <div className="mb-6 rounded-xl bg-bg-tint px-4 py-3.5 text-[13px]">

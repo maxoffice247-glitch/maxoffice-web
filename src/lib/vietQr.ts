@@ -18,7 +18,11 @@ export const VIETQR_ACCOUNTS: Record<
   { bankCode: string; accountNumber: string; accountName: string }
 > = {
   "1117777888": { bankCode: "TCB", accountNumber: "1117777888", accountName: "CTY MAX OFFICE" },
-  "16868889": { bankCode: "TCB", accountNumber: "16868889", accountName: "CTY MAX OFFICE" },
+  // Tên ĐẦY ĐỦ "CÔNG TY TNHH MAX OFFICE" (khác tài khoản 1 dùng tên rút
+  // gọn) — áp dụng THỐNG NHẤT cho CẢ 2 công cụ dùng chung registry này
+  // (CompositeQuoteTool VÀ PaymentRequestTool), theo đúng xác nhận khi
+  // thêm ô chọn tài khoản cho công cụ Đề nghị thanh toán.
+  "16868889": { bankCode: "TCB", accountNumber: "16868889", accountName: "CÔNG TY TNHH MAX OFFICE" },
 };
 
 /** Tài khoản mặc định khi bật QR mà không đổi lựa chọn — GIỮ NGUYÊN tài
