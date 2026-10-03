@@ -45,27 +45,33 @@ export const runtime = "nodejs";
 
 // Lề 2 bên RIÊNG của tool Đề nghị thanh toán — CỐ Ý không đụng tới MARGIN_X
 // dùng chung ở quoteImageShared.tsx (dùng chung với route quote-image/tong-hop
-// của CompositeQuoteTool). Rộng hơn MARGIN_X=56 gốc khoảng 2.5 lần → vùng nội
-// dung (PR_CONTENT_WIDTH) thu hẹp từ 968px còn 800px, giảm ~17.4% — đúng
-// khoảng 15-20% theo yêu cầu. QuoteHeaderRow/QuoteFooterRow (2 component DÙNG
-// CHUNG) nhận lề này qua prop `marginX` tuỳ chọn, mặc định vẫn là MARGIN_X gốc
-// nên route quote-image/tong-hop không bị ảnh hưởng gì.
-const PR_MARGIN_X = 140;
+// của CompositeQuoteTool). Lần đầu dùng 140px (giảm 17.4%) — theo yêu cầu
+// giảm bớt mức thu hẹp, hạ xuống còn ~12.5%: mục tiêu vùng nội dung ≈
+// 968 × (1 − 0.125) = 847px đúng, nhưng 847 không chia hết cho 2 lề bằng
+// nhau (1080 − 847 = 233, số LẺ) nên không có PR_MARGIN_X nguyên nào cho
+// đúng 847px — chọn 117 (vùng nội dung 846px, giảm 12.60%, LỆCH 1px so với
+// mục tiêu, gần nhất có thể) thay vì 116 (848px, giảm 12.40%, lệch 1px theo
+// hướng ngược lại) — cả 2 lệch như nhau, chọn 117 theo quy ước làm tròn
+// 116.5 lên. QuoteHeaderRow/QuoteFooterRow (2 component DÙNG CHUNG) nhận lề
+// này qua prop `marginX` tuỳ chọn, mặc định vẫn là MARGIN_X gốc nên route
+// quote-image/tong-hop không bị ảnh hưởng gì.
+const PR_MARGIN_X = 117;
 
 const TITLE_BLOCK_H = 70;
 const DIA_DIEM_H = 36;
 const RECIPIENT_TOP_MARGIN = 20;
 const RECIPIENT_LINE_H = 24;
+const RECIPIENT_CONTACT_H = 24;
 // Ngưỡng ký tự ước lượng số dòng xuống hàng — HIỆU CHỈNH bằng pixel thật qua
 // render test (xem báo cáo cuối phiên), theo đúng phương pháp đã dùng cho
-// MERGED_TITLE_WRAP_THRESHOLD ở route quote-image tổng hợp. Đã tính lại theo
-// tỉ lệ PR_CONTENT_WIDTH/968 (≈0.826) so với ngưỡng cũ khi còn dùng lề chung,
+// MERGED_TITLE_WRAP_THRESHOLD ở route quote-image tổng hợp. Tính lại theo tỉ
+// lệ bề rộng vùng nội dung mới (846px) so với bề rộng gốc dùng chung 968px,
 // rồi hiệu chỉnh thêm sau khi đo pixel thật.
-const RECIPIENT_CHARS_PER_LINE = 66; // dòng "Kính gửi: Tên — MST: x — SĐT: y" gộp, fontSize 15
-const PARAGRAPH_CHARS_PER_LINE = 81;
+const RECIPIENT_NAME_CHARS_PER_LINE = 70; // dòng 1 "Kính gửi: Tên", fontSize 15 đậm — KHÔNG còn gộp MST/SĐT
+const PARAGRAPH_CHARS_PER_LINE = 86;
 const PARAGRAPH_LINE_H = 21;
 const PARAGRAPH_BLOCK_GAP = 6;
-const DEBT_CHARS_PER_LINE = 41;
+const DEBT_CHARS_PER_LINE = 43;
 const TABLE_TOP_MARGIN = 24;
 const TABLE_HEADER_H = 38;
 const ITEM_ROW_BASE_H = 46;
@@ -98,15 +104,15 @@ function paragraphBlockHeight(lines: string[] | undefined, topMargin: number): n
   return topMargin + textLines * PARAGRAPH_LINE_H + (lines.length - 1) * PARAGRAPH_BLOCK_GAP;
 }
 
-/** "Kính gửi: Tên — MST: x — SĐT: y" GỘP CHUNG 1 khối văn bản chảy tự nhiên
- * (xem RecipientBlock) — ước lượng số dòng theo TỔNG độ dài chuỗi gộp, không
- * còn tách riêng "tên công ty" như trước (đã gộp label+tên+liên hệ thành 1
- * đoạn duy nhất nên phải đếm chung). */
+/** TÁCH LÀM 2 DÒNG RIÊNG (sửa lại lần gộp trước — hiểu sai ý ban đầu):
+ * dòng 1 "Kính gửi: Tên công ty" (chỉ tên, KHÔNG kèm MST/SĐT) — ước lượng số
+ * dòng theo độ dài dòng 1 (có thể wrap tự nhiên nếu tên dài); dòng 2 "MST: x
+ * - SĐT: y" LUÔN 1 dòng cố định (số liệu ngắn, không cần wrap). */
 function recipientBlockHeight(companyName: string, mst: string, phone: string): number {
-  const contactSuffix = [mst && `MST: ${mst}`, phone && `SĐT: ${phone}`].filter(Boolean).join("  —  ");
-  const fullText = `Kính gửi: ${companyName}${contactSuffix ? `  —  ${contactSuffix}` : ""}`;
-  const lines = estimateLines(fullText, RECIPIENT_CHARS_PER_LINE);
-  return RECIPIENT_TOP_MARGIN + lines * RECIPIENT_LINE_H;
+  const line1 = `Kính gửi: ${companyName}`;
+  const nameLines = estimateLines(line1, RECIPIENT_NAME_CHARS_PER_LINE);
+  const hasContact = Boolean(mst || phone);
+  return RECIPIENT_TOP_MARGIN + nameLines * RECIPIENT_LINE_H + (hasContact ? RECIPIENT_CONTACT_H : 0);
 }
 
 function debtRowHeight(debt: PaymentRequestDebt | null): number {
@@ -211,36 +217,24 @@ function TitleBlock({ subjectLine }: { subjectLine: string }) {
   );
 }
 
-/** "Kính gửi:" + tên công ty + MST/SĐT GỘP CHUNG 1 DÒNG VĂN BẢN THUẦN (1 div,
- * 1 chuỗi string duy nhất, KHÔNG dùng <span> lồng bên trong).
- *
- * ĐÃ THỬ cách lồng <span> in đậm cho riêng tên công ty bên trong cùng div
- * trước đó — RENDER THẬT (xem ảnh test mtk.png/khac-long.png) cho thấy Satori
- * KHÔNG áp dụng word-wrap xuyên suốt nội dung hỗn hợp text+span như trình
- * duyệt thật: toàn bộ nội dung bị ép tràn trên 1 dòng vật lý, phần text sau
- * <span> ĐÈ CHỒNG (overlap) lên cuối tên công ty thay vì xuống dòng. Chỉ 1
- * CHUỖI STRING THUẦN trong 1 div mới được Satori wrap đúng theo từng từ (đã
- * xác nhận qua chính ParagraphBlock bên dưới — các đoạn contractParagraph
- * dài vẫn luôn wrap đúng vì là string thuần, không lồng phần tử con nào).
- * Hệ quả: hy sinh việc tô đậm RIÊNG tên công ty (khác nhãn/liên hệ) — cả dòng
- * dùng chung 1 kiểu chữ (đậm, màu navy) để vẫn nổi bật, đổi lại đảm bảo wrap
- * tự nhiên đúng yêu cầu, không bao giờ ép xuống dòng ngay sau "Kính gửi:". */
+/** TÁCH LÀM 2 DÒNG RIÊNG (sửa lại lần gộp trước — hiểu sai ý ban đầu, đã gộp
+ * cả MST/SĐT vào chung 1 dòng với "Kính gửi:"): dòng 1 CHỈ "Kính gửi: Tên
+ * công ty", dòng 2 RIÊNG "MST: x - SĐT: y". Dòng 1 vẫn là 1 CHUỖI STRING
+ * THUẦN trong 1 div (không lồng <span>) để Satori wrap đúng theo từng từ khi
+ * tên dài — đã xác nhận qua render thật: lồng <span> in đậm riêng cho tên
+ * công ty trong CÙNG div bị Satori ép tràn 1 dòng, chữ đè chồng lên nhau
+ * thay vì xuống dòng (xem báo cáo lần sửa trước), nên giữ cả dòng 1 dùng
+ * chung 1 kiểu chữ (đậm, navy) thay vì tô đậm riêng tên công ty. */
 function RecipientBlock({ companyName, mst, phone }: { companyName: string; mst: string; phone: string }) {
-  const contactSuffix = [mst && `MST: ${mst}`, phone && `SĐT: ${phone}`].filter(Boolean).join("  —  ");
-  const fullText = `Kính gửi: ${companyName}${contactSuffix ? `  —  ${contactSuffix}` : ""}`;
+  const contactLine = [mst && `MST: ${mst}`, phone && `SĐT: ${phone}`].filter(Boolean).join(" - ");
   return (
-    <div
-      style={{
-        display: "flex",
-        margin: `0 ${PR_MARGIN_X}px`,
-        marginTop: RECIPIENT_TOP_MARGIN,
-        fontSize: 15,
-        fontWeight: 700,
-        lineHeight: 1.6,
-        color: QUOTE_COLOR.navy,
-      }}
-    >
-      {fullText}
+    <div style={{ display: "flex", flexDirection: "column", margin: `0 ${PR_MARGIN_X}px`, marginTop: RECIPIENT_TOP_MARGIN }}>
+      <div style={{ display: "flex", fontSize: 15, fontWeight: 700, lineHeight: 1.6, color: QUOTE_COLOR.navy }}>
+        {`Kính gửi: ${companyName}`}
+      </div>
+      {contactLine && (
+        <div style={{ display: "flex", marginTop: 4, fontSize: 14, color: QUOTE_COLOR.bodyText }}>{contactLine}</div>
+      )}
     </div>
   );
 }
@@ -435,17 +429,30 @@ function QrBlock({ dataUri, accountLabel, amount }: { dataUri: string; accountLa
  * 1 khối trống cao QE_AGENCY_SIGN_SPACE_H (div rỗng, không nội dung) ngay
  * dưới "CÔNG TY TNHH MAX OFFICE" để đủ chỗ con dấu tròn + chữ ký tay thông
  * thường, rồi mới tới dòng tên người ký. */
+/** `showSignerName` CHỈ true cho QE Agency — công ty này cần phiếu IN RA
+ * GIẤY để ký tay + đóng dấu thật (không phải 4 công ty còn lại/"Dịch vụ
+ * khác", vẫn giữ nguyên bố cục cũ không có khoảng trống/tên người ký).
+ *
+ * "CÔNG TY TNHH MAX OFFICE" + khoảng trống ký tay + "DƯƠNG MẠNH HÙNG" được
+ * BỌC RIÊNG trong 1 div con `flexDirection:"column", alignItems:"center"`
+ * — div con này tự co theo bề rộng phần tử RỘNG NHẤT bên trong nó (chính là
+ * dòng "CÔNG TY TNHH MAX OFFICE"), rồi chính div con đó mới được div cha
+ * (`alignItems:"flex-end"`) đẩy sát mép phải. Nhờ vậy "DƯƠNG MẠNH HÙNG" căn
+ * GIỮA đúng theo trục ngang của dòng công ty phía trên (cùng 1 tâm), khác
+ * với chỉ `textAlign`/căn phải thông thường (2 dòng độ dài khác nhau, căn
+ * phải sẽ lệch tâm). 4 công ty còn lại chỉ có 1 dòng duy nhất trong div con
+ * này nên không đổi gì so với trước. */
 function SignatureBlock({ showSignerName }: { showSignerName: boolean }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", margin: `0 ${PR_MARGIN_X}px`, marginTop: 24 }}>
       <div style={{ display: "flex", fontSize: 14, fontWeight: 600, color: QUOTE_COLOR.ink }}>Trân trọng cảm ơn!</div>
-      <div style={{ display: "flex", marginTop: 32, fontSize: 15, fontWeight: 800, color: QUOTE_COLOR.navy }}>
-        CÔNG TY TNHH MAX OFFICE
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 32 }}>
+        <div style={{ display: "flex", fontSize: 15, fontWeight: 800, color: QUOTE_COLOR.navy }}>CÔNG TY TNHH MAX OFFICE</div>
+        {showSignerName && <div style={{ display: "flex", height: QE_AGENCY_SIGN_SPACE_H }} />}
+        {showSignerName && (
+          <div style={{ display: "flex", fontSize: 15, fontWeight: 800, color: QUOTE_COLOR.navy }}>DƯƠNG MẠNH HÙNG</div>
+        )}
       </div>
-      {showSignerName && <div style={{ display: "flex", height: QE_AGENCY_SIGN_SPACE_H }} />}
-      {showSignerName && (
-        <div style={{ display: "flex", fontSize: 15, fontWeight: 800, color: QUOTE_COLOR.navy }}>DƯƠNG MẠNH HÙNG</div>
-      )}
     </div>
   );
 }
