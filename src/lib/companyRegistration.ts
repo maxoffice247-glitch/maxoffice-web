@@ -265,7 +265,9 @@ export function formatThousands(raw: string): string {
 
 /** Chuỗi 9 hoặc 12 chữ số LIỀN NHAU (CMND/CCCD) trong ô văn bản tự do — form
  * này chủ động KHÔNG thu số CCCD, nên chặn luôn thay vì để lọt vào email/sheet. */
-const ID_NUMBER_PATTERN = /(?<!\d)(?:\d{9}|\d{12})(?!\d)/;
+// Không dùng lookbehind (?<!\d): Safari/iOS < 16.4 và WebView cũ (trình duyệt trong Zalo) báo lỗi cú pháp
+// làm hỏng cả chunk JS. `(?:^|\D)` + lookahead tương đương hoàn toàn khi dùng với .test().
+const ID_NUMBER_PATTERN = /(?:^|\D)(?:\d{9}|\d{12})(?!\d)/;
 
 const ERR = {
   required: "Vui lòng nhập thông tin này.",

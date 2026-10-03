@@ -16,6 +16,7 @@ import MoneyInput from "../MoneyInput";
 import PrintPdfButton from "../PrintPdfButton";
 import BrandIcon from "../BrandIcon";
 import BranchAddressCombobox from "./BranchAddressCombobox";
+import FormErrorBoundary from "./FormErrorBoundary";
 import IdentitySection, { EMPTY_IDENTITY_UI, EMPTY_IDENTITY_UI_FORM, effectivePlaceChoice, effectivePlaceText, type IdentityUiState } from "./IdentitySection";
 import type { BranchAddressGroup } from "@/lib/branchAddress";
 import { ArrowRightSmallIcon, BuildingIcon, CheckCircleIcon, HomeIcon, UserIcon, UsersIcon } from "../icons";
@@ -113,7 +114,16 @@ function describedBy(id: string, hint: boolean, error: boolean): string | undefi
   return ids || undefined;
 }
 
-export default function CompanyRegistrationForm({ branchGroups }: { branchGroups: BranchAddressGroup[] }) {
+/** Bọc error boundary: lỗi JS trong form chỉ làm hiện khung "Zalo/hotline", không làm mất cả khối. */
+export default function CompanyRegistrationForm(props: { branchGroups: BranchAddressGroup[] }) {
+  return (
+    <FormErrorBoundary>
+      <CompanyRegistrationFormInner {...props} />
+    </FormErrorBoundary>
+  );
+}
+
+function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAddressGroup[] }) {
   const uid = useId();
   const urlType = useSyncExternalStore(subscribeNoop, readTypeFromUrl, () => null);
 
@@ -156,11 +166,17 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
   const focusHeadingPending = useRef(false);
   const focusRadioPending = useRef(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // true trong đúng lượt sự kiện của phím mũi tên: trình duyệt bắn click lên radio khi mũi tên đổi lựa chọn
+  // — click đó KHÔNG được coi là "xác nhận chọn loại hình" (chỉ Enter/Space/chạm/chuột mới xác nhận).
+  const arrowNavRef = useRef(false);
 
   useEffect(() => {
     if (focusHeadingPending.current && committed && headingRef.current) {
       focusHeadingPending.current = false;
-      headingRef.current.focus();
+      // preventScroll + scrollIntoView tường minh: tiêu đề form có scroll-mt nên không bị header cố định che,
+      // chạy giống nhau trên iOS Safari (focus() tự cuộn khác nhau giữa các trình duyệt).
+      headingRef.current.focus({ preventScroll: true });
+      headingRef.current.scrollIntoView({ block: "start" });
     }
     if (focusRadioPending.current && !committed && choice && radioRefs.current[choice]) {
       focusRadioPending.current = false;
@@ -397,11 +413,22 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
                     value={t}
                     checked={selected}
                     onChange={() => setPicked(t)}
-                    onClick={(e) => {
-                      // detail > 0 = chuột/chạm thật; phím mũi tên cũng bắn click nhưng detail = 0.
-                      if (e.detail > 0) commit(t);
+                    onClick={() => {
+                      // KHÔNG dựa vào e.detail: Safari/iOS (WebKit) gửi click chuyển tiếp từ <label> lên radio với
+                      // detail = 0 nên form không bao giờ mở khi chạm vào thẻ. Chỉ bỏ qua click do phím mũi tên.
+                      if (arrowNavRef.current) return;
+                      commit(t);
                     }}
-                    onKeyDown={(e) => onRadioKeyDown(e, t)}
+                    onKeyDown={(e) => {
+                      if (e.key.startsWith("Arrow")) {
+                        arrowNavRef.current = true;
+                        // Click của mũi tên được bắn đồng bộ trong cùng lượt keydown → tới timeout 0 thì tắt cờ.
+                        setTimeout(() => {
+                          arrowNavRef.current = false;
+                        }, 0);
+                      }
+                      onRadioKeyDown(e, t);
+                    }}
                     className="peer sr-only"
                   />
                   <span className="relative flex h-full min-h-[44px] flex-col rounded-3xl border-2 border-primary/25 bg-white p-4 shadow-[0_4px_14px_rgba(21,101,192,0.10)] transition-all duration-200 hover:-translate-y-1 hover:border-accent hover:shadow-[0_14px_30px_rgba(220,53,48,0.18)] active:-translate-y-0.5 active:border-accent active:shadow-[0_10px_22px_rgba(220,53,48,0.16)] peer-checked:border-primary peer-checked:bg-primary-tint peer-checked:hover:border-primary peer-focus-visible:-translate-y-1 peer-focus-visible:border-accent peer-focus-visible:shadow-[0_14px_30px_rgba(220,53,48,0.18)] peer-focus-visible:ring-[3px] peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 motion-reduce:hover:translate-y-0 motion-reduce:active:translate-y-0 motion-reduce:peer-focus-visible:translate-y-0 sm:p-5">
@@ -434,13 +461,16 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
           <p className="mt-3 text-center text-[12.5px] text-body-text">
             Dùng phím mũi tên để chọn, nhấn Enter để tiếp tục.
           </p>
+          <p className="mt-1 text-center text-[12.5px] text-body-text">
+            Không chọn được hoặc form không hiện? Nhắn Zalo hoặc gọi 089 8082 188, MAX OFFICE sẽ hỗ trợ ngay.
+          </p>
         </div>
       )}
 
       {committed && cfg && current && status !== "success" && (
         <div className="rounded-2xl border border-line bg-white p-5 sm:p-7">
           <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
-            <h3 ref={headingRef} tabIndex={-1} className="text-[19px] font-bold leading-snug text-navy focus:outline-none">
+            <h3 ref={headingRef} tabIndex={-1} className="scroll-mt-28 text-[19px] font-bold leading-snug text-navy focus:outline-none">
               {cfg.title}
             </h3>
             <div className="flex flex-wrap gap-2 print:hidden">
