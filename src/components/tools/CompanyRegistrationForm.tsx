@@ -16,7 +16,7 @@ import MoneyInput from "../MoneyInput";
 import PrintPdfButton from "../PrintPdfButton";
 import BrandIcon from "../BrandIcon";
 import BranchAddressCombobox from "./BranchAddressCombobox";
-import IdentitySection, { EMPTY_IDENTITY_UI, type IdentityUiState } from "./IdentitySection";
+import IdentitySection, { EMPTY_IDENTITY_UI, effectivePlaceChoice, effectivePlaceText, type IdentityUiState } from "./IdentitySection";
 import type { BranchAddressGroup } from "@/lib/branchAddress";
 import { ArrowRightSmallIcon, BuildingIcon, CheckCircleIcon, HomeIcon, UserIcon, UsersIcon } from "../icons";
 import { trackEvent } from "@/lib/gtag";
@@ -232,6 +232,11 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
   // Họ tên trên giấy tờ: Hộ kinh doanh = chủ hộ; TNHH 1 thành viên = trùng người đại diện hoặc ô riêng.
   const ownerName = choice === "ho-kinh-doanh" || idState.sameAsRep ? repName : idState.info.hoTen.trim();
 
+  // "Khác (tự nhập)" mà để trống → báo lỗi ở client (server không thể phân biệt với "để trống"
+  // nên sẽ tự điền theo ngày cấp).
+  const placeError =
+    useIdForm && effectivePlaceChoice(idState) === "khac" && !idState.placeOther.trim() ? "Vui lòng nhập nơi cấp." : undefined;
+
   const current: RegistrationClean | null = choice
     ? {
         loai: choice,
@@ -247,7 +252,7 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
         nguoiDaiDien: repName,
         chucDanh: cfg?.hasTitle ? shared.chucDanh.trim() : "",
         hinhThucGiayTo: useIdForm ? "form" : "zalo",
-        giayTo: useIdForm ? { ...idState.info, hoTen: ownerName } : undefined,
+        giayTo: useIdForm ? { ...idState.info, hoTen: ownerName, noiCap: effectivePlaceText(idState) } : undefined,
       }
     : null;
 
@@ -261,16 +266,18 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
     e.preventDefault();
     if (sendingRef.current || !current || !validation) return;
     setShowErrors(true);
-    if (!validation.ok) {
+    if (!validation.ok || placeError) {
+      const ve: RegistrationErrors = validation.ok ? {} : validation.errors;
+      const idErrs: Record<string, string | undefined> = { ...(ve.giayTo ?? {}), ...(placeError ? { noiCap: placeError } : {}) };
       // Thứ tự theo bố cục trang: ô thông thường → nhóm giấy tờ (nằm trên ô đồng ý chung) → ô đồng ý chung.
       const order = ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website", "nguoiDaiDien", "chucDanh"] as const;
-      const first = order.find((k) => validation.errors[k]);
+      const first = order.find((k) => ve[k]);
       if (first) document.getElementById(`${uid}-${first}`)?.focus();
-      else if (validation.errors.giayTo) {
+      else if (Object.keys(idErrs).length) {
         const idOrder = ["hoTen", "ngaySinh", "soCccd", "ngayCap", "noiCap", "quocTich", "danToc", "thuongTru", "lienLac", "consent"] as const;
-        const k = idOrder.find((x) => validation.errors.giayTo?.[x]);
+        const k = idOrder.find((x) => idErrs[x]);
         if (k) document.getElementById(`${uid}-gt-${k}`)?.focus();
-      } else if (validation.errors.consent) document.getElementById(`${uid}-consent`)?.focus();
+      } else if (ve.consent) document.getElementById(`${uid}-consent`)?.focus();
       return;
     }
     sendingRef.current = true;
@@ -760,7 +767,7 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
               state={idState}
               onChange={(next) => choice && setIdStates((all) => ({ ...all, [choice]: next }))}
               repName={repName}
-              errors={errors.giayTo ?? {}}
+              errors={{ ...(errors.giayTo ?? {}), ...(showErrors && placeError ? { noiCap: placeError } : {}) }}
               methodError={errors.hinhThucGiayTo}
             />
 

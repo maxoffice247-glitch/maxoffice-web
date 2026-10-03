@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { CheckCircleIcon } from "../icons";
+import { CheckCircleIcon, ChevronDownIcon } from "../icons";
 import {
   IDENTITY_MAX,
   formatDateInput,
@@ -10,6 +10,7 @@ import {
   type IdentityInfo,
   type RegistrationTypeConfig,
 } from "@/lib/companyRegistration";
+import { ISSUE_PLACE_BCA, ISSUE_PLACE_CSQLHC, choiceFromPlace, placeFromChoice, suggestIssuePlace, type PlaceChoice } from "@/lib/issuePlace";
 
 /**
  * Khung "giấy tờ tuỳ thân" của form Hồ sơ thành lập doanh nghiệp.
@@ -27,7 +28,24 @@ export type IdentityUiState = {
   info: IdentityInfo;
   /** TNHH 1 thành viên: chủ sở hữu trùng người đại diện theo pháp luật. */
   sameAsRep: boolean;
+  /** Khách đã TỰ đổi ô "Nơi cấp" — khi đó KHÔNG ghi đè theo ngày cấp nữa (cho tới khi bấm "Đặt lại theo ngày cấp"). */
+  placeManual: boolean;
+  /** Lựa chọn của khách (chỉ có nghĩa khi placeManual = true). */
+  placeChoice: PlaceChoice;
+  /** Nội dung gõ tay khi chọn "Khác (tự nhập)" — giữ lại kể cả khi đổi lựa chọn. */
+  placeOther: string;
 };
+
+/** Lựa chọn nơi cấp ĐANG HIỆU LỰC: khách đã tự đổi thì theo khách, ngược lại tự suy ra từ ngày cấp
+ * (tính lại mỗi lần render, không cần effect/state phụ). */
+export function effectivePlaceChoice(state: IdentityUiState): PlaceChoice {
+  return state.placeManual ? state.placeChoice : choiceFromPlace(suggestIssuePlace(state.info.ngayCap, state.info.ngaySinh));
+}
+
+/** Chuỗi "Nơi cấp" sẽ gửi đi. */
+export function effectivePlaceText(state: IdentityUiState): string {
+  return placeFromChoice(effectivePlaceChoice(state), state.placeOther);
+}
 
 export const EMPTY_IDENTITY_UI: IdentityUiState = {
   method: "zalo",
@@ -45,6 +63,9 @@ export const EMPTY_IDENTITY_UI: IdentityUiState = {
     consent: false,
   },
   sameAsRep: false,
+  placeManual: false,
+  placeChoice: "",
+  placeOther: "",
 };
 
 const inputClass =
@@ -156,6 +177,8 @@ export default function IdentitySection({
   const nameLocked = isHousehold || state.sameAsRep;
   const nameValue = nameLocked ? repName : info.hoTen;
   const methodName = `${uid}-id-method`;
+  const placeChoice = effectivePlaceChoice(state);
+  const suggestion = suggestIssuePlace(info.ngayCap, info.ngaySinh);
 
   return (
     <div className="space-y-4">
@@ -310,25 +333,59 @@ export default function IdentitySection({
                 className={inputClass}
               />
             </Field>
-            <Field id={id("noiCap")} label="Nơi cấp (tuỳ chọn)" error={errors.noiCap}>
-              <input
-                id={id("noiCap")}
-                type="text"
-                list={id("noiCap-goi-y")}
-                value={info.noiCap}
-                onChange={(e) => set("noiCap", e.target.value)}
-                placeholder="Ví dụ: Bộ Công an"
-                maxLength={IDENTITY_MAX.noiCap}
-                autoComplete="off"
-                aria-invalid={!!errors.noiCap}
-                aria-describedby={describe(id("noiCap"), false, !!errors.noiCap)}
-                className={inputClass}
-              />
-              <datalist id={id("noiCap-goi-y")}>
-                <option value="Cục Cảnh sát quản lý hành chính về trật tự xã hội" />
-                <option value="Bộ Công an" />
-              </datalist>
-            </Field>
+            <div className="print:hidden">
+              <label htmlFor={id("noiCapSel")} className={labelClass}>
+                Nơi cấp
+              </label>
+              <div className="relative">
+                <select
+                  id={id("noiCapSel")}
+                  value={placeChoice}
+                  onChange={(e) => onChange({ ...state, placeManual: true, placeChoice: e.target.value as PlaceChoice })}
+                  aria-describedby={`${id("noiCapSel")}-hint`}
+                  className={`${inputClass} min-h-[44px] appearance-none pr-10`}
+                >
+                  <option value="" disabled>
+                    Chưa chọn
+                  </option>
+                  <option value="bca">{ISSUE_PLACE_BCA}</option>
+                  <option value="csqlhc">{ISSUE_PLACE_CSQLHC}</option>
+                  <option value="khac">Khác (tự nhập)</option>
+                </select>
+                <ChevronDownIcon className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-body-text" />
+              </div>
+              <p id={`${id("noiCapSel")}-hint`} className="mt-1.5 text-[12.5px] leading-relaxed text-body-text">
+                {suggestion || state.placeManual
+                  ? "Tự động chọn theo ngày cấp. Nếu thẻ của bạn ghi khác, hãy đổi hoặc chọn 'Khác'."
+                  : "Sẽ tự điền sau khi bạn nhập ngày cấp"}
+              </p>
+              {state.placeManual && (
+                <button
+                  type="button"
+                  onClick={() => onChange({ ...state, placeManual: false })}
+                  className="mt-1.5 inline-flex min-h-[44px] items-center text-[13px] font-semibold text-primary underline underline-offset-2"
+                >
+                  Đặt lại theo ngày cấp
+                </button>
+              )}
+            </div>
+            {placeChoice === "khac" && (
+              <Field id={id("noiCap")} label="Nơi cấp (nhập tay)" required error={errors.noiCap}>
+                <input
+                  id={id("noiCap")}
+                  type="text"
+                  value={state.placeOther}
+                  onChange={(e) => onChange({ ...state, placeManual: true, placeChoice: "khac", placeOther: e.target.value })}
+                  placeholder="Ví dụ: Công an tỉnh/thành phố ..."
+                  maxLength={IDENTITY_MAX.noiCap}
+                  autoComplete="off"
+                  aria-required="true"
+                  aria-invalid={!!errors.noiCap}
+                  aria-describedby={describe(id("noiCap"), false, !!errors.noiCap)}
+                  className={inputClass}
+                />
+              </Field>
+            )}
             <Field id={id("quocTich")} label="Quốc tịch (tuỳ chọn)" error={errors.quocTich}>
               <input
                 id={id("quocTich")}
