@@ -1,12 +1,17 @@
 import { renderOgImage, size, contentType } from "@/lib/og";
-import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
+import { REGISTRATION_CONFIG, REGISTRATION_TYPES } from "@/lib/companyRegistration";
 
 export { size, contentType };
 
 export default async function Image() {
   return renderOgImage({
-    title: "Checklist Thành Lập Doanh Nghiệp — Tải PDF Miễn Phí | MAX OFFICE",
-    backgroundImagePath: "/images/og/thanh-lap-doanh-nghiep.jpg",
-    subtitle: `${ACTIVE_BRANCH_COUNT} chi nhánh TP.HCM • Công cụ miễn phí`,
+    title: "Hồ sơ thành lập doanh nghiệp",
+    // "contain": nền navy đặc + ảnh gốc đặt khung bên phải — chữ (nhất là dòng 4
+    // loại hình) luôn rõ, không đè lên vùng sáng của ảnh nền như chế độ cover.
+    backgroundImagePath: "/images/thanh-lap-doanh-nghiep.jpg",
+    backgroundFit: "contain",
+    // Dấu cách không ngắt (NBSP) trong từng tên loại hình để khi xuống dòng chỉ
+    // ngắt ở dấu "•", không bẻ giữa tên (VD "Hộ kinh / doanh").
+    subtitle: REGISTRATION_TYPES.map((t) => REGISTRATION_CONFIG[t].label.replace(/ /g, "\u00A0")).join(" • "),
   });
 }

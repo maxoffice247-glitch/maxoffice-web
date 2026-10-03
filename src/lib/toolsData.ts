@@ -129,8 +129,8 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
         icon: ListIcon,
         title: "Checklist thành lập DN",
         titleFull: "Checklist thành lập doanh nghiệp",
-        desc: "Các bước và giấy tờ cần chuẩn bị khi thành lập Hộ kinh doanh, Công ty TNHH hoặc Công ty Cổ phần.",
-        linkLabel: "Xem checklist",
+        desc: "Chọn loại hình, điền thông tin cần chuẩn bị và gửi hồ sơ thành lập: Công ty Cổ phần, TNHH 2 thành viên trở lên, TNHH 1 thành viên, Hộ kinh doanh.",
+        linkLabel: "Điền hồ sơ thành lập",
       },
       {
         slug: "checklist-mo-chi-nhanh",

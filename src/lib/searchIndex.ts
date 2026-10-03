@@ -504,7 +504,7 @@ export const SEARCH_INDEX: SearchItem[] = [
     title: "Checklist thành lập doanh nghiệp",
     category: "Tiện ích",
     href: "/tien-ich/checklist-thanh-lap-doanh-nghiep",
-    desc: "Các bước và giấy tờ cần chuẩn bị khi thành lập doanh nghiệp, tải PDF miễn phí",
+    desc: "Chọn loại hình, điền thông tin cần chuẩn bị và gửi hồ sơ thành lập doanh nghiệp cho MAX OFFICE, tải PDF miễn phí",
   },
   {
     title: "Checklist mở chi nhánh",

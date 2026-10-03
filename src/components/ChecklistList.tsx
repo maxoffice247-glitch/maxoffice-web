@@ -5,14 +5,7 @@ import { CheckCircleIcon } from "./icons";
 
 export type ChecklistGroup = { groupTitle: string; items: string[] };
 
-export default function ChecklistList({
-  groups,
-  showProgress = true,
-}: {
-  groups: ChecklistGroup[];
-  /** false khi các nhóm là PHƯƠNG ÁN THAY THẾ nhau (VD 4 loại hình doanh nghiệp, chỉ chọn 1) — bộ đếm gộp "x/tổng" lúc đó gây hiểu lầm. */
-  showProgress?: boolean;
-}) {
+export default function ChecklistList({ groups }: { groups: ChecklistGroup[] }) {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const totalItems = groups.reduce((sum, g) => sum + g.items.length, 0);
   const doneCount = Object.values(checked).filter(Boolean).length;
@@ -21,14 +14,12 @@ export default function ChecklistList({
 
   return (
     <div>
-      {showProgress && (
-        <div className="mb-7 flex items-center justify-between rounded-xl bg-primary-tint px-5 py-3.5 print:hidden">
-          <span className="text-[13.5px] font-bold text-navy">Tiến độ của bạn</span>
-          <span className="font-mono text-[14px] font-bold text-primary">
-            {doneCount}/{totalItems} mục
-          </span>
-        </div>
-      )}
+      <div className="mb-7 flex items-center justify-between rounded-xl bg-primary-tint px-5 py-3.5 print:hidden">
+        <span className="text-[13.5px] font-bold text-navy">Tiến độ của bạn</span>
+        <span className="font-mono text-[14px] font-bold text-primary">
+          {doneCount}/{totalItems} mục
+        </span>
+      </div>
 
       {groups.map((group, gi) => (
         <div key={group.groupTitle} className="mb-8 last:mb-0">
