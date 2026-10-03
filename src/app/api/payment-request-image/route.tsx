@@ -75,6 +75,12 @@ const GRAND_TOTAL_BOX_H = 88;
 const WORDS_H = 28;
 const QR_BLOCK_H = 232;
 const SIGNATURE_H = 90;
+// Khoảng trống ký tay + đóng dấu thật — CHỈ QE Agency (xem SignatureBlock).
+// 100px đủ cho 1 con dấu tròn (thường ~35-40mm ~ tương đương cỡ này ở DPI
+// ảnh 1080px khổ A4) + chữ ký tay thông thường, nằm trong khoảng 80-120px
+// theo yêu cầu.
+const QE_AGENCY_SIGN_SPACE_H = 100;
+const QE_AGENCY_SIGNER_NAME_H = 22;
 const HEADER_H = 148; // giống hệt QuoteHeaderRow ở route quote-image/tong-hop (cùng component)
 const FOOTER_H = 140; // giống hệt QuoteFooterRow ở route quote-image/tong-hop (cùng component)
 
@@ -423,13 +429,23 @@ function QrBlock({ dataUri, accountLabel, amount }: { dataUri: string; accountLa
   );
 }
 
-function SignatureBlock() {
+/** `showSignerName` CHỈ true cho QE Agency — công ty này cần phiếu IN RA
+ * GIẤY để ký tay + đóng dấu thật (không phải 4 công ty còn lại/"Dịch vụ
+ * khác", vẫn giữ nguyên bố cục cũ không có khoảng trống/tên người ký). Chừa
+ * 1 khối trống cao QE_AGENCY_SIGN_SPACE_H (div rỗng, không nội dung) ngay
+ * dưới "CÔNG TY TNHH MAX OFFICE" để đủ chỗ con dấu tròn + chữ ký tay thông
+ * thường, rồi mới tới dòng tên người ký. */
+function SignatureBlock({ showSignerName }: { showSignerName: boolean }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", margin: `0 ${PR_MARGIN_X}px`, marginTop: 24 }}>
       <div style={{ display: "flex", fontSize: 14, fontWeight: 600, color: QUOTE_COLOR.ink }}>Trân trọng cảm ơn!</div>
       <div style={{ display: "flex", marginTop: 32, fontSize: 15, fontWeight: 800, color: QUOTE_COLOR.navy }}>
         CÔNG TY TNHH MAX OFFICE
       </div>
+      {showSignerName && <div style={{ display: "flex", height: QE_AGENCY_SIGN_SPACE_H }} />}
+      {showSignerName && (
+        <div style={{ display: "flex", fontSize: 15, fontWeight: 800, color: QUOTE_COLOR.navy }}>DƯƠNG MẠNH HÙNG</div>
+      )}
     </div>
   );
 }
@@ -529,6 +545,7 @@ export async function POST(req: Request) {
     WORDS_H +
     (qrDataUri ? QR_BLOCK_H : 0) +
     SIGNATURE_H +
+    (result.companyKey === "qe-agency" ? QE_AGENCY_SIGN_SPACE_H + QE_AGENCY_SIGNER_NAME_H : 0) +
     FOOTER_H;
 
   const pngResponse = new ImageResponse(
@@ -565,7 +582,7 @@ export async function POST(req: Request) {
         <GrandTotalBox amount={result.grandTotal} />
         <AmountInWords amount={result.grandTotal} />
         {qrDataUri && <QrBlock dataUri={qrDataUri} accountLabel={vietQrAccountLabel(qrAccountKey)} amount={result.grandTotal} />}
-        <SignatureBlock />
+        <SignatureBlock showSignerName={result.companyKey === "qe-agency"} />
         <QuoteFooterRow marginX={PR_MARGIN_X} />
       </div>
     ),
