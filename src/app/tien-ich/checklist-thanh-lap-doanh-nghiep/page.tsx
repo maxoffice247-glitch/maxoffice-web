@@ -3,6 +3,7 @@ import ToolPageTemplate from "@/components/ToolPageTemplate";
 import SectionHead from "@/components/SectionHead";
 import ChecklistList, { type ChecklistGroup } from "@/components/ChecklistList";
 import PrintPdfButton from "@/components/PrintPdfButton";
+import BrandIcon from "@/components/BrandIcon";
 import { ClockIcon, CheckCircleIcon, DocumentCheckIcon, HeadsetIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
@@ -14,39 +15,58 @@ export const metadata: Metadata = {
 
 const CHECKLIST_GROUPS: ChecklistGroup[] = [
   {
-    groupTitle: "Giai đoạn 1: Chuẩn bị trước khi nộp hồ sơ",
+    groupTitle: "1. Hồ sơ thành lập Công ty Cổ phần",
     items: [
-      "Xác định loại hình phù hợp: Hộ kinh doanh, Công ty TNHH hoặc Công ty Cổ phần",
-      "Chọn và tra cứu tên doanh nghiệp dự kiến, tránh trùng hoặc gây nhầm lẫn",
-      "Xác định địa chỉ trụ sở — cần địa chỉ đăng ký kinh doanh hợp lệ (có thể dùng văn phòng ảo)",
-      "Xác định ngành nghề kinh doanh dự kiến đăng ký",
-      "Dự kiến mức vốn điều lệ",
-      "Chuẩn bị bản sao CCCD/hộ chiếu của chủ sở hữu, thành viên hoặc cổ đông sáng lập",
+      "Tên công ty:",
+      "Địa chỉ:",
+      "Ngành nghề kinh doanh:",
+      "Chọn ngành chính (tích dấu X vào ngành chính)",
+      "Vốn điều lệ:",
+      "Hình chụp VNeID của các cổ đông (Lưu ý: tối thiểu 3 cổ đông; chụp thấy rõ ngày cấp CCCD)",
+      "SĐT đăng ký:",
+      "Email: (nếu có)",
+      "Website: (nếu có)",
     ],
   },
   {
-    groupTitle: "Giai đoạn 2: Soạn và nộp hồ sơ",
+    groupTitle: "2. Hồ sơ thành lập Công ty TNHH 2 thành viên trở lên",
     items: [
-      "Soạn hồ sơ đăng ký doanh nghiệp (giấy đề nghị đăng ký, điều lệ công ty, danh sách thành viên/cổ đông tuỳ loại hình)",
-      "Nộp hồ sơ tại cơ quan đăng ký kinh doanh có thẩm quyền",
-      "Theo dõi hồ sơ và bổ sung nếu cơ quan đăng ký yêu cầu",
+      "Tên công ty:",
+      "Địa chỉ:",
+      "Ngành nghề kinh doanh:",
+      "Chọn ngành chính (tích dấu X vào ngành chính)",
+      "Vốn điều lệ:",
+      "Hình chụp VNeID của các thành viên (Lưu ý: tối thiểu 2 thành viên; chụp thấy rõ ngày cấp CCCD)",
+      "SĐT đăng ký:",
+      "Email: (nếu có)",
+      "Website: (nếu có)",
     ],
   },
   {
-    groupTitle: "Giai đoạn 3: Sau khi có giấy phép",
+    groupTitle: "3. Hồ sơ thành lập Công ty TNHH 1 thành viên",
     items: [
-      "Nhận Giấy chứng nhận đăng ký doanh nghiệp",
-      "Khắc dấu doanh nghiệp",
-      "Mở tài khoản ngân hàng doanh nghiệp",
-      "Đăng ký thuế ban đầu",
-      "Treo bảng hiệu tại trụ sở",
-      "Thông báo phát hành hoá đơn điện tử (nếu cần xuất hoá đơn)",
+      "Tên công ty:",
+      "Địa chỉ:",
+      "Ngành nghề kinh doanh:",
+      "Chọn ngành nghề kinh doanh chính",
+      "Vốn điều lệ:",
+      "Hình chụp VNeID (Lưu ý: chụp thấy rõ ngày cấp CCCD)",
+      "SĐT đăng ký:",
+      "Email: (nếu có)",
+      "Website: (nếu có)",
     ],
   },
   {
-    groupTitle: "Lưu ý quan trọng",
+    groupTitle: "4. Hồ sơ thành lập Hộ kinh doanh",
     items: [
-      "Mỗi loại hình và ngành nghề có thể phát sinh yêu cầu hồ sơ khác nhau — liên hệ MAX OFFICE để được hướng dẫn chi tiết theo đúng trường hợp của bạn.",
+      "Tên hộ kinh doanh:",
+      "Địa chỉ:",
+      "Số điện thoại:",
+      "Email:",
+      "Ngành nghề kinh doanh:",
+      "Chọn ngành nghề kinh doanh chính",
+      "Vốn kinh doanh:",
+      "Hình chụp VNeID:",
     ],
   },
 ];
@@ -96,7 +116,22 @@ export default function ChecklistThanhLapDoanhNghiepPage() {
           <div className="mb-7 flex justify-center">
             <PrintPdfButton />
           </div>
-          <ChecklistList groups={CHECKLIST_GROUPS} />
+          <ChecklistList groups={CHECKLIST_GROUPS} showProgress={false} />
+          <div className="mt-9 rounded-2xl bg-bg-tint p-6 text-center sm:p-8">
+            <p className="mx-auto max-w-[640px] text-[14.5px] leading-relaxed text-ink">
+              Trên là một số thông tin cần chuẩn bị. Nếu sử dụng dịch vụ Thành lập doanh nghiệp của MAX OFFICE, sau khi
+              chuẩn bị đủ, bạn gửi qua Zalo để MAX OFFICE lên hồ sơ cho bạn.
+            </p>
+            <a
+              href="https://zalo.me/0898082188"
+              target="_blank"
+              rel="noopener"
+              className="mt-5 inline-flex items-center justify-center gap-2.5 rounded-full bg-[#0068FF] print:hidden px-7 py-3.5 text-[15px] font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(0,104,255,0.3)]"
+            >
+              <BrandIcon type="zalo" className="h-6 w-6" />
+              Gửi hồ sơ qua Zalo
+            </a>
+          </div>
         </div>
       </section>
     </ToolPageTemplate>
