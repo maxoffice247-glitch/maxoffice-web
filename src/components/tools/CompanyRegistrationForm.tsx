@@ -16,6 +16,7 @@ import MoneyInput from "../MoneyInput";
 import PrintPdfButton from "../PrintPdfButton";
 import BrandIcon from "../BrandIcon";
 import BranchAddressCombobox from "./BranchAddressCombobox";
+import IdentitySection, { EMPTY_IDENTITY_UI, type IdentityUiState } from "./IdentitySection";
 import type { BranchAddressGroup } from "@/lib/branchAddress";
 import { ArrowRightSmallIcon, BuildingIcon, CheckCircleIcon, HomeIcon, UserIcon, UsersIcon } from "../icons";
 import { trackEvent } from "@/lib/gtag";
@@ -135,6 +136,14 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
   // Chỉ là trạng thái giao diện (không gửi lên): tích thì người đại diện = người liên hệ.
   // Phần khách đã gõ riêng (shared.nguoiDaiDien) KHÔNG bị xoá khi tích, nên bỏ tích là hiện lại.
   const [sameAsContact, setSameAsContact] = useState(false);
+  // Thông tin giấy tờ (cách 2: điền vào form) — mỗi loại hình nhớ riêng. CHỈ nằm trong state
+  // trang này: không storage/cookie/URL/analytics/log (xem IdentitySection.tsx).
+  const [idStates, setIdStates] = useState<Record<RegistrationType, IdentityUiState>>({
+    "co-phan": EMPTY_IDENTITY_UI,
+    "tnhh-2tv": EMPTY_IDENTITY_UI,
+    "tnhh-1tv": EMPTY_IDENTITY_UI,
+    "ho-kinh-doanh": EMPTY_IDENTITY_UI,
+  });
   const [fax, setFax] = useState("");
   const [showErrors, setShowErrors] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -217,6 +226,12 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
   // Địa chỉ gửi đi: chế độ MAX OFFICE lấy ĐÚNG địa chỉ chuẩn của chi nhánh đã
   // chọn (server đối chiếu lại); chế độ tự nhập lấy chữ khách gõ. Phần chữ đã
   // gõ (cur.diaChi) không bị xoá khi chuyển chế độ qua lại.
+  const repName = sameAsContact ? shared.tenLienHe.trim() : shared.nguoiDaiDien.trim();
+  const idState = choice ? idStates[choice] : EMPTY_IDENTITY_UI;
+  const useIdForm = !!cfg?.idForm && idState.method === "form";
+  // Họ tên trên giấy tờ: Hộ kinh doanh = chủ hộ; TNHH 1 thành viên = trùng người đại diện hoặc ô riêng.
+  const ownerName = choice === "ho-kinh-doanh" || idState.sameAsRep ? repName : idState.info.hoTen.trim();
+
   const current: RegistrationClean | null = choice
     ? {
         loai: choice,
@@ -229,23 +244,33 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
         consent: shared.consent,
         loaiDiaChi: shared.loaiDiaChi,
         chiNhanh: useBranch ? (selectedBranch?.slug ?? "") : "",
-        nguoiDaiDien: sameAsContact ? shared.tenLienHe.trim() : shared.nguoiDaiDien.trim(),
+        nguoiDaiDien: repName,
         chucDanh: cfg?.hasTitle ? shared.chucDanh.trim() : "",
+        hinhThucGiayTo: useIdForm ? "form" : "zalo",
+        giayTo: useIdForm ? { ...idState.info, hoTen: ownerName } : undefined,
       }
     : null;
 
   const validation = current ? validateRegistration({ ...current }) : null;
   const errors: RegistrationErrors = showErrors && validation && !validation.ok ? validation.errors : {};
+  // Sao chép: đầy đủ. Bản in/PDF: số CCCD che (4 số cuối).
   const summaryText = current ? buildRegistrationSummary(current, selectedBranch?.name) : "";
+  const printText = current ? buildRegistrationSummary(current, selectedBranch?.name, "print") : "";
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (sendingRef.current || !current || !validation) return;
     setShowErrors(true);
     if (!validation.ok) {
-      const order = ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website", "nguoiDaiDien", "chucDanh", "consent"] as const;
+      // Thứ tự theo bố cục trang: ô thông thường → nhóm giấy tờ (nằm trên ô đồng ý chung) → ô đồng ý chung.
+      const order = ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website", "nguoiDaiDien", "chucDanh"] as const;
       const first = order.find((k) => validation.errors[k]);
       if (first) document.getElementById(`${uid}-${first}`)?.focus();
+      else if (validation.errors.giayTo) {
+        const idOrder = ["hoTen", "ngaySinh", "soCccd", "ngayCap", "noiCap", "quocTich", "danToc", "thuongTru", "lienLac", "consent"] as const;
+        const k = idOrder.find((x) => validation.errors.giayTo?.[x]);
+        if (k) document.getElementById(`${uid}-gt-${k}`)?.focus();
+      } else if (validation.errors.consent) document.getElementById(`${uid}-consent`)?.focus();
       return;
     }
     sendingRef.current = true;
@@ -424,7 +449,7 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
           {/* Bản IN: chỉ hiện khi in/Tải PDF — dựng từ đúng dữ liệu đã điền (cùng
               hàm với "Sao chép nội dung", bỏ 2 dòng đầu vì tiêu đề form đã hiện sẵn), thay vì in các ô nhập (in ô nhập
               trống sẽ ra placeholder xám, không "sạch"). */}
-          <pre className="hidden whitespace-pre-wrap font-sans text-[13.5px] leading-relaxed text-ink print:block">{summaryText.split("\n").slice(2).join("\n")}</pre>
+          <pre className="hidden whitespace-pre-wrap font-sans text-[13.5px] leading-relaxed text-ink print:block">{printText.split("\n").slice(2).join("\n")}</pre>
 
           <form noValidate onSubmit={onSubmit} className="space-y-6 print:hidden">
             <div className="space-y-4">
@@ -589,11 +614,6 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
               )}
             </div>
 
-            <div className="rounded-xl border border-primary/25 bg-primary-tint p-4 text-[13.5px] leading-relaxed text-navy">
-              <p className="font-bold">{cfg.vneidNote}</p>
-              <p className="mt-1.5 text-body-text">Vui lòng không nhập số CCCD vào form này.</p>
-            </div>
-
             <div className="space-y-4">
               <Field id={idOf("tenLienHe")} label="Họ tên người liên hệ" required error={errors.tenLienHe}>
                 <input
@@ -730,6 +750,19 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
                 </Field>
               )}
             </div>
+
+            {/* Khung giấy tờ tuỳ thân (VNeID) — đặt SAU khối người đại diện vì họ tên chủ hộ/chủ sở hữu
+                lấy từ khối đó. */}
+            <IdentitySection
+              uid={uid}
+              cfg={cfg}
+              isHousehold={choice === "ho-kinh-doanh"}
+              state={idState}
+              onChange={(next) => choice && setIdStates((all) => ({ ...all, [choice]: next }))}
+              repName={repName}
+              errors={errors.giayTo ?? {}}
+              methodError={errors.hinhThucGiayTo}
+            />
 
             {/* Honeypot: người thật không thấy/không điền; bot tự điền mọi ô → server bỏ qua lặng lẽ. */}
             <div aria-hidden="true" className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden">

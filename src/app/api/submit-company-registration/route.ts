@@ -11,6 +11,7 @@ import {
   buildRegistrationSummary,
   registrationAddressLine,
   registrationRepresentative,
+  identitySectionLines,
   validateRegistration,
   type RegistrationClean,
 } from "@/lib/companyRegistration";
@@ -92,6 +93,32 @@ function buildEmail(d: RegistrationClean, branchName?: string) {
   if (cfg.membersLabel) rows.push([cfg.membersLabel, d.thanhVien]);
 
   const cell = (v: string) => escapeHtml(v || "-").replace(/\n/g, "<br>");
+
+  // Khách chọn điền giấy tờ vào form: thông tin ĐẦY ĐỦ nằm trong phần riêng này của
+  // email nội bộ (dòng sheet chỉ có CCCD che). Mặc định: nhắc khách sẽ gửi ảnh VNeID qua Zalo.
+  let identityHtml = `<p><b>Ảnh VNeID:</b> khách sẽ gửi qua Zalo (${escapeHtml(cfg.vneidNote.split(":")[0])}).</p>`;
+  if (d.hinhThucGiayTo === "form" && d.giayTo) {
+    const idLines = identitySectionLines(d, "full");
+    const idRows = idLines
+      .slice(1)
+      .filter((l) => l.includes(": ") && !l.startsWith("Ảnh VNeID"))
+      .map((l): [string, string] => [l.slice(0, l.indexOf(": ")), l.slice(l.indexOf(": ") + 2)]);
+    identityHtml = `
+    <h3 style="margin-top:20px">${escapeHtml(idLines[0])}</h3>
+    <table cellpadding="6" style="border-collapse:collapse">
+      ${idRows
+        .map(
+          ([label, value]) => `
+        <tr>
+          <td style="font-weight:bold;vertical-align:top">${escapeHtml(label)}</td>
+          <td>${cell(value)}</td>
+        </tr>`
+        )
+        .join("")}
+    </table>
+    <p><b>${escapeHtml(idLines[idLines.length - 1])}</b></p>`;
+  }
+
   const html = `
     <h2>Hồ sơ thành lập doanh nghiệp mới từ website MAX OFFICE</h2>
     <table cellpadding="6" style="border-collapse:collapse">
@@ -105,7 +132,7 @@ function buildEmail(d: RegistrationClean, branchName?: string) {
         )
         .join("")}
     </table>
-    <p><b>Ảnh VNeID:</b> khách sẽ gửi qua Zalo (${escapeHtml(cfg.vneidNote.split(":")[0])}).</p>
+    ${identityHtml}
   `;
   return { subject, html, text: buildRegistrationSummary(d, branchName) };
 }
@@ -120,7 +147,8 @@ async function sendEmail(d: RegistrationClean, branchName?: string) {
  * không cần sửa: thông tin chi tiết gom vào cột "Ghi chú". */
 function buildSheetPayload(d: RegistrationClean, branchName?: string): LeadPayload {
   const cfg = REGISTRATION_CONFIG[d.loai];
-  const note = buildRegistrationSummary(d, branchName).split("\n").slice(2).join("\n");
+  // Chế độ "sheet": KHÔNG có ngày sinh/ngày cấp/địa chỉ thường trú, CCCD che (chỉ 4 số cuối).
+  const note = buildRegistrationSummary(d, branchName, "sheet").split("\n").slice(2).join("\n");
   return {
     formType: LEAD_SOURCE,
     name: d.tenLienHe,
