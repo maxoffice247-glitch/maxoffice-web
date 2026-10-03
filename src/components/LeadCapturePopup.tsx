@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { CloseIcon } from "./icons";
+import { ChevronDownIcon, CloseIcon } from "./icons";
 import { useLeadSubmit } from "@/lib/useLeadSubmit";
 import { POPUP_FORM_TYPE, POPUP_SERVICE_OPTIONS, defaultPopupService } from "@/lib/popupServices";
 
@@ -32,7 +32,6 @@ export default function LeadCapturePopup() {
   // undefined = khách chưa đụng vào -> dùng dịch vụ chọn sẵn theo trang; null = khách chủ động bỏ chọn.
   const [picked, setPicked] = useState<string | null | undefined>(undefined);
   const selected = picked === undefined ? defaultPopupService(pathname) || null : picked;
-  const chipRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     if (sessionStorage.getItem(SEEN_KEY)) return;
@@ -119,19 +118,6 @@ export default function LeadCapturePopup() {
     );
   };
 
-  // Radio group có thể BỎ CHỌN (bấm lại chip đang chọn): mũi tên di chuyển + chọn, Space/Enter bật-tắt.
-  const onChipKeyDown = (e: ReactKeyboardEvent<HTMLButtonElement>, i: number) => {
-    const n = POPUP_SERVICE_OPTIONS.length;
-    let next = -1;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (i + 1) % n;
-    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = (i - 1 + n) % n;
-    if (next < 0) return;
-    e.preventDefault();
-    setPicked(POPUP_SERVICE_OPTIONS[next]);
-    chipRefs.current[next]?.focus();
-  };
-  const selectedIndex = selected ? POPUP_SERVICE_OPTIONS.findIndex((o) => o === selected) : -1;
-
   return createPortal(
     <AnimatePresence>
       {open && (
@@ -199,7 +185,7 @@ export default function LeadCapturePopup() {
                     width={336}
                     height={224}
                     decoding="async"
-                    className="short:mb-0.5 short:h-[64px] short:w-[96px] mx-auto mb-2 block h-[112px] w-[168px] object-contain"
+                    className="mx-auto mb-2 block h-[112px] w-[168px] object-contain"
                   />
                 </picture>
                 <h3 id="lead-capture-title" className="short:mb-1 short:text-[18px] mb-2 text-center text-[20px] font-bold text-navy">
@@ -241,45 +227,29 @@ export default function LeadCapturePopup() {
                     />
                   </div>
 
-                  <div role="radiogroup" aria-labelledby={`${uid}-svc-label`}>
-                    <p id={`${uid}-svc-label`} className="short:mb-1 mb-1.5 text-[14px] leading-snug font-semibold text-body-text">
-                      Bạn quan tâm dịch vụ nào? (không bắt buộc)
-                    </p>
-                    <div className="short:gap-1.5 grid grid-cols-2 gap-2">
-                      {POPUP_SERVICE_OPTIONS.map((label, i) => {
-                        const isSelected = selected === label;
-                        const isLast = i === POPUP_SERVICE_OPTIONS.length - 1;
-                        // Roving tabindex: chip đang chọn (hoặc chip đầu nếu chưa chọn) là điểm dừng Tab duy nhất.
-                        const tabStop = selectedIndex >= 0 ? i === selectedIndex : i === 0;
-                        return (
-                          <button
-                            key={label}
-                            ref={(el) => {
-                              chipRefs.current[i] = el;
-                            }}
-                            type="button"
-                            role="radio"
-                            aria-checked={isSelected}
-                            tabIndex={tabStop ? 0 : -1}
-                            onClick={() => setPicked(isSelected ? null : label)}
-                            onKeyDown={(e) => onChipKeyDown(e, i)}
-                            className={`flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl border-[1.5px] px-2 py-1.5 text-center text-[14px] leading-tight font-semibold transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none ${
-                              isLast ? "col-span-2" : ""
-                            } ${
-                              isSelected
-                                ? "border-primary bg-primary text-white"
-                                : "border-line bg-white text-navy hover:border-primary/50"
-                            }`}
-                          >
-                            {isSelected && (
-                              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M5 12.5l4.5 4.5L19 7.5" />
-                              </svg>
-                            )}
+                  <div>
+                    <label htmlFor={`${uid}-service`} className="short:mb-1 mb-1.5 block text-[14px] leading-snug font-semibold text-body-text">
+                      Dịch vụ bạn quan tâm (không bắt buộc)
+                    </label>
+                    {/* <select> gốc: bộ chọn riêng của iOS/Android, thân thiện mobile. Chữ 16px trên mobile để iOS không
+                        tự zoom khi chạm. Chọn sẵn theo trang (khách đổi/bỏ chọn được qua mục "Chọn dịch vụ"). */}
+                    <div className="relative">
+                      <select
+                        id={`${uid}-service`}
+                        value={selected ?? ""}
+                        onChange={(e) => setPicked(e.target.value === "" ? null : e.target.value)}
+                        className={`min-h-[44px] w-full appearance-none rounded-xl border bg-white px-4 py-2.5 pr-10 text-[16px] transition-colors duration-200 focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:text-[14.5px] ${
+                          selected ? "border-primary font-semibold text-navy" : "border-line text-body-text"
+                        }`}
+                      >
+                        <option value="">Chọn dịch vụ</option>
+                        {POPUP_SERVICE_OPTIONS.map((label) => (
+                          <option key={label} value={label}>
                             {label}
-                          </button>
-                        );
-                      })}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3.5 h-4 w-4 -translate-y-1/2 text-body-text" />
                     </div>
                   </div>
 
