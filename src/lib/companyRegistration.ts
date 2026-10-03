@@ -103,13 +103,21 @@ export type RegistrationValues = {
   thanhVien: string;
 };
 
-/** Các ô DÙNG CHUNG — giữ nguyên khi khách đổi loại hình. */
+export const ADDRESS_TYPES = ["max-office", "khac"] as const;
+export type AddressType = (typeof ADDRESS_TYPES)[number];
+
+/** Các ô DÙNG CHUNG — giữ nguyên khi khách đổi loại hình. `loaiDiaChi`/
+ * `chiNhanh` (khách dùng địa chỉ MAX OFFICE hay tự nhập) cũng dùng chung vì
+ * địa chỉ chi nhánh không phụ thuộc loại hình doanh nghiệp. */
 export type RegistrationShared = {
   tenLienHe: string;
   sdt: string;
   email: string;
   website: string;
   consent: boolean;
+  loaiDiaChi: AddressType;
+  /** Slug chi nhánh khi loaiDiaChi = "max-office", ngược lại luôn rỗng. */
+  chiNhanh: string;
 };
 
 export const EMPTY_VALUES: RegistrationValues = {
@@ -127,6 +135,8 @@ export const EMPTY_SHARED: RegistrationShared = {
   email: "",
   website: "",
   consent: false,
+  loaiDiaChi: "khac",
+  chiNhanh: "",
 };
 
 /** Body gửi lên API. `fax` là honeypot (ô ẩn, người thật không bao giờ điền). */
@@ -149,6 +159,7 @@ export const FIELD_MAX = {
   sdt: 20,
   email: 150,
   website: 200,
+  chiNhanh: 80,
 } as const;
 
 /** Bỏ khoảng trắng/dấu chấm/gạch/ngoặc, đổi đầu số +84/84 thành 0. */
@@ -180,6 +191,7 @@ const ERR = {
   email: "Email chưa đúng định dạng.",
   website: "Website chưa đúng định dạng.",
   consent: "Vui lòng đồng ý để MAX OFFICE liên hệ và soạn hồ sơ.",
+  branch: "Vui lòng chọn chi nhánh MAX OFFICE, hoặc chuyển sang \"Tự nhập địa chỉ khác\".",
   idNumber: "Vui lòng không nhập số CCCD/CMND vào form này — gửi ảnh VNeID qua Zalo.",
 } as const;
 
@@ -215,6 +227,8 @@ export function validateRegistration(
     email: str(b.email),
     website: cfg.hasWebsite ? str(b.website) : "",
     consent: b.consent === true,
+    loaiDiaChi: b.loaiDiaChi === "max-office" ? "max-office" : "khac",
+    chiNhanh: b.loaiDiaChi === "max-office" ? str(b.chiNhanh) : "",
   };
 
   for (const k of ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website"] as const) {
@@ -236,24 +250,41 @@ export function validateRegistration(
     errors.website = ERR.website;
   }
   if (!data.consent) errors.consent = ERR.consent;
+  if (data.loaiDiaChi === "max-office") {
+    // Chỉ kiểm tra HÌNH DẠNG ở đây (client dùng chung hàm này); việc slug có
+    // thật và địa chỉ có khớp địa chỉ chuẩn của chi nhánh do API route kiểm
+    // tra bằng dữ liệu chi nhánh (không tin giá trị client gửi).
+    if (!data.chiNhanh || data.chiNhanh.length > FIELD_MAX.chiNhanh || !data.diaChi) errors.diaChi = ERR.branch;
+  }
 
   return Object.keys(errors).length ? { ok: false, errors } : { ok: true, data };
 }
 
 const NONE = "(chưa cung cấp)";
 
+/** Dòng địa chỉ — LUÔN đứng đầu phần thông tin (email, sheet, bản sao, bản in)
+ * để nhân viên nhận ra ngay khách cần cả địa chỉ MAX OFFICE (văn phòng ảo). */
+export function registrationAddressLine(d: RegistrationClean, branchName?: string): string {
+  if (d.loaiDiaChi === "max-office") {
+    return `Địa chỉ: ${d.diaChi || NONE} (chi nhánh MAX OFFICE: ${branchName || d.chiNhanh})`;
+  }
+  return `Địa chỉ khách tự cung cấp: ${d.diaChi || NONE}`;
+}
+
 /** Bản tóm tắt dạng văn bản — dùng cho nút "Sao chép nội dung", khối in, và
- * nội dung email (server dựng lại từ dữ liệu đã validate, không nhận từ client). */
-export function buildRegistrationSummary(d: RegistrationClean): string {
+ * nội dung email (server dựng lại từ dữ liệu đã validate, không nhận từ client).
+ * `branchName` = tên chi nhánh khi khách dùng địa chỉ MAX OFFICE. */
+export function buildRegistrationSummary(d: RegistrationClean, branchName?: string): string {
   const cfg = REGISTRATION_CONFIG[d.loai];
   const lines: string[] = [cfg.title.toUpperCase(), ""];
+  lines.push(registrationAddressLine(d, branchName));
+  lines.push("");
   lines.push(`Họ tên người liên hệ: ${d.tenLienHe || NONE}`);
   lines.push(`SĐT đăng ký: ${d.sdt || NONE}`);
   lines.push(`Email: ${d.email || NONE}`);
   if (cfg.hasWebsite) lines.push(`Website: ${d.website || NONE}`);
   lines.push("");
   lines.push(`${cfg.nameLabel}: ${d.tenDonVi || NONE}`);
-  lines.push(`Địa chỉ: ${d.diaChi || NONE}`);
   lines.push(`Ngành nghề kinh doanh: ${d.nganhNghe || NONE}`);
   lines.push(`${cfg.industryMainLabel}: ${d.nganhChinh || NONE}`);
   lines.push(`${cfg.capitalLabel}: ${d.von ? `${formatThousands(d.von)} đồng` : NONE}`);

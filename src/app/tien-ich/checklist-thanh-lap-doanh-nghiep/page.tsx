@@ -4,6 +4,7 @@ import SectionHead from "@/components/SectionHead";
 import CompanyRegistrationForm from "@/components/tools/CompanyRegistrationForm";
 import { ClockIcon, CheckCircleIcon, DocumentCheckIcon, HeadsetIcon } from "@/components/icons";
 import { REGISTRATION_CONFIG, REGISTRATION_TYPES } from "@/lib/companyRegistration";
+import { getBranchAddressGroups } from "@/lib/branchAddress";
 import { SITE_NAME } from "@/lib/siteConfig";
 
 const PAGE_PATH = "/tien-ich/checklist-thanh-lap-doanh-nghiep";
@@ -79,7 +80,7 @@ export default function ChecklistThanhLapDoanhNghiepPage() {
               ))}
             </ul>
           </div>
-          <CompanyRegistrationForm />
+          <CompanyRegistrationForm branchGroups={getBranchAddressGroups()} />
         </div>
       </section>
     </ToolPageTemplate>

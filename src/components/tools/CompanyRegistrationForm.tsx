@@ -15,6 +15,8 @@ import Link from "next/link";
 import MoneyInput from "../MoneyInput";
 import PrintPdfButton from "../PrintPdfButton";
 import BrandIcon from "../BrandIcon";
+import BranchAddressCombobox from "./BranchAddressCombobox";
+import type { BranchAddressGroup } from "@/lib/branchAddress";
 import { CheckCircleIcon } from "../icons";
 import { trackEvent } from "@/lib/gtag";
 import {
@@ -102,7 +104,7 @@ function describedBy(id: string, hint: boolean, error: boolean): string | undefi
   return ids || undefined;
 }
 
-export default function CompanyRegistrationForm() {
+export default function CompanyRegistrationForm({ branchGroups }: { branchGroups: BranchAddressGroup[] }) {
   const uid = useId();
   const urlType = useSyncExternalStore(subscribeNoop, readTypeFromUrl, () => null);
 
@@ -196,21 +198,32 @@ export default function CompanyRegistrationForm() {
     setShared((s) => ({ ...s, [key]: v }));
   }
 
+  const useBranch = shared.loaiDiaChi === "max-office";
+  const selectedBranch = useBranch
+    ? (branchGroups.flatMap((g) => g.options).find((o) => o.slug === shared.chiNhanh) ?? null)
+    : null;
+
+  // Địa chỉ gửi đi: chế độ MAX OFFICE lấy ĐÚNG địa chỉ chuẩn của chi nhánh đã
+  // chọn (server đối chiếu lại); chế độ tự nhập lấy chữ khách gõ. Phần chữ đã
+  // gõ (cur.diaChi) không bị xoá khi chuyển chế độ qua lại.
   const current: RegistrationClean | null = choice
     ? {
         loai: choice,
         ...cur,
+        diaChi: useBranch ? (selectedBranch?.address ?? "") : cur.diaChi,
         tenLienHe: shared.tenLienHe.trim(),
         sdt: shared.sdt.trim(),
         email: shared.email.trim(),
         website: shared.website.trim(),
         consent: shared.consent,
+        loaiDiaChi: shared.loaiDiaChi,
+        chiNhanh: useBranch ? (selectedBranch?.slug ?? "") : "",
       }
     : null;
 
   const validation = current ? validateRegistration({ ...current }) : null;
   const errors: RegistrationErrors = showErrors && validation && !validation.ok ? validation.errors : {};
-  const summaryText = current ? buildRegistrationSummary(current) : "";
+  const summaryText = current ? buildRegistrationSummary(current, selectedBranch?.name) : "";
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -382,26 +395,76 @@ export default function CompanyRegistrationForm() {
                 label="Địa chỉ"
                 error={errors.diaChi}
                 hint={
-                  <>
-                    Chưa có địa chỉ trụ sở?{" "}
-                    <Link href="/dia-diem" target="_blank" className="font-semibold text-primary underline underline-offset-2">
-                      Xem địa chỉ văn phòng ảo MAX OFFICE
-                    </Link>
-                  </>
+                  useBranch ? (
+                    <>
+                      Địa chỉ MAX OFFICE đi kèm dịch vụ văn phòng ảo, nhân viên sẽ tư vấn gói phù hợp.{" "}
+                      <Link href="/bang-gia" target="_blank" className="font-semibold text-primary underline underline-offset-2">
+                        Xem bảng giá
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      Chưa có địa chỉ trụ sở?{" "}
+                      <Link href="/dia-diem" target="_blank" className="font-semibold text-primary underline underline-offset-2">
+                        Xem địa chỉ văn phòng ảo MAX OFFICE
+                      </Link>
+                    </>
+                  )
                 }
               >
-                <textarea
-                  id={idOf("diaChi")}
-                  rows={2}
-                  value={cur.diaChi}
-                  onChange={(e) => setValue("diaChi", e.target.value)}
-                  placeholder="Ví dụ: Số 10 Sông Thao, Phường Tân Sơn Hoà, Tp. Hồ Chí Minh, Việt Nam"
-                  maxLength={FIELD_MAX.diaChi}
-                  autoComplete="street-address"
-                  aria-invalid={!!errors.diaChi}
-                  aria-describedby={describedBy(idOf("diaChi"), true, !!errors.diaChi)}
-                  className={inputClass}
-                />
+                <div role="radiogroup" aria-label="Cách cung cấp địa chỉ" className="mb-3 flex flex-col gap-2 sm:flex-row">
+                  {(
+                    [
+                      ["max-office", "Dùng địa chỉ MAX OFFICE"],
+                      ["khac", "Tự nhập địa chỉ khác"],
+                    ] as const
+                  ).map(([val, text]) => (
+                    <label key={val} className="block flex-1 cursor-pointer">
+                      <input
+                        type="radio"
+                        name={`${uid}-loai-dia-chi`}
+                        value={val}
+                        checked={shared.loaiDiaChi === val}
+                        onChange={() => setSharedValue("loaiDiaChi", val)}
+                        className="peer sr-only"
+                      />
+                      <span className="flex min-h-[44px] items-center gap-2.5 rounded-xl border-[1.5px] border-line bg-white px-4 py-2.5 text-[14px] font-semibold text-navy transition-colors duration-200 hover:border-primary/40 peer-checked:border-primary peer-checked:bg-primary-tint peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2">
+                        <span
+                          aria-hidden="true"
+                          className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 ${
+                            shared.loaiDiaChi === val ? "border-primary" : "border-line"
+                          }`}
+                        >
+                          {shared.loaiDiaChi === val && <span className="h-2 w-2 rounded-full bg-primary" />}
+                        </span>
+                        {text}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                {useBranch ? (
+                  <BranchAddressCombobox
+                    id={idOf("diaChi")}
+                    groups={branchGroups}
+                    value={shared.chiNhanh}
+                    onChange={(slug) => setSharedValue("chiNhanh", slug)}
+                    invalid={!!errors.diaChi}
+                    describedBy={describedBy(idOf("diaChi"), true, !!errors.diaChi)}
+                  />
+                ) : (
+                  <textarea
+                    id={idOf("diaChi")}
+                    rows={2}
+                    value={cur.diaChi}
+                    onChange={(e) => setValue("diaChi", e.target.value)}
+                    placeholder="Ví dụ: Số 10 Sông Thao, Phường Tân Sơn Hoà, Tp. Hồ Chí Minh, Việt Nam"
+                    maxLength={FIELD_MAX.diaChi}
+                    autoComplete="street-address"
+                    aria-invalid={!!errors.diaChi}
+                    aria-describedby={describedBy(idOf("diaChi"), true, !!errors.diaChi)}
+                    className={inputClass}
+                  />
+                )}
               </Field>
 
               <Field id={idOf("nganhNghe")} label="Ngành nghề kinh doanh" error={errors.nganhNghe}>

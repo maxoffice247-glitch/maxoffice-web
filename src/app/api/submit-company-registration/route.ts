@@ -9,9 +9,11 @@ import {
 import {
   REGISTRATION_CONFIG,
   buildRegistrationSummary,
+  registrationAddressLine,
   validateRegistration,
   type RegistrationClean,
 } from "@/lib/companyRegistration";
+import { findBranchAddress } from "@/lib/branchAddress";
 import { getRedis } from "@/lib/portal/redisClient";
 import { getClientIp } from "@/lib/portal/requestIp";
 
@@ -61,13 +63,18 @@ async function isRateLimited(ip: string): Promise<boolean> {
   }
 }
 
-function buildEmail(d: RegistrationClean) {
+function buildEmail(d: RegistrationClean, branchName?: string) {
   const cfg = REGISTRATION_CONFIG[d.loai];
   const display = oneLine(d.tenDonVi) || oneLine(d.tenLienHe);
   const subject = `[Hồ sơ thành lập] ${cfg.label} - ${display}`;
 
+  // Dòng địa chỉ LUÔN đứng đầu (ngay sau loại hình): khách dùng địa chỉ MAX
+  // OFFICE thì nhân viên thấy ngay khách cần cả văn phòng ảo.
+  const addressLine = registrationAddressLine(d, branchName);
+  const sep = addressLine.indexOf(": ");
   const rows: [string, string][] = [
     ["Loại hình", cfg.label],
+    [addressLine.slice(0, sep), addressLine.slice(sep + 2)],
     ["Họ tên người liên hệ", d.tenLienHe],
     ["SĐT đăng ký", d.sdt],
     ["Email", d.email],
@@ -75,7 +82,6 @@ function buildEmail(d: RegistrationClean) {
   if (cfg.hasWebsite) rows.push(["Website", d.website]);
   rows.push(
     [cfg.nameLabel, d.tenDonVi],
-    ["Địa chỉ", d.diaChi],
     ["Ngành nghề kinh doanh", d.nganhNghe],
     [cfg.industryMainLabel, d.nganhChinh],
     [cfg.capitalLabel, d.von ? `${Number(d.von).toLocaleString("vi-VN")} đồng` : ""]
@@ -98,20 +104,20 @@ function buildEmail(d: RegistrationClean) {
     </table>
     <p><b>Ảnh VNeID:</b> khách sẽ gửi qua Zalo (${escapeHtml(cfg.vneidNote.split(":")[0])}).</p>
   `;
-  return { subject, html, text: buildRegistrationSummary(d) };
+  return { subject, html, text: buildRegistrationSummary(d, branchName) };
 }
 
-async function sendEmail(d: RegistrationClean) {
+async function sendEmail(d: RegistrationClean, branchName?: string) {
   const { transporter, from } = createZohoMailer();
-  const { subject, html, text } = buildEmail(d);
+  const { subject, html, text } = buildEmail(d, branchName);
   await transporter.sendMail({ from, to: LEAD_INBOX, subject, html, text });
 }
 
 /** Cùng định dạng payload như submit-lead để Apps Script của sheet lead chạy
  * không cần sửa: thông tin chi tiết gom vào cột "Ghi chú". */
-function buildSheetPayload(d: RegistrationClean): LeadPayload {
+function buildSheetPayload(d: RegistrationClean, branchName?: string): LeadPayload {
   const cfg = REGISTRATION_CONFIG[d.loai];
-  const note = buildRegistrationSummary(d).split("\n").slice(2).join("\n");
+  const note = buildRegistrationSummary(d, branchName).split("\n").slice(2).join("\n");
   return {
     formType: LEAD_SOURCE,
     name: d.tenLienHe,
@@ -152,6 +158,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Thông tin chưa hợp lệ.", fields: result.errors }, { status: 400 });
   }
 
+  // Địa chỉ MAX OFFICE: KHÔNG tin giá trị client gửi — slug phải là chi nhánh
+  // đang hoạt động và địa chỉ phải khớp đúng địa chỉ chuẩn của chi nhánh đó.
+  let branchName: string | undefined;
+  if (result.data.loaiDiaChi === "max-office") {
+    const branch = findBranchAddress(result.data.chiNhanh);
+    if (!branch) {
+      return NextResponse.json(
+        { error: "Thông tin chưa hợp lệ.", fields: { diaChi: "Chi nhánh MAX OFFICE không hợp lệ." } },
+        { status: 400 }
+      );
+    }
+    if (branch.address !== result.data.diaChi) {
+      return NextResponse.json(
+        { error: "Thông tin chưa hợp lệ.", fields: { diaChi: "Địa chỉ không khớp địa chỉ chuẩn của chi nhánh đã chọn." } },
+        { status: 400 }
+      );
+    }
+    branchName = branch.name;
+  }
+
   if (await isRateLimited(getClientIp(request))) {
     return NextResponse.json(
       { error: "Bạn gửi quá nhiều lần trong thời gian ngắn. Vui lòng thử lại sau ít phút hoặc gửi qua Zalo." },
@@ -160,8 +186,8 @@ export async function POST(request: Request) {
   }
 
   const [sheetResult, emailResult] = await Promise.allSettled([
-    sendToGoogleSheet(buildSheetPayload(result.data)),
-    sendEmail(result.data),
+    sendToGoogleSheet(buildSheetPayload(result.data, branchName)),
+    sendEmail(result.data, branchName),
   ]);
   const sheetOk = sheetResult.status === "fulfilled";
   const emailOk = emailResult.status === "fulfilled";
