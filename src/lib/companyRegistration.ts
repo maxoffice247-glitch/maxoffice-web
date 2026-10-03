@@ -27,6 +27,10 @@ export type RegistrationTypeConfig = {
   hasWebsite: boolean;
   /** undefined = loại hình này không có ô "họ tên các cổ đông/thành viên". */
   membersLabel?: string;
+  /** Nhãn ô người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ). */
+  representativeLabel: string;
+  /** Hộ kinh doanh không có ô chức danh. */
+  hasTitle: boolean;
   /** Nội dung khung lưu ý về ảnh VNeID (KHÔNG phải ô nhập). */
   vneidNote: string;
   /** Câu mô tả số người tối thiểu, dùng cho đoạn giới thiệu tĩnh trên trang. */
@@ -36,6 +40,8 @@ export type RegistrationTypeConfig = {
 export const REGISTRATION_CONFIG: Record<RegistrationType, RegistrationTypeConfig> = {
   "co-phan": {
     key: "co-phan",
+    representativeLabel: "Họ tên người đại diện theo pháp luật",
+    hasTitle: true,
     label: "Công ty Cổ phần",
     shortDesc: "Tối thiểu 3 cổ đông",
     title: "Hồ sơ thành lập Công ty Cổ phần",
@@ -46,11 +52,13 @@ export const REGISTRATION_CONFIG: Record<RegistrationType, RegistrationTypeConfi
     hasWebsite: true,
     membersLabel: "Họ tên các cổ đông",
     vneidNote:
-      "Ảnh VNeID của các cổ đông (tối thiểu 3, chụp thấy rõ ngày cấp CCCD): gửi qua Zalo sau khi bấm Gửi hồ sơ.",
+      "Ảnh VNeID của các cổ đông (tối thiểu 3, chụp thấy rõ ngày cấp CCCD; bao gồm người đại diện theo pháp luật nếu người đó không nằm trong danh sách cổ đông): gửi qua Zalo sau khi bấm Gửi hồ sơ.",
     introText: "Công ty Cổ phần: tối thiểu 3 cổ đông",
   },
   "tnhh-2tv": {
     key: "tnhh-2tv",
+    representativeLabel: "Họ tên người đại diện theo pháp luật",
+    hasTitle: true,
     label: "Công ty TNHH 2 thành viên trở lên",
     shortDesc: "Tối thiểu 2 thành viên",
     title: "Hồ sơ thành lập Công ty TNHH 2 thành viên trở lên",
@@ -61,11 +69,13 @@ export const REGISTRATION_CONFIG: Record<RegistrationType, RegistrationTypeConfi
     hasWebsite: true,
     membersLabel: "Họ tên các thành viên",
     vneidNote:
-      "Ảnh VNeID của các thành viên (tối thiểu 2, chụp thấy rõ ngày cấp CCCD): gửi qua Zalo sau khi bấm Gửi hồ sơ.",
+      "Ảnh VNeID của các thành viên (tối thiểu 2, chụp thấy rõ ngày cấp CCCD; bao gồm người đại diện theo pháp luật nếu người đó không nằm trong danh sách thành viên): gửi qua Zalo sau khi bấm Gửi hồ sơ.",
     introText: "Công ty TNHH 2 thành viên trở lên: tối thiểu 2 thành viên",
   },
   "tnhh-1tv": {
     key: "tnhh-1tv",
+    representativeLabel: "Họ tên người đại diện theo pháp luật",
+    hasTitle: true,
     label: "Công ty TNHH 1 thành viên",
     shortDesc: "Chỉ 1 chủ sở hữu",
     title: "Hồ sơ thành lập Công ty TNHH 1 thành viên",
@@ -74,11 +84,14 @@ export const REGISTRATION_CONFIG: Record<RegistrationType, RegistrationTypeConfi
     industryMainLabel: "Ngành nghề kinh doanh chính",
     capitalLabel: "Vốn điều lệ",
     hasWebsite: true,
-    vneidNote: "Ảnh VNeID (chụp thấy rõ ngày cấp CCCD): gửi qua Zalo sau khi bấm Gửi hồ sơ.",
+    vneidNote:
+      "Ảnh VNeID (chụp thấy rõ ngày cấp CCCD; bao gồm người đại diện theo pháp luật nếu người đó không phải chủ sở hữu): gửi qua Zalo sau khi bấm Gửi hồ sơ.",
     introText: "Công ty TNHH 1 thành viên: 1 chủ sở hữu",
   },
   "ho-kinh-doanh": {
     key: "ho-kinh-doanh",
+    representativeLabel: "Họ tên chủ hộ kinh doanh",
+    hasTitle: false,
     label: "Hộ kinh doanh",
     shortDesc: "Cá nhân hoặc hộ gia đình",
     title: "Hồ sơ thành lập Hộ kinh doanh",
@@ -118,6 +131,12 @@ export type RegistrationShared = {
   loaiDiaChi: AddressType;
   /** Slug chi nhánh khi loaiDiaChi = "max-office", ngược lại luôn rỗng. */
   chiNhanh: string;
+  /** Người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ). Dùng chung giữa các
+   * loại hình — là 1 con người, không phụ thuộc loại hình. Khi khách tích
+   * "trùng người liên hệ", form gửi lên đúng họ tên người liên hệ ở đây. */
+  nguoiDaiDien: string;
+  /** Chức danh gõ tự do (không áp dụng Hộ kinh doanh). */
+  chucDanh: string;
 };
 
 export const EMPTY_VALUES: RegistrationValues = {
@@ -137,6 +156,8 @@ export const EMPTY_SHARED: RegistrationShared = {
   consent: false,
   loaiDiaChi: "khac",
   chiNhanh: "",
+  nguoiDaiDien: "",
+  chucDanh: "",
 };
 
 /** Body gửi lên API. `fax` là honeypot (ô ẩn, người thật không bao giờ điền). */
@@ -160,6 +181,8 @@ export const FIELD_MAX = {
   email: 150,
   website: 200,
   chiNhanh: 80,
+  nguoiDaiDien: 120,
+  chucDanh: 80,
 } as const;
 
 /** Bỏ khoảng trắng/dấu chấm/gạch/ngoặc, đổi đầu số +84/84 thành 0. */
@@ -229,12 +252,15 @@ export function validateRegistration(
     consent: b.consent === true,
     loaiDiaChi: b.loaiDiaChi === "max-office" ? "max-office" : "khac",
     chiNhanh: b.loaiDiaChi === "max-office" ? str(b.chiNhanh) : "",
+    nguoiDaiDien: str(b.nguoiDaiDien),
+    // Hộ kinh doanh không có chức danh — bỏ hẳn dữ liệu thừa từ client.
+    chucDanh: cfg.hasTitle ? str(b.chucDanh) : "",
   };
 
-  for (const k of ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website"] as const) {
+  for (const k of ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website", "nguoiDaiDien", "chucDanh"] as const) {
     if (data[k].length > FIELD_MAX[k]) errors[k] = ERR.tooLong;
   }
-  for (const k of ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "thanhVien", "tenLienHe"] as const) {
+  for (const k of ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "thanhVien", "tenLienHe", "nguoiDaiDien", "chucDanh"] as const) {
     if (!errors[k] && ID_NUMBER_PATTERN.test(data[k])) errors[k] = ERR.idNumber;
   }
 
@@ -271,6 +297,24 @@ export function registrationAddressLine(d: RegistrationClean, branchName?: strin
   return `Địa chỉ khách tự cung cấp: ${d.diaChi || NONE}`;
 }
 
+function sameName(a: string, b: string): boolean {
+  const n = (x: string) => x.trim().replace(/\s+/g, " ").toLowerCase();
+  return n(a) !== "" && n(a) === n(b);
+}
+
+/** Dòng người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ) — đặt ngay dưới
+ * nhóm thông tin liên hệ ở mọi nơi (email, sheet, bản sao, bản in). "Trùng người
+ * liên hệ" được SUY RA từ việc 2 họ tên giống nhau (không cần cờ riêng gửi lên). */
+export function registrationRepresentative(d: RegistrationClean): { label: string; value: string } {
+  const cfg = REGISTRATION_CONFIG[d.loai];
+  const label = cfg.hasTitle ? "Người đại diện theo pháp luật" : "Chủ hộ kinh doanh";
+  if (!d.nguoiDaiDien) return { label, value: NONE };
+  let value = d.nguoiDaiDien;
+  if (cfg.hasTitle && d.chucDanh) value += ` (${d.chucDanh})`;
+  if (sameName(d.nguoiDaiDien, d.tenLienHe)) value += " (trùng người liên hệ)";
+  return { label, value };
+}
+
 /** Bản tóm tắt dạng văn bản — dùng cho nút "Sao chép nội dung", khối in, và
  * nội dung email (server dựng lại từ dữ liệu đã validate, không nhận từ client).
  * `branchName` = tên chi nhánh khi khách dùng địa chỉ MAX OFFICE. */
@@ -283,6 +327,8 @@ export function buildRegistrationSummary(d: RegistrationClean, branchName?: stri
   lines.push(`SĐT đăng ký: ${d.sdt || NONE}`);
   lines.push(`Email: ${d.email || NONE}`);
   if (cfg.hasWebsite) lines.push(`Website: ${d.website || NONE}`);
+  const rep = registrationRepresentative(d);
+  lines.push(`${rep.label}: ${rep.value}`);
   lines.push("");
   lines.push(`${cfg.nameLabel}: ${d.tenDonVi || NONE}`);
   lines.push(`Ngành nghề kinh doanh: ${d.nganhNghe || NONE}`);

@@ -10,6 +10,7 @@ import {
   REGISTRATION_CONFIG,
   buildRegistrationSummary,
   registrationAddressLine,
+  registrationRepresentative,
   validateRegistration,
   type RegistrationClean,
 } from "@/lib/companyRegistration";
@@ -80,6 +81,8 @@ function buildEmail(d: RegistrationClean, branchName?: string) {
     ["Email", d.email],
   ];
   if (cfg.hasWebsite) rows.push(["Website", d.website]);
+  const rep = registrationRepresentative(d);
+  rows.push([rep.label, d.nguoiDaiDien ? rep.value : ""]);
   rows.push(
     [cfg.nameLabel, d.tenDonVi],
     ["Ngành nghề kinh doanh", d.nganhNghe],

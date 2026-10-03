@@ -132,6 +132,9 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
     "ho-kinh-doanh": EMPTY_VALUES,
   });
   const [shared, setShared] = useState<RegistrationShared>(EMPTY_SHARED);
+  // Chỉ là trạng thái giao diện (không gửi lên): tích thì người đại diện = người liên hệ.
+  // Phần khách đã gõ riêng (shared.nguoiDaiDien) KHÔNG bị xoá khi tích, nên bỏ tích là hiện lại.
+  const [sameAsContact, setSameAsContact] = useState(false);
   const [fax, setFax] = useState("");
   const [showErrors, setShowErrors] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -226,6 +229,8 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
         consent: shared.consent,
         loaiDiaChi: shared.loaiDiaChi,
         chiNhanh: useBranch ? (selectedBranch?.slug ?? "") : "",
+        nguoiDaiDien: sameAsContact ? shared.tenLienHe.trim() : shared.nguoiDaiDien.trim(),
+        chucDanh: cfg?.hasTitle ? shared.chucDanh.trim() : "",
       }
     : null;
 
@@ -238,7 +243,7 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
     if (sendingRef.current || !current || !validation) return;
     setShowErrors(true);
     if (!validation.ok) {
-      const order = ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website", "consent"] as const;
+      const order = ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website", "nguoiDaiDien", "chucDanh", "consent"] as const;
       const first = order.find((k) => validation.errors[k]);
       if (first) document.getElementById(`${uid}-${first}`)?.focus();
       return;
@@ -654,6 +659,74 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
                     aria-describedby={describedBy(idOf("website"), false, !!errors.website)}
                     className={inputClass}
                   />
+                </Field>
+              )}
+            </div>
+
+            {/* Người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ) — đặt SAU nhóm liên hệ vì
+                ô tích "trùng người liên hệ" cần họ tên liên hệ đã điền ở phía trên. Không bắt buộc. */}
+            <div className="space-y-4">
+              <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-[13.5px] leading-relaxed text-ink">
+                <input
+                  id={idOf("trungLienHe")}
+                  type="checkbox"
+                  checked={sameAsContact}
+                  onChange={(e) => setSameAsContact(e.target.checked)}
+                  className="peer sr-only"
+                />
+                <span
+                  aria-hidden="true"
+                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 ${
+                    sameAsContact ? "border-primary bg-primary text-white" : "border-line text-transparent"
+                  }`}
+                >
+                  <CheckCircleIcon className="h-3.5 w-3.5" />
+                </span>
+                <span>{cfg.hasTitle ? "Người đại diện trùng với người liên hệ" : "Chủ hộ trùng với người liên hệ"}</span>
+              </label>
+
+              <Field
+                id={idOf("nguoiDaiDien")}
+                label={cfg.representativeLabel}
+                error={errors.nguoiDaiDien}
+                hint="Thông tin này cần để soạn hồ sơ."
+              >
+                <input
+                  id={idOf("nguoiDaiDien")}
+                  type="text"
+                  value={sameAsContact ? shared.tenLienHe : shared.nguoiDaiDien}
+                  onChange={(e) => setSharedValue("nguoiDaiDien", e.target.value)}
+                  readOnly={sameAsContact}
+                  placeholder="Ví dụ: Nguyễn Văn A"
+                  maxLength={FIELD_MAX.nguoiDaiDien}
+                  autoComplete="off"
+                  aria-invalid={!!errors.nguoiDaiDien}
+                  aria-describedby={describedBy(idOf("nguoiDaiDien"), true, !!errors.nguoiDaiDien)}
+                  className={`${inputClass} ${sameAsContact ? "bg-bg-tint text-body-text" : ""}`}
+                />
+              </Field>
+
+              {cfg.hasTitle && (
+                <Field id={idOf("chucDanh")} label="Chức danh (tuỳ chọn)" error={errors.chucDanh}>
+                  {/* Ô gõ tự do + gợi ý (datalist) — KHÔNG phải danh sách chọn cố định, và không nêu quy
+                      định pháp lý nào vì chức danh cho phép khác nhau theo loại hình. */}
+                  <input
+                    id={idOf("chucDanh")}
+                    type="text"
+                    list={`${idOf("chucDanh")}-goi-y`}
+                    value={shared.chucDanh}
+                    onChange={(e) => setSharedValue("chucDanh", e.target.value)}
+                    placeholder="Ví dụ: Giám đốc"
+                    maxLength={FIELD_MAX.chucDanh}
+                    autoComplete="off"
+                    aria-invalid={!!errors.chucDanh}
+                    aria-describedby={describedBy(idOf("chucDanh"), false, !!errors.chucDanh)}
+                    className={inputClass}
+                  />
+                  <datalist id={`${idOf("chucDanh")}-goi-y`}>
+                    <option value="Giám đốc" />
+                    <option value="Tổng giám đốc" />
+                  </datalist>
                 </Field>
               )}
             </div>
