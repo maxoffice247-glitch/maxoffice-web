@@ -9,7 +9,7 @@ import { SITE_NAME } from "@/lib/siteConfig";
 
 const PAGE_PATH = "/tien-ich/checklist-thanh-lap-doanh-nghiep";
 const PAGE_DESCRIPTION =
-  "Chọn loại hình (Công ty Cổ phần, TNHH 2 thành viên trở lên, TNHH 1 thành viên, Hộ kinh doanh), điền thông tin cần chuẩn bị và gửi hồ sơ để MAX OFFICE lên hồ sơ thành lập — miễn phí.";
+  "Chọn loại hình (Công ty TNHH 1 thành viên, TNHH 2 thành viên trở lên, Cổ phần, Hộ kinh doanh), điền thông tin cần chuẩn bị và gửi hồ sơ để MAX OFFICE lên hồ sơ thành lập — miễn phí.";
 
 export const metadata: Metadata = {
   alternates: { canonical: PAGE_PATH },
@@ -45,8 +45,8 @@ const RELATED_SERVICES = [
 const FAQS = [
   { q: "Thành lập doanh nghiệp mất bao lâu?", a: "Thông thường vài ngày làm việc tuỳ loại hình và hồ sơ. MAX OFFICE sẽ hỗ trợ theo dõi tiến độ và thông báo kết quả sớm nhất." },
   { q: "Tôi có thể dùng địa chỉ văn phòng ảo để đăng ký kinh doanh không?", a: "Có. Địa chỉ văn phòng ảo tại MAX OFFICE hoàn toàn hợp lệ để đăng ký kinh doanh và đăng ký thuế." },
-  { q: "Tôi cung cấp giấy tờ tuỳ thân (VNeID/CCCD) bằng cách nào?", a: "Có 2 cách. Cách chính (chỉ Công ty TNHH 1 thành viên và Hộ kinh doanh): điền thông tin trên CCCD/VNeID trực tiếp vào form — đây là lựa chọn mặc định, không cần gửi ảnh. Cách thay thế: chọn \"Tôi muốn gửi ảnh VNeID qua Zalo riêng (không điền thông tin)\", sau khi bấm \"Gửi hồ sơ\" thì bấm \"Mở Zalo gửi ảnh VNeID\" để gửi ảnh qua Zalo hotline của MAX OFFICE (chụp thấy rõ ngày cấp CCCD). Công ty Cổ phần và Công ty TNHH 2 thành viên trở lên gửi ảnh VNeID qua Zalo. Ngoài ô \"Số CCCD\" khi điền vào form, vui lòng không nhập số CCCD vào các ô khác của form." },
-  { q: "Cần tối thiểu bao nhiêu cổ đông hoặc thành viên?", a: "Công ty Cổ phần cần tối thiểu 3 cổ đông; Công ty TNHH 2 thành viên trở lên cần tối thiểu 2 thành viên; Công ty TNHH 1 thành viên chỉ có 1 chủ sở hữu. Mỗi người cần cung cấp giấy tờ tuỳ thân (Công ty TNHH 1 thành viên và Hộ kinh doanh: điền thông tin CCCD vào form, hoặc gửi ảnh VNeID; các loại hình còn lại: ảnh VNeID); nếu người đại diện theo pháp luật không nằm trong danh sách đó thì cần cung cấp thêm của người này." },
+  { q: "Tôi cung cấp giấy tờ tuỳ thân (VNeID/CCCD) bằng cách nào?", a: "Có 2 cách. Cách chính (chỉ Công ty TNHH 1 thành viên và Hộ kinh doanh): điền thông tin trên CCCD/VNeID trực tiếp vào form — đây là lựa chọn mặc định, không cần gửi ảnh. Cách thay thế: chọn \"Tôi muốn gửi ảnh VNeID qua Zalo riêng (không điền thông tin)\", sau khi bấm \"Gửi hồ sơ\" thì bấm \"Mở Zalo gửi ảnh VNeID\" để gửi ảnh qua Zalo hotline của MAX OFFICE (chụp thấy rõ ngày cấp CCCD). Công ty TNHH 2 thành viên trở lên và Công ty Cổ phần gửi ảnh VNeID qua Zalo. Ngoài ô \"Số CCCD\" khi điền vào form, vui lòng không nhập số CCCD vào các ô khác của form." },
+  { q: "Cần tối thiểu bao nhiêu cổ đông hoặc thành viên?", a: "Công ty TNHH 1 thành viên chỉ có 1 chủ sở hữu; Công ty TNHH 2 thành viên trở lên cần tối thiểu 2 thành viên; Công ty Cổ phần cần tối thiểu 3 cổ đông. Mỗi người cần cung cấp giấy tờ tuỳ thân (Công ty TNHH 1 thành viên và Hộ kinh doanh: điền thông tin CCCD vào form, hoặc gửi ảnh VNeID; các loại hình còn lại: ảnh VNeID); nếu người đại diện theo pháp luật không nằm trong danh sách đó thì cần cung cấp thêm của người này." },
   { q: "Danh sách này có áp dụng cho mọi ngành nghề không?", a: "Đây là các thông tin chung cần có cho phần lớn trường hợp. Một số ngành nghề có điều kiện có thể cần thêm giấy phép con — MAX OFFICE sẽ tư vấn cụ thể sau khi nhận hồ sơ." },
   { q: "Tôi có thể tải nội dung đã điền về để lưu không?", a: "Có. Sau khi chọn loại hình và điền thông tin, bấm nút \"Tải PDF\" để lưu lại bản đã điền, hoặc bấm \"Sao chép nội dung\" sau khi gửi hồ sơ." },
 ];

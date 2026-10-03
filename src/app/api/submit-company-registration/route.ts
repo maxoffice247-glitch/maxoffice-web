@@ -12,6 +12,7 @@ import {
   registrationAddressLine,
   registrationRepresentative,
   registrationContact,
+  registrationMembersBody,
   identitySectionLines,
   validateRegistration,
   type RegistrationClean,
@@ -94,7 +95,8 @@ function buildEmail(d: RegistrationClean, branchName?: string) {
     [cfg.industryMainLabel, d.nganhChinh],
     [cfg.capitalLabel, d.von ? `${Number(d.von).toLocaleString("vi-VN")} đồng` : ""]
   );
-  if (cfg.membersLabel) rows.push([cfg.membersLabel, d.thanhVien]);
+  // Danh sách đánh số + vốn góp + % + tổng (nhiều dòng; cell() đổi \n thành <br>).
+  if (cfg.membersLabel) rows.push([cfg.membersLabel, registrationMembersBody(d).join("\n")]);
 
   const cell = (v: string) => escapeHtml(v || "-").replace(/\n/g, "<br>");
 

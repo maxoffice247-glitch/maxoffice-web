@@ -17,6 +17,7 @@ import PrintPdfButton from "../PrintPdfButton";
 import BrandIcon from "../BrandIcon";
 import BranchAddressCombobox from "./BranchAddressCombobox";
 import FormErrorBoundary from "./FormErrorBoundary";
+import MembersEditor from "./MembersEditor";
 import IdentitySection, { EMPTY_IDENTITY_UI, EMPTY_IDENTITY_UI_FORM, effectivePlaceChoice, effectivePlaceText, type IdentityUiState } from "./IdentitySection";
 import type { BranchAddressGroup } from "@/lib/branchAddress";
 import { ArrowRightSmallIcon, BuildingIcon, CheckCircleIcon, HomeIcon, UserIcon, UsersIcon } from "../icons";
@@ -25,6 +26,12 @@ import {
   EMPTY_SHARED,
   EMPTY_VALUES,
   FIELD_MAX,
+  PRINT_MEMBERS_MARKER,
+  cleanMemberRows,
+  emptyValuesFor,
+  formatThousands,
+  memberPercent,
+  membersCapitalTotal,
   REGISTRATION_CONFIG,
   REGISTRATION_TYPES,
   buildRegistrationSummary,
@@ -136,11 +143,12 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
 
   // Mỗi loại hình giữ bộ ô riêng (đổi qua lại không mất dữ liệu); các ô dùng
   // chung (họ tên, SĐT, email, website, đồng ý) nằm ở `shared`.
+  // Cổ phần hiện sẵn 3 dòng cổ đông, TNHH 2 thành viên trở lên 2 dòng (emptyValuesFor).
   const [values, setValues] = useState<Record<RegistrationType, RegistrationValues>>({
-    "co-phan": EMPTY_VALUES,
-    "tnhh-2tv": EMPTY_VALUES,
-    "tnhh-1tv": EMPTY_VALUES,
-    "ho-kinh-doanh": EMPTY_VALUES,
+    "co-phan": emptyValuesFor("co-phan"),
+    "tnhh-2tv": emptyValuesFor("tnhh-2tv"),
+    "tnhh-1tv": emptyValuesFor("tnhh-1tv"),
+    "ho-kinh-doanh": emptyValuesFor("ho-kinh-doanh"),
   });
   const [shared, setShared] = useState<RegistrationShared>(EMPTY_SHARED);
   // Thông tin giấy tờ — mỗi loại hình nhớ riêng (đổi qua lại giữa "điền form" và "gửi Zalo" hay đổi
@@ -278,6 +286,10 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
   // Sao chép: đầy đủ. Bản in/PDF: số CCCD che (4 số cuối).
   const summaryText = current ? buildRegistrationSummary(current, selectedBranch?.name) : "";
   const printText = current ? buildRegistrationSummary(current, selectedBranch?.name, "print") : "";
+  // Bản in: tách tại dòng đánh dấu để chèn BẢNG cổ đông/thành viên (STT, họ tên, vốn góp, tỷ lệ) vào giữa.
+  const printParts = printText.split("\n").slice(2).join("\n").split(PRINT_MEMBERS_MARKER);
+  const printMembers = current && cfg?.membersLabel ? cleanMemberRows(current.thanhVien) : [];
+  const printTotal = membersCapitalTotal(printMembers);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -288,8 +300,12 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
       const idErrs: Record<string, string | undefined> = { ...(ve.giayTo ?? {}), ...(placeError ? { noiCap: placeError } : {}) };
       // Thứ tự theo bố cục trang: thông tin đơn vị → người đại diện → liên hệ → nhóm giấy tờ → ô đồng ý (duy nhất).
       const order = ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "nguoiDaiDien", "chucDanh", "tenLienHe", "sdt", "email", "website"] as const;
-      const first = order.find((k) => ve[k]);
-      if (first) document.getElementById(`${uid}-${first}`)?.focus();
+      const first = order.find((k) => ve[k] || (k === "thanhVien" && ve.thanhVienRows));
+      if (first === "thanhVien") {
+        const rowIdx = ve.thanhVienRows ? Number(Object.keys(ve.thanhVienRows)[0]) : 0;
+        const fld = ve.thanhVienRows?.[rowIdx]?.von && !ve.thanhVienRows?.[rowIdx]?.ten ? "von" : "ten";
+        document.getElementById(`${uid}-tv-${rowIdx}-${fld}`)?.focus();
+      } else if (first) document.getElementById(`${uid}-${first}`)?.focus();
       else if (Object.keys(idErrs).length) {
         const idOrder = ["hoTen", "ngaySinh", "soCccd", "ngayCap", "noiCap", "diaChiLienHe"] as const;
         const k = idOrder.find((x) => idErrs[x]);
@@ -487,7 +503,55 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
           {/* Bản IN: chỉ hiện khi in/Tải PDF — dựng từ đúng dữ liệu đã điền (cùng
               hàm với "Sao chép nội dung", bỏ 2 dòng đầu vì tiêu đề form đã hiện sẵn), thay vì in các ô nhập (in ô nhập
               trống sẽ ra placeholder xám, không "sạch"). */}
-          <pre className="hidden whitespace-pre-wrap font-sans text-[13.5px] leading-relaxed text-ink print:block">{printText.split("\n").slice(2).join("\n")}</pre>
+          {printParts.map((part, idx) =>
+            idx === 0 ? (
+              <pre key="p0" className="hidden whitespace-pre-wrap font-sans text-[13.5px] leading-relaxed text-ink print:block">
+                {part}
+              </pre>
+            ) : (
+              <div key={`p${idx}`} className="hidden print:block">
+                {printMembers.length > 0 && cfg.membersLabel && (
+                  <table className="my-2 w-full border-collapse text-[13px] text-ink">
+                    <caption className="mb-1 text-left font-bold">{cfg.membersLabel}</caption>
+                    <thead>
+                      <tr>
+                        <th className="border border-black/40 px-2 py-1 text-left">STT</th>
+                        <th className="border border-black/40 px-2 py-1 text-left">Họ và tên</th>
+                        <th className="border border-black/40 px-2 py-1 text-right">Vốn góp (đồng)</th>
+                        <th className="border border-black/40 px-2 py-1 text-right">Tỷ lệ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {printMembers.map((m, k) => (
+                        <tr key={k}>
+                          <td className="border border-black/40 px-2 py-1">{k + 1}</td>
+                          <td className="border border-black/40 px-2 py-1">{m.ten || "(chưa nhập họ tên)"}</td>
+                          <td className="border border-black/40 px-2 py-1 text-right">{m.von ? formatThousands(m.von) : "—"}</td>
+                          <td className="border border-black/40 px-2 py-1 text-right">{memberPercent(m.von, current.von) || "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    {printTotal > 0 && (
+                      <tfoot>
+                        <tr>
+                          <td colSpan={2} className="border border-black/40 px-2 py-1 font-bold">
+                            Tổng vốn góp
+                          </td>
+                          <td className="border border-black/40 px-2 py-1 text-right font-bold">{formatThousands(String(printTotal))}</td>
+                          <td className="border border-black/40 px-2 py-1 text-right">
+                            {current.von && Number(current.von) > 0 && printTotal !== Number(current.von)
+                              ? "chưa bằng vốn điều lệ"
+                              : ""}
+                          </td>
+                        </tr>
+                      </tfoot>
+                    )}
+                  </table>
+                )}
+                <pre className="whitespace-pre-wrap font-sans text-[13.5px] leading-relaxed text-ink">{part}</pre>
+              </div>
+            )
+          )}
 
           <form noValidate onSubmit={onSubmit} className="space-y-6 print:hidden">
             <div className="space-y-4">
@@ -631,24 +695,15 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
               </Field>
 
               {cfg.membersLabel && (
-                <Field
-                  id={idOf("thanhVien")}
-                  label={`${cfg.membersLabel} (tuỳ chọn)`}
+                <MembersEditor
+                  uid={uid}
+                  cfg={cfg}
+                  rows={cur.thanhVien}
+                  onChange={(rows) => setValue("thanhVien", rows)}
+                  vonDieuLe={cur.von}
                   error={errors.thanhVien}
-                  hint="Mỗi người 1 dòng."
-                >
-                  <textarea
-                    id={idOf("thanhVien")}
-                    rows={3}
-                    value={cur.thanhVien}
-                    onChange={(e) => setValue("thanhVien", e.target.value)}
-                    placeholder={"Ví dụ:\nNguyễn Văn A\nTrần Thị B"}
-                    maxLength={FIELD_MAX.thanhVien}
-                    aria-invalid={!!errors.thanhVien}
-                    aria-describedby={describedBy(idOf("thanhVien"), true, !!errors.thanhVien)}
-                    className={inputClass}
-                  />
-                </Field>
+                  rowErrors={errors.thanhVienRows}
+                />
               )}
             </div>
 

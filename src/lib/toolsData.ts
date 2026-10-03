@@ -129,7 +129,7 @@ export const TOOL_GROUPS: { title: string; description: string; tools: ToolItem[
         icon: ListIcon,
         title: "Checklist thành lập DN",
         titleFull: "Checklist thành lập doanh nghiệp",
-        desc: "Chọn loại hình, điền thông tin cần chuẩn bị và gửi hồ sơ thành lập: Công ty Cổ phần, TNHH 2 thành viên trở lên, TNHH 1 thành viên, Hộ kinh doanh.",
+        desc: "Chọn loại hình, điền thông tin cần chuẩn bị và gửi hồ sơ thành lập: Công ty TNHH 1 thành viên, TNHH 2 thành viên trở lên, Cổ phần, Hộ kinh doanh.",
         linkLabel: "Điền hồ sơ thành lập",
       },
       {

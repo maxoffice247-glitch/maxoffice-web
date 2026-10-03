@@ -9,7 +9,10 @@
 import { dateKey, parseVnDate, todayVnKey } from "./vnDate";
 import { suggestIssuePlace } from "./issuePlace";
 
-export const REGISTRATION_TYPES = ["co-phan", "tnhh-2tv", "tnhh-1tv", "ho-kinh-doanh"] as const;
+/** THỨ TỰ HIỂN THỊ: TNHH 1 thành viên, TNHH 2 thành viên trở lên, Cổ phần, Hộ kinh doanh — quyết định thứ tự
+ * 4 thẻ (lưới 2x2: hàng trên 2 loại TNHH), phím mũi tên, đoạn giới thiệu tĩnh và ảnh OG. Giá trị (slug) dùng làm
+ * ?loai= và body API KHÔNG đổi. */
+export const REGISTRATION_TYPES = ["tnhh-1tv", "tnhh-2tv", "co-phan", "ho-kinh-doanh"] as const;
 export type RegistrationType = (typeof REGISTRATION_TYPES)[number];
 
 export function isRegistrationType(v: unknown): v is RegistrationType {
@@ -28,8 +31,12 @@ export type RegistrationTypeConfig = {
   industryMainLabel: string;
   capitalLabel: string;
   hasWebsite: boolean;
-  /** undefined = loại hình này không có ô "họ tên các cổ đông/thành viên". */
+  /** undefined = loại hình này không có danh sách cổ đông/thành viên. Nhãn dòng đầu danh sách trong email/bản sao. */
   membersLabel?: string;
+  /** "Cổ đông" / "Thành viên" — dùng cho nhãn từng dòng và nút thêm. */
+  memberWord?: string;
+  /** Số dòng hiện sẵn (cũng là số tối thiểu: dòng vượt quá mới xoá được). Không chặn gửi. */
+  membersMin?: number;
   /** Nhãn ô người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ). */
   representativeLabel: string;
   /** Hộ kinh doanh không có ô chức danh. */
@@ -59,7 +66,9 @@ export const REGISTRATION_CONFIG: Record<RegistrationType, RegistrationTypeConfi
     industryMainLabel: "Ngành chính",
     capitalLabel: "Vốn điều lệ",
     hasWebsite: true,
-    membersLabel: "Họ tên các cổ đông",
+    membersLabel: "Danh sách cổ đông",
+    memberWord: "Cổ đông",
+    membersMin: 3,
     vneidNote:
       "Ảnh VNeID của các cổ đông (tối thiểu 3, chụp thấy rõ ngày cấp CCCD; bao gồm người đại diện theo pháp luật nếu người đó không nằm trong danh sách cổ đông): gửi qua Zalo sau khi bấm Gửi hồ sơ.",
     introText: "Công ty Cổ phần: tối thiểu 3 cổ đông",
@@ -77,7 +86,9 @@ export const REGISTRATION_CONFIG: Record<RegistrationType, RegistrationTypeConfi
     industryMainLabel: "Ngành chính",
     capitalLabel: "Vốn điều lệ",
     hasWebsite: true,
-    membersLabel: "Họ tên các thành viên",
+    membersLabel: "Danh sách thành viên",
+    memberWord: "Thành viên",
+    membersMin: 2,
     vneidNote:
       "Ảnh VNeID của các thành viên (tối thiểu 2, chụp thấy rõ ngày cấp CCCD; bao gồm người đại diện theo pháp luật nếu người đó không nằm trong danh sách thành viên): gửi qua Zalo sau khi bấm Gửi hồ sơ.",
     introText: "Công ty TNHH 2 thành viên trở lên: tối thiểu 2 thành viên",
@@ -119,6 +130,14 @@ export const REGISTRATION_CONFIG: Record<RegistrationType, RegistrationTypeConfi
   },
 };
 
+/** Một dòng cổ đông/thành viên: họ tên + vốn góp (chỉ chữ số, đơn vị đồng). Cả hai tuỳ chọn. */
+export type MemberRow = { ten: string; von: string };
+
+export const MEMBERS_MAX_ROWS = 30;
+export const MEMBER_NAME_MAX = 120;
+/** Vốn góp tối đa mỗi dòng: 1.000 tỷ đồng. */
+export const MEMBER_CAPITAL_MAX = 1_000_000_000_000;
+
 /** Các ô RIÊNG của từng loại hình (khác loại hình thì giữ giá trị riêng). */
 export type RegistrationValues = {
   tenDonVi: string;
@@ -127,7 +146,7 @@ export type RegistrationValues = {
   nganhChinh: string;
   /** Chỉ chứa chữ số (không dấu chấm) — dấu phân cách chỉ là trình bày. */
   von: string;
-  thanhVien: string;
+  thanhVien: MemberRow[];
 };
 
 export const ADDRESS_TYPES = ["max-office", "khac"] as const;
@@ -161,8 +180,14 @@ export const EMPTY_VALUES: RegistrationValues = {
   nganhNghe: "",
   nganhChinh: "",
   von: "",
-  thanhVien: "",
+  thanhVien: [],
 };
+
+/** Giá trị khởi tạo theo loại hình: Cổ phần hiện sẵn 3 dòng cổ đông, TNHH 2 thành viên trở lên hiện sẵn 2 dòng. */
+export function emptyValuesFor(type: RegistrationType): RegistrationValues {
+  const n = REGISTRATION_CONFIG[type].membersMin ?? 0;
+  return { ...EMPTY_VALUES, thanhVien: Array.from({ length: n }, () => ({ ten: "", von: "" })) };
+}
 
 export const EMPTY_SHARED: RegistrationShared = {
   tenLienHe: "",
@@ -227,7 +252,8 @@ export const FIELD_MAX = {
   nganhNghe: 2000,
   nganhChinh: 300,
   von: 18,
-  thanhVien: 1500,
+  /** Độ dài tối đa của chuỗi nhiều dòng KIỂU CŨ (client chưa tải lại trong lúc deploy). */
+  thanhVienLegacy: 1500,
   tenLienHe: 120,
   sdt: 20,
   email: 150,
@@ -303,12 +329,89 @@ export function maskCccd(cccd: string): string {
 }
 
 export type RegistrationErrors = Partial<Record<keyof RegistrationValues | keyof RegistrationShared, string>> & {
+  /** Lỗi theo chỉ số dòng cổ đông/thành viên (chỉ số trong mảng client gửi lên). */
+  thanhVienRows?: Record<number, { ten?: string; von?: string }>;
   hinhThucGiayTo?: string;
   giayTo?: Partial<Record<keyof IdentityInfo, string>>;
 };
 
 function str(v: unknown): string {
   return typeof v === "string" ? v.trim() : "";
+}
+
+const ERR_MEMBERS = {
+  tooMany: `Tối đa ${MEMBERS_MAX_ROWS} dòng.`,
+  invalid: "Danh sách không hợp lệ.",
+  nameLong: `Họ tên tối đa ${MEMBER_NAME_MAX} ký tự.`,
+  capital: "Vốn góp phải là số nguyên không âm (đồng), tối đa 1.000 tỷ đồng.",
+} as const;
+
+/** Làm sạch danh sách cổ đông/thành viên từ body: nhận MẢNG [{ten, von}] (kiểu mới) hoặc CHUỖI nhiều dòng
+ * (kiểu cũ của client chưa tải lại trong lúc deploy → mỗi dòng là một họ tên, chưa có vốn góp). Từ chối sai
+ * định dạng; dòng trống hoàn toàn thì bỏ qua. */
+function parseMembers(raw: unknown, errors: RegistrationErrors): MemberRow[] {
+  if (raw === undefined || raw === null || raw === "") return [];
+  const rowsErr: NonNullable<RegistrationErrors["thanhVienRows"]> = {};
+  const out: MemberRow[] = [];
+  const note = (i: number, k: "ten" | "von", msg: string) => {
+    rowsErr[i] = { ...rowsErr[i], [k]: msg };
+  };
+  const checkName = (i: number, ten: string) => {
+    if (ten.length > MEMBER_NAME_MAX) note(i, "ten", ERR_MEMBERS.nameLong);
+    else if (ID_NUMBER_PATTERN.test(ten)) note(i, "ten", ERR.idNumber);
+  };
+
+  if (typeof raw === "string") {
+    if (raw.length > FIELD_MAX.thanhVienLegacy) {
+      errors.thanhVien = ERR.tooLong;
+      return [];
+    }
+    const lines = raw.split(/\r?\n/);
+    if (lines.length > MEMBERS_MAX_ROWS * 4) {
+      errors.thanhVien = ERR_MEMBERS.tooMany;
+      return [];
+    }
+    lines.forEach((line, i) => {
+      const ten = line.trim();
+      if (!ten) return;
+      checkName(i, ten);
+      out.push({ ten, von: "" });
+    });
+  } else if (Array.isArray(raw)) {
+    if (raw.length > MEMBERS_MAX_ROWS) {
+      errors.thanhVien = ERR_MEMBERS.tooMany;
+      return [];
+    }
+    raw.forEach((item, i) => {
+      if (!item || typeof item !== "object") {
+        note(i, "ten", ERR_MEMBERS.invalid);
+        return;
+      }
+      const r = item as Record<string, unknown>;
+      if (r.ten !== undefined && r.ten !== null && typeof r.ten !== "string") note(i, "ten", ERR_MEMBERS.invalid);
+      const ten = typeof r.ten === "string" ? r.ten.trim() : "";
+      let von = "";
+      if (typeof r.von === "number") {
+        if (Number.isInteger(r.von) && r.von >= 0 && r.von <= MEMBER_CAPITAL_MAX) von = String(r.von);
+        else note(i, "von", ERR_MEMBERS.capital);
+      } else if (typeof r.von === "string") {
+        const v = r.von.trim();
+        if (v === "") von = "";
+        else if (/^\d{1,13}$/.test(v) && Number(v) <= MEMBER_CAPITAL_MAX) von = String(Number(v));
+        else note(i, "von", ERR_MEMBERS.capital);
+      } else if (r.von !== undefined && r.von !== null) {
+        note(i, "von", ERR_MEMBERS.capital);
+      }
+      checkName(i, ten);
+      if (ten === "" && von === "") return; // dòng trống: bỏ qua
+      out.push({ ten, von });
+    });
+  } else {
+    errors.thanhVien = ERR_MEMBERS.invalid;
+    return [];
+  }
+  if (Object.keys(rowsErr).length) errors.thanhVienRows = rowsErr;
+  return out;
 }
 
 /** Validate + làm sạch. Dùng được cho input chưa rõ kiểu (body request). */
@@ -330,8 +433,7 @@ export function validateRegistration(
     nganhNghe: str(b.nganhNghe),
     nganhChinh: str(b.nganhChinh),
     von: str(b.von).replace(/\D/g, ""),
-    // Loại hình không có ô thành viên thì bỏ hẳn, không nhận dữ liệu thừa từ client.
-    thanhVien: cfg.membersLabel ? str(b.thanhVien) : "",
+    thanhVien: [],
     // Tích "người liên hệ là người đại diện": người liên hệ = người đại diện (không tin tenLienHe client gửi).
     tenLienHe: b.lienHeLaDaiDien === true ? str(b.nguoiDaiDien) : str(b.tenLienHe),
     sdt: str(b.sdt),
@@ -347,10 +449,13 @@ export function validateRegistration(
     hinhThucGiayTo: b.hinhThucGiayTo === "form" && cfg.idForm ? "form" : "zalo",
   };
 
-  for (const k of ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website", "nguoiDaiDien", "chucDanh"] as const) {
+  // Loại hình không có danh sách cổ đông/thành viên thì bỏ hẳn, không nhận dữ liệu thừa từ client.
+  if (cfg.membersLabel) data.thanhVien = parseMembers(b.thanhVien, errors);
+
+  for (const k of ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "tenLienHe", "sdt", "email", "website", "nguoiDaiDien", "chucDanh"] as const) {
     if (data[k].length > FIELD_MAX[k]) errors[k] = ERR.tooLong;
   }
-  for (const k of ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "thanhVien", "tenLienHe", "nguoiDaiDien", "chucDanh"] as const) {
+  for (const k of ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "tenLienHe", "nguoiDaiDien", "chucDanh"] as const) {
     if (!errors[k] && ID_NUMBER_PATTERN.test(data[k])) errors[k] = ERR.idNumber;
   }
 
@@ -437,6 +542,49 @@ export function validateRegistration(
 }
 
 const NONE = "(chưa cung cấp)";
+
+/** Bỏ dòng trống hoàn toàn, cắt khoảng trắng, chỉ giữ chữ số ở vốn góp (dùng được cho cả dữ liệu thô từ form). */
+export function cleanMemberRows(rows: readonly MemberRow[]): MemberRow[] {
+  return rows
+    .map((r) => ({ ten: (r.ten ?? "").trim(), von: (r.von ?? "").replace(/\D/g, "") }))
+    .filter((r) => r.ten !== "" || r.von !== "");
+}
+
+export function membersCapitalTotal(rows: readonly MemberRow[]): number {
+  return rows.reduce((sum, r) => sum + (r.von ? Number(r.von) : 0), 0);
+}
+
+/** Tỷ lệ % theo vốn điều lệ, làm tròn tối đa 2 chữ số thập phân, dấu phẩy kiểu Việt ("33,33%"). "" nếu thiếu dữ liệu. */
+export function memberPercent(von: string, vonDieuLe: string): string {
+  const v = Number(von);
+  const total = Number(vonDieuLe);
+  if (!von || !vonDieuLe || !(total > 0) || !Number.isFinite(v)) return "";
+  const pct = Math.round((v * 10000) / total) / 100;
+  return `${String(pct).replace(".", ",")}%`;
+}
+
+/** Nội dung danh sách cổ đông/thành viên (KHÔNG gồm dòng tiêu đề): đánh số, vốn góp, % theo vốn điều lệ (nếu đã
+ * nhập), cuối cùng là tổng vốn góp (+ lưu ý nếu khác vốn điều lệ). Rỗng nếu không có dòng nào. */
+export function registrationMembersBody(d: Pick<RegistrationClean, "thanhVien" | "von">): string[] {
+  const rows = cleanMemberRows(d.thanhVien);
+  if (!rows.length) return [];
+  const lines = rows.map((r, i) => {
+    const pct = memberPercent(r.von, d.von);
+    const cap = r.von ? `${formatThousands(r.von)} đồng${pct ? ` (${pct})` : ""}` : "(chưa nhập)";
+    return `${i + 1}. ${r.ten || "(chưa nhập họ tên)"} - vốn góp: ${cap}`;
+  });
+  if (rows.some((r) => r.von)) {
+    const total = membersCapitalTotal(rows);
+    const vdl = d.von ? Number(d.von) : 0;
+    let line = `Tổng vốn góp: ${formatThousands(String(total))} đồng`;
+    if (vdl > 0 && total !== vdl) line += ` (lưu ý: chưa bằng vốn điều lệ ${formatThousands(d.von)} đồng)`;
+    lines.push(line);
+  }
+  return lines;
+}
+
+/** Dòng đánh dấu chỗ chèn BẢNG cổ đông/thành viên khi dựng bản in (mode "print"); form tách chuỗi theo dòng này. */
+export const PRINT_MEMBERS_MARKER = "@@DANH_SACH_THANH_VIEN@@";
 
 /** Dòng địa chỉ — LUÔN đứng đầu phần thông tin (email, sheet, bản sao, bản in)
  * để nhân viên nhận ra ngay khách cần cả địa chỉ MAX OFFICE (văn phòng ảo). */
@@ -530,7 +678,11 @@ export function buildRegistrationSummary(d: RegistrationClean, branchName?: stri
   lines.push(`Ngành nghề kinh doanh: ${d.nganhNghe || NONE}`);
   lines.push(`${cfg.industryMainLabel}: ${d.nganhChinh || NONE}`);
   lines.push(`${cfg.capitalLabel}: ${d.von ? `${formatThousands(d.von)} đồng` : NONE}`);
-  if (cfg.membersLabel) lines.push(d.thanhVien ? `${cfg.membersLabel}:\n${d.thanhVien}` : `${cfg.membersLabel}: ${NONE}`);
+  if (cfg.membersLabel) {
+    const body = registrationMembersBody(d);
+    if (mode === "print" && body.length) lines.push(PRINT_MEMBERS_MARKER);
+    else lines.push(body.length ? `${cfg.membersLabel}:\n${body.join("\n")}` : `${cfg.membersLabel}: ${NONE}`);
+  }
   lines.push("");
   lines.push(...identitySectionLines(d, mode));
   return lines.join("\n");
