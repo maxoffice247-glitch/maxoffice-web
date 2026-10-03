@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Chính sách bảo mật thông tin cá nhân của MAX OFFICE: mục đích thu thập, cách sử dụng, thời gian lưu trữ và quyền của khách hàng theo Nghị định 13/2023/NĐ-CP.",
 };
 
-const LAST_UPDATED = "04/09/2026";
+const LAST_UPDATED = "03/10/2026";
 
 type Section = {
   heading: string;
@@ -37,7 +37,7 @@ const SECTIONS: Section[] = [
     bullets: ["Họ và tên", "Số điện thoại", "Địa chỉ email", "Dịch vụ quan tâm", "Ghi chú / yêu cầu cụ thể (nếu có)"],
     afterBullets: [
       "Ngoài các biểu mẫu liên hệ nêu trên, MAX OFFICE cung cấp công cụ \"Soạn hồ sơ doanh nghiệp tự động\" (tại địa chỉ gpkd.maxoffice.vn, được nhúng trong website chính) để hỗ trợ khách hàng soạn thảo hồ sơ đăng ký doanh nghiệp. Khi sử dụng công cụ này, chúng tôi có thể thu thập thêm: họ tên, số CCCD/CMND, địa chỉ thường trú của người đại diện/thành viên góp vốn, và thông tin công ty (tên, vốn điều lệ, ngành nghề) để tạo ra hồ sơ đăng ký doanh nghiệp theo yêu cầu của bạn. Dữ liệu này được lưu trữ nội bộ, chỉ Công ty TNHH MAX Office có quyền truy cập, không chia sẻ cho bất kỳ bên thứ ba nào ngoài phạm vi xử lý hồ sơ.",
-      "Ngoài ra, tại trang \"Checklist thành lập doanh nghiệp\" (biểu mẫu Hồ sơ thành lập doanh nghiệp), nếu bạn chọn điền thông tin giấy tờ tuỳ thân trực tiếp vào biểu mẫu thay vì gửi ảnh (áp dụng cho Công ty TNHH 1 thành viên và Hộ kinh doanh), chúng tôi thu thập: họ và tên, giới tính, ngày sinh, số CCCD, ngày cấp, nơi cấp, quốc tịch, dân tộc, địa chỉ thường trú và địa chỉ liên lạc của chủ sở hữu hoặc chủ hộ. Mục đích thu thập là để MAX OFFICE soạn hồ sơ thành lập doanh nghiệp cho bạn. Thông tin này được gửi đến email nội bộ của MAX OFFICE.",
+      "Ngoài ra, tại trang \"Checklist thành lập doanh nghiệp\" (biểu mẫu Hồ sơ thành lập doanh nghiệp), nếu bạn chọn điền thông tin giấy tờ tuỳ thân trực tiếp vào biểu mẫu thay vì gửi ảnh (áp dụng cho Công ty TNHH 1 thành viên và Hộ kinh doanh), chúng tôi thu thập: họ và tên, giới tính, ngày sinh, số CCCD, ngày cấp, nơi cấp và địa chỉ liên hệ của chủ sở hữu hoặc chủ hộ. Mục đích thu thập là để MAX OFFICE soạn hồ sơ thành lập doanh nghiệp cho bạn. Thông tin này được gửi đến email nội bộ của MAX OFFICE.",
       "Đối với các giao dịch thanh toán liên quan đến dịch vụ soạn hồ sơ (nếu có), quá trình thanh toán được thực hiện thông qua cổng thanh toán trung gian SePay. MAX OFFICE không lưu trữ bất kỳ thông tin thẻ/tài khoản ngân hàng nào của bạn — toàn bộ thông tin thanh toán được xử lý trực tiếp bởi SePay theo chính sách bảo mật riêng của đơn vị này.",
     ],
   },
@@ -45,7 +45,7 @@ const SECTIONS: Section[] = [
     heading: "3. Cách sử dụng dữ liệu",
     paragraphs: [
       "Thông tin bạn cung cấp chỉ được sử dụng để liên hệ tư vấn về dịch vụ bạn quan tâm, sắp xếp lịch tham quan văn phòng (nếu bạn đăng ký) và gửi thông tin ưu đãi liên quan (nếu bạn đồng ý nhận).",
-      "Dữ liệu được lưu trữ nội bộ qua Google Sheet phục vụ mục đích vận hành, đồng thời hệ thống gửi email thông báo tự động đến đội ngũ Chăm sóc khách hàng (CSKH) của MAX OFFICE để xử lý yêu cầu kịp thời.",
+      "Thông tin liên hệ và nội dung biểu mẫu bạn gửi được lưu trong Google Sheet phục vụ mục đích vận hành, đồng thời hệ thống gửi email thông báo tự động đến đội ngũ Chăm sóc khách hàng (CSKH) của MAX OFFICE để xử lý yêu cầu kịp thời. Riêng thông tin giấy tờ tuỳ thân bạn điền tại biểu mẫu Hồ sơ thành lập doanh nghiệp chỉ được gửi đầy đủ qua email nội bộ của MAX OFFICE; trong Google Sheet chỉ ghi số CCCD dưới dạng đã che (chỉ hiển thị 4 số cuối).",
       "Chúng tôi cam kết không bán, cho thuê hoặc chia sẻ thông tin cá nhân của bạn cho bất kỳ bên thứ ba nào ngoài mục đích vận hành nội bộ nêu trên.",
     ],
   },

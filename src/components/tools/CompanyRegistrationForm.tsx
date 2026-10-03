@@ -16,7 +16,7 @@ import MoneyInput from "../MoneyInput";
 import PrintPdfButton from "../PrintPdfButton";
 import BrandIcon from "../BrandIcon";
 import BranchAddressCombobox from "./BranchAddressCombobox";
-import IdentitySection, { EMPTY_IDENTITY_UI, effectivePlaceChoice, effectivePlaceText, type IdentityUiState } from "./IdentitySection";
+import IdentitySection, { EMPTY_IDENTITY_UI, EMPTY_IDENTITY_UI_FORM, effectivePlaceChoice, effectivePlaceText, type IdentityUiState } from "./IdentitySection";
 import type { BranchAddressGroup } from "@/lib/branchAddress";
 import { ArrowRightSmallIcon, BuildingIcon, CheckCircleIcon, HomeIcon, UserIcon, UsersIcon } from "../icons";
 import { trackEvent } from "@/lib/gtag";
@@ -133,16 +133,14 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
     "ho-kinh-doanh": EMPTY_VALUES,
   });
   const [shared, setShared] = useState<RegistrationShared>(EMPTY_SHARED);
-  // Chỉ là trạng thái giao diện (không gửi lên): tích thì người đại diện = người liên hệ.
-  // Phần khách đã gõ riêng (shared.nguoiDaiDien) KHÔNG bị xoá khi tích, nên bỏ tích là hiện lại.
-  const [sameAsContact, setSameAsContact] = useState(false);
-  // Thông tin giấy tờ (cách 2: điền vào form) — mỗi loại hình nhớ riêng. CHỈ nằm trong state
-  // trang này: không storage/cookie/URL/analytics/log (xem IdentitySection.tsx).
+  // Thông tin giấy tờ — mỗi loại hình nhớ riêng (đổi qua lại giữa "điền form" và "gửi Zalo" hay đổi
+  // loại hình không mất dữ liệu). TNHH 1 thành viên / Hộ kinh doanh MẶC ĐỊNH là điền vào form.
+  // CHỈ nằm trong state trang này: không storage/cookie/URL/analytics/log (xem IdentitySection.tsx).
   const [idStates, setIdStates] = useState<Record<RegistrationType, IdentityUiState>>({
     "co-phan": EMPTY_IDENTITY_UI,
     "tnhh-2tv": EMPTY_IDENTITY_UI,
-    "tnhh-1tv": EMPTY_IDENTITY_UI,
-    "ho-kinh-doanh": EMPTY_IDENTITY_UI,
+    "tnhh-1tv": EMPTY_IDENTITY_UI_FORM,
+    "ho-kinh-doanh": EMPTY_IDENTITY_UI_FORM,
   });
   const [fax, setFax] = useState("");
   const [showErrors, setShowErrors] = useState(false);
@@ -226,7 +224,7 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
   // Địa chỉ gửi đi: chế độ MAX OFFICE lấy ĐÚNG địa chỉ chuẩn của chi nhánh đã
   // chọn (server đối chiếu lại); chế độ tự nhập lấy chữ khách gõ. Phần chữ đã
   // gõ (cur.diaChi) không bị xoá khi chuyển chế độ qua lại.
-  const repName = sameAsContact ? shared.tenLienHe.trim() : shared.nguoiDaiDien.trim();
+  const repName = shared.nguoiDaiDien.trim();
   const idState = choice ? idStates[choice] : EMPTY_IDENTITY_UI;
   const useIdForm = !!cfg?.idForm && idState.method === "form";
   // Họ tên trên giấy tờ: Hộ kinh doanh = chủ hộ; TNHH 1 thành viên = trùng người đại diện hoặc ô riêng.
@@ -242,7 +240,10 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
         loai: choice,
         ...cur,
         diaChi: useBranch ? (selectedBranch?.address ?? "") : cur.diaChi,
-        tenLienHe: shared.tenLienHe.trim(),
+        // Tích "người liên hệ là người đại diện": họ tên liên hệ = họ tên người đại diện (ô liên hệ bị ẩn,
+        // phần khách đã gõ riêng vẫn giữ trong state để bỏ tích là hiện lại).
+        tenLienHe: shared.lienHeLaDaiDien ? repName : shared.tenLienHe.trim(),
+        lienHeLaDaiDien: shared.lienHeLaDaiDien,
         sdt: shared.sdt.trim(),
         email: shared.email.trim(),
         website: shared.website.trim(),
@@ -269,12 +270,12 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
     if (!validation.ok || placeError) {
       const ve: RegistrationErrors = validation.ok ? {} : validation.errors;
       const idErrs: Record<string, string | undefined> = { ...(ve.giayTo ?? {}), ...(placeError ? { noiCap: placeError } : {}) };
-      // Thứ tự theo bố cục trang: ô thông thường → nhóm giấy tờ (nằm trên ô đồng ý chung) → ô đồng ý chung.
-      const order = ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "tenLienHe", "sdt", "email", "website", "nguoiDaiDien", "chucDanh"] as const;
+      // Thứ tự theo bố cục trang: thông tin đơn vị → người đại diện → liên hệ → nhóm giấy tờ → ô đồng ý (duy nhất).
+      const order = ["tenDonVi", "diaChi", "nganhNghe", "nganhChinh", "von", "thanhVien", "nguoiDaiDien", "chucDanh", "tenLienHe", "sdt", "email", "website"] as const;
       const first = order.find((k) => ve[k]);
       if (first) document.getElementById(`${uid}-${first}`)?.focus();
       else if (Object.keys(idErrs).length) {
-        const idOrder = ["hoTen", "ngaySinh", "soCccd", "ngayCap", "noiCap", "quocTich", "danToc", "thuongTru", "lienLac", "consent"] as const;
+        const idOrder = ["hoTen", "ngaySinh", "soCccd", "ngayCap", "noiCap", "diaChiLienHe"] as const;
         const k = idOrder.find((x) => idErrs[x]);
         if (k) document.getElementById(`${uid}-gt-${k}`)?.focus();
       } else if (ve.consent) document.getElementById(`${uid}-consent`)?.focus();
@@ -621,22 +622,97 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
               )}
             </div>
 
+            {/* Người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ) — đứng TRƯỚC nhóm liên hệ; ô tích
+                "người liên hệ chính là người đại diện" nằm ở nhóm liên hệ ngay bên dưới. */}
             <div className="space-y-4">
-              <Field id={idOf("tenLienHe")} label="Họ tên người liên hệ" required error={errors.tenLienHe}>
+              <Field
+                id={idOf("nguoiDaiDien")}
+                label={cfg.representativeLabel}
+                required={shared.lienHeLaDaiDien}
+                error={errors.nguoiDaiDien}
+                hint="Thông tin này cần để soạn hồ sơ."
+              >
                 <input
-                  id={idOf("tenLienHe")}
+                  id={idOf("nguoiDaiDien")}
                   type="text"
-                  value={shared.tenLienHe}
-                  onChange={(e) => setSharedValue("tenLienHe", e.target.value)}
+                  value={shared.nguoiDaiDien}
+                  onChange={(e) => setSharedValue("nguoiDaiDien", e.target.value)}
                   placeholder="Ví dụ: Nguyễn Văn A"
-                  maxLength={FIELD_MAX.tenLienHe}
-                  autoComplete="name"
-                  aria-required="true"
-                  aria-invalid={!!errors.tenLienHe}
-                  aria-describedby={describedBy(idOf("tenLienHe"), false, !!errors.tenLienHe)}
+                  maxLength={FIELD_MAX.nguoiDaiDien}
+                  autoComplete="off"
+                  aria-required={shared.lienHeLaDaiDien}
+                  aria-invalid={!!errors.nguoiDaiDien}
+                  aria-describedby={describedBy(idOf("nguoiDaiDien"), true, !!errors.nguoiDaiDien)}
                   className={inputClass}
                 />
               </Field>
+
+              {cfg.hasTitle && (
+                <Field id={idOf("chucDanh")} label="Chức danh (tuỳ chọn)" error={errors.chucDanh}>
+                  {/* Ô gõ tự do + gợi ý (datalist) — KHÔNG phải danh sách chọn cố định, và không nêu quy
+                      định pháp lý nào vì chức danh cho phép khác nhau theo loại hình. */}
+                  <input
+                    id={idOf("chucDanh")}
+                    type="text"
+                    list={`${idOf("chucDanh")}-goi-y`}
+                    value={shared.chucDanh}
+                    onChange={(e) => setSharedValue("chucDanh", e.target.value)}
+                    placeholder="Ví dụ: Giám đốc"
+                    maxLength={FIELD_MAX.chucDanh}
+                    autoComplete="off"
+                    aria-invalid={!!errors.chucDanh}
+                    aria-describedby={describedBy(idOf("chucDanh"), false, !!errors.chucDanh)}
+                    className={inputClass}
+                  />
+                  <datalist id={`${idOf("chucDanh")}-goi-y`}>
+                    <option value="Giám đốc" />
+                    <option value="Tổng giám đốc" />
+                  </datalist>
+                </Field>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-[13.5px] leading-relaxed text-ink">
+                <input
+                  id={idOf("lienHeLaDaiDien")}
+                  type="checkbox"
+                  checked={shared.lienHeLaDaiDien}
+                  onChange={(e) => setSharedValue("lienHeLaDaiDien", e.target.checked)}
+                  className="peer sr-only"
+                />
+                <span
+                  aria-hidden="true"
+                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 ${
+                    shared.lienHeLaDaiDien ? "border-primary bg-primary text-white" : "border-line text-transparent"
+                  }`}
+                >
+                  <CheckCircleIcon className="h-3.5 w-3.5" />
+                </span>
+                <span>
+                  {cfg.hasTitle
+                    ? "Người liên hệ chính là người đại diện (không cần điền lại)"
+                    : "Người liên hệ chính là chủ hộ kinh doanh (không cần điền lại)"}
+                </span>
+              </label>
+
+              {!shared.lienHeLaDaiDien && (
+                <Field id={idOf("tenLienHe")} label="Họ tên người liên hệ" required error={errors.tenLienHe}>
+                  <input
+                    id={idOf("tenLienHe")}
+                    type="text"
+                    value={shared.tenLienHe}
+                    onChange={(e) => setSharedValue("tenLienHe", e.target.value)}
+                    placeholder="Ví dụ: Nguyễn Văn A"
+                    maxLength={FIELD_MAX.tenLienHe}
+                    autoComplete="name"
+                    aria-required="true"
+                    aria-invalid={!!errors.tenLienHe}
+                    aria-describedby={describedBy(idOf("tenLienHe"), false, !!errors.tenLienHe)}
+                    className={inputClass}
+                  />
+                </Field>
+              )}
 
               <Field id={idOf("sdt")} label="SĐT đăng ký" required error={errors.sdt}>
                 <input
@@ -690,76 +766,8 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
               )}
             </div>
 
-            {/* Người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ) — đặt SAU nhóm liên hệ vì
-                ô tích "trùng người liên hệ" cần họ tên liên hệ đã điền ở phía trên. Không bắt buộc. */}
-            <div className="space-y-4">
-              <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-[13.5px] leading-relaxed text-ink">
-                <input
-                  id={idOf("trungLienHe")}
-                  type="checkbox"
-                  checked={sameAsContact}
-                  onChange={(e) => setSameAsContact(e.target.checked)}
-                  className="peer sr-only"
-                />
-                <span
-                  aria-hidden="true"
-                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 ${
-                    sameAsContact ? "border-primary bg-primary text-white" : "border-line text-transparent"
-                  }`}
-                >
-                  <CheckCircleIcon className="h-3.5 w-3.5" />
-                </span>
-                <span>{cfg.hasTitle ? "Người đại diện trùng với người liên hệ" : "Chủ hộ trùng với người liên hệ"}</span>
-              </label>
-
-              <Field
-                id={idOf("nguoiDaiDien")}
-                label={cfg.representativeLabel}
-                error={errors.nguoiDaiDien}
-                hint="Thông tin này cần để soạn hồ sơ."
-              >
-                <input
-                  id={idOf("nguoiDaiDien")}
-                  type="text"
-                  value={sameAsContact ? shared.tenLienHe : shared.nguoiDaiDien}
-                  onChange={(e) => setSharedValue("nguoiDaiDien", e.target.value)}
-                  readOnly={sameAsContact}
-                  placeholder="Ví dụ: Nguyễn Văn A"
-                  maxLength={FIELD_MAX.nguoiDaiDien}
-                  autoComplete="off"
-                  aria-invalid={!!errors.nguoiDaiDien}
-                  aria-describedby={describedBy(idOf("nguoiDaiDien"), true, !!errors.nguoiDaiDien)}
-                  className={`${inputClass} ${sameAsContact ? "bg-bg-tint text-body-text" : ""}`}
-                />
-              </Field>
-
-              {cfg.hasTitle && (
-                <Field id={idOf("chucDanh")} label="Chức danh (tuỳ chọn)" error={errors.chucDanh}>
-                  {/* Ô gõ tự do + gợi ý (datalist) — KHÔNG phải danh sách chọn cố định, và không nêu quy
-                      định pháp lý nào vì chức danh cho phép khác nhau theo loại hình. */}
-                  <input
-                    id={idOf("chucDanh")}
-                    type="text"
-                    list={`${idOf("chucDanh")}-goi-y`}
-                    value={shared.chucDanh}
-                    onChange={(e) => setSharedValue("chucDanh", e.target.value)}
-                    placeholder="Ví dụ: Giám đốc"
-                    maxLength={FIELD_MAX.chucDanh}
-                    autoComplete="off"
-                    aria-invalid={!!errors.chucDanh}
-                    aria-describedby={describedBy(idOf("chucDanh"), false, !!errors.chucDanh)}
-                    className={inputClass}
-                  />
-                  <datalist id={`${idOf("chucDanh")}-goi-y`}>
-                    <option value="Giám đốc" />
-                    <option value="Tổng giám đốc" />
-                  </datalist>
-                </Field>
-              )}
-            </div>
-
-            {/* Khung giấy tờ tuỳ thân (VNeID) — đặt SAU khối người đại diện vì họ tên chủ hộ/chủ sở hữu
-                lấy từ khối đó. */}
+            {/* Khung giấy tờ tuỳ thân (VNeID) — đặt SAU khối người đại diện (họ tên chủ hộ/chủ sở hữu
+                lấy từ khối đó) và trước ô đồng ý duy nhất ở cuối form. */}
             <IdentitySection
               uid={uid}
               cfg={cfg}
@@ -806,7 +814,10 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
                   <CheckCircleIcon className="h-3.5 w-3.5" />
                 </span>
                 <span>
-                  Tôi đồng ý để MAX OFFICE sử dụng thông tin này để liên hệ và soạn hồ sơ thành lập{" "}
+                  {/* Ô đồng ý DUY NHẤT: đang điền thông tin giấy tờ vào form thì câu chữ nêu rõ giấy tờ tuỳ thân. */}
+                  {useIdForm
+                    ? "Tôi đồng ý để MAX OFFICE sử dụng thông tin này, kể cả thông tin giấy tờ tuỳ thân tôi cung cấp, để liên hệ và soạn hồ sơ thành lập"
+                    : "Tôi đồng ý để MAX OFFICE sử dụng thông tin này để liên hệ và soạn hồ sơ thành lập"}{" "}
                   <Link href="/chinh-sach-bao-mat" target="_blank" className="font-semibold text-primary underline underline-offset-2">
                     (Chính sách bảo mật)
                   </Link>

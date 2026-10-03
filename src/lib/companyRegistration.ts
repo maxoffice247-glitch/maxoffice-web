@@ -34,8 +34,8 @@ export type RegistrationTypeConfig = {
   representativeLabel: string;
   /** Hộ kinh doanh không có ô chức danh. */
   hasTitle: boolean;
-  /** Cho phép CÁCH THỨ HAI cung cấp giấy tờ: điền thông tin CCCD/VNeID vào form
-   * thay vì gửi ảnh. CHỈ TNHH 1 thành viên và Hộ kinh doanh. */
+  /** Cho phép điền thông tin CCCD/VNeID vào form (CÁCH MẶC ĐỊNH) thay vì gửi ảnh
+   * VNeID qua Zalo. CHỈ TNHH 1 thành viên và Hộ kinh doanh. */
   idForm: boolean;
   /** Tên nhóm ô thông tin giấy tờ (chỉ khi idForm). */
   idGroupTitle?: string;
@@ -98,7 +98,7 @@ export const REGISTRATION_CONFIG: Record<RegistrationType, RegistrationTypeConfi
     hasWebsite: true,
     vneidNote:
       "Ảnh VNeID (chụp thấy rõ ngày cấp CCCD; bao gồm người đại diện theo pháp luật nếu người đó không phải chủ sở hữu): gửi qua Zalo sau khi bấm Gửi hồ sơ.",
-    introText: "Công ty TNHH 1 thành viên: 1 chủ sở hữu (gửi ảnh VNeID hoặc điền thông tin CCCD vào form)",
+    introText: "Công ty TNHH 1 thành viên: 1 chủ sở hữu (điền thông tin CCCD vào form hoặc gửi ảnh VNeID)",
   },
   "ho-kinh-doanh": {
     key: "ho-kinh-doanh",
@@ -115,7 +115,7 @@ export const REGISTRATION_CONFIG: Record<RegistrationType, RegistrationTypeConfi
     capitalLabel: "Vốn kinh doanh",
     hasWebsite: false,
     vneidNote: "Ảnh VNeID: gửi qua Zalo sau khi bấm Gửi hồ sơ.",
-    introText: "Hộ kinh doanh: do cá nhân hoặc hộ gia đình đăng ký (gửi ảnh VNeID hoặc điền thông tin CCCD vào form)",
+    introText: "Hộ kinh doanh: do cá nhân hoặc hộ gia đình đăng ký (điền thông tin CCCD vào form hoặc gửi ảnh VNeID)",
   },
 };
 
@@ -146,9 +146,11 @@ export type RegistrationShared = {
   /** Slug chi nhánh khi loaiDiaChi = "max-office", ngược lại luôn rỗng. */
   chiNhanh: string;
   /** Người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ). Dùng chung giữa các
-   * loại hình — là 1 con người, không phụ thuộc loại hình. Khi khách tích
-   * "trùng người liên hệ", form gửi lên đúng họ tên người liên hệ ở đây. */
+   * loại hình — là 1 con người, không phụ thuộc loại hình. */
   nguoiDaiDien: string;
+  /** Khách tích "Người liên hệ chính là người đại diện": họ tên người liên hệ = họ tên
+   * người đại diện (server tự suy ra, không tin `tenLienHe` client gửi kèm). */
+  lienHeLaDaiDien: boolean;
   /** Chức danh gõ tự do (không áp dụng Hộ kinh doanh). */
   chucDanh: string;
 };
@@ -171,6 +173,7 @@ export const EMPTY_SHARED: RegistrationShared = {
   loaiDiaChi: "khac",
   chiNhanh: "",
   nguoiDaiDien: "",
+  lienHeLaDaiDien: false,
   chucDanh: "",
 };
 
@@ -189,12 +192,8 @@ export type IdentityInfo = {
   soCccd: string;
   ngayCap: string;
   noiCap: string;
-  quocTich: string;
-  danToc: string;
-  thuongTru: string;
-  lienLac: string;
-  /** Ô đồng ý riêng cho việc cung cấp giấy tờ tuỳ thân. */
-  consent: boolean;
+  /** Địa chỉ liên hệ của chủ sở hữu/chủ hộ (một ô duy nhất; nhập theo địa giới hành chính mới). */
+  diaChiLienHe: string;
 };
 
 export const EMPTY_IDENTITY: IdentityInfo = {
@@ -204,19 +203,17 @@ export const EMPTY_IDENTITY: IdentityInfo = {
   soCccd: "",
   ngayCap: "",
   noiCap: "",
-  quocTich: "Việt Nam",
-  danToc: "",
-  thuongTru: "",
-  lienLac: "",
-  consent: false,
+  diaChiLienHe: "",
 };
 
-/** Body gửi lên API. `fax` là honeypot (ô ẩn, người thật không bao giờ điền). */
+/** Body gửi lên API. `fax` là honeypot (ô ẩn, người thật không bao giờ điền). Server bỏ qua mọi
+ * trường không có trong kiểu này (vd. quốc tịch/dân tộc/địa chỉ thường trú của bản cũ). */
 export type RegistrationSubmission = RegistrationValues &
   RegistrationShared & {
     loai: RegistrationType;
     fax?: string;
-    /** "zalo" (mặc định): gửi ảnh VNeID qua Zalo. "form": điền vào form (chỉ idForm). */
+    /** "form": điền thông tin CCCD vào form (chỉ idForm; form web mặc định chọn cách này).
+     * "zalo": gửi ảnh VNeID qua Zalo riêng (giá trị mặc định khi API không nhận được gì). */
     hinhThucGiayTo: IdMethod;
     /** Chỉ có khi hinhThucGiayTo = "form". */
     giayTo?: IdentityInfo;
@@ -243,10 +240,7 @@ export const FIELD_MAX = {
 export const IDENTITY_MAX = {
   hoTen: 120,
   noiCap: 120,
-  quocTich: 60,
-  danToc: 60,
-  thuongTru: 300,
-  lienLac: 300,
+  diaChiLienHe: 300,
   soCccd: 20, // cho phép gõ khoảng trắng trước khi bỏ
   ngay: 10,
 } as const;
@@ -283,7 +277,8 @@ const ERR = {
   branch: "Vui lòng chọn chi nhánh MAX OFFICE, hoặc chuyển sang \"Tự nhập địa chỉ khác\".",
   idNumber: "Vui lòng không nhập số CCCD/CMND vào form này — gửi ảnh VNeID qua Zalo.",
   idMethodNotAllowed: "Loại hình này không hỗ trợ điền thông tin giấy tờ vào form — vui lòng gửi ảnh VNeID qua Zalo.",
-  idConsent: "Vui lòng đồng ý cung cấp thông tin giấy tờ tuỳ thân để MAX OFFICE soạn hồ sơ thành lập.",
+  addressContact: "Vui lòng nhập địa chỉ liên hệ.",
+  repForContact: "Vui lòng nhập họ tên người đại diện (đang dùng làm người liên hệ).",
   cccd: "Số CCCD gồm đúng 12 chữ số.",
   dateFormat: "Nhập đúng ngày theo dd/mm/yyyy, ví dụ 25/12/1990.",
   birthFuture: "Ngày sinh không được ở tương lai.",
@@ -335,7 +330,8 @@ export function validateRegistration(
     von: str(b.von).replace(/\D/g, ""),
     // Loại hình không có ô thành viên thì bỏ hẳn, không nhận dữ liệu thừa từ client.
     thanhVien: cfg.membersLabel ? str(b.thanhVien) : "",
-    tenLienHe: str(b.tenLienHe),
+    // Tích "người liên hệ là người đại diện": người liên hệ = người đại diện (không tin tenLienHe client gửi).
+    tenLienHe: b.lienHeLaDaiDien === true ? str(b.nguoiDaiDien) : str(b.tenLienHe),
     sdt: str(b.sdt),
     email: str(b.email),
     website: cfg.hasWebsite ? str(b.website) : "",
@@ -343,6 +339,7 @@ export function validateRegistration(
     loaiDiaChi: b.loaiDiaChi === "max-office" ? "max-office" : "khac",
     chiNhanh: b.loaiDiaChi === "max-office" ? str(b.chiNhanh) : "",
     nguoiDaiDien: str(b.nguoiDaiDien),
+    lienHeLaDaiDien: b.lienHeLaDaiDien === true,
     // Hộ kinh doanh không có chức danh — bỏ hẳn dữ liệu thừa từ client.
     chucDanh: cfg.hasTitle ? str(b.chucDanh) : "",
     hinhThucGiayTo: b.hinhThucGiayTo === "form" && cfg.idForm ? "form" : "zalo",
@@ -355,7 +352,9 @@ export function validateRegistration(
     if (!errors[k] && ID_NUMBER_PATTERN.test(data[k])) errors[k] = ERR.idNumber;
   }
 
-  if (!data.tenLienHe) errors.tenLienHe = ERR.required;
+  if (data.lienHeLaDaiDien) {
+    if (!data.nguoiDaiDien) errors.nguoiDaiDien = ERR.repForContact;
+  } else if (!data.tenLienHe) errors.tenLienHe = ERR.required;
   if (!data.sdt) errors.sdt = ERR.required;
   else if (!errors.sdt && !isValidVnPhone(data.sdt)) errors.sdt = ERR.phone;
   if (data.email && !errors.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) errors.email = ERR.email;
@@ -391,21 +390,17 @@ export function validateRegistration(
       soCccd: str(g.soCccd),
       ngayCap: str(g.ngayCap),
       noiCap: str(g.noiCap),
-      quocTich: str(g.quocTich),
-      danToc: str(g.danToc),
-      thuongTru: str(g.thuongTru),
-      lienLac: str(g.lienLac),
-      consent: g.consent === true,
+      diaChiLienHe: str(g.diaChiLienHe),
     };
     if (gender && gender !== "nam" && gender !== "nu") idErr.gioiTinh = "Giới tính không hợp lệ.";
 
-    for (const k of ["hoTen", "noiCap", "quocTich", "danToc", "thuongTru", "lienLac"] as const) {
+    for (const k of ["hoTen", "noiCap", "diaChiLienHe"] as const) {
       if (info[k].length > IDENTITY_MAX[k]) idErr[k] = ERR.tooLong;
       // Quy tắc chặn 9/12 chữ số liền nhau áp dụng cho MỌI ô văn bản — chỉ riêng ô Số CCCD được phép.
       else if (ID_NUMBER_PATTERN.test(info[k])) idErr[k] = ERR.idNumber;
     }
     if (!info.hoTen) idErr.hoTen = data.loai === "ho-kinh-doanh" ? ERR.ownerNameFromAbove : ERR.required;
-    if (!info.thuongTru) idErr.thuongTru = ERR.required;
+    if (!info.diaChiLienHe && !idErr.diaChiLienHe) idErr.diaChiLienHe = ERR.addressContact;
 
     // Số CCCD: chỉ cho phép chữ số và khoảng trắng, sau khi bỏ khoảng trắng phải ĐÚNG 12 chữ số.
     const cccd = info.soCccd.replace(/\s/g, "");
@@ -432,8 +427,6 @@ export function validateRegistration(
       info.noiCap = suggestIssuePlace(info.ngayCap, info.ngaySinh);
     }
 
-    if (!info.consent) idErr.consent = ERR.idConsent;
-
     if (Object.keys(idErr).length) errors.giayTo = idErr;
     else data.giayTo = info;
   }
@@ -457,22 +450,28 @@ function sameName(a: string, b: string): boolean {
   return n(a) !== "" && n(a) === n(b);
 }
 
-/** Dòng người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ) — đặt ngay dưới
- * nhóm thông tin liên hệ ở mọi nơi (email, sheet, bản sao, bản in). "Trùng người
- * liên hệ" được SUY RA từ việc 2 họ tên giống nhau (không cần cờ riêng gửi lên). */
+/** Dòng người đại diện theo pháp luật (Hộ kinh doanh: chủ hộ) — đặt TRƯỚC nhóm thông tin
+ * liên hệ ở mọi nơi (form, email, sheet, bản sao, bản in). */
 export function registrationRepresentative(d: RegistrationClean): { label: string; value: string } {
   const cfg = REGISTRATION_CONFIG[d.loai];
   const label = cfg.hasTitle ? "Người đại diện theo pháp luật" : "Chủ hộ kinh doanh";
   if (!d.nguoiDaiDien) return { label, value: NONE };
   let value = d.nguoiDaiDien;
   if (cfg.hasTitle && d.chucDanh) value += ` (${d.chucDanh})`;
-  if (sameName(d.nguoiDaiDien, d.tenLienHe)) value += " (trùng người liên hệ)";
   return { label, value };
+}
+
+/** Dòng người liên hệ: tích "chính là người đại diện" thì ghi "trùng ..." thay vì lặp họ tên. */
+export function registrationContact(d: RegistrationClean): { label: string; value: string } {
+  if (d.lienHeLaDaiDien) {
+    return { label: "Người liên hệ", value: `trùng ${REGISTRATION_CONFIG[d.loai].hasTitle ? "người đại diện" : "chủ hộ kinh doanh"}` };
+  }
+  return { label: "Họ tên người liên hệ", value: d.tenLienHe || NONE };
 }
 
 /** "full" = đầy đủ (nút Sao chép, nội dung email nội bộ); "print" = bản in/PDF (số CCCD che,
  * chỉ 4 số cuối); "sheet" = dòng ghi Google Sheet (KHÔNG có ngày sinh/ngày cấp/địa chỉ
- * thường trú, CCCD che — chi tiết đầy đủ chỉ nằm trong email). */
+ * liên hệ, CCCD che — chi tiết đầy đủ chỉ nằm trong email). */
 export type SummaryMode = "full" | "print" | "sheet";
 
 const GENDER_TEXT = { nam: "Nam", nu: "Nữ" } as const;
@@ -498,10 +497,7 @@ export function identitySectionLines(d: RegistrationClean, mode: SummaryMode): s
     lines.push(`Số CCCD: ${mode === "print" ? maskCccd(g.soCccd) : g.soCccd}`);
     lines.push(`Ngày cấp: ${g.ngayCap || NONE}`);
     lines.push(`Nơi cấp: ${g.noiCap || NONE}`);
-    lines.push(`Quốc tịch: ${g.quocTich || NONE}`);
-    lines.push(`Dân tộc: ${g.danToc || NONE}`);
-    lines.push(`Địa chỉ thường trú: ${g.thuongTru || NONE}`);
-    lines.push(`Địa chỉ liên lạc: ${g.lienLac || NONE}`);
+    lines.push(`Địa chỉ liên hệ: ${g.diaChiLienHe || NONE}`);
   }
   lines.push("");
   if (d.loai === "tnhh-1tv" && !sameName(d.nguoiDaiDien, g.hoTen)) {
@@ -520,12 +516,13 @@ export function buildRegistrationSummary(d: RegistrationClean, branchName?: stri
   const lines: string[] = [cfg.title.toUpperCase(), ""];
   lines.push(registrationAddressLine(d, branchName));
   lines.push("");
-  lines.push(`Họ tên người liên hệ: ${d.tenLienHe || NONE}`);
+  const rep = registrationRepresentative(d);
+  lines.push(`${rep.label}: ${rep.value}`);
+  const contact = registrationContact(d);
+  lines.push(`${contact.label}: ${contact.value}`);
   lines.push(`SĐT đăng ký: ${d.sdt || NONE}`);
   lines.push(`Email: ${d.email || NONE}`);
   if (cfg.hasWebsite) lines.push(`Website: ${d.website || NONE}`);
-  const rep = registrationRepresentative(d);
-  lines.push(`${rep.label}: ${rep.value}`);
   lines.push("");
   lines.push(`${cfg.nameLabel}: ${d.tenDonVi || NONE}`);
   lines.push(`Ngành nghề kinh doanh: ${d.nganhNghe || NONE}`);

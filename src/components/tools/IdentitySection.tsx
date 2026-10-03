@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { CheckCircleIcon, ChevronDownIcon } from "../icons";
 import {
   IDENTITY_MAX,
@@ -15,9 +14,11 @@ import { ISSUE_PLACE_BCA, ISSUE_PLACE_CSQLHC, choiceFromPlace, placeFromChoice, 
 /**
  * Khung "giấy tờ tuỳ thân" của form Hồ sơ thành lập doanh nghiệp.
  *
- * - Mọi loại hình: khung lưu ý VNeID (gửi ảnh qua Zalo).
- * - CHỈ TNHH 1 thành viên / Hộ kinh doanh (cfg.idForm): thêm lựa chọn cách 2 — điền
- *   thông tin trên CCCD/VNeID trực tiếp vào form (nhóm ô bên dưới).
+ * - Loại hình thường (Cổ phần, TNHH 2 thành viên trở lên): khung lưu ý VNeID (gửi ảnh qua Zalo).
+ * - CHỈ TNHH 1 thành viên / Hộ kinh doanh (cfg.idForm): MẶC ĐỊNH là điền thông tin trên
+ *   CCCD/VNeID trực tiếp vào form (nhóm ô bên dưới); lựa chọn thay thế là gửi ảnh VNeID qua
+ *   Zalo riêng (ẩn nhóm ô, không bắt buộc gì thêm). Đồng ý sử dụng thông tin nằm ở ô đồng ý
+ *   DUY NHẤT cuối form (CompanyRegistrationForm), không còn ô đồng ý riêng ở đây.
  *
  * BẢO MẬT: component này KHÔNG giữ giá trị nào — mọi giá trị nằm trong state của form
  * cha (chỉ trong bộ nhớ trang). Không localStorage/sessionStorage/cookie/URL, không
@@ -56,17 +57,16 @@ export const EMPTY_IDENTITY_UI: IdentityUiState = {
     soCccd: "",
     ngayCap: "",
     noiCap: "",
-    quocTich: "Việt Nam",
-    danToc: "",
-    thuongTru: "",
-    lienLac: "",
-    consent: false,
+    diaChiLienHe: "",
   },
   sameAsRep: false,
   placeManual: false,
   placeChoice: "",
   placeOther: "",
 };
+
+/** Trạng thái ban đầu của loại hình có `idForm`: mặc định điền thông tin vào form. */
+export const EMPTY_IDENTITY_UI_FORM: IdentityUiState = { ...EMPTY_IDENTITY_UI, method: "form" };
 
 const inputClass =
   "w-full rounded-xl border border-line bg-white px-4 py-3 text-[16px] text-ink transition-colors duration-200 placeholder:text-[14px] placeholder:italic placeholder:text-body-text/55 sm:placeholder:text-[14.5px] focus:border-primary focus:outline-none aria-[invalid=true]:border-accent read-only:bg-bg-tint read-only:text-body-text sm:text-[14.5px] print:hidden";
@@ -185,13 +185,13 @@ export default function IdentitySection({
       <div className="rounded-xl border border-primary/25 bg-primary-tint p-4 text-[13.5px] leading-relaxed text-navy">
         {cfg.idForm ? (
           <>
-            <p className="font-bold">Giấy tờ tuỳ thân: gửi ảnh VNeID hoặc điền thông tin CCCD vào form.</p>
+            <p className="font-bold">Giấy tờ tuỳ thân: điền thông tin CCCD vào form hoặc gửi ảnh VNeID.</p>
             <div role="radiogroup" aria-label="Cách cung cấp giấy tờ tuỳ thân" className="mt-3 flex flex-col gap-2 sm:flex-row print:hidden">
-              <RadioPill name={methodName} value="zalo" checked={state.method === "zalo"} onChange={() => onChange({ ...state, method: "zalo" })}>
-                Gửi ảnh VNeID qua Zalo
-              </RadioPill>
               <RadioPill name={methodName} value="form" checked={state.method === "form"} onChange={() => onChange({ ...state, method: "form" })}>
-                Điền thông tin trên CCCD/VNeID vào form (không cần gửi ảnh)
+                Điền thông tin trên CCCD/VNeID vào form
+              </RadioPill>
+              <RadioPill name={methodName} value="zalo" checked={state.method === "zalo"} onChange={() => onChange({ ...state, method: "zalo" })}>
+                Tôi muốn gửi ảnh VNeID qua Zalo riêng (không điền thông tin)
               </RadioPill>
             </div>
             {methodError && (
@@ -199,13 +199,13 @@ export default function IdentitySection({
                 {methodError}
               </p>
             )}
-            {state.method === "zalo" ? (
+            {state.method === "form" ? (
+              <p className="mt-3 text-body-text">Thông tin bên dưới chỉ dùng để MAX OFFICE soạn hồ sơ thành lập — bạn không cần gửi ảnh VNeID của {ownerWord}.</p>
+            ) : (
               <>
                 <p className="mt-3 font-bold">{cfg.vneidNote}</p>
                 <p className="mt-1.5 text-body-text">Vui lòng không nhập số CCCD vào form này.</p>
               </>
-            ) : (
-              <p className="mt-3 text-body-text">Thông tin bên dưới chỉ dùng để MAX OFFICE soạn hồ sơ thành lập — bạn không cần gửi ảnh VNeID của {ownerWord}.</p>
             )}
           </>
         ) : (
@@ -386,61 +386,26 @@ export default function IdentitySection({
                 />
               </Field>
             )}
-            <Field id={id("quocTich")} label="Quốc tịch (tuỳ chọn)" error={errors.quocTich}>
-              <input
-                id={id("quocTich")}
-                type="text"
-                value={info.quocTich}
-                onChange={(e) => set("quocTich", e.target.value)}
-                maxLength={IDENTITY_MAX.quocTich}
-                autoComplete="off"
-                aria-invalid={!!errors.quocTich}
-                aria-describedby={describe(id("quocTich"), false, !!errors.quocTich)}
-                className={inputClass}
-              />
-            </Field>
-            <Field id={id("danToc")} label="Dân tộc (tuỳ chọn)" error={errors.danToc}>
-              <input
-                id={id("danToc")}
-                type="text"
-                value={info.danToc}
-                onChange={(e) => set("danToc", e.target.value)}
-                placeholder="Ví dụ: Kinh"
-                maxLength={IDENTITY_MAX.danToc}
-                autoComplete="off"
-                aria-invalid={!!errors.danToc}
-                aria-describedby={describe(id("danToc"), false, !!errors.danToc)}
-                className={inputClass}
-              />
-            </Field>
           </div>
 
-          <Field id={id("thuongTru")} label="Địa chỉ thường trú" required error={errors.thuongTru}>
+          <Field
+            id={id("diaChiLienHe")}
+            label="Địa chỉ liên hệ"
+            required
+            error={errors.diaChiLienHe}
+            hint="Lưu ý: nhập theo địa giới hành chính mới sau sáp nhập."
+          >
             <textarea
-              id={id("thuongTru")}
+              id={id("diaChiLienHe")}
               rows={2}
-              value={info.thuongTru}
-              onChange={(e) => set("thuongTru", e.target.value)}
-              placeholder="Ví dụ: Số 10 Sông Thao, Phường Tân Sơn Hoà, Tp. Hồ Chí Minh, Việt Nam"
-              maxLength={IDENTITY_MAX.thuongTru}
+              value={info.diaChiLienHe}
+              onChange={(e) => set("diaChiLienHe", e.target.value)}
+              placeholder="Ví dụ: Số 10 Đường Sông Thao, Phường Tân Sơn Hoà, Thành phố Hồ Chí Minh"
+              maxLength={IDENTITY_MAX.diaChiLienHe}
               autoComplete="off"
               aria-required="true"
-              aria-invalid={!!errors.thuongTru}
-              aria-describedby={describe(id("thuongTru"), false, !!errors.thuongTru)}
-              className={inputClass}
-            />
-          </Field>
-
-          <Field id={id("lienLac")} label="Địa chỉ liên lạc (tuỳ chọn)" error={errors.lienLac} hint="Chỉ điền nếu khác địa chỉ thường trú.">
-            <textarea
-              id={id("lienLac")}
-              rows={2}
-              value={info.lienLac}
-              onChange={(e) => set("lienLac", e.target.value)}
-              maxLength={IDENTITY_MAX.lienLac}
-              autoComplete="off"
-              aria-invalid={!!errors.lienLac}
-              aria-describedby={describe(id("lienLac"), true, !!errors.lienLac)}
+              aria-invalid={!!errors.diaChiLienHe}
+              aria-describedby={describe(id("diaChiLienHe"), true, !!errors.diaChiLienHe)}
               className={inputClass}
             />
           </Field>
@@ -450,45 +415,6 @@ export default function IdentitySection({
               Vui lòng gửi ảnh VNeID của người đại diện qua Zalo
             </p>
           )}
-
-          <div>
-            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-[13.5px] leading-relaxed text-ink">
-              <input
-                id={id("consent")}
-                type="checkbox"
-                checked={info.consent}
-                onChange={(e) => set("consent", e.target.checked)}
-                aria-required="true"
-                aria-invalid={!!errors.consent}
-                aria-describedby={errors.consent ? `${id("consent")}-err` : undefined}
-                className="peer sr-only"
-              />
-              <span
-                aria-hidden="true"
-                className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 ${
-                  info.consent ? "border-primary bg-primary text-white" : errors.consent ? "border-accent text-transparent" : "border-line text-transparent"
-                }`}
-              >
-                <CheckCircleIcon className="h-3.5 w-3.5" />
-              </span>
-              <span>
-                Tôi đồng ý cung cấp thông tin giấy tờ tuỳ thân trên để MAX OFFICE soạn hồ sơ thành lập{" "}
-                <Link href="/chinh-sach-bao-mat" target="_blank" className="font-semibold text-primary underline underline-offset-2">
-                  (Chính sách bảo mật)
-                </Link>
-                <span className="text-accent" aria-hidden="true">
-                  {" "}
-                  *
-                </span>
-                <span className="sr-only"> (bắt buộc)</span>
-              </span>
-            </label>
-            {errors.consent && (
-              <p id={`${id("consent")}-err`} role="alert" className="mt-1.5 text-[12.5px] font-semibold text-accent">
-                {errors.consent}
-              </p>
-            )}
-          </div>
         </div>
       )}
     </div>

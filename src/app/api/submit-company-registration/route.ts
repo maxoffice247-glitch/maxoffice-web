@@ -11,6 +11,7 @@ import {
   buildRegistrationSummary,
   registrationAddressLine,
   registrationRepresentative,
+  registrationContact,
   identitySectionLines,
   validateRegistration,
   type RegistrationClean,
@@ -74,16 +75,19 @@ function buildEmail(d: RegistrationClean, branchName?: string) {
   // OFFICE thì nhân viên thấy ngay khách cần cả văn phòng ảo.
   const addressLine = registrationAddressLine(d, branchName);
   const sep = addressLine.indexOf(": ");
+  // Người đại diện đứng TRƯỚC nhóm liên hệ (giống thứ tự trên form); tích "trùng" thì ghi
+  // "Người liên hệ: trùng người đại diện" thay vì lặp họ tên.
+  const rep = registrationRepresentative(d);
+  const contact = registrationContact(d);
   const rows: [string, string][] = [
     ["Loại hình", cfg.label],
     [addressLine.slice(0, sep), addressLine.slice(sep + 2)],
-    ["Họ tên người liên hệ", d.tenLienHe],
+    [rep.label, d.nguoiDaiDien ? rep.value : ""],
+    [contact.label, d.lienHeLaDaiDien ? contact.value : d.tenLienHe],
     ["SĐT đăng ký", d.sdt],
     ["Email", d.email],
   ];
   if (cfg.hasWebsite) rows.push(["Website", d.website]);
-  const rep = registrationRepresentative(d);
-  rows.push([rep.label, d.nguoiDaiDien ? rep.value : ""]);
   rows.push(
     [cfg.nameLabel, d.tenDonVi],
     ["Ngành nghề kinh doanh", d.nganhNghe],
@@ -147,7 +151,7 @@ async function sendEmail(d: RegistrationClean, branchName?: string) {
  * không cần sửa: thông tin chi tiết gom vào cột "Ghi chú". */
 function buildSheetPayload(d: RegistrationClean, branchName?: string): LeadPayload {
   const cfg = REGISTRATION_CONFIG[d.loai];
-  // Chế độ "sheet": KHÔNG có ngày sinh/ngày cấp/địa chỉ thường trú, CCCD che (chỉ 4 số cuối).
+  // Chế độ "sheet": KHÔNG có ngày sinh/ngày cấp/địa chỉ liên hệ, CCCD che (chỉ 4 số cuối).
   const note = buildRegistrationSummary(d, branchName, "sheet").split("\n").slice(2).join("\n");
   return {
     formType: LEAD_SOURCE,

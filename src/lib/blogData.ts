@@ -227,7 +227,7 @@ thumbnailPosition: "center",
         id: "chuan-bi-voi-max-office",
         heading: "Chuẩn bị nhanh khi dùng dịch vụ của MAX OFFICE",
         paragraphs: [
-          "Danh sách trên là giấy tờ pháp lý theo quy định. Khi dùng dịch vụ của MAX OFFICE, bạn chỉ cần chụp ảnh VNeID (Công ty TNHH 2 thành viên trở lên: của tất cả thành viên; Công ty TNHH 1 thành viên: của chủ sở hữu, hoặc điền thông tin CCCD trực tiếp vào form), bổ sung VNeID của người đại diện theo pháp luật nếu người đó không nằm trong danh sách trên, và điền thông tin theo checklist — MAX OFFICE sẽ lên hồ sơ cho bạn.",
+          "Danh sách trên là giấy tờ pháp lý theo quy định. Khi dùng dịch vụ của MAX OFFICE, bạn chỉ cần cung cấp giấy tờ tuỳ thân (Công ty TNHH 1 thành viên: điền thông tin CCCD của chủ sở hữu trực tiếp vào form, hoặc chụp ảnh VNeID; Công ty TNHH 2 thành viên trở lên: ảnh VNeID của tất cả thành viên), bổ sung VNeID của người đại diện theo pháp luật nếu người đó không nằm trong danh sách trên, và điền thông tin theo checklist — MAX OFFICE sẽ lên hồ sơ cho bạn.",
         ],
         link: { label: "Mở checklist thành lập doanh nghiệp", href: "/tien-ich/checklist-thanh-lap-doanh-nghiep" },
       },
@@ -303,7 +303,7 @@ thumbnailPosition: "center",
     cta: {
       title: "Để MAX OFFICE soạn hồ sơ giúp bạn",
       description:
-        "Gửi ảnh VNeID của chủ sở hữu/các thành viên và người đại diện theo pháp luật (Công ty TNHH 1 thành viên có thể điền thông tin CCCD trực tiếp vào form), cùng thông tin theo checklist — chuyên viên MAX OFFICE lo phần còn lại, hoàn tất trong 5-7 ngày làm việc.",
+        "Cung cấp giấy tờ tuỳ thân (điền thông tin CCCD trực tiếp vào form với Công ty TNHH 1 thành viên, hoặc gửi ảnh VNeID của chủ sở hữu/các thành viên và người đại diện theo pháp luật) cùng thông tin theo checklist — chuyên viên MAX OFFICE lo phần còn lại, hoàn tất trong 5-7 ngày làm việc.",
       service: "Thành lập doanh nghiệp",
       serviceHref: "/services/thanh-lap-doanh-nghiep",
       serviceLabel: "Xem dịch vụ thành lập doanh nghiệp",
