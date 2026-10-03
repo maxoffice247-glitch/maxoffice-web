@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { escapeHtml, sendToGoogleSheet, createZohoMailer, LEAD_INBOX, type LeadPayload } from "@/lib/leadDelivery";
+import { POPUP_FORM_TYPE, isPopupService } from "@/lib/popupServices";
 
 export type LeadRequestBody = {
   formType?: string;
@@ -21,7 +22,8 @@ async function sendEmailNotification(payload: LeadPayload) {
     ["Họ tên", payload.name],
     ["Số điện thoại", payload.phone],
     ["Email", payload.email],
-    ["Dịch vụ quan tâm", payload.service],
+    // Popup ưu đãi: luôn hiện dòng này, chưa chọn thì ghi "Chưa chọn" (form khác giữ nguyên "-").
+    ["Dịch vụ quan tâm", payload.formType === POPUP_FORM_TYPE ? payload.service || "Chưa chọn" : payload.service],
     ["Chi nhánh", payload.branch],
     ["Ngày mong muốn", payload.date],
     ["Giờ mong muốn", payload.time],
@@ -81,7 +83,14 @@ export async function POST(request: Request) {
     name,
     phone,
     email: email || undefined,
-    service: body.service?.trim() || undefined,
+    // Popup ưu đãi chỉ nhận đúng 5 nhãn dịch vụ (hoặc rỗng); giá trị lạ thì BỎ riêng trường này,
+    // lead vẫn được ghi. Các form khác giữ nguyên (nhận chuỗi tự do từ dropdown của chúng).
+    service:
+      formType === POPUP_FORM_TYPE
+        ? isPopupService(body.service?.trim())
+          ? body.service?.trim()
+          : undefined
+        : body.service?.trim() || undefined,
     branch: body.branch?.trim() || undefined,
     date: body.date?.trim() || undefined,
     time: body.time?.trim() || undefined,

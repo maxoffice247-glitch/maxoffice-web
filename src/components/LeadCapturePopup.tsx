@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { CloseIcon } from "./icons";
 import { useLeadSubmit } from "@/lib/useLeadSubmit";
+import { POPUP_FORM_TYPE, POPUP_SERVICE_OPTIONS, defaultPopupService } from "@/lib/popupServices";
 
 const EASE_PREMIUM = [0.22, 0.9, 0.32, 1] as const;
 const SEEN_KEY = "mo_lead_popup_seen";
@@ -26,6 +28,11 @@ export default function LeadCapturePopup() {
   const { status, submit } = useLeadSubmit();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const pathname = usePathname();
+  // undefined = khách chưa đụng vào -> dùng dịch vụ chọn sẵn theo trang; null = khách chủ động bỏ chọn.
+  const [picked, setPicked] = useState<string | null | undefined>(undefined);
+  const selected = picked === undefined ? defaultPopupService(pathname) || null : picked;
+  const chipRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     if (sessionStorage.getItem(SEEN_KEY)) return;
@@ -105,15 +112,32 @@ export default function LeadCapturePopup() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await submit({ formType: "Popup ưu đãi", name, phone });
+    await submit(
+      { formType: POPUP_FORM_TYPE, name, phone, service: selected ?? undefined },
+      // GA4: chỉ NHÃN dịch vụ (không SĐT/tên); bỏ qua nếu khách không chọn gì.
+      selected ? { service_interest: selected } : undefined
+    );
   };
+
+  // Radio group có thể BỎ CHỌN (bấm lại chip đang chọn): mũi tên di chuyển + chọn, Space/Enter bật-tắt.
+  const onChipKeyDown = (e: ReactKeyboardEvent<HTMLButtonElement>, i: number) => {
+    const n = POPUP_SERVICE_OPTIONS.length;
+    let next = -1;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (i + 1) % n;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = (i - 1 + n) % n;
+    if (next < 0) return;
+    e.preventDefault();
+    setPicked(POPUP_SERVICE_OPTIONS[next]);
+    chipRefs.current[next]?.focus();
+  };
+  const selectedIndex = selected ? POPUP_SERVICE_OPTIONS.findIndex((o) => o === selected) : -1;
 
   return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
           key="lead-capture-popup"
-          className="fixed inset-0 z-[300] flex items-center justify-center p-4"
+          className="short:p-3 fixed inset-0 z-[300] flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -132,13 +156,13 @@ export default function LeadCapturePopup() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 8 }}
             transition={{ duration: 0.25, ease: EASE_PREMIUM }}
-            className="relative max-h-[92vh] w-full max-w-[420px] overflow-y-auto rounded-2xl bg-white p-7 shadow-[0_30px_80px_rgba(11,31,58,0.35)] sm:p-8"
+            className="short:p-4 relative max-h-[calc(100dvh-1.5rem)] w-full max-w-[420px] overflow-y-auto rounded-2xl bg-white p-7 shadow-[0_30px_80px_rgba(11,31,58,0.35)] sm:p-8 short:sm:p-4"
           >
             <button
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Đóng"
-              className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full text-body-text transition-colors duration-200 hover:bg-bg-tint hover:text-navy"
+              className="short:top-2 short:right-2 absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full text-body-text transition-colors duration-200 hover:bg-bg-tint hover:text-navy"
             >
               <CloseIcon className="h-4 w-4" />
             </button>
@@ -175,18 +199,18 @@ export default function LeadCapturePopup() {
                     width={336}
                     height={224}
                     decoding="async"
-                    className="mx-auto mb-2 block h-[112px] w-[168px] object-contain"
+                    className="short:mb-0.5 short:h-[64px] short:w-[96px] mx-auto mb-2 block h-[112px] w-[168px] object-contain"
                   />
                 </picture>
-                <h3 id="lead-capture-title" className="mb-2 text-center text-[20px] font-bold text-navy">
+                <h3 id="lead-capture-title" className="short:mb-1 short:text-[18px] mb-2 text-center text-[20px] font-bold text-navy">
                   🎁 Voucher dành riêng cho bạn!
                 </h3>
-                <p className="mb-6 text-center text-[14.5px] leading-relaxed text-body-text">
+                <p className="short:mb-2 short:text-[14px] short:leading-snug mb-6 text-center text-[14.5px] leading-relaxed text-body-text">
                   Để lại số điện thoại, MAX OFFICE tư vấn miễn phí và giữ ưu đãi giảm 10% tháng đầu
                   tiên cho bạn.
                 </p>
 
-                <form onSubmit={handleSubmit} className="space-y-3">
+                <form onSubmit={handleSubmit} className="short:space-y-2 space-y-3">
                   <label htmlFor={`${uid}-name`} className="sr-only">
                     Họ tên
                   </label>
@@ -197,7 +221,7 @@ export default function LeadCapturePopup() {
                     placeholder="Họ tên của bạn"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none"
+                    className="short:py-2.5 w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none"
                   />
                   <label htmlFor={`${uid}-phone`} className="sr-only">
                     Số điện thoại
@@ -213,8 +237,50 @@ export default function LeadCapturePopup() {
                       placeholder="9xx xxx xxx"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full min-w-0 px-3 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 focus:outline-none"
+                      className="short:py-2.5 w-full min-w-0 px-3 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 focus:outline-none"
                     />
+                  </div>
+
+                  <div role="radiogroup" aria-labelledby={`${uid}-svc-label`}>
+                    <p id={`${uid}-svc-label`} className="short:mb-1 mb-1.5 text-[14px] leading-snug font-semibold text-body-text">
+                      Bạn quan tâm dịch vụ nào? (không bắt buộc)
+                    </p>
+                    <div className="short:gap-1.5 grid grid-cols-2 gap-2">
+                      {POPUP_SERVICE_OPTIONS.map((label, i) => {
+                        const isSelected = selected === label;
+                        const isLast = i === POPUP_SERVICE_OPTIONS.length - 1;
+                        // Roving tabindex: chip đang chọn (hoặc chip đầu nếu chưa chọn) là điểm dừng Tab duy nhất.
+                        const tabStop = selectedIndex >= 0 ? i === selectedIndex : i === 0;
+                        return (
+                          <button
+                            key={label}
+                            ref={(el) => {
+                              chipRefs.current[i] = el;
+                            }}
+                            type="button"
+                            role="radio"
+                            aria-checked={isSelected}
+                            tabIndex={tabStop ? 0 : -1}
+                            onClick={() => setPicked(isSelected ? null : label)}
+                            onKeyDown={(e) => onChipKeyDown(e, i)}
+                            className={`flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl border-[1.5px] px-2 py-1.5 text-center text-[14px] leading-tight font-semibold transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none ${
+                              isLast ? "col-span-2" : ""
+                            } ${
+                              isSelected
+                                ? "border-primary bg-primary text-white"
+                                : "border-line bg-white text-navy hover:border-primary/50"
+                            }`}
+                          >
+                            {isSelected && (
+                              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M5 12.5l4.5 4.5L19 7.5" />
+                              </svg>
+                            )}
+                            {label}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
 
                   {status === "error" && (
@@ -239,12 +305,12 @@ export default function LeadCapturePopup() {
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="flex w-full items-center justify-center rounded-full bg-accent px-6 py-3.5 text-[15px] font-bold text-white shadow-[0_8px_20px_rgba(229,57,53,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[0_16px_32px_rgba(229,57,53,0.38)] disabled:pointer-events-none disabled:opacity-60"
+                    className="short:py-3 flex w-full items-center justify-center rounded-full bg-accent px-6 py-3.5 text-[15px] font-bold text-white shadow-[0_8px_20px_rgba(229,57,53,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[0_16px_32px_rgba(229,57,53,0.38)] disabled:pointer-events-none disabled:opacity-60"
                   >
                     {status === "loading" ? "Đang gửi..." : "Nhận ưu đãi ngay"}
                   </button>
                 </form>
-                <p className="mt-3 text-center text-[11.5px] leading-snug text-body-text">
+                <p className="short:mt-2 mt-3 text-center text-[11.5px] leading-snug text-body-text">
                   Bằng việc gửi thông tin, bạn đồng ý để MAX OFFICE liên hệ tư vấn.
                 </p>
               </>

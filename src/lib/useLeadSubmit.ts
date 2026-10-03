@@ -20,7 +20,8 @@ export type LeadPayload = {
 export function useLeadSubmit() {
   const [status, setStatus] = useState<LeadSubmitStatus>("idle");
 
-  async function submit(payload: LeadPayload) {
+  /** `extraEventParams`: tham số GA4 bổ sung (chỉ giá trị KHÔNG định danh, VD nhãn dịch vụ — tuyệt đối không SĐT/tên). */
+  async function submit(payload: LeadPayload, extraEventParams?: Record<string, string>) {
     setStatus("loading");
     try {
       const res = await fetch("/api/submit-lead", {
@@ -30,7 +31,7 @@ export function useLeadSubmit() {
       });
       if (!res.ok) throw new Error(`submit-lead responded ${res.status}`);
       setStatus("success");
-      trackEvent("form_submit", { form_type: payload.formType, service: payload.service });
+      trackEvent("form_submit", { form_type: payload.formType, service: payload.service, ...extraEventParams });
     } catch (err) {
       console.error("Lead submission failed:", err);
       setStatus("error");
