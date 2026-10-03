@@ -23,6 +23,8 @@ export type BlogSection = {
   heading: string;
   paragraphs: string[];
   bullets?: string[];
+  /** Liên kết nội bộ tuỳ chọn, hiện ngay dưới các đoạn văn của mục. */
+  link?: BlogRelatedLink;
 };
 
 export type BlogFaqItem = { q: string; a: string };
@@ -222,6 +224,14 @@ thumbnailPosition: "center",
         ],
       },
       {
+        id: "chuan-bi-voi-max-office",
+        heading: "Chuẩn bị nhanh khi dùng dịch vụ của MAX OFFICE",
+        paragraphs: [
+          "Danh sách trên là giấy tờ pháp lý theo quy định. Khi dùng dịch vụ của MAX OFFICE, bạn chỉ cần chụp ảnh VNeID (Công ty TNHH 2 thành viên trở lên: của tất cả thành viên; Công ty TNHH 1 thành viên: của chủ sở hữu) và điền thông tin theo checklist — MAX OFFICE sẽ lên hồ sơ cho bạn.",
+        ],
+        link: { label: "Mở checklist thành lập doanh nghiệp", href: "/tien-ich/checklist-thanh-lap-doanh-nghiep" },
+      },
+      {
         id: "thong-tin-can-xac-dinh",
         heading: "Những thông tin cần xác định trước khi soạn hồ sơ",
         paragraphs: [
@@ -259,7 +269,7 @@ thumbnailPosition: "center",
         id: "dich-vu-ho-tro",
         heading: "Vì sao nên để đơn vị chuyên nghiệp soạn hồ sơ",
         paragraphs: [
-          "Với người lần đầu thành lập doanh nghiệp, việc tự soạn hồ sơ dễ mất thời gian tra cứu quy định và dễ sai sót ở những chi tiết nhỏ nhưng quan trọng. MAX OFFICE hỗ trợ soạn thảo toàn bộ hồ sơ thành lập Công ty TNHH, đại diện nộp hồ sơ và theo dõi tiến độ cho đến khi bạn nhận được Giấy chứng nhận đăng ký doanh nghiệp — bạn chỉ cần cung cấp thông tin cơ bản và bản sao giấy tờ tuỳ thân.",
+          "Với người lần đầu thành lập doanh nghiệp, việc tự soạn hồ sơ dễ mất thời gian tra cứu quy định và dễ sai sót ở những chi tiết nhỏ nhưng quan trọng. MAX OFFICE hỗ trợ soạn thảo toàn bộ hồ sơ thành lập Công ty TNHH, đại diện nộp hồ sơ và theo dõi tiến độ cho đến khi bạn nhận được Giấy chứng nhận đăng ký doanh nghiệp — bạn chuẩn bị ảnh VNeID và thông tin theo checklist thành lập doanh nghiệp.",
         ],
       },
     ],
@@ -293,7 +303,7 @@ thumbnailPosition: "center",
     cta: {
       title: "Để MAX OFFICE soạn hồ sơ giúp bạn",
       description:
-        "Chỉ cần CCCD và thông tin cơ bản — chuyên viên MAX OFFICE lo phần còn lại, hoàn tất trong 5-7 ngày làm việc.",
+        "Chụp ảnh VNeID của chủ sở hữu hoặc các thành viên và điền thông tin theo checklist — chuyên viên MAX OFFICE lo phần còn lại, hoàn tất trong 5-7 ngày làm việc.",
       service: "Thành lập doanh nghiệp",
       serviceHref: "/services/thanh-lap-doanh-nghiep",
       serviceLabel: "Xem dịch vụ thành lập doanh nghiệp",

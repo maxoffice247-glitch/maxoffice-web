@@ -1,13 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionHead from "./SectionHead";
 import Reveal from "./Reveal";
 import { PlusIcon } from "./icons";
 import { ACTIVE_BRANCH_COUNT } from "@/lib/locationsData";
 
-export type FaqItem = { q: string; a: string };
+/** `link` (tuỳ chọn): liên kết nội bộ hiện dưới câu trả lời — dùng khi cần dẫn
+ * tới trang chi tiết (VD checklist thành lập doanh nghiệp). Không đưa vào JSON-LD
+ * FAQPage (chỉ `a` là nội dung trả lời). */
+export type FaqItem = { q: string; a: string; link?: { label: string; href: string } };
 
 const DEFAULT_FAQS: FaqItem[] = [
   {
@@ -115,9 +119,21 @@ export default function Faq({
                       transition={{ duration: 0.35, ease: [0.22, 0.9, 0.32, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="text-justify-vn max-w-[680px] pb-6 text-[14.5px] leading-relaxed whitespace-pre-line text-body-text">
+                      <p
+                        className={`text-justify-vn max-w-[680px] text-[14.5px] leading-relaxed whitespace-pre-line text-body-text ${
+                          item.link ? "pb-3" : "pb-6"
+                        }`}
+                      >
                         {item.a.replace(/\//g, "/\u200b")}
                       </p>
+                      {item.link && (
+                        <Link
+                          href={item.link.href}
+                          className="mb-6 inline-block text-[14px] font-semibold text-primary hover:underline"
+                        >
+                          {item.link.label} →
+                        </Link>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>

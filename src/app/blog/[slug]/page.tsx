@@ -107,6 +107,13 @@ export default async function BlogArticlePage({
                           {p}
                         </p>
                       ))}
+                      {section.link && (
+                        <p className="mt-3">
+                          <Link href={section.link.href} className="font-semibold text-primary hover:underline">
+                            {section.link.label} →
+                          </Link>
+                        </p>
+                      )}
                       {section.bullets && (
                         <ul className="mt-4 space-y-2.5">
                           {section.bullets.map((b, i) => (
