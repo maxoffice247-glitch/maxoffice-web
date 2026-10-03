@@ -74,10 +74,16 @@ export function QuoteHeaderRow({
   logoSrc,
   badgeLabel,
   dateLabel,
+  marginX = MARGIN_X,
 }: {
   logoSrc: string;
   badgeLabel: string;
   dateLabel: string;
+  /** Lề 2 bên TUỲ CHỌN — mặc định dùng đúng MARGIN_X dùng chung (hành vi cũ,
+   * route quote-image/tong-hop không truyền gì vẫn y hệt trước). Route
+   * payment-request-image truyền lề RIÊNG (rộng hơn) cho tool đó, KHÔNG đụng
+   * tới MARGIN_X dùng chung nên không ảnh hưởng route kia. */
+  marginX?: number;
 }) {
   return (
     <div
@@ -85,7 +91,7 @@ export function QuoteHeaderRow({
         display: "flex",
         alignItems: "flex-start",
         justifyContent: "space-between",
-        padding: `48px ${MARGIN_X}px 32px`,
+        padding: `48px ${marginX}px 32px`,
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -141,12 +147,15 @@ function EmailIcon({ color }: { color: string }) {
  * không cần lo "độ rộng khác nhau" — đã đo thực tế tổng độ rộng 4 phần tử
  * ở cỡ chữ này đủ chỗ trong CONTENT_WIDTH (968px), không tràn/chồng lấn
  * (xem báo cáo cuối phiên). */
-export function QuoteFooterRow({ lang = "vi" }: { lang?: QuoteLang } = {}) {
+export function QuoteFooterRow({
+  lang = "vi",
+  marginX = MARGIN_X,
+}: { lang?: QuoteLang; marginX?: number } = {}) {
   return (
     <div
       style={{
         display: "flex",
-        margin: `0 ${MARGIN_X}px`,
+        margin: `0 ${marginX}px`,
         marginTop: 32,
         alignItems: "center",
         justifyContent: "space-between",

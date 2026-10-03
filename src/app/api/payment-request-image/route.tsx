@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 import {
   CARD_WIDTH,
-  MARGIN_X,
   QUOTE_COLOR,
   loadQuoteImageFonts,
   loadQuoteImageLogo,
@@ -44,21 +43,29 @@ import { savePaymentRequestHistory } from "@/lib/paymentRequestHistory";
  */
 export const runtime = "nodejs";
 
+// Lề 2 bên RIÊNG của tool Đề nghị thanh toán — CỐ Ý không đụng tới MARGIN_X
+// dùng chung ở quoteImageShared.tsx (dùng chung với route quote-image/tong-hop
+// của CompositeQuoteTool). Rộng hơn MARGIN_X=56 gốc khoảng 2.5 lần → vùng nội
+// dung (PR_CONTENT_WIDTH) thu hẹp từ 968px còn 800px, giảm ~17.4% — đúng
+// khoảng 15-20% theo yêu cầu. QuoteHeaderRow/QuoteFooterRow (2 component DÙNG
+// CHUNG) nhận lề này qua prop `marginX` tuỳ chọn, mặc định vẫn là MARGIN_X gốc
+// nên route quote-image/tong-hop không bị ảnh hưởng gì.
+const PR_MARGIN_X = 140;
+
 const TITLE_BLOCK_H = 70;
 const DIA_DIEM_H = 36;
 const RECIPIENT_TOP_MARGIN = 20;
-const RECIPIENT_LABEL_H = 18;
-const RECIPIENT_NAME_LINE_H = 24;
-const RECIPIENT_CONTACT_H = 24;
-// Ngưỡng ký tự ước lượng số dòng xuống hàng cho tên công ty (fontSize 17,
-// bold) và đoạn văn hợp đồng/giới thiệu (fontSize 14, thường) — HIỆU CHỈNH
-// bằng pixel thật qua render test (xem báo cáo cuối phiên), theo đúng
-// phương pháp đã dùng cho MERGED_TITLE_WRAP_THRESHOLD ở route quote-image
-// tổng hợp.
-const NAME_CHARS_PER_LINE = 62;
-const PARAGRAPH_CHARS_PER_LINE = 98;
+const RECIPIENT_LINE_H = 24;
+// Ngưỡng ký tự ước lượng số dòng xuống hàng — HIỆU CHỈNH bằng pixel thật qua
+// render test (xem báo cáo cuối phiên), theo đúng phương pháp đã dùng cho
+// MERGED_TITLE_WRAP_THRESHOLD ở route quote-image tổng hợp. Đã tính lại theo
+// tỉ lệ PR_CONTENT_WIDTH/968 (≈0.826) so với ngưỡng cũ khi còn dùng lề chung,
+// rồi hiệu chỉnh thêm sau khi đo pixel thật.
+const RECIPIENT_CHARS_PER_LINE = 66; // dòng "Kính gửi: Tên — MST: x — SĐT: y" gộp, fontSize 15
+const PARAGRAPH_CHARS_PER_LINE = 81;
 const PARAGRAPH_LINE_H = 21;
 const PARAGRAPH_BLOCK_GAP = 6;
+const DEBT_CHARS_PER_LINE = 41;
 const TABLE_TOP_MARGIN = 24;
 const TABLE_HEADER_H = 38;
 const ITEM_ROW_BASE_H = 46;
@@ -85,14 +92,20 @@ function paragraphBlockHeight(lines: string[] | undefined, topMargin: number): n
   return topMargin + textLines * PARAGRAPH_LINE_H + (lines.length - 1) * PARAGRAPH_BLOCK_GAP;
 }
 
-function recipientBlockHeight(companyName: string): number {
-  const nameLines = estimateLines(companyName, NAME_CHARS_PER_LINE);
-  return RECIPIENT_TOP_MARGIN + RECIPIENT_LABEL_H + nameLines * RECIPIENT_NAME_LINE_H + RECIPIENT_CONTACT_H;
+/** "Kính gửi: Tên — MST: x — SĐT: y" GỘP CHUNG 1 khối văn bản chảy tự nhiên
+ * (xem RecipientBlock) — ước lượng số dòng theo TỔNG độ dài chuỗi gộp, không
+ * còn tách riêng "tên công ty" như trước (đã gộp label+tên+liên hệ thành 1
+ * đoạn duy nhất nên phải đếm chung). */
+function recipientBlockHeight(companyName: string, mst: string, phone: string): number {
+  const contactSuffix = [mst && `MST: ${mst}`, phone && `SĐT: ${phone}`].filter(Boolean).join("  —  ");
+  const fullText = `Kính gửi: ${companyName}${contactSuffix ? `  —  ${contactSuffix}` : ""}`;
+  const lines = estimateLines(fullText, RECIPIENT_CHARS_PER_LINE);
+  return RECIPIENT_TOP_MARGIN + lines * RECIPIENT_LINE_H;
 }
 
 function debtRowHeight(debt: PaymentRequestDebt | null): number {
   if (!debt) return 0;
-  const lines = estimateLines(debt.description, 50);
+  const lines = estimateLines(debt.description, DEBT_CHARS_PER_LINE);
   return 20 + 28 + lines * 20;
 }
 
@@ -181,33 +194,54 @@ function isValidRequestShape(body: unknown): body is PaymentRequestInput {
 
 function TitleBlock({ subjectLine }: { subjectLine: string }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: `0 ${MARGIN_X}px`, marginTop: 8 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: `0 ${PR_MARGIN_X}px`, marginTop: 8 }}>
       <div style={{ display: "flex", fontSize: 26, fontWeight: 800, letterSpacing: 0.5, color: QUOTE_COLOR.navy }}>
         ĐỀ NGHỊ THANH TOÁN
       </div>
-      <div style={{ display: "flex", marginTop: 6, fontSize: 14, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>
+      <div style={{ display: "flex", marginTop: 6, fontSize: 14, fontStyle: "italic", color: QUOTE_COLOR.bodyText, textAlign: "center" }}>
         {subjectLine}
       </div>
     </div>
   );
 }
 
+/** "Kính gửi:" + tên công ty + MST/SĐT GỘP CHUNG 1 DÒNG VĂN BẢN THUẦN (1 div,
+ * 1 chuỗi string duy nhất, KHÔNG dùng <span> lồng bên trong).
+ *
+ * ĐÃ THỬ cách lồng <span> in đậm cho riêng tên công ty bên trong cùng div
+ * trước đó — RENDER THẬT (xem ảnh test mtk.png/khac-long.png) cho thấy Satori
+ * KHÔNG áp dụng word-wrap xuyên suốt nội dung hỗn hợp text+span như trình
+ * duyệt thật: toàn bộ nội dung bị ép tràn trên 1 dòng vật lý, phần text sau
+ * <span> ĐÈ CHỒNG (overlap) lên cuối tên công ty thay vì xuống dòng. Chỉ 1
+ * CHUỖI STRING THUẦN trong 1 div mới được Satori wrap đúng theo từng từ (đã
+ * xác nhận qua chính ParagraphBlock bên dưới — các đoạn contractParagraph
+ * dài vẫn luôn wrap đúng vì là string thuần, không lồng phần tử con nào).
+ * Hệ quả: hy sinh việc tô đậm RIÊNG tên công ty (khác nhãn/liên hệ) — cả dòng
+ * dùng chung 1 kiểu chữ (đậm, màu navy) để vẫn nổi bật, đổi lại đảm bảo wrap
+ * tự nhiên đúng yêu cầu, không bao giờ ép xuống dòng ngay sau "Kính gửi:". */
 function RecipientBlock({ companyName, mst, phone }: { companyName: string; mst: string; phone: string }) {
-  const contactLine = [mst && `MST: ${mst}`, phone && `SĐT: ${phone}`].filter(Boolean).join("   •   ");
+  const contactSuffix = [mst && `MST: ${mst}`, phone && `SĐT: ${phone}`].filter(Boolean).join("  —  ");
+  const fullText = `Kính gửi: ${companyName}${contactSuffix ? `  —  ${contactSuffix}` : ""}`;
   return (
-    <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: RECIPIENT_TOP_MARGIN }}>
-      <div style={{ display: "flex", fontSize: 13, color: QUOTE_COLOR.bodyText }}>Kính gửi:</div>
-      <div style={{ display: "flex", marginTop: 2, fontSize: 17, fontWeight: 700, color: QUOTE_COLOR.navy }}>{companyName}</div>
-      {contactLine && (
-        <div style={{ display: "flex", marginTop: 6, fontSize: 14, color: QUOTE_COLOR.bodyText }}>{contactLine}</div>
-      )}
+    <div
+      style={{
+        display: "flex",
+        margin: `0 ${PR_MARGIN_X}px`,
+        marginTop: RECIPIENT_TOP_MARGIN,
+        fontSize: 15,
+        fontWeight: 700,
+        lineHeight: 1.6,
+        color: QUOTE_COLOR.navy,
+      }}
+    >
+      {fullText}
     </div>
   );
 }
 
 function ParagraphBlock({ lines, topMargin }: { lines: string[]; topMargin: number }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: topMargin, gap: PARAGRAPH_BLOCK_GAP }}>
+    <div style={{ display: "flex", flexDirection: "column", margin: `0 ${PR_MARGIN_X}px`, marginTop: topMargin, gap: PARAGRAPH_BLOCK_GAP }}>
       {lines.map((line, i) => (
         <div key={i} style={{ display: "flex", fontSize: 14, lineHeight: 1.5, color: QUOTE_COLOR.ink }}>
           {line}
@@ -224,7 +258,7 @@ function DebtRow({ debt }: { debt: PaymentRequestDebt }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        margin: `0 ${MARGIN_X}px`,
+        margin: `0 ${PR_MARGIN_X}px`,
         marginTop: 20,
         borderRadius: 12,
         backgroundColor: "#fff7e6",
@@ -240,13 +274,19 @@ function DebtRow({ debt }: { debt: PaymentRequestDebt }) {
   );
 }
 
+// Tỉ lệ flex các cột — ĐÃ TÁI CÂN BẰNG cho vùng nội dung hẹp hơn (xem
+// PR_CONTENT_WIDTH): tăng tỉ trọng "service" (tên dịch vụ, cần nhiều chỗ nhất
+// — đặc biệt nhãn thuê QE Agency dài), giảm "vat" (chỉ có "10%"/"8%", rất
+// ngắn, dư chỗ) để bù lại — độ rộng tuyệt đối cột "service" sau khi tái cân
+// bằng gần tương đương trước khi thu hẹp lề (đã đo thật, xem báo cáo cuối
+// phiên).
 const COL = {
   stt: 40,
-  service: 4,
-  amount: 1.4,
-  vat: 0.9,
-  vatAmount: 1.2,
-  total: 1.4,
+  service: 5,
+  amount: 1.3,
+  vat: 0.7,
+  vatAmount: 1.1,
+  total: 1.3,
 };
 
 function TableHeader() {
@@ -256,7 +296,7 @@ function TableHeader() {
       style={{
         display: "flex",
         alignItems: "center",
-        margin: `0 ${MARGIN_X}px`,
+        margin: `0 ${PR_MARGIN_X}px`,
         marginTop: TABLE_TOP_MARGIN,
         backgroundColor: QUOTE_COLOR.navy,
         borderRadius: "10px 10px 0 0",
@@ -279,7 +319,7 @@ function TableRow({ item, isLast }: { item: PaymentRequestLineItem; isLast: bool
       style={{
         display: "flex",
         alignItems: "center",
-        margin: `0 ${MARGIN_X}px`,
+        margin: `0 ${PR_MARGIN_X}px`,
         backgroundColor: "#ffffff",
         borderLeft: `1px solid ${QUOTE_COLOR.line}`,
         borderRight: `1px solid ${QUOTE_COLOR.line}`,
@@ -318,7 +358,7 @@ function TableRow({ item, isLast }: { item: PaymentRequestLineItem; isLast: bool
 
 function GrandTotalBox({ amount }: { amount: number }) {
   return (
-    <div style={{ display: "flex", justifyContent: "flex-end", margin: `0 ${MARGIN_X}px`, marginTop: GRAND_TOTAL_TOP_MARGIN }}>
+    <div style={{ display: "flex", justifyContent: "flex-end", margin: `0 ${PR_MARGIN_X}px`, marginTop: GRAND_TOTAL_TOP_MARGIN }}>
       <div
         style={{
           display: "flex",
@@ -344,7 +384,7 @@ function AmountInWords({ amount }: { amount: number }) {
       style={{
         display: "flex",
         justifyContent: "flex-end",
-        margin: `0 ${MARGIN_X}px`,
+        margin: `0 ${PR_MARGIN_X}px`,
         marginTop: 8,
         fontSize: 13,
         fontStyle: "italic",
@@ -363,7 +403,7 @@ function QrBlock({ dataUri, accountLabel, amount }: { dataUri: string; accountLa
         display: "flex",
         alignItems: "center",
         gap: 24,
-        margin: `0 ${MARGIN_X}px`,
+        margin: `0 ${PR_MARGIN_X}px`,
         marginTop: 24,
         borderRadius: 16,
         backgroundColor: QUOTE_COLOR.bgTint,
@@ -385,7 +425,7 @@ function QrBlock({ dataUri, accountLabel, amount }: { dataUri: string; accountLa
 
 function SignatureBlock() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", margin: `0 ${MARGIN_X}px`, marginTop: 24 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", margin: `0 ${PR_MARGIN_X}px`, marginTop: 24 }}>
       <div style={{ display: "flex", fontSize: 14, fontWeight: 600, color: QUOTE_COLOR.ink }}>Trân trọng cảm ơn!</div>
       <div style={{ display: "flex", marginTop: 32, fontSize: 15, fontWeight: 800, color: QUOTE_COLOR.navy }}>
         CÔNG TY TNHH MAX OFFICE
@@ -478,7 +518,7 @@ export async function POST(req: Request) {
     HEADER_H +
     TITLE_BLOCK_H +
     (result.diaDiem ? DIA_DIEM_H : 0) +
-    recipientBlockHeight(result.companyName) +
+    recipientBlockHeight(result.companyName, result.mst, result.phone) +
     paragraphBlockHeight(result.contractParagraph, 16) +
     paragraphBlockHeight(result.requestParagraph, 12) +
     debtRowHeight(result.debt) +
@@ -503,10 +543,10 @@ export async function POST(req: Request) {
           fontFamily: "Inter",
         }}
       >
-        <QuoteHeaderRow logoSrc={logoSrc} badgeLabel="Đề nghị thanh toán" dateLabel={result.issueDateLabel} />
+        <QuoteHeaderRow logoSrc={logoSrc} badgeLabel="Đề nghị thanh toán" dateLabel={result.issueDateLabel} marginX={PR_MARGIN_X} />
         <TitleBlock subjectLine={result.subjectLine} />
         {result.diaDiem && (
-          <div style={{ display: "flex", margin: `0 ${MARGIN_X}px`, marginTop: 16, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
+          <div style={{ display: "flex", margin: `0 ${PR_MARGIN_X}px`, marginTop: 16, fontSize: 14, color: QUOTE_COLOR.bodyText }}>
             Địa điểm: {result.diaDiem}
           </div>
         )}
@@ -526,7 +566,7 @@ export async function POST(req: Request) {
         <AmountInWords amount={result.grandTotal} />
         {qrDataUri && <QrBlock dataUri={qrDataUri} accountLabel={vietQrAccountLabel(qrAccountKey)} amount={result.grandTotal} />}
         <SignatureBlock />
-        <QuoteFooterRow />
+        <QuoteFooterRow marginX={PR_MARGIN_X} />
       </div>
     ),
     {
