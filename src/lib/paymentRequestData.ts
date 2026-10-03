@@ -67,6 +67,13 @@ export const QE_AGENCY_DEFAULT_RENT = 8_500_000;
 /** Ngày bắt đầu chu kỳ thuê ghi trên phiếu QE Agency (chỉ còn dùng cho NHÃN
  * hiển thị "10/MM - 10/MM+1", không còn liên quan gì tới cách tính tiền). */
 export const QE_AGENCY_RENT_START_DAY = 10;
+/** Ngày kết thúc chu kỳ = ngày 09 của THÁNG KẾ TIẾP (10/MM → 09/MM+1) để đủ
+ * tròn 1 tháng, KHÔNG phải ngày 10 (sẽ thành 1 tháng + 1 ngày). */
+export const QE_AGENCY_RENT_END_DAY = 9;
+
+function pad2(n: number): string {
+  return String(n).padStart(2, "0");
+}
 
 function formatVnd(n: number): string {
   return `${n.toLocaleString("vi-VN")}đ`;
@@ -90,6 +97,21 @@ function prevMonth(month: number, year: number): { month: number; year: number }
  * 10/MM+1"), tự xử lý đúng khi qua năm (tháng 12 -> tháng 1 năm sau). */
 function nextMonth(month: number, year: number): { month: number; year: number } {
   return month === 12 ? { month: 1, year: year + 1 } : { month: month + 1, year };
+}
+
+/** Khoảng ngày thuê QE Agency: "10/MM/YYYY - 09/MM+1/YYYY" (tháng 12 → qua
+ * năm sau). Dùng chung cho nhãn dòng tiền thuê trên phiếu VÀ dòng gợi ý
+ * dưới ô Tiền thuê ở form (PaymentRequestTool.tsx) — 1 nguồn duy nhất. */
+export function qeAgencyRentRange(month: number, year: number): string {
+  const { month: nextM, year: nextY } = nextMonth(month, year);
+  return `${pad2(QE_AGENCY_RENT_START_DAY)}/${pad2(month)}/${year} - ${pad2(QE_AGENCY_RENT_END_DAY)}/${pad2(nextM)}/${nextY}`;
+}
+
+/** Khoảng ngày thuê theo tháng DƯƠNG LỊCH cho MTK/Tây Bắc/CUL: "01/MM -
+ * <ngày cuối tháng>/MM/YYYY". Ngày cuối tháng lấy từ daysInMonth() (Date chuẩn,
+ * tự đúng tháng 2 năm nhuận) — không có bảng tháng hardcode. */
+export function monthlyRentRange(month: number, year: number): string {
+  return `01/${pad2(month)} - ${pad2(daysInMonth(month, year))}/${pad2(month)}/${year}`;
 }
 
 /**
@@ -396,7 +418,6 @@ function resolveMtkOrQe(
   }
   const company = companies[type];
   const { month: prevM, year: prevY } = prevMonth(thang, nam);
-  const lastDay = daysInMonth(thang, nam);
   const kwh = chiSoCuoi - chiSoDau;
   const dienAmount = Math.round(kwh * donGiaDien);
 
@@ -406,11 +427,8 @@ function resolveMtkOrQe(
   // tháng hiện tại là 12.
   const rentLabel =
     type === "qe-agency"
-      ? (() => {
-          const { month: nextM, year: nextY } = nextMonth(thang, nam);
-          return `Phí thuê văn phòng từ ngày ${QE_AGENCY_RENT_START_DAY}/${thang}/${nam} - ${QE_AGENCY_RENT_START_DAY}/${nextM}/${nextY}`;
-        })()
-      : `Phí thuê tầng trệt từ ngày 01/${thang} - ${lastDay}/${thang}/${nam}`;
+      ? `Phí thuê văn phòng từ ngày ${qeAgencyRentRange(thang, nam)}`
+      : `Phí thuê tầng trệt từ ngày ${monthlyRentRange(thang, nam)}`;
   const rentAmount = tienThue;
 
   // Dòng xe/điện ẨN HẲN khi giá trị THỰC TẾ của đúng tháng đang lập phiếu
@@ -483,7 +501,7 @@ function resolveTayBacCul(
   // riêng 1 kiểu (trước đây luôn hiện đủ 2 dòng kể cả "0đ"). Tiền thuê luôn
   // hiện (không có khái niệm "thuê = 0").
   const items: PaymentRequestLineItem[] = [
-    makeLine({ stt: 1, label: `Phí thuê ${company.areaLabel} tháng ${thang}/${nam}`, amount: tienThue, vatPercent: RENT_VAT_PERCENT }),
+    makeLine({ stt: 1, label: `Phí thuê ${company.areaLabel} từ ngày ${monthlyRentRange(thang, nam)}`, amount: tienThue, vatPercent: RENT_VAT_PERCENT }),
   ];
   if (soXe > 0) {
     items.push(
@@ -551,7 +569,7 @@ function resolveKoolog(
     makeLine({
       stt: 1,
       label: `Phí thuê ${company.areaLabel} ${periodLabel}`,
-      labelEn: `Room P701 rental fee ${periodLabelEn}`,
+      labelEn: `Room ${company.areaLabel.replace(/^phòng\s+/i, "")} rental fee ${periodLabelEn}`,
       detail: `${formatVnd(tienThueThang)}/tháng × 3 tháng`,
       amount: rentQuarterAmount,
       vatPercent: RENT_VAT_PERCENT,

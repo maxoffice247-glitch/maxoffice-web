@@ -10,6 +10,7 @@ import {
   PAYMENT_REQUEST_COMPANY_OPTIONS,
   DEFAULT_ELECTRICITY_PRICE_PER_KWH,
   QE_AGENCY_DEFAULT_RENT,
+  qeAgencyRentRange,
   type PaymentRequestCompanyKey,
   type PaymentRequestInput,
 } from "@/lib/paymentRequestData";
@@ -616,9 +617,8 @@ export default function PaymentRequestTool() {
                 />
                 {form.type === "qe-agency" && (
                   <p className="mt-1 text-[11px] text-body-text">
-                    Phiếu sẽ ghi chu kỳ thuê &ldquo;từ ngày 10/{form.thang}/{form.nam} - 10/
-                    {form.thang === 12 ? 1 : form.thang + 1}/{form.thang === 12 ? form.nam + 1 : form.nam}&rdquo; —
-                    tiền thuê cố định theo tháng, không tính theo số ngày.
+                    Phiếu sẽ ghi chu kỳ thuê &ldquo;từ ngày {qeAgencyRentRange(form.thang, form.nam)}&rdquo; — tiền thuê
+                    cố định theo tháng, không tính theo số ngày.
                   </p>
                 )}
               </div>
