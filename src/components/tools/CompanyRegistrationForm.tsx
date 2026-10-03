@@ -17,7 +17,7 @@ import PrintPdfButton from "../PrintPdfButton";
 import BrandIcon from "../BrandIcon";
 import BranchAddressCombobox from "./BranchAddressCombobox";
 import type { BranchAddressGroup } from "@/lib/branchAddress";
-import { CheckCircleIcon } from "../icons";
+import { ArrowRightSmallIcon, BuildingIcon, CheckCircleIcon, HomeIcon, UserIcon, UsersIcon } from "../icons";
 import { trackEvent } from "@/lib/gtag";
 import {
   EMPTY_SHARED,
@@ -36,6 +36,14 @@ import {
 } from "@/lib/companyRegistration";
 
 const ZALO_URL = "https://zalo.me/0898082188";
+
+/** Icon nhỏ cho từng loại hình (dùng bộ icon sẵn có của dự án). */
+const TYPE_ICONS: Record<RegistrationType, (props: { className?: string }) => ReactNode> = {
+  "co-phan": BuildingIcon,
+  "tnhh-2tv": UsersIcon,
+  "tnhh-1tv": UserIcon,
+  "ho-kinh-doanh": HomeIcon,
+};
 
 const inputClass =
   "w-full rounded-xl border border-line bg-white px-4 py-3 text-[16px] text-ink transition-colors duration-200 placeholder:text-[14px] placeholder:italic placeholder:text-body-text/55 sm:placeholder:text-[14.5px] focus:border-primary focus:outline-none aria-[invalid=true]:border-accent sm:text-[14.5px] print:hidden";
@@ -312,13 +320,34 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
       </p>
 
       {!committed && (
-        <div role="radiogroup" aria-labelledby={`${uid}-legend`}>
-          <h3 id={`${uid}-legend`} className="mb-4 text-center text-[16px] font-bold text-navy">
+        <div role="radiogroup" aria-labelledby={`${uid}-legend`} aria-describedby={`${uid}-guide`}>
+          <h3 id={`${uid}-legend`} className="text-center text-[17px] font-bold text-navy sm:text-[18px]">
             Bạn muốn thành lập loại hình nào?
           </h3>
+          <p id={`${uid}-guide`} className="mx-auto mt-1.5 max-w-[520px] text-center text-[14px] leading-relaxed text-body-text">
+            Hãy chọn loại hình doanh nghiệp của bạn để xem chi tiết hồ sơ cần chuẩn bị
+          </p>
+          {/* Mũi tên chỉ xuống nhấp nhô nhẹ — chỉ trang trí (aria-hidden, không nhận focus);
+              reduced-motion: đứng yên. Khung cao cố định nên không gây CLS. */}
+          <div className="flex h-10 items-center justify-center" aria-hidden="true">
+            <svg
+              className="animate-type-hint h-7 w-7 text-accent"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              focusable="false"
+            >
+              <path d="M12 4v15M5.5 13l6.5 6.5 6.5-6.5" />
+            </svg>
+          </div>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {REGISTRATION_TYPES.map((t) => {
               const c = REGISTRATION_CONFIG[t];
+              const Icon = TYPE_ICONS[t];
+              const selected = choice === t;
               return (
                 <label key={t} className="block cursor-pointer">
                   <input
@@ -328,7 +357,7 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
                     type="radio"
                     name={`${uid}-loai-hinh`}
                     value={t}
-                    checked={choice === t}
+                    checked={selected}
                     onChange={() => setPicked(t)}
                     onClick={(e) => {
                       // detail > 0 = chuột/chạm thật; phím mũi tên cũng bắn click nhưng detail = 0.
@@ -337,9 +366,28 @@ export default function CompanyRegistrationForm({ branchGroups }: { branchGroups
                     onKeyDown={(e) => onRadioKeyDown(e, t)}
                     className="peer sr-only"
                   />
-                  <span className="flex h-full flex-col rounded-2xl border-[1.5px] border-line bg-white p-4 transition-all duration-200 hover:border-primary/40 peer-checked:border-primary peer-checked:bg-primary-tint peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 sm:p-5">
+                  <span className="relative flex h-full min-h-[44px] flex-col rounded-3xl border-2 border-primary/25 bg-white p-4 shadow-[0_4px_14px_rgba(21,101,192,0.10)] transition-all duration-200 hover:-translate-y-1 hover:border-accent hover:shadow-[0_14px_30px_rgba(220,53,48,0.18)] active:-translate-y-0.5 active:border-accent active:shadow-[0_10px_22px_rgba(220,53,48,0.16)] peer-checked:border-primary peer-checked:bg-primary-tint peer-checked:hover:border-primary peer-focus-visible:-translate-y-1 peer-focus-visible:border-accent peer-focus-visible:shadow-[0_14px_30px_rgba(220,53,48,0.18)] peer-focus-visible:ring-[3px] peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 motion-reduce:hover:translate-y-0 motion-reduce:active:translate-y-0 motion-reduce:peer-focus-visible:translate-y-0 sm:p-5">
+                    <span className="mb-3 flex items-start justify-between">
+                      <span
+                        aria-hidden="true"
+                        className={`flex h-10 w-10 items-center justify-center rounded-xl text-primary ${selected ? "bg-white" : "bg-primary-tint"}`}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      {selected && (
+                        <span aria-hidden="true" className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-white">
+                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M5 12.5l4.5 4.5L19 7.5" />
+                          </svg>
+                        </span>
+                      )}
+                    </span>
                     <span className="text-[14.5px] font-bold leading-snug text-navy">{c.label}</span>
                     <span className="mt-1.5 text-[12.5px] leading-snug text-body-text">{c.shortDesc}</span>
+                    <span aria-hidden="true" className="mt-auto flex items-center justify-end gap-1 pt-3 text-[12.5px] font-semibold text-primary">
+                      {selected ? "Đã chọn" : "Bấm để chọn"}
+                      <ArrowRightSmallIcon className="h-3.5 w-3.5" />
+                    </span>
                   </span>
                 </label>
               );

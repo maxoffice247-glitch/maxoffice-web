@@ -151,6 +151,32 @@ body {
   transform-origin: 50% 50%;
 }
 
+/* Mũi tên chỉ xuống nhấp nhô nhẹ ở phần chọn loại hình thành lập DN
+   (CompanyRegistrationForm.tsx). Luật prefers-reduced-motion toàn cục bên dưới
+   đã đưa animation về trạng thái đứng yên; thêm motion-reduce:animate-none ở
+   chỗ dùng để chắc chắn. */
+@keyframes type-hint-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.animate-type-hint {
+  animation: type-hint-bob 1.6s ease-in-out infinite;
+}
+
+/* CSS không nằm trong @layer nên thắng cả tiện ích Tailwind (motion-reduce:
+   animate-none không ghi đè được) — tắt hẳn animation ở đây. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-type-hint {
+    animation: none;
+  }
+}
+
 /* Header hotline icon — a periodic wiggle/shake on the phone icon itself,
    like it's ringing, plus a soft ring pulsing outward from behind it. Both
    run on a 5s cycle: the wiggle fires in a quick 0.5s burst then rests for
