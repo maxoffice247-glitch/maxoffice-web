@@ -17,6 +17,7 @@ import PrintPdfButton from "../PrintPdfButton";
 import BrandIcon from "../BrandIcon";
 import BranchAddressCombobox from "./BranchAddressCombobox";
 import FormErrorBoundary from "./FormErrorBoundary";
+import { markProgrammaticScroll } from "@/lib/programmaticScroll";
 import MembersEditor from "./MembersEditor";
 import IdentitySection, { EMPTY_IDENTITY_UI, EMPTY_IDENTITY_UI_FORM, effectivePlaceChoice, effectivePlaceText, type IdentityUiState } from "./IdentitySection";
 import type { BranchAddressGroup } from "@/lib/branchAddress";
@@ -177,6 +178,7 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
   // true trong đúng lượt sự kiện của phím mũi tên: trình duyệt bắn click lên radio khi mũi tên đổi lựa chọn
   // — click đó KHÔNG được coi là "xác nhận chọn loại hình" (chỉ Enter/Space/chạm/chuột mới xác nhận).
   const arrowNavRef = useRef(false);
+  const scrolledFromUrlRef = useRef(false);
 
   useEffect(() => {
     if (focusHeadingPending.current && committed && headingRef.current) {
@@ -191,6 +193,43 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
       radioRefs.current[choice]?.focus();
     }
   }, [committed, choice]);
+
+  // Vào thẳng bằng link ?loai= HỢP LỆ (urlType khác null): cuộn tới đầu form MỘT lần. Chỉ chạy SAU sự kiện load và
+  // khi trình duyệt rảnh (requestIdleCallback, dự phòng setTimeout) để không cộng vào Total Blocking Time. Không
+  // cuộn nếu ?loai= sai/không có (urlType = null), nếu khách đã chọn thẻ/đổi loại hình (committedPick khác null →
+  // effect bị huỷ), hoặc nếu trang đang không ở đầu (trình duyệt khôi phục vị trí cuộn / khách đã tự cuộn).
+  useEffect(() => {
+    if (!urlType || committedPick !== null || scrolledFromUrlRef.current) return;
+    let cancelled = false;
+    let idleHandle: number | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const run = () => {
+      const heading = headingRef.current;
+      if (cancelled || scrolledFromUrlRef.current || !heading || window.scrollY > 100) return;
+      scrolledFromUrlRef.current = true;
+      // prefers-reduced-motion: cuộn tức thì (html có scroll-behavior: smooth nên tắt tạm khi gọi).
+      const html = document.documentElement;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const prev = html.style.scrollBehavior;
+      if (reduce) html.style.scrollBehavior = "auto";
+      // Cuộn do code: không được tính là "tương tác đầu tiên" (sẽ tải sớm Tidio/GA → tăng TBT). 1,6s phủ cả cuộn mượt.
+      markProgrammaticScroll(reduce ? 400 : 1600);
+      heading.scrollIntoView({ block: "start" });
+      if (reduce) html.style.scrollBehavior = prev;
+    };
+    const whenIdle = () => {
+      if (typeof window.requestIdleCallback === "function") idleHandle = window.requestIdleCallback(run, { timeout: 2000 });
+      else timer = setTimeout(run, 300);
+    };
+    if (document.readyState === "complete") whenIdle();
+    else window.addEventListener("load", whenIdle, { once: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener("load", whenIdle);
+      if (idleHandle !== undefined && typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idleHandle);
+      if (timer !== undefined) clearTimeout(timer);
+    };
+  }, [urlType, committedPick]);
 
   useEffect(() => {
     if (status === "success") successRef.current?.focus();

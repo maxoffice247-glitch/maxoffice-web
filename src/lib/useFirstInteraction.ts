@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { isProgrammaticScroll } from "./programmaticScroll";
 
 /** 4 loại tương tác coi là "người dùng thật sự bắt đầu dùng trang" —
     chạm (mobile), cuộn, click, gõ phím. Chỉ cần 1 trong 4 xảy ra lần đầu
@@ -31,8 +32,13 @@ export function useFirstInteraction(): boolean {
 
   useEffect(() => {
     if (interacted) return;
-    const trigger = () => setInteracted(true);
-    const opts: AddEventListenerOptions = { once: true, passive: true };
+    // Không dùng `once`: sự kiện scroll do code tự gây ra (programmaticScroll.ts) bị bỏ qua mà vẫn phải chờ
+    // tương tác thật tiếp theo. Khi có tương tác thật, `interacted` đổi → cleanup gỡ toàn bộ listener.
+    const trigger = (e: Event) => {
+      if (e.type === "scroll" && isProgrammaticScroll()) return;
+      setInteracted(true);
+    };
+    const opts: AddEventListenerOptions = { passive: true };
     for (const event of INTERACTION_EVENTS) {
       window.addEventListener(event, trigger, opts);
     }
