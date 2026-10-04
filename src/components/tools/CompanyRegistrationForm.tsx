@@ -65,8 +65,32 @@ const actionBtnClass =
  * useSearchParams: trang giữ nguyên prerender tĩnh, không cần Suspense/CSR
  * bailout, 4 thẻ chọn loại hình vẫn nằm trong HTML server (không nhảy bố cục
  * sau hydrate); khách vào bằng link ?loai= thì client chuyển thẳng vào form. */
-function subscribeNoop() {
-  return () => {};
+const LOAI_URL_EVENT = "mo-loai-url";
+function subscribeUrl(onChange: () => void) {
+  window.addEventListener("popstate", onChange);
+  window.addEventListener(LOAI_URL_EVENT, onChange);
+  return () => {
+    window.removeEventListener("popstate", onChange);
+    window.removeEventListener(LOAI_URL_EVENT, onChange);
+  };
+}
+
+/** Đồng bộ ?loai= lên thanh địa chỉ bằng replaceState: KHÔNG tải lại, KHÔNG cuộn, KHÔNG thêm mục lịch sử (Back không
+ * bị kẹt). CHỈ thêm/xoá đúng tham số `loai` (giữ nguyên các tham số khác như utm_* và #hash) — tuyệt đối không đưa dữ
+ * liệu form (tên, SĐT, địa chỉ, CCCD...) vào URL. `type = null` → bỏ tham số, về URL gốc. */
+function setLoaiInUrl(type: RegistrationType | null) {
+  try {
+    const url = new URL(window.location.href);
+    if (type) url.searchParams.set("loai", type);
+    else url.searchParams.delete("loai");
+    const next = url.pathname + url.search + url.hash;
+    if (next === window.location.pathname + window.location.search + window.location.hash) return;
+    // Truyền lại history.state hiện có để router của Next không mất trạng thái nội bộ.
+    window.history.replaceState(window.history.state, "", next);
+    window.dispatchEvent(new Event(LOAI_URL_EVENT));
+  } catch {
+    // URL không cập nhật được thì form vẫn hoạt động bình thường.
+  }
 }
 function readTypeFromUrl(): RegistrationType | null {
   const v = new URLSearchParams(window.location.search).get("loai");
@@ -133,7 +157,7 @@ export default function CompanyRegistrationForm(props: { branchGroups: BranchAdd
 
 function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAddressGroup[] }) {
   const uid = useId();
-  const urlType = useSyncExternalStore(subscribeNoop, readTypeFromUrl, () => null);
+  const urlType = useSyncExternalStore(subscribeUrl, readTypeFromUrl, () => null);
 
   // `picked`/`committedPick` chỉ có giá trị SAU khi khách thao tác; chưa thao
   // tác thì rơi về loại hình từ ?loai= (nếu có).
@@ -166,6 +190,8 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [linkFallback, setLinkFallback] = useState("");
   const [announce, setAnnounce] = useState("");
 
   const sendingRef = useRef(false);
@@ -175,6 +201,8 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
   const focusHeadingPending = useRef(false);
   const focusRadioPending = useRef(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const linkTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const linkFallbackRef = useRef<HTMLInputElement>(null);
   // true trong đúng lượt sự kiện của phím mũi tên: trình duyệt bắn click lên radio khi mũi tên đổi lựa chọn
   // — click đó KHÔNG được coi là "xác nhận chọn loại hình" (chỉ Enter/Space/chạm/chuột mới xác nhận).
   const arrowNavRef = useRef(false);
@@ -231,6 +259,20 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
     };
   }, [urlType, committedPick]);
 
+  // ?loai= có mặt nhưng GIÁ TRỊ SAI (hoặc rỗng): hiện màn chọn loại hình và dọn sạch tham số sai khỏi URL.
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("loai");
+    if (raw !== null && !isRegistrationType(raw)) setLoaiInUrl(null);
+  }, []);
+
+  // Clipboard không dùng được: chọn sẵn văn bản link để khách tự sao chép.
+  useEffect(() => {
+    if (linkFallback) {
+      linkFallbackRef.current?.focus();
+      linkFallbackRef.current?.select();
+    }
+  }, [linkFallback]);
+
   useEffect(() => {
     if (status === "success") successRef.current?.focus();
   }, [status]);
@@ -238,6 +280,7 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
   useEffect(
     () => () => {
       if (copyTimer.current) clearTimeout(copyTimer.current);
+      if (linkTimer.current) clearTimeout(linkTimer.current);
     },
     []
   );
@@ -248,6 +291,7 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
   function commit(type: RegistrationType) {
     setPicked(type);
     setCommittedPick(true);
+    setLoaiInUrl(type);
     focusHeadingPending.current = true;
     setAnnounce(`Đã chọn ${REGISTRATION_CONFIG[type].label}. Form điền thông tin hiển thị bên dưới.`);
   }
@@ -255,10 +299,48 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
   function changeType() {
     setPicked(choice);
     setCommittedPick(false);
+    setLoaiInUrl(null);
     focusRadioPending.current = true;
     setStatus("idle");
     setErrorMsg("");
     setAnnounce("Chọn lại loại hình doanh nghiệp.");
+  }
+
+  /** Sao chép link riêng của loại hình đang chọn (chỉ gồm đường dẫn trang + ?loai=, không kèm tham số/dữ liệu nào khác). */
+  async function copyTypeLink() {
+    if (!choice) return;
+    const link = `${window.location.origin}${window.location.pathname}?loai=${choice}`;
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(link);
+      ok = true;
+    } catch {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = link;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          ok = document.execCommand("copy");
+        } finally {
+          document.body.removeChild(ta);
+        }
+      } catch {
+        ok = false;
+      }
+    }
+    if (linkTimer.current) clearTimeout(linkTimer.current);
+    if (ok) {
+      setLinkFallback("");
+      setLinkCopied(true);
+      linkTimer.current = setTimeout(() => setLinkCopied(false), 2000);
+    } else {
+      setLinkCopied(false);
+      setLinkFallback(link);
+    }
   }
 
   function onRadioKeyDown(e: KeyboardEvent<HTMLInputElement>, type: RegistrationType) {
@@ -531,13 +613,46 @@ function CompanyRegistrationFormInner({ branchGroups }: { branchGroups: BranchAd
             <div className="flex flex-wrap gap-2 print:hidden">
               <button
                 type="button"
+                onClick={copyTypeLink}
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border-[1.5px] border-line bg-white px-4 py-2 text-[13.5px] font-bold text-navy transition-colors duration-200 hover:border-primary hover:text-primary"
+              >
+                {/* Hai nhãn xếp chồng cùng một ô lưới: độ rộng nút luôn bằng nhãn dài hơn → đổi nhãn không làm xô lệch bố cục. */}
+                <span className="grid">
+                  <span aria-hidden={linkCopied} className={`col-start-1 row-start-1 text-center ${linkCopied ? "invisible" : ""}`}>
+                    Sao chép link loại hình này
+                  </span>
+                  <span aria-hidden={!linkCopied} className={`col-start-1 row-start-1 text-center ${linkCopied ? "" : "invisible"}`}>
+                    Đã sao chép
+                  </span>
+                </span>
+              </button>
+              <button
+                type="button"
                 onClick={changeType}
-                className="rounded-full border-[1.5px] border-line bg-white px-4 py-2 text-[13.5px] font-bold text-navy transition-colors duration-200 hover:border-primary hover:text-primary"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-full border-[1.5px] border-line bg-white px-4 py-2 text-[13.5px] font-bold text-navy transition-colors duration-200 hover:border-primary hover:text-primary"
               >
                 Đổi loại hình
               </button>
             </div>
+            <p role="status" aria-live="polite" className="sr-only">
+              {linkCopied ? "Đã sao chép link loại hình này" : ""}
+            </p>
           </div>
+          {linkFallback && (
+            <div className="-mt-2 mb-5 print:hidden">
+              <label htmlFor={`${uid}-link-fallback`} className="mb-1.5 block text-[12.5px] font-semibold text-body-text">
+                Không sao chép tự động được. Link đã được chọn sẵn, bạn nhấn Ctrl/Cmd + C để sao chép:
+              </label>
+              <input
+                id={`${uid}-link-fallback`}
+                ref={linkFallbackRef}
+                readOnly
+                value={linkFallback}
+                onFocus={(e) => e.currentTarget.select()}
+                className={inputClass}
+              />
+            </div>
+          )}
 
           {/* Bản IN: chỉ hiện khi in/Tải PDF — dựng từ đúng dữ liệu đã điền (cùng
               hàm với "Sao chép nội dung", bỏ 2 dòng đầu vì tiêu đề form đã hiện sẵn), thay vì in các ô nhập (in ô nhập
