@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Chính sách bảo mật thông tin cá nhân của MAX OFFICE: mục đích thu thập, cách sử dụng, thời gian lưu trữ và quyền của khách hàng theo Nghị định 13/2023/NĐ-CP.",
 };
 
-const LAST_UPDATED = "03/10/2026";
+const LAST_UPDATED = "04/10/2026";
 
 type Section = {
   heading: string;
@@ -27,7 +27,7 @@ const SECTIONS: Section[] = [
   {
     heading: "1. Mục đích thu thập thông tin",
     paragraphs: [
-      "Website maxoffice.vn do Công ty TNHH MAX Office vận hành thu thập một số thông tin cá nhân khi bạn chủ động cung cấp qua các biểu mẫu trên website — bao gồm mẫu đặt lịch tham quan văn phòng, mẫu nhận tư vấn dịch vụ và popup ưu đãi.",
+      "Website maxoffice.vn do Công ty TNHH MAX Office vận hành thu thập một số thông tin cá nhân khi bạn chủ động cung cấp qua các biểu mẫu trên website — bao gồm mẫu đặt lịch tham quan văn phòng, mẫu nhận tư vấn dịch vụ, popup ưu đãi và biểu mẫu Hồ sơ thành lập doanh nghiệp.",
       "Mục đích duy nhất của việc thu thập này là để đội ngũ MAX OFFICE có thể liên hệ, tư vấn và hỗ trợ bạn về các dịch vụ mà bạn quan tâm. Chúng tôi không thu thập thông tin cá nhân của bạn cho bất kỳ mục đích nào khác ngoài mục đích tư vấn và chăm sóc khách hàng nêu trên.",
     ],
   },
@@ -36,8 +36,10 @@ const SECTIONS: Section[] = [
     paragraphs: ["Khi bạn điền các biểu mẫu trên website, chúng tôi có thể thu thập:"],
     bullets: ["Họ và tên", "Số điện thoại", "Địa chỉ email", "Dịch vụ quan tâm", "Ghi chú / yêu cầu cụ thể (nếu có)"],
     afterBullets: [
-      "Ngoài các biểu mẫu liên hệ nêu trên, MAX OFFICE cung cấp công cụ \"Soạn hồ sơ doanh nghiệp tự động\" (tại địa chỉ gpkd.maxoffice.vn, được nhúng trong website chính) để hỗ trợ khách hàng soạn thảo hồ sơ đăng ký doanh nghiệp. Khi sử dụng công cụ này, chúng tôi có thể thu thập thêm: họ tên, số CCCD/CMND, địa chỉ thường trú của người đại diện/thành viên góp vốn, và thông tin công ty (tên, vốn điều lệ, ngành nghề) để tạo ra hồ sơ đăng ký doanh nghiệp theo yêu cầu của bạn. Dữ liệu này được lưu trữ nội bộ, chỉ Công ty TNHH MAX Office có quyền truy cập, không chia sẻ cho bất kỳ bên thứ ba nào ngoài phạm vi xử lý hồ sơ.",
+      "Ngoài các biểu mẫu liên hệ nêu trên, MAX OFFICE cung cấp công cụ \"Soạn hồ sơ doanh nghiệp tự động\" (tại địa chỉ gpkd.maxoffice.vn, được nhúng trong website chính) để hỗ trợ khách hàng soạn thảo hồ sơ đăng ký doanh nghiệp. Khi sử dụng công cụ này, chúng tôi có thể thu thập thông tin bạn nhập vào, gồm: thông tin công ty (tên, mã số thuế, địa chỉ, vốn điều lệ, ngành nghề) và thông tin của người đại diện, thành viên góp vốn hoặc người được uỷ quyền (họ và tên, giới tính, ngày sinh, số CCCD, ngày cấp, nơi cấp, địa chỉ thường trú hoặc địa chỉ liên lạc), để tạo hồ sơ đăng ký doanh nghiệp theo yêu cầu của bạn. Dữ liệu và tệp hồ sơ được tạo ra được lưu trên Google Sheets và Google Drive do Công ty TNHH MAX Office quản lý; chỉ nhân sự được phân quyền của MAX OFFICE có quyền truy cập, và không chia sẻ cho bất kỳ bên thứ ba nào ngoài phạm vi xử lý hồ sơ.",
       "Ngoài ra, tại trang \"Checklist thành lập doanh nghiệp\" (biểu mẫu Hồ sơ thành lập doanh nghiệp), nếu bạn chọn điền thông tin giấy tờ tuỳ thân trực tiếp vào biểu mẫu thay vì gửi ảnh (áp dụng cho Công ty TNHH 1 thành viên và Hộ kinh doanh), chúng tôi thu thập: họ và tên, giới tính, ngày sinh, số CCCD, ngày cấp, nơi cấp và địa chỉ liên hệ của chủ sở hữu hoặc chủ hộ. Mục đích thu thập là để MAX OFFICE soạn hồ sơ thành lập doanh nghiệp cho bạn. Thông tin này được gửi đến email nội bộ của MAX OFFICE.",
+      "Tính năng \"Tra cứu hợp đồng khách hàng\" cho phép khách hàng đang sử dụng dịch vụ xem thông tin hợp đồng của mình. Khi bạn nhập mã số thuế hoặc số hợp đồng, hệ thống đối chiếu với dữ liệu hợp đồng do MAX OFFICE quản lý. Để xem thông tin chi tiết, bạn cần xác nhận số điện thoại hoặc email đã đăng ký với MAX OFFICE và nhập mã xác thực (OTP) được gửi đến địa chỉ email đã lưu trong hồ sơ. Trong quá trình này, chúng tôi xử lý mã số thuế hoặc số hợp đồng bạn nhập, mã xác thực tạm thời và địa chỉ IP truy cập, trong thời gian ngắn và chỉ nhằm mục đích xác thực và hạn chế truy cập lạm dụng.",
+      "Website sử dụng tiện ích trò chuyện trực tuyến do Tidio cung cấp. Khi bạn chủ động nhắn tin, nội dung trò chuyện và thông tin bạn cung cấp trong khung chat (nếu có) được đội ngũ CSKH của MAX OFFICE tiếp nhận để hỗ trợ bạn, đồng thời được Tidio xử lý theo chính sách bảo mật riêng của đơn vị này.",
       "Đối với các giao dịch thanh toán liên quan đến dịch vụ soạn hồ sơ (nếu có), quá trình thanh toán được thực hiện thông qua cổng thanh toán trung gian SePay. MAX OFFICE không lưu trữ bất kỳ thông tin thẻ/tài khoản ngân hàng nào của bạn — toàn bộ thông tin thanh toán được xử lý trực tiếp bởi SePay theo chính sách bảo mật riêng của đơn vị này.",
     ],
   },
@@ -46,7 +48,7 @@ const SECTIONS: Section[] = [
     paragraphs: [
       "Thông tin bạn cung cấp chỉ được sử dụng để liên hệ tư vấn về dịch vụ bạn quan tâm, sắp xếp lịch tham quan văn phòng (nếu bạn đăng ký) và gửi thông tin ưu đãi liên quan (nếu bạn đồng ý nhận).",
       "Thông tin liên hệ và nội dung biểu mẫu bạn gửi được lưu trong Google Sheet phục vụ mục đích vận hành, đồng thời hệ thống gửi email thông báo tự động đến đội ngũ Chăm sóc khách hàng (CSKH) của MAX OFFICE để xử lý yêu cầu kịp thời. Riêng thông tin giấy tờ tuỳ thân bạn điền tại biểu mẫu Hồ sơ thành lập doanh nghiệp chỉ được gửi đầy đủ qua email nội bộ của MAX OFFICE; trong Google Sheet chỉ ghi số CCCD dưới dạng đã che (chỉ hiển thị 4 số cuối).",
-      "Chúng tôi cam kết không bán, cho thuê hoặc chia sẻ thông tin cá nhân của bạn cho bất kỳ bên thứ ba nào ngoài mục đích vận hành nội bộ nêu trên.",
+      "Chúng tôi sử dụng một số đơn vị cung cấp dịch vụ hỗ trợ vận hành (như Google, Tidio, SePay) trong phạm vi cần thiết để vận hành website và các tính năng nêu trên. Chúng tôi cam kết không bán, cho thuê hoặc chia sẻ thông tin cá nhân của bạn cho bất kỳ bên thứ ba nào ngoài mục đích vận hành nội bộ nêu trên.",
     ],
   },
   {
@@ -74,7 +76,7 @@ const SECTIONS: Section[] = [
   {
     heading: "7. Cookie và công nghệ theo dõi",
     paragraphs: [
-      "Website sử dụng Google Analytics để phân tích lưu lượng truy cập và cải thiện trải nghiệm người dùng. Công cụ này thu thập dữ liệu thống kê chung (như số lượt truy cập, trang được xem nhiều) và không thu thập thông tin định danh cá nhân của bạn thông qua cookie.",
+      "Website sử dụng Google Analytics để phân tích lưu lượng truy cập và cải thiện trải nghiệm người dùng. Công cụ này thu thập dữ liệu thống kê chung (như số lượt truy cập, trang được xem nhiều) và không thu thập thông tin định danh cá nhân của bạn thông qua cookie. Ngoài ra, tiện ích trò chuyện Tidio có thể sử dụng cookie hoặc bộ nhớ của trình duyệt để duy trì phiên trò chuyện của bạn.",
     ],
   },
 ];
