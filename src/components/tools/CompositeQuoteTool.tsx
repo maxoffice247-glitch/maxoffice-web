@@ -3,6 +3,7 @@
 import { useId, useMemo, useState, useSyncExternalStore } from "react";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
+import MoneyInput from "../MoneyInput";
 import { PlusIcon, CloseIcon, DownloadIcon, ShareIcon, SpinnerIcon, PhoneIcon } from "../icons";
 import { shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
 import { AMENDMENT_SERVICES, AMENDMENT_VAT_PERCENT, calculateAmendmentCombo, formatAmendmentVnd } from "@/lib/setupFees";
@@ -16,18 +17,30 @@ import {
   getChuKySoTierOptions,
   getHoaDonDienTuTierOptions,
   buildCompositeQuoteFilename,
+  maxOfficeGroupTotal,
+  resolveInstallment,
+  INSTALLMENT_QR_SUFFIX,
   CUSTOM_SERVICE_META,
   MONTH_OPTIONS,
   type CompositeQuoteItem,
   type CustomServiceSlug,
   type MonthOption,
+  type InstallmentStage,
 } from "@/lib/compositeQuote";
-import { oneTimeFeeCheckboxLabel, type QuoteLang } from "@/lib/quoteImageDictionary";
+import {
+  oneTimeFeeCheckboxLabel,
+  paymentScheduleText,
+  DEPOSIT_LABEL,
+  DEFAULT_BALANCE_CONDITION,
+  BALANCE_CONDITION_MAX,
+  type QuoteLang,
+} from "@/lib/quoteImageDictionary";
 import {
   VIETQR_ACCOUNT_KEYS,
   DEFAULT_VIETQR_ACCOUNT_KEY,
   vietQrAccountLabel,
   buildQrNote,
+  buildInstallmentQrNote,
   type VietQrAccountKey,
 } from "@/lib/vietQr";
 
@@ -275,6 +288,11 @@ export default function CompositeQuoteTool() {
   // được". CHỈ áp dụng cho QR "Dịch vụ MAX OFFICE" (xem route.tsx) — QR thu
   // hộ (Chữ ký số/Hoá đơn điện tử) luôn tự sinh, không có ô sửa riêng.
   const [qrNoteManual, setQrNoteManual] = useState<string | null>(null);
+  // Thanh toán theo đợt (đặt cọc) — MẶC ĐỊNH TẮT. Chỉ áp dụng nhóm "Dịch vụ MAX OFFICE" (ẩn khi báo giá không có nhóm này).
+  const [installOn, setInstallOn] = useState(false);
+  const [depositRaw, setDepositRaw] = useState("");
+  const [installStage, setInstallStage] = useState<InstallmentStage>("deposit");
+  const [balanceCondition, setBalanceCondition] = useState<string>(DEFAULT_BALANCE_CONDITION.vi);
   // Ngôn ngữ của ẢNH XUẤT RA — mặc định "vi" (hành vi y hệt trước khi có
   // tính năng song ngữ nếu nhân viên không chủ động đổi). CHỈ ảnh hưởng ảnh
   // PNG cuối cùng, KHÔNG đổi ngôn ngữ form nhập liệu này (luôn tiếng Việt)
@@ -316,15 +334,37 @@ export default function CompositeQuoteTool() {
     () => rows.map(rowToItem).filter((it): it is CompositeQuoteItem => it !== null),
     [rows]
   );
-  const canSubmit = items.length > 0 && status !== "generating";
+
+  // Tổng nhóm MAX OFFICE (đã gồm VAT) — tính bằng CÙNG hàm với server. null = không có nhóm này (chỉ thu hộ/rỗng) -> ẩn tuỳ chọn đặt cọc.
+  const maxOfficeTotal = useMemo(() => {
+    const lines = items.flatMap((it) => {
+      const r = resolveCompositeQuoteItem(it);
+      return "error" in r ? [] : [r];
+    });
+    return maxOfficeGroupTotal(lines);
+  }, [items]);
+  const installAvailable = maxOfficeTotal != null;
+  const depositNum = depositRaw ? Number(depositRaw) : NaN;
+  const installResult =
+    installOn && installAvailable
+      ? resolveInstallment({ depositAmount: depositNum, installmentStage: installStage, balanceCondition }, maxOfficeTotal)
+      : null;
+  const installment = installResult && !("error" in installResult) ? installResult : null;
+  // Đang bật mà số tiền chưa hợp lệ -> chặn tạo ảnh (không âm thầm quay về tổng đầy đủ).
+  const installBlocking = installOn && installAvailable && !installment;
+  const installError = installResult && "error" in installResult ? installResult.error : null;
+  const canSubmit = items.length > 0 && status !== "generating" && !installBlocking;
 
   // Gợi ý tự sinh — CÙNG logic ưu tiên Tên công ty > Tên khách > SĐT > mặc
   // định đang dùng ở server (buildQrNote() trong vietQr.ts, import thẳng từ
   // đó để không lặp lại logic ở 2 nơi dễ lệch nhau).
-  const autoQrNote = useMemo(
-    () => buildQrNote({ name: customerName, phone: customerPhone, companyName: customerCompany }),
-    [customerName, customerPhone, customerCompany]
-  );
+  // Thanh toán theo đợt: mặc định thêm " dat coc" / " thanh toan con lai" ở cuối (vẫn sửa đè được như mọi gợi ý).
+  const autoQrNote = installment
+    ? buildInstallmentQrNote(
+        { name: customerName, phone: customerPhone, companyName: customerCompany },
+        INSTALLMENT_QR_SUFFIX[installment.stage]
+      )
+    : buildQrNote({ name: customerName, phone: customerPhone, companyName: customerCompany });
   const qrNote = qrNoteManual ?? autoQrNote;
 
   const handleGenerate = async () => {
@@ -340,7 +380,21 @@ export default function CompositeQuoteTool() {
       const res = await fetch("/api/quote-image/tong-hop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customer, items, showQr, qrAccountKey, qrNote: qrNote.trim() || undefined, lang }),
+        body: JSON.stringify({
+          customer,
+          items,
+          showQr,
+          qrAccountKey,
+          qrNote: qrNote.trim() || undefined,
+          lang,
+          ...(installment
+            ? {
+                depositAmount: installment.deposit,
+                installmentStage: installment.stage,
+                balanceCondition: installment.condition,
+              }
+            : null),
+        }),
       });
       if (!res.ok) {
         const message = await res.text().catch(() => "");
@@ -351,7 +405,8 @@ export default function CompositeQuoteTool() {
       const filename = buildCompositeQuoteFilename(
         customer,
         new Date(),
-        items.some((it) => it.type === "sua-doi-bang-gia") ? "bang-gia-sua-doi" : undefined
+        items.some((it) => it.type === "sua-doi-bang-gia") ? "bang-gia-sua-doi" : undefined,
+        installment?.stage
       );
       setPreviewUrl((old) => {
         if (old) URL.revokeObjectURL(old);
@@ -511,6 +566,161 @@ export default function CompositeQuoteTool() {
               </div>
             )}
           </div>
+
+          {installAvailable && (
+            <div className="mb-6 rounded-xl border border-line bg-bg-tint p-4">
+              <label
+                htmlFor="install-on"
+                className="flex min-h-[44px] cursor-pointer items-start gap-3"
+              >
+                <input
+                  id="install-on"
+                  type="checkbox"
+                  checked={installOn}
+                  onChange={(e) => setInstallOn(e.target.checked)}
+                  className="mt-0.5 h-5 w-5 shrink-0 accent-primary"
+                />
+                <span>
+                  <span className="block text-[13.5px] font-bold text-navy">
+                    Khách thanh toán theo đợt ({DEPOSIT_LABEL.vi.toLowerCase()})
+                  </span>
+                  <span className="block text-[12px] text-body-text">
+                    Tắt mặc định. Chỉ áp dụng cho nhóm Dịch vụ MAX OFFICE (đã gồm VAT); nhóm thu hộ Chữ ký số/Hoá đơn điện tử giữ nguyên số tiền và mã QR riêng.
+                  </span>
+                </span>
+              </label>
+
+              {installOn && (
+                <div className="mt-3.5 space-y-3.5 border-t border-line pt-3.5">
+                  <div>
+                    <span className={labelClass}>Báo giá này dùng cho</span>
+                    <div className="flex flex-wrap gap-2">
+                      {(
+                        [
+                          { value: "deposit", label: `${DEPOSIT_LABEL.vi} (đợt 1)` },
+                          { value: "balance", label: "Thanh toán phần còn lại (đợt 2)" },
+                        ] as const
+                      ).map((opt) => (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          aria-pressed={installStage === opt.value}
+                          onClick={() => setInstallStage(opt.value)}
+                          className={`inline-flex min-h-[44px] items-center rounded-full border-[1.5px] px-4 text-[12.5px] font-bold transition-all duration-200 ${
+                            installStage === opt.value
+                              ? "border-primary bg-primary text-white"
+                              : "border-line bg-white text-body-text hover:border-primary/40"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="install-deposit" className={labelClass}>
+                      {installStage === "balance"
+                        ? `Số tiền đã ${DEPOSIT_LABEL.vi.toLowerCase()} (đợt 1)`
+                        : `Số tiền ${DEPOSIT_LABEL.vi.toLowerCase()} (đợt 1)`}
+                    </label>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="relative min-w-[180px] flex-1">
+                        <MoneyInput
+                          id="install-deposit"
+                          value={depositRaw}
+                          onChange={(raw) => setDepositRaw(raw.replace(/^0+(?=\d)/, "").slice(0, 12))}
+                          placeholder="Ví dụ: 2.000.000"
+                          aria-invalid={!!installError}
+                          aria-describedby={installError ? "install-error" : undefined}
+                          className="min-h-[44px] w-full rounded-xl border border-line bg-white px-3.5 py-2.5 pr-14 text-[16px] text-ink placeholder:text-[14px] placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none aria-[invalid=true]:border-accent sm:text-[13.5px]"
+                        />
+                        {depositRaw && (
+                          <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-[13px] text-body-text">
+                            đồng
+                          </span>
+                        )}
+                      </div>
+                      {[30, 50].map((pct) => (
+                        <button
+                          key={pct}
+                          type="button"
+                          onClick={() => setDepositRaw(String(Math.round((maxOfficeTotal * pct) / 100)))}
+                          className="inline-flex min-h-[44px] min-w-[64px] items-center justify-center rounded-full border-[1.5px] border-primary/40 bg-white px-4 text-[13px] font-bold text-primary transition-colors duration-200 hover:border-primary hover:bg-primary-tint"
+                        >
+                          {pct}%
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-1.5 text-[12px] text-body-text">
+                      Nút 30% / 50% tính trên tổng nhóm MAX OFFICE ({formatVnd(maxOfficeTotal)}, đã gồm VAT), làm tròn đồng.
+                    </p>
+                    {installError && (
+                      <p id="install-error" role="alert" className="mt-1.5 text-[12.5px] font-semibold text-accent">
+                        {installError}
+                      </p>
+                    )}
+                    {installBlocking && !installError && (
+                      <p className="mt-1.5 text-[12.5px] font-semibold text-accent">
+                        Nhập số tiền {DEPOSIT_LABEL.vi.toLowerCase()} để tạo báo giá theo đợt (hoặc bỏ tích ô trên).
+                      </p>
+                    )}
+                  </div>
+
+                  {installStage === "deposit" && (
+                    <div>
+                      <label htmlFor="install-condition" className={labelClass}>
+                        Điều kiện thanh toán phần còn lại (tuỳ chọn)
+                      </label>
+                      <input
+                        id="install-condition"
+                        type="text"
+                        value={balanceCondition}
+                        maxLength={BALANCE_CONDITION_MAX}
+                        onChange={(e) => setBalanceCondition(e.target.value)}
+                        autoComplete="off"
+                        className="min-h-[44px] w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-[16px] text-ink placeholder:text-[14px] placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none sm:text-[13.5px]"
+                      />
+                    </div>
+                  )}
+
+                  {installment && (
+                    <div aria-live="polite" className="rounded-lg bg-white px-3.5 py-3 text-[13px]">
+                      {(() => {
+                        const t = paymentScheduleText("vi");
+                        const rows =
+                          installment.stage === "deposit"
+                            ? [
+                                [t.total, installment.total, false],
+                                [t.depositStage1, installment.deposit, true],
+                                [t.remaining, installment.balance, false],
+                              ]
+                            : [
+                                [t.total, installment.total, false],
+                                [t.depositPaid, installment.deposit, false],
+                                [t.balanceDue, installment.balance, true],
+                              ];
+                        return rows.map(([label, amount, strong]) => (
+                          <div key={String(label)} className="flex items-center justify-between gap-3 py-0.5">
+                            <span className={strong ? "font-bold text-navy" : "text-body-text"}>{label as string}</span>
+                            <span className={`font-mono ${strong ? "font-bold text-accent" : "font-bold text-ink"}`}>
+                              {formatVnd(amount as number)}
+                            </span>
+                          </div>
+                        ));
+                      })()}
+                      {showQr && (
+                        <div className="mt-1.5 text-[11.5px] text-body-text">
+                          Mã QR nhóm MAX OFFICE sẽ điền sẵn số tiền{" "}
+                          {installment.stage === "deposit" ? DEPOSIT_LABEL.vi.toLowerCase() : "còn lại"}.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="mb-6 rounded-xl border border-line bg-bg-tint p-4">
             <span className="mb-2 block text-[12px] font-bold text-body-text">Ngôn ngữ xuất báo giá</span>

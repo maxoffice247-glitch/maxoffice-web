@@ -137,6 +137,24 @@ export function buildQrNote(
   return `${identifier} ${purpose}`;
 }
 
+/** img.vietqr.io CHỈ giữ 40 ký tự đầu của `addInfo` (đã đo: gửi 41-50 ký tự vẫn ra QR 40 ký tự) — dài hơn thì phần đuôi mất trong mã QR. */
+export const VIETQR_NOTE_MAX_CHARS = 40;
+
+/**
+ * Nội dung chuyển khoản MẶC ĐỊNH cho thanh toán theo đợt: câu mặc định + hậu tố (" dat coc"/" thanh toan con lai"). Hậu tố nằm ở CUỐI nên nếu
+ * cả câu vượt 40 ký tự (tên công ty dài) thì ngân hàng cắt mất đúng phần phân biệt đợt — khi đó bỏ "thanh toan phi dich vu" và rút gọn phần
+ * tên khách để hậu tố luôn còn trong QR. Câu ngắn đủ chỗ thì giữ đúng dạng "… thanh toan phi dich vu dat coc".
+ */
+export function buildInstallmentQrNote(
+  customer: { name?: string; phone?: string; companyName?: string } | undefined,
+  suffix: string
+): string {
+  const full = `${buildQrNote(customer)}${suffix}`;
+  if (stripDiacritics(full).length <= VIETQR_NOTE_MAX_CHARS) return full;
+  const identifier = stripDiacritics(buildQrNote(customer, "")).trim();
+  return `${identifier.slice(0, VIETQR_NOTE_MAX_CHARS - suffix.length).trimEnd()}${suffix}`;
+}
+
 /**
  * Tự nhận diện định dạng ảnh thật qua magic bytes — KHÔNG tin đuôi URL
  * (".png") lẫn header `Content-Type` của response. Đã xác nhận bằng byte

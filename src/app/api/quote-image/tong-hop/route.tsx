@@ -15,13 +15,17 @@ import {
   type CompositeQuoteItem,
   type ResolvedQuoteLine,
   type QuoteBucket,
+  type InstallmentPlan,
+  resolveInstallment,
+  INSTALLMENT_QR_SUFFIX,
 } from "@/lib/compositeQuote";
-import { priceListColIncl } from "@/lib/quoteImageDictionary";
+import { priceListColIncl, paymentScheduleText, balanceConditionText } from "@/lib/quoteImageDictionary";
 import { amountToVietnameseWords } from "@/lib/numberToWords";
 import {
   buildVietQrImageUrl,
   buildVietQrImageUrlForAccount,
   buildQrNote,
+  buildInstallmentQrNote,
   vietQrAccountLabel,
   thuHoAccountLabel,
   THU_HO_ACCOUNT,
@@ -103,6 +107,15 @@ const PL_NAME_WRAP_THRESHOLD = 62; // ký tự: tên dài hơn ngưỡng này ư
 const PL_TITLE_BLOCK_H = 40; // tiêu đề 20px (~24) + margin dưới 16 — đo thực tế
 const PL_VAT_NOTE_H = 26; // margin 10 + 1 dòng chữ 12.5px (~16) — đo thực tế
 const PL_CARD_BORDER = 2;
+
+// Khối "Lịch thanh toán" (thanh toán theo đợt): thẻ nền nhạt, tiêu đề + 3 hàng [nhãn | số tiền]. Hằng số hiệu chỉnh bằng pixel thật (xem scheduleHeight).
+const SCHEDULE_TOP_MARGIN = 32;
+const SCHEDULE_PADDING_Y = 40; // padding 20+20
+const SCHEDULE_TITLE_H = 27; // tiêu đề 14px (~17) + margin dưới 10
+const SCHEDULE_ROW_H = 38; // 1 dòng chữ 16px: padding 7+7, lineHeight 24
+const SCHEDULE_ROW_BORDER = 1; // viền trên mỗi hàng (trừ hàng đầu)
+const SCHEDULE_ROW_EXTRA_LINE_H = 24; // mỗi dòng chữ thêm khi nhãn (điều kiện thanh toán dài) xuống dòng
+const SCHEDULE_LABEL_CHARS_PER_LINE = 88; // ký tự/dòng của nhãn (chữ 16px, cột nhãn ~790px): đo thực tế nhãn tiếng Việt ~95-99 ký tự, tiếng Anh ~91-94 vẫn 1 dòng — chọn thấp hơn để KHÔNG BAO GIỜ thiếu chiều cao
 
 const SECTION_HEADER_H = 34;
 const SECTION_TOP_MARGIN = 32;
@@ -685,6 +698,109 @@ function Section({ bucket, lines, lang }: { bucket: QuoteBucket; lines: Resolved
   );
 }
 
+/** Nhãn + số tiền của 3 hàng trong khối "Lịch thanh toán" — DÙNG CHUNG giữa PaymentSchedule() (render) và scheduleHeight() (ước lượng chiều cao). */
+function scheduleRows(plan: InstallmentPlan, lang: QuoteLang) {
+  const t = paymentScheduleText(lang);
+  const condition = balanceConditionText(plan.condition, lang);
+  if (plan.stage === "deposit") {
+    return [
+      { label: t.total, amount: plan.total, emphasis: false },
+      { label: t.depositStage1, amount: plan.deposit, emphasis: true },
+      { label: condition ? `${t.remaining} (${condition})` : t.remaining, amount: plan.balance, emphasis: false },
+    ];
+  }
+  return [
+    { label: t.total, amount: plan.total, emphasis: false },
+    { label: t.depositPaid, amount: plan.deposit, emphasis: false },
+    { label: t.balanceDue, amount: plan.balance, emphasis: true },
+  ];
+}
+
+function scheduleHeight(plan: InstallmentPlan | null, lang: QuoteLang): number {
+  if (!plan) return 0;
+  const rowsH = scheduleRows(plan, lang).reduce(
+    (sum, r, i) =>
+      sum +
+      SCHEDULE_ROW_H +
+      (i > 0 ? SCHEDULE_ROW_BORDER : 0) +
+      (Math.ceil(r.label.length / SCHEDULE_LABEL_CHARS_PER_LINE) - 1) * SCHEDULE_ROW_EXTRA_LINE_H,
+    0
+  );
+  return SCHEDULE_TOP_MARGIN + SCHEDULE_PADDING_Y + SCHEDULE_TITLE_H + rowsH;
+}
+
+/** Khối "Lịch thanh toán" — chỉ tính trên TỔNG ĐÃ GỒM VAT, không có dòng VAT/hoá đơn riêng từng đợt. Dòng nhấn (màu đỏ, đậm) là số tiền đang
+ * nằm trong mã QR của nhóm MAX OFFICE. */
+function PaymentSchedule({ plan, lang, hasThuHo }: { plan: InstallmentPlan; lang: QuoteLang; hasThuHo: boolean }) {
+  const t = paymentScheduleText(lang);
+  const rows = scheduleRows(plan, lang);
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        margin: `0 ${MARGIN_X}px`,
+        marginTop: SCHEDULE_TOP_MARGIN,
+        borderRadius: 16,
+        backgroundColor: QUOTE_COLOR.bgTint,
+        padding: "20px 24px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          marginBottom: 10,
+          fontSize: 14,
+          fontWeight: 700,
+          letterSpacing: 1,
+          color: QUOTE_COLOR.primary,
+          textTransform: "uppercase",
+        }}
+      >
+        {hasThuHo ? t.titleMaxOffice : t.title}
+      </div>
+      {rows.map((r, i) => (
+        <div
+          key={i}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "7px 0",
+            borderTop: i > 0 ? `1px solid ${QUOTE_COLOR.line}` : "none",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flex: 1,
+              paddingRight: 16,
+              fontSize: 16,
+              lineHeight: "24px",
+              fontWeight: r.emphasis ? 700 : 400,
+              color: r.emphasis ? QUOTE_COLOR.navy : QUOTE_COLOR.bodyText,
+            }}
+          >
+            {r.label}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexShrink: 0,
+              fontSize: r.emphasis ? 20 : 16,
+              lineHeight: "24px",
+              fontWeight: r.emphasis ? 800 : 700,
+              color: r.emphasis ? QUOTE_COLOR.accent : QUOTE_COLOR.ink,
+            }}
+          >
+            {formatQuoteCurrency(r.amount, lang)}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function sectionHeight(lines: ResolvedQuoteLine[], lang: QuoteLang): number {
   if (lines.length === 0) return 0;
   const rowsHeight = lines.reduce((sum, l) => sum + estimateRowHeight(l), 0) + (lines.length - 1) * ROW_GAP;
@@ -1104,6 +1220,13 @@ export async function POST(req: Request) {
   const maxOfficeQrAmount = groupQrAmount(maxOfficeLines);
   const thuHoQrAmount = groupQrAmount(thuHoLines);
 
+  // Thanh toán theo đợt (đặt cọc) — CHỈ nhóm MAX OFFICE; nhóm thu hộ giữ nguyên số tiền/QR. null = tắt: ảnh y hệt trước khi có tính năng.
+  const installmentResult = resolveInstallment(body, maxOfficeQrAmount);
+  if (installmentResult && "error" in installmentResult) {
+    return new Response(installmentResult.error, { status: 400 });
+  }
+  const installment = installmentResult;
+
   // Dòng tổng GỘP CẢ 2 nhóm — CHỈ hiện khi CẢ 2 nhóm đều có số tiền (nếu chỉ
   // 1 nhóm, khối tổng của nhóm đó đã đủ, xem OverallTotal()).
   const showOverallTotal = maxOfficeQrAmount != null && thuHoQrAmount != null;
@@ -1119,13 +1242,19 @@ export async function POST(req: Request) {
   // Nội dung chuyển khoản do nhân viên tự sửa (nếu có) — CHỈ áp dụng QR "Dịch
   // vụ MAX OFFICE"; QR thu hộ luôn tự sinh, không đọc field này (xem
   // buildQrNote() trong vietQr.ts để biết lý do).
-  const maxOfficeQrNote = isNonEmptyString(body.qrNote) ? body.qrNote.trim() : buildQrNote(customer);
+  const maxOfficeQrNote = isNonEmptyString(body.qrNote)
+    ? body.qrNote.trim()
+    : installment
+      ? buildInstallmentQrNote(customer, INSTALLMENT_QR_SUFFIX[installment.stage])
+      : buildQrNote(customer);
+  // Số tiền QR nhóm MAX OFFICE: tắt đợt = tổng nhóm; đợt 1 = tiền cọc; đợt 2 = phần còn lại (server tự tính).
+  const maxOfficePayAmount = installment ? installment.qrAmount : maxOfficeQrAmount;
 
   const showMaxOfficeQr = Boolean(body.showQr) && maxOfficeQrAmount != null;
   const showThuHoQr = Boolean(body.showQr) && thuHoQrAmount != null;
 
   const [maxOfficeQrDataUri, thuHoQrDataUri] = await Promise.all([
-    showMaxOfficeQr ? fetchQrDataUri(buildVietQrImageUrl(qrAccountKey, maxOfficeQrAmount, maxOfficeQrNote)) : null,
+    showMaxOfficeQr ? fetchQrDataUri(buildVietQrImageUrl(qrAccountKey, maxOfficePayAmount, maxOfficeQrNote)) : null,
     showThuHoQr
       ? fetchQrDataUri(
           buildVietQrImageUrlForAccount(
@@ -1150,6 +1279,7 @@ export async function POST(req: Request) {
     BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!, lang), 0) +
     grandTotalHeight(maxOfficeLines, lang) +
     overallTotalHeight(showOverallTotal, lang) +
+    scheduleHeight(installment, lang) +
     qrSectionHeight(maxOfficeQrDataUri, thuHoQrDataUri) +
     FOOTER_H;
 
@@ -1223,13 +1353,15 @@ export async function POST(req: Request) {
 
         {showOverallTotal && <OverallTotal amount={overallTotalAmount} lang={lang} />}
 
+        {installment && <PaymentSchedule plan={installment} lang={lang} hasThuHo={hasThuHo} />}
+
         {maxOfficeQrDataUri && thuHoQrDataUri ? (
           <QrPaymentRow
             left={{
               dataUri: maxOfficeQrDataUri,
               groupLabel: qt("scanToPayMaxOfficeTitle", lang),
               accountLabel: vietQrAccountLabel(qrAccountKey),
-              amount: maxOfficeQrAmount,
+              amount: maxOfficePayAmount,
             }}
             right={{
               dataUri: thuHoQrDataUri,
@@ -1247,7 +1379,7 @@ export async function POST(req: Request) {
                 dataUri={maxOfficeQrDataUri}
                 title={qt("scanToPayTitle", lang)}
                 accountLabel={vietQrAccountLabel(qrAccountKey)}
-                amount={maxOfficeQrAmount}
+                amount={maxOfficePayAmount}
                 lang={lang}
               />
             )}

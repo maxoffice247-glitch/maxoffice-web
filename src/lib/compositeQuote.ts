@@ -35,6 +35,8 @@ import {
   AMENDMENT_SERVICE_NAMES_EN,
   AMENDMENT_SCOPE_NOTE_EN,
   priceListVatNote,
+  DEFAULT_BALANCE_CONDITION,
+  BALANCE_CONDITION_MAX,
   type QuoteLang,
   type QuoteDictKey,
 } from "./quoteImageDictionary";
@@ -273,8 +275,75 @@ export type CompositeQuoteRequestBody = {
    * field vẫn hoạt động đúng như trước). Form nhập liệu LUÔN tiếng Việt,
    * field này chỉ quyết định nhãn/tên hiển thị trên ảnh PNG cuối cùng. */
   lang?: QuoteLang;
+  /** Thanh toán theo đợt (đặt cọc) cho nhóm "Dịch vụ MAX OFFICE" — xem resolveInstallment(). Mặc định TẮT: chỉ BẬT khi `depositAmount` là số VÀ
+   * `installmentStage` là "deposit"/"balance"; thiếu hoặc sai kiểu = tắt (ảnh y hệt trước). Server tự tính phần còn lại và số tiền QR, bỏ qua mọi số tiền khác client gửi. */
+  depositAmount?: number;
+  installmentStage?: "deposit" | "balance";
+  /** Điều kiện thanh toán phần còn lại (chỉ hiện ở đợt 1). Thiếu/sai kiểu = câu mặc định; chuỗi rỗng = không ghi điều kiện. */
+  balanceCondition?: string;
   items: CompositeQuoteItem[];
 };
+
+/** Hậu tố mặc định của nội dung chuyển khoản theo đợt (nhân viên vẫn sửa được ở form) — quy ước cố định, không theo nhãn DEPOSIT_LABEL. */
+export const INSTALLMENT_QR_SUFFIX = { deposit: " dat coc", balance: " thanh toan con lai" } as const;
+/** Hậu tố tên file ảnh theo đợt. */
+export const INSTALLMENT_FILENAME_SUFFIX = { deposit: "-COC", balance: "-CON-LAI" } as const;
+
+export type InstallmentStage = "deposit" | "balance";
+export type InstallmentPlan = {
+  stage: InstallmentStage;
+  /** Tổng nhóm MAX OFFICE (đã gồm VAT). */
+  total: number;
+  deposit: number;
+  /** = total - deposit. */
+  balance: number;
+  /** Điều kiện thanh toán phần còn lại ("" = không ghi). */
+  condition: string;
+  /** Số tiền QR của nhóm MAX OFFICE: đợt 1 = deposit, đợt 2 = balance. */
+  qrAmount: number;
+};
+
+/** Tổng "Thành tiền" (đã gồm VAT) của nhóm MAX OFFICE — các dòng KHÔNG thuộc bucket thu hộ và tách được số; null nếu không có dòng nào. DÙNG CHUNG form + server. */
+export function maxOfficeGroupTotal(lines: ResolvedQuoteLine[]): number | null {
+  const total = lines
+    .filter((l) => l.bucket !== "thu-ho" && !l.priceList)
+    .reduce((sum, l) => sum + (l.breakdown?.total ?? 0), 0);
+  return total > 0 ? total : null;
+}
+
+/**
+ * Đọc + kiểm tra cấu hình thanh toán theo đợt. Trả null = TẮT (thiếu/sai kiểu `depositAmount` hoặc `installmentStage`); `{ error }` = bật nhưng số
+ * không hợp lệ (route trả 400); ngược lại là kế hoạch đã tính. Chỉ tin số do client gửi ở `depositAmount` — phần còn lại/QR luôn tự tính.
+ */
+export function resolveInstallment(
+  input: { depositAmount?: unknown; installmentStage?: unknown; balanceCondition?: unknown },
+  maxOfficeTotal: number | null
+): InstallmentPlan | { error: string } | null {
+  const { depositAmount, installmentStage, balanceCondition } = input;
+  if (typeof depositAmount !== "number" || !Number.isFinite(depositAmount)) return null;
+  if (installmentStage !== "deposit" && installmentStage !== "balance") return null;
+  if (maxOfficeTotal == null) {
+    return { error: "Thanh toán theo đợt chỉ áp dụng cho nhóm Dịch vụ MAX OFFICE — báo giá này không có dịch vụ nào thuộc nhóm đó." };
+  }
+  if (!Number.isInteger(depositAmount)) return { error: "Số tiền đặt cọc phải là số nguyên đồng." };
+  if (depositAmount <= 0) return { error: "Số tiền đặt cọc phải lớn hơn 0." };
+  if (depositAmount >= maxOfficeTotal) {
+    return { error: "Số tiền đặt cọc phải nhỏ hơn tổng nhóm Dịch vụ MAX OFFICE (đã gồm VAT)." };
+  }
+  const balance = maxOfficeTotal - depositAmount;
+  const condition =
+    typeof balanceCondition === "string"
+      ? balanceCondition.trim().slice(0, BALANCE_CONDITION_MAX)
+      : DEFAULT_BALANCE_CONDITION.vi;
+  return {
+    stage: installmentStage,
+    total: maxOfficeTotal,
+    deposit: depositAmount,
+    balance,
+    condition,
+    qrAmount: installmentStage === "deposit" ? depositAmount : balance,
+  };
+}
 
 export type QuoteBreakdown = {
   /** Giá gốc / đơn vị (mỗi tháng, mỗi giờ, hoặc giá gốc 1 lần) — SỐ NGUYÊN
@@ -695,7 +764,8 @@ export function getHoaDonDienTuTierOptions(): { key: string; quantity: string; p
 export function buildCompositeQuoteFilename(
   customer: CompositeQuoteCustomer,
   now: Date = new Date(),
-  kind?: "bang-gia-sua-doi"
+  kind?: "bang-gia-sua-doi",
+  installmentStage?: InstallmentStage
 ): string {
   const dd = String(now.getDate()).padStart(2, "0");
   const mm = String(now.getMonth() + 1).padStart(2, "0");
@@ -704,5 +774,6 @@ export function buildCompositeQuoteFilename(
   if (kind === "bang-gia-sua-doi") return `BG-BANG-GIA-SUA-DOI-${dd}${mm}${yy}.png`;
   const source = customer.companyName?.trim() || customer.name?.trim();
   const slug = source ? slugifyForFilename(source, 25) : "KHACH-LE";
-  return `BG-${slug}-${dd}${mm}${yy}.png`;
+  const stageSuffix = installmentStage ? INSTALLMENT_FILENAME_SUFFIX[installmentStage] : "";
+  return `BG-${slug}-${dd}${mm}${yy}${stageSuffix}.png`;
 }

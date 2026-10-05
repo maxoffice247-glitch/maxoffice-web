@@ -240,3 +240,49 @@ export function oneTimeFeePlanLine(fee: OneTimeFeeText): string {
 export function oneTimeFeeCheckboxLabel(fee: OneTimeFeeText): string {
   return `Có làm ${lowerFirst(fee.label)} (thu ${formatQuoteCurrency(fee.price, "vi")} một lần)`;
 }
+
+/* ---------------------------------------------------------------------- */
+/* Thanh toán theo đợt (đặt cọc) — chỉ cho nhóm "Dịch vụ MAX OFFICE".       */
+/* Bản tiếng Anh là Claude tự đề xuất, CẦN RÀ SOÁT.                          */
+/* ---------------------------------------------------------------------- */
+
+/** Nhãn khoản tiền trả trước — ĐỔI Ở ĐÂY là đổi toàn bộ chữ (form lẫn ảnh): vd "Tạm ứng" / "Advance". Hậu tố tên file (-COC) và nội dung
+ * chuyển khoản (" dat coc") là quy ước cố định riêng, không theo nhãn này. */
+export const DEPOSIT_LABEL: Record<QuoteLang, string> = { vi: "Đặt cọc", en: "Deposit" };
+
+/** Điều kiện thanh toán phần còn lại mặc định — nhân viên sửa tự do ở form. Ảnh tiếng Anh chỉ dịch được ĐÚNG câu mặc định này; câu tự gõ giữ nguyên chữ đã nhập. */
+export const DEFAULT_BALANCE_CONDITION: Record<QuoteLang, string> = {
+  vi: "khi nhận kết quả hồ sơ",
+  en: "upon receipt of the application results",
+};
+
+export const BALANCE_CONDITION_MAX = 120;
+
+/** Điều kiện hiển thị theo ngôn ngữ ảnh: đúng câu mặc định tiếng Việt thì dịch sang tiếng Anh khi ảnh là English. */
+export function balanceConditionText(condition: string, lang: QuoteLang): string {
+  return lang === "en" && condition === DEFAULT_BALANCE_CONDITION.vi ? DEFAULT_BALANCE_CONDITION.en : condition;
+}
+
+/** Khung câu của khối "Lịch thanh toán" trên ảnh. */
+export function paymentScheduleText(lang: QuoteLang) {
+  const dep = DEPOSIT_LABEL[lang];
+  return lang === "en"
+    ? {
+        title: "Payment Schedule",
+        titleMaxOffice: "Payment Schedule — MAX OFFICE Services",
+        total: "Total (incl. VAT)",
+        depositStage1: `${dep} (installment 1)`,
+        remaining: "Remaining balance",
+        depositPaid: `${dep} paid`,
+        balanceDue: "Balance due",
+      }
+    : {
+        title: "Lịch thanh toán",
+        titleMaxOffice: "Lịch thanh toán — Dịch vụ MAX OFFICE",
+        total: "Tổng cộng (đã gồm VAT)",
+        depositStage1: `${dep} (đợt 1)`,
+        remaining: "Còn lại",
+        depositPaid: `Đã ${dep.charAt(0).toLowerCase()}${dep.slice(1)}`,
+        balanceDue: "Còn phải thanh toán",
+      };
+}
