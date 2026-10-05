@@ -1,10 +1,11 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useState, useSyncExternalStore } from "react";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import { PlusIcon, CloseIcon, DownloadIcon, ShareIcon, SpinnerIcon, PhoneIcon } from "../icons";
 import { shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
+import { AMENDMENT_SERVICES, calculateAmendmentCombo, formatAmendmentVnd } from "@/lib/setupFees";
 import { getAllOfferedPlans, formatVoPrice, type OfferedPlan } from "@/lib/planFinder";
 import {
   resolveCompositeQuoteItem,
@@ -50,6 +51,7 @@ function formatVnd(n: number): string {
 type ServiceTypeKey =
   | "van-phong-ao"
   | "thanh-lap-doanh-nghiep"
+  | "sua-doi"
   | "ke-toan-thue"
   | "chu-ky-so"
   | "hoa-don-dien-tu"
@@ -58,6 +60,7 @@ type ServiceTypeKey =
 const SERVICE_TYPE_OPTIONS: { value: ServiceTypeKey; label: string }[] = [
   { value: "van-phong-ao", label: "Văn phòng ảo" },
   { value: "thanh-lap-doanh-nghiep", label: "Thành lập doanh nghiệp" },
+  { value: "sua-doi", label: "Dịch vụ pháp lý sửa đổi" },
   { value: "ke-toan-thue", label: "Kế toán & thuế" },
   { value: "chu-ky-so", label: "Chữ ký số" },
   { value: "hoa-don-dien-tu", label: "Hoá đơn điện tử" },
@@ -68,6 +71,18 @@ const SERVICE_TYPE_OPTIONS: { value: ServiceTypeKey; label: string }[] = [
 ];
 
 const MAX_ROWS = 12;
+
+/** ?loai= hợp lệ duy nhất cho công cụ này — link từ 2 trang bảng "Dịch vụ pháp lý sửa đổi" chọn sẵn loại dịch vụ. Giá trị
+ * khác bị bỏ qua. Đọc qua useSyncExternalStore (snapshot server = null) để trang vẫn prerender tĩnh, như form Checklist. */
+const LOAI_PRESETS = ["sua-doi"] as const;
+type LoaiPreset = (typeof LOAI_PRESETS)[number];
+function subscribeNoop() {
+  return () => {};
+}
+function readLoaiPreset(): LoaiPreset | null {
+  const v = new URLSearchParams(window.location.search).get("loai");
+  return (LOAI_PRESETS as readonly string[]).includes(v ?? "") ? (v as LoaiPreset) : null;
+}
 
 // Trivial, đọc thẳng từ servicesData.ts (2 gói GPKD, 3 nhóm + 9 mức kế toán,
 // 3 mốc Chữ ký số + 10 mốc Hoá đơn điện tử) — không cần useMemo như
@@ -107,6 +122,8 @@ type QuoteRow = {
    * loại dịch vụ tương ứng. */
   chuKySoTierKey: string;
   hoaDonTierKey: string;
+  /** Slug các dịch vụ pháp lý sửa đổi đang tích (loại "sua-doi") — tick nhiều, combo tính ở server. */
+  amendSlugs: string[];
 };
 
 function createEmptyRow(): QuoteRow {
@@ -124,6 +141,7 @@ function createEmptyRow(): QuoteRow {
     customVat: 10,
     chuKySoTierKey: "",
     hoaDonTierKey: "",
+    amendSlugs: [],
   };
 }
 
@@ -146,6 +164,9 @@ function applyServiceTypeDefaults(row: QuoteRow, type: ServiceTypeKey, firstLoca
   }
   if (type === "thanh-lap-doanh-nghiep") {
     return { ...row, serviceType: type, tier: "goi-1" };
+  }
+  if (type === "sua-doi") {
+    return { ...row, serviceType: type, amendSlugs: [] };
   }
   if (type === "ke-toan-thue") {
     return { ...row, serviceType: type, group: "A", rangeIndex: 0 };
@@ -173,6 +194,8 @@ function rowToItem(row: QuoteRow): CompositeQuoteItem | null {
         : null;
     case "thanh-lap-doanh-nghiep":
       return { type: "thanh-lap-doanh-nghiep", tier: row.tier };
+    case "sua-doi":
+      return row.amendSlugs.length > 0 ? { type: "sua-doi", serviceSlugs: row.amendSlugs } : null;
     case "ke-toan-thue":
       return { type: "ke-toan-thue", group: row.group, rangeIndex: row.rangeIndex };
     case "chu-ky-so":
@@ -238,7 +261,16 @@ export default function CompositeQuoteTool() {
   // PNG cuối cùng, KHÔNG đổi ngôn ngữ form nhập liệu này (luôn tiếng Việt)
   // và KHÔNG đổi bản xem trước từng dòng bên dưới (preview luôn tiếng Việt).
   const [lang, setLang] = useState<QuoteLang>("vi");
-  const [rows, setRows] = useState<QuoteRow[]>(() => [createEmptyRow()]);
+  // Dòng dịch vụ: khách chưa thao tác thì lấy dòng mặc định (có thể chọn sẵn loại "sua-doi" theo ?loai=); sau thao tác đầu
+  // tiên chuyển sang state riêng. Không dùng setState trong effect để đọc URL (tránh render dư và lệch hydration).
+  const urlPreset = useSyncExternalStore(subscribeNoop, readLoaiPreset, () => null);
+  const defaultRows = useMemo<QuoteRow[]>(() => {
+    const empty = createEmptyRow();
+    return [urlPreset === "sua-doi" ? { ...empty, serviceType: "sua-doi" } : empty];
+  }, [urlPreset]);
+  const [userRows, setUserRows] = useState<QuoteRow[] | null>(null);
+  const rows = userRows ?? defaultRows;
+  const setRows = (updater: (prev: QuoteRow[]) => QuoteRow[]) => setUserRows((prev) => updater(prev ?? defaultRows));
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -380,6 +412,7 @@ export default function CompositeQuoteTool() {
                 allVoPlans={allVoPlans}
                 voLocations={voLocations}
                 canRemove={rows.length > 1}
+                amendmentTakenElsewhere={row.serviceType !== "sua-doi" && rows.some((r) => r.serviceType === "sua-doi")}
                 onRemove={() => removeRow(row.id)}
                 onChangeServiceType={(type) => changeServiceType(row.id, type)}
                 onUpdate={(patch) => updateRow(row.id, patch)}
@@ -531,6 +564,7 @@ function QuoteRowEditor({
   allVoPlans,
   voLocations,
   canRemove,
+  amendmentTakenElsewhere,
   onRemove,
   onChangeServiceType,
   onUpdate,
@@ -540,6 +574,8 @@ function QuoteRowEditor({
   allVoPlans: OfferedPlan[];
   voLocations: { slug: string; name: string }[];
   canRemove: boolean;
+  /** Đã có dòng khác chọn "Dịch vụ pháp lý sửa đổi" — chỉ được 1 dòng loại này (combo tính trong 1 danh sách duy nhất). */
+  amendmentTakenElsewhere: boolean;
   onRemove: () => void;
   onChangeServiceType: (type: ServiceTypeKey) => void;
   onUpdate: (patch: Partial<QuoteRow>) => void;
@@ -586,11 +622,15 @@ function QuoteRowEditor({
           <option value="" disabled>
             — Chọn loại dịch vụ —
           </option>
-          {SERVICE_TYPE_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
+          {SERVICE_TYPE_OPTIONS.map((opt) => {
+            const taken = opt.value === "sua-doi" && amendmentTakenElsewhere;
+            return (
+              <option key={opt.value} value={opt.value} disabled={taken}>
+                {opt.label}
+                {taken ? " (đã chọn ở dòng khác)" : ""}
+              </option>
+            );
+          })}
         </select>
       </div>
 
@@ -654,6 +694,10 @@ function QuoteRowEditor({
             </div>
           </div>
         </div>
+      )}
+
+      {row.serviceType === "sua-doi" && (
+        <AmendmentPicker selected={row.amendSlugs} onChange={(amendSlugs) => onUpdate({ amendSlugs })} />
       )}
 
       {row.serviceType === "thanh-lap-doanh-nghiep" && (
@@ -834,5 +878,87 @@ function QuoteRowEditor({
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * Danh sách ô tích (chọn nhiều) 13 dịch vụ pháp lý sửa đổi — đọc cùng nguồn AMENDMENT_SERVICES với bảng trên web. Phía dưới
+ * hiện NGAY tổng tạm tính sau combo + số tiền được giảm (calculateAmendmentCombo — cùng hàm server dùng để tính ảnh), cập nhật
+ * khi tích. Mỗi dòng cao >= 44px để dễ chạm trên điện thoại.
+ */
+function AmendmentPicker({ selected, onChange }: { selected: string[]; onChange: (slugs: string[]) => void }) {
+  const uid = useId();
+  const combo = useMemo(() => calculateAmendmentCombo(selected), [selected]);
+  const finalBySlug = useMemo(() => new Map(combo.items.map((it) => [it.slug, it])), [combo]);
+  const originalTotal = combo.items.reduce((sum, it) => sum + it.price, 0);
+  const discount = originalTotal - combo.total;
+
+  const toggle = (slug: string, checked: boolean) => {
+    // Giữ thứ tự theo bảng để danh sách gửi lên ổn định, không phụ thuộc thứ tự khách tích.
+    const next = new Set(selected);
+    if (checked) next.add(slug);
+    else next.delete(slug);
+    onChange(AMENDMENT_SERVICES.filter((s) => next.has(s.slug)).map((s) => s.slug));
+  };
+
+  return (
+    <fieldset className="mt-3">
+      <legend className={labelClass}>Chọn các dịch vụ cần báo giá (tích được nhiều dịch vụ)</legend>
+      <div className="space-y-2">
+        {AMENDMENT_SERVICES.map((svc) => {
+          const checked = selected.includes(svc.slug);
+          const calc = finalBySlug.get(svc.slug);
+          const showCombo = checked && calc?.discounted;
+          const id = `${uid}-${svc.slug}`;
+          return (
+            <label
+              key={svc.slug}
+              htmlFor={id}
+              className={`flex min-h-[44px] cursor-pointer items-start gap-3 rounded-lg border-[1.5px] bg-white px-3 py-2.5 transition-colors duration-200 ${
+                checked ? "border-primary bg-primary-tint/50" : "border-line hover:border-primary/40"
+              }`}
+            >
+              <input
+                id={id}
+                type="checkbox"
+                checked={checked}
+                onChange={(e) => toggle(svc.slug, e.target.checked)}
+                className="mt-0.5 h-5 w-5 shrink-0 accent-primary"
+              />
+              <span className="min-w-0 flex-1">
+                <span className="block text-[13.5px] leading-snug font-semibold text-navy">{svc.name}</span>
+                <span className="mt-0.5 flex flex-wrap items-baseline gap-x-2 text-[12.5px] text-body-text">
+                  {showCombo && <s className="text-body-text/70">{formatAmendmentVnd(svc.price)}</s>}
+                  <span className={`font-mono font-bold ${showCombo ? "text-accent" : "text-primary"}`}>
+                    {formatAmendmentVnd(showCombo && calc ? calc.finalPrice : svc.price)}
+                  </span>
+                  <span>· {svc.duration}</span>
+                </span>
+              </span>
+            </label>
+          );
+        })}
+      </div>
+      <div aria-live="polite" className="mt-3 rounded-lg bg-white px-3.5 py-3 text-[13px]">
+        {selected.length === 0 ? (
+          <span className="text-body-text">Tích ít nhất 1 dịch vụ để xem tổng tạm tính.</span>
+        ) : (
+          <>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+              <span className="text-body-text">Tạm tính sau combo (chưa VAT)</span>
+              <span className="font-mono text-[15px] font-bold text-primary">{formatAmendmentVnd(combo.total)}</span>
+            </div>
+            {discount > 0 ? (
+              <div className="mt-1 flex flex-wrap items-baseline justify-between gap-x-3 text-[12.5px]">
+                <span className="text-body-text">Giảm so với giá gốc ({formatAmendmentVnd(originalTotal)})</span>
+                <span className="font-mono font-bold text-accent">−{formatAmendmentVnd(discount)}</span>
+              </div>
+            ) : (
+              <div className="mt-1 text-[12.5px] text-body-text">Chọn từ 2 dịch vụ trở lên để được ưu đãi combo.</div>
+            )}
+          </>
+        )}
+      </div>
+    </fieldset>
   );
 }

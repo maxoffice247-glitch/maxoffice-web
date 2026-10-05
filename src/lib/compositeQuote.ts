@@ -24,7 +24,24 @@
  */
 import { getOfferedPlan } from "./planFinder";
 import { SERVICES_DATA, CHU_KY_SO_TIERS, HOA_DON_DIEN_TU_TIERS } from "./servicesData";
-import { qt, formatQuoteCurrency, type QuoteLang, type QuoteDictKey } from "./quoteImageDictionary";
+import {
+  qt,
+  formatQuoteCurrency,
+  amendmentComboNote,
+  amendmentServiceCount,
+  translateAmendmentDuration,
+  AMENDMENT_SERVICE_NAMES_EN,
+  type QuoteLang,
+  type QuoteDictKey,
+} from "./quoteImageDictionary";
+import {
+  AMENDMENT_VAT_PERCENT,
+  AMENDMENT_COMBO_THRESHOLD,
+  AMENDMENT_COMBO_HIGH_PRICE,
+  AMENDMENT_COMBO_LOW_PRICE,
+  calculateAmendmentCombo,
+  validateAmendmentSelection,
+} from "./setupFees";
 import { slugifyForFilename } from "./slugify";
 
 export type CustomServiceSlug = "van-phong-tron-goi" | "cho-ngoi-linh-dong" | "phong-hop" | "khac";
@@ -196,6 +213,9 @@ export type CompositeQuoteCustomer = {
 export type CompositeQuoteItem =
   | { type: "van-phong-ao"; locationSlug: string; planKey: string; months: MonthOption }
   | { type: "thanh-lap-doanh-nghiep"; tier: "goi-1" | "goi-2" }
+  /** "Dịch vụ pháp lý sửa đổi": client CHỈ gửi danh sách slug dịch vụ đã chọn (AMENDMENT_SERVICES trong setupFees.ts).
+   * Giá gốc, giá combo, VAT đều do server tự tính (calculateAmendmentCombo) — mọi field "giá" client gửi kèm bị bỏ qua. */
+  | { type: "sua-doi"; serviceSlugs: string[] }
   | { type: "ke-toan-thue"; group: "A" | "B" | "C"; rangeIndex: number }
   | {
       type: "custom";
@@ -258,6 +278,26 @@ export type QuoteBreakdown = {
   total: number;
 };
 
+/** Chi tiết riêng của dòng "Dịch vụ pháp lý sửa đổi" (loại "sua-doi") — 1 dòng gộp nhiều dịch vụ, mỗi dịch vụ là 1 hàng gọn. */
+export type AmendmentLineDetail = {
+  rows: {
+    name: string;
+    duration: string;
+    baseAmount: number;
+    /** Giá sau combo (= baseAmount khi không giảm). */
+    finalAmount: number;
+    discounted: boolean;
+  }[];
+  /** Tổng giá gốc các dịch vụ đã chọn (chưa combo, chưa VAT). */
+  originalTotal: number;
+  /** Tổng sau combo (chưa VAT) = breakdown.subtotal. */
+  comboTotal: number;
+  /** Số tiền được giảm nhờ combo = originalTotal - comboTotal. */
+  discountAmount: number;
+  /** Chú thích ưu đãi combo — chỉ có khi chọn từ 2 dịch vụ trở lên. */
+  comboNote?: string;
+};
+
 export type ResolvedQuoteLine = {
   category: string;
   title: string;
@@ -268,6 +308,8 @@ export type ResolvedQuoteLine = {
    * `fallbackLabel` thay thế toàn bộ khối chi tiết. */
   breakdown: QuoteBreakdown | null;
   fallbackLabel?: string;
+  /** Chỉ có ở dòng loại "sua-doi" — route ảnh dựa vào field này để vẽ dạng gọn nhiều hàng. */
+  amendment?: AmendmentLineDetail;
 };
 
 export type ResolveItemError = { error: string };
@@ -364,6 +406,52 @@ export function resolveCompositeQuoteItem(
           baseLabel: lang === "en" ? formatQuoteCurrency(baseAmount, "en") : tier.price,
           vatRatePercent: 8,
         }),
+      };
+    }
+
+    case "sua-doi": {
+      // Server luôn tự kiểm tra + tự tính: chỉ đọc item.serviceSlugs, bỏ qua mọi field khác (kể cả "giá" client gửi kèm).
+      const selection = validateAmendmentSelection(item.serviceSlugs);
+      if (!selection.ok) return { error: selection.error };
+      const combo = calculateAmendmentCombo(selection.slugs);
+      const originalTotal = combo.items.reduce((sum, it) => sum + it.price, 0);
+      const comboTotal = combo.total;
+      const vatAmount = Math.round((comboTotal * AMENDMENT_VAT_PERCENT) / 100);
+      const n = combo.items.length;
+      const categoryName = qt("categoryPhapLySuaDoi", lang);
+      return {
+        category: categoryName,
+        title: categoryName,
+        subtitle: amendmentServiceCount(n, lang),
+        bucket: "mot-lan",
+        breakdown: {
+          baseAmount: originalTotal,
+          baseLabel: formatQuoteCurrency(originalTotal, lang),
+          subtotal: comboTotal,
+          vatRatePercent: AMENDMENT_VAT_PERCENT,
+          vatAmount,
+          total: comboTotal + vatAmount,
+        },
+        amendment: {
+          rows: combo.items.map((it) => ({
+            name: lang === "en" ? (AMENDMENT_SERVICE_NAMES_EN[it.slug] ?? it.name) : it.name,
+            duration: translateAmendmentDuration(it.duration, lang),
+            baseAmount: it.price,
+            finalAmount: it.finalPrice,
+            discounted: it.discounted,
+          })),
+          originalTotal,
+          comboTotal,
+          discountAmount: originalTotal - comboTotal,
+          comboNote:
+            n >= 2
+              ? amendmentComboNote(lang, {
+                  threshold: AMENDMENT_COMBO_THRESHOLD,
+                  high: AMENDMENT_COMBO_HIGH_PRICE,
+                  low: AMENDMENT_COMBO_LOW_PRICE,
+                })
+              : undefined,
+        },
       };
     }
 

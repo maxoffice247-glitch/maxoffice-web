@@ -54,6 +54,13 @@ export const QUOTE_DICT = {
   categoryVanPhongAo: { vi: "Văn phòng ảo", en: "Virtual Office" },
   categoryThanhLapDoanhNghiep: { vi: "Thành lập doanh nghiệp", en: "Business Registration" },
   categoryKeToanThue: { vi: "Kế toán & thuế", en: "Accounting & Tax" },
+  // Nhóm "Dịch vụ pháp lý sửa đổi" (loại "sua-doi" trong compositeQuote.ts) — tên 13 dịch vụ ở AMENDMENT_SERVICE_NAMES_EN
+  // bên dưới, thời gian dịch qua translateAmendmentDuration().
+  categoryPhapLySuaDoi: { vi: "Dịch vụ pháp lý sửa đổi", en: "Legal Amendment Services" },
+  amendmentOriginalTotalLabel: { vi: "Tổng giá gốc", en: "List price total" },
+  amendmentComboSubtotalLabel: { vi: "Tạm tính sau combo (chưa VAT)", en: "After combo (excl. VAT)" },
+  // Ghi chú ưu đãi combo — dựng từ hằng số ở setupFees.ts nên số tiền luôn khớp; câu cố định ở hàm
+  // amendmentComboNote() bên dưới (khác các nhãn tĩnh ở đây vì chèn số tiền).
   // Từ "Gói" đứng trước tên gói VPA (VD "Gói LITE" -> "LITE Package") — đặt
   // SAU tên gói ở bản tiếng Anh cho đúng thứ tự tự nhiên, xem cách dùng ở
   // compositeQuote.ts (khác cấu trúc template nên tách riêng, không chung
@@ -131,4 +138,49 @@ export function formatQuoteCurrency(n: number, lang: QuoteLang): string {
     ngữ (quy ước quốc tế cũng viết "VAT" + số %, không cần dịch riêng). */
 export function vatLabel(ratePercent: number): string {
   return `VAT ${ratePercent}%`;
+}
+
+/**
+ * Tên tiếng Anh của 13 dịch vụ pháp lý sửa đổi (AMENDMENT_SERVICES trong setupFees.ts) — Claude TỰ ĐỀ XUẤT, CẦN RÀ
+ * SOÁT trước khi gửi khách. Chú ý "cùng cơ sở"/"khác cơ sở" dịch là "within/outside the same jurisdiction" theo cách hiểu
+ * "cùng/khác phạm vi quản lý của cơ quan đăng ký" — cần xác nhận đúng nghĩa nghiệp vụ.
+ */
+export const AMENDMENT_SERVICE_NAMES_EN: Record<string, string> = {
+  "doi-ten-cong-ty": "Change of company name",
+  "doi-dia-chi-cung-co-so": "Change of address - within the same jurisdiction",
+  "doi-dia-chi-khac-co-so": "Change of address - to a different jurisdiction",
+  "doi-dai-dien-phap-luat": "Change of legal representative",
+  "doi-dai-dien-va-chu-so-huu": "Change of legal representative + owner",
+  "tang-von-1-thanh-vien": "Charter capital increase - single-member company",
+  "tang-von-2-thanh-vien": "Charter capital increase - multi-member LLC & joint-stock company",
+  "bo-sung-nganh-nghe": "Add business lines (1-15 lines)",
+  "doi-so-dien-thoai": "Add/change phone number",
+  "cap-nhat-cccd": "Update citizen ID card (CCCD)",
+  "them-ten-viet-tat": "Add abbreviated/foreign company name",
+  "chuyen-doi-loai-hinh": "Conversion of business type",
+  "cap-nhat-dia-gioi-hanh-chinh": "Update administrative boundaries - identify beneficial owner",
+};
+
+/** "5-7 ngày" -> "5-7 days" (dữ liệu gốc luôn có dạng "N ngày"/"N-M ngày"); chuỗi lạ giữ nguyên. */
+export function translateAmendmentDuration(duration: string, lang: QuoteLang): string {
+  if (lang === "vi") return duration;
+  const m = duration.match(/^(\d+(?:-\d+)?)\s*ngày$/);
+  return m ? `${m[1]} days` : duration;
+}
+
+/** Câu chú thích ưu đãi combo trên ảnh báo giá — CỐ Ý ngắn để vừa MỘT dòng nhỏ (chữ 12px) ở cả 2 ngôn ngữ. Số tiền truyền
+ * vào từ hằng số setupFees.ts nên luôn khớp quy tắc tính. */
+export function amendmentComboNote(
+  lang: QuoteLang,
+  p: { threshold: number; high: number; low: number }
+): string {
+  const f = (n: number) => formatQuoteCurrency(n, lang);
+  return lang === "en"
+    ? `Combo discount: highest-priced service in full; others ${f(p.high)} (list price > ${f(p.threshold)}) or ${f(p.low)} (≤ ${f(p.threshold)}).`
+    : `Ưu đãi combo: dịch vụ giá cao nhất tính đủ; còn lại tính ${f(p.high)} (giá gốc > ${f(p.threshold)}) hoặc ${f(p.low)} (giá gốc ≤ ${f(p.threshold)}).`;
+}
+
+/** "3 dịch vụ" / "3 services" ("1 service" ở số ít) — đếm số dịch vụ sửa đổi trong dòng tiêu đề thẻ trên ảnh. */
+export function amendmentServiceCount(n: number, lang: QuoteLang): string {
+  return lang === "en" ? `${n} ${n === 1 ? "service" : "services"}` : `${n} dịch vụ`;
 }

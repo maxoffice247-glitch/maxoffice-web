@@ -1,6 +1,7 @@
 import Reveal from "./Reveal";
 import SectionHead from "./SectionHead";
 import LeadFormButton from "./LeadFormButton";
+import Button from "./Button";
 import ScrollFadeContainer from "./ScrollFadeContainer";
 import { BadgePercentIcon } from "./icons";
 import { AMENDMENT_SERVICES, COMBO_DISCOUNT_RULE } from "@/lib/setupFees";
@@ -97,10 +98,14 @@ export default function AmendmentPricingTable() {
           </div>
         </Reveal>
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <LeadFormButton service="Thành lập doanh nghiệp" variant="primary">
             Nhận tư vấn miễn phí
           </LeadFormButton>
+          {/* Mở công cụ Báo giá tổng hợp với loại "Dịch vụ pháp lý sửa đổi" chọn sẵn (?loai=sua-doi). */}
+          <Button href="/tien-ich/tao-bao-gia-tong-hop?loai=sua-doi" variant="ghost">
+            Tạo báo giá dịch vụ sửa đổi
+          </Button>
         </div>
       </div>
     </section>

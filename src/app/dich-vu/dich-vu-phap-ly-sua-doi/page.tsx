@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import Breadcrumb from "@/components/Breadcrumb";
+import Button from "@/components/Button";
 import SectionHead from "@/components/SectionHead";
 import ServiceBenefits, { type BenefitItem } from "@/components/ServiceBenefits";
 import Faq, { type FaqItem } from "@/components/Faq";
@@ -187,6 +188,12 @@ export default function DichVuPhapLySuaDoiPage() {
           </Reveal>
 
           <Reveal>
+            <div className="mt-6 flex justify-center">
+              {/* Mở công cụ Báo giá tổng hợp với loại "Dịch vụ pháp lý sửa đổi" chọn sẵn (?loai=sua-doi). */}
+              <Button href="/tien-ich/tao-bao-gia-tong-hop?loai=sua-doi" variant="ghost">
+                Tạo báo giá dịch vụ sửa đổi
+              </Button>
+            </div>
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               <Link
                 href="/tien-ich/tinh-chi-phi-thanh-lap"

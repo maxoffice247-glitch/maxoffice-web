@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Test chạy bằng `node --test` (CommonJS, nạp file TS qua tests/ts-register.cjs) — không thuộc mã ứng dụng.
+    "tests/**",
   ]),
 ]);
 

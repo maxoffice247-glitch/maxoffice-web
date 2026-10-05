@@ -77,11 +77,38 @@ export const AMENDMENT_SERVICES: AmendmentService[] = [
   },
 ];
 
-export const COMBO_DISCOUNT_RULE =
-  "Khi đặt từ 2 dịch vụ sửa đổi trở lên cùng lúc: dịch vụ có giá trị lớn nhất tính giá đầy đủ; các dịch vụ còn lại — giá gốc trên 500.000đ giảm còn 500.000đ, giá gốc từ 500.000đ trở xuống giảm còn 300.000đ.";
+/**
+ * VAT cho nhóm "Dịch vụ pháp lý sửa đổi" khi xuất ảnh Báo giá tổng hợp. TẠM dùng 8% giống Thành lập doanh nghiệp
+ * (CHƯA có xác nhận cuối cùng của chủ site) — đổi MỘT chỗ này là cả công cụ báo giá đổi theo.
+ */
+export const AMENDMENT_VAT_PERCENT = 8;
+
+/** Combo: giá gốc TRÊN ngưỡng này thì dịch vụ "còn lại" tính AMENDMENT_COMBO_HIGH_PRICE; từ ngưỡng TRỞ XUỐNG (kể cả
+ * đúng bằng ngưỡng) thì tính AMENDMENT_COMBO_LOW_PRICE. */
+export const AMENDMENT_COMBO_THRESHOLD = 500000;
+export const AMENDMENT_COMBO_HIGH_PRICE = 500000;
+export const AMENDMENT_COMBO_LOW_PRICE = 300000;
+export const AMENDMENT_MAX_SELECTION = AMENDMENT_SERVICES.length;
+
+/** "500000" -> "500.000đ" (không dùng toLocaleString để kết quả không phụ thuộc ICU của môi trường chạy). */
+export function formatAmendmentVnd(n: number): string {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "đ";
+}
+
+// Câu quy tắc hiển thị trên web (bảng giá + công cụ tính chi phí) — dựng TỪ các hằng số trên để sửa số ở 1 chỗ là đúng
+// mọi nơi; nội dung giữ nguyên từng chữ so với bản viết cứng trước đây (có test đối chiếu).
+export const COMBO_DISCOUNT_RULE = `Khi đặt từ 2 dịch vụ sửa đổi trở lên cùng lúc: dịch vụ có giá trị lớn nhất tính giá đầy đủ; các dịch vụ còn lại — giá gốc trên ${formatAmendmentVnd(AMENDMENT_COMBO_THRESHOLD)} giảm còn ${formatAmendmentVnd(AMENDMENT_COMBO_HIGH_PRICE)}, giá gốc từ ${formatAmendmentVnd(AMENDMENT_COMBO_THRESHOLD)} trở xuống giảm còn ${formatAmendmentVnd(AMENDMENT_COMBO_LOW_PRICE)}.`;
 
 export type AmendmentComboItem = AmendmentService & { finalPrice: number; discounted: boolean };
 
+/**
+ * HÀM THUẦN tính combo — nguồn DUY NHẤT cho cả công cụ "Tính chi phí thành lập" lẫn "Báo giá tổng hợp" (server).
+ * Quy tắc: từ 2 dịch vụ trở lên thì dịch vụ có giá gốc lớn nhất tính đủ; mỗi dịch vụ còn lại tính
+ * AMENDMENT_COMBO_HIGH_PRICE (giá gốc > ngưỡng) hoặc AMENDMENT_COMBO_LOW_PRICE (giá gốc <= ngưỡng). Chọn 1 dịch vụ thì
+ * tính giá gốc. Nhiều dịch vụ cùng giá lớn nhất: chỉ MỘT dịch vụ tính đủ — dịch vụ đứng trước trong bảng (sắp xếp ổn
+ * định). Slug lạ bị bỏ qua và slug trùng chỉ tính một lần (muốn từ chối đầu vào sai thì dùng
+ * validateAmendmentSelection() trước). Kết quả xếp theo giá gốc giảm dần.
+ */
 export function calculateAmendmentCombo(
   selectedSlugs: string[]
 ): { items: AmendmentComboItem[]; total: number } {
@@ -91,9 +118,36 @@ export function calculateAmendmentCombo(
   const sorted = [...selected].sort((a, b) => b.price - a.price);
   const items: AmendmentComboItem[] = sorted.map((s, i) => {
     const discounted = selected.length >= 2 && i > 0;
-    const finalPrice = !discounted ? s.price : s.price > 500000 ? 500000 : 300000;
+    const finalPrice = !discounted
+      ? s.price
+      : s.price > AMENDMENT_COMBO_THRESHOLD
+        ? AMENDMENT_COMBO_HIGH_PRICE
+        : AMENDMENT_COMBO_LOW_PRICE;
     return { ...s, finalPrice, discounted };
   });
   const total = items.reduce((sum, it) => sum + it.finalPrice, 0);
   return { items, total };
+}
+
+/** Kiểm tra danh sách slug do client gửi lên (server dùng trước khi tính giá): phải là mảng 1..N chuỗi, mỗi slug
+ * tồn tại trong AMENDMENT_SERVICES, không trùng. Trả danh sách đã chuẩn hoá hoặc thông báo lỗi tiếng Việt. */
+export function validateAmendmentSelection(
+  raw: unknown
+): { ok: true; slugs: string[] } | { ok: false; error: string } {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return { ok: false, error: "Cần chọn ít nhất 1 dịch vụ pháp lý sửa đổi." };
+  }
+  if (raw.length > AMENDMENT_MAX_SELECTION) {
+    return { ok: false, error: `Chỉ có ${AMENDMENT_MAX_SELECTION} dịch vụ pháp lý sửa đổi — danh sách gửi lên có quá nhiều mục.` };
+  }
+  const known = new Set(AMENDMENT_SERVICES.map((s) => s.slug));
+  const seen = new Set<string>();
+  for (const v of raw) {
+    if (typeof v !== "string" || !known.has(v)) {
+      return { ok: false, error: `Dịch vụ pháp lý sửa đổi không tồn tại: "${typeof v === "string" ? v.slice(0, 60) : String(v)}".` };
+    }
+    if (seen.has(v)) return { ok: false, error: `Dịch vụ pháp lý sửa đổi bị chọn trùng: "${v}".` };
+    seen.add(v);
+  }
+  return { ok: true, slugs: Array.from(seen) };
 }

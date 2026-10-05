@@ -75,6 +75,18 @@ const TOTAL_ROW_H = 56; // khối "Thành tiền" viền trên
 const FALLBACK_ROW_H = 78; // dòng "custom" không tách được số (giữ như thiết kế cũ)
 const ROW_GAP = 14;
 
+// Dòng "Dịch vụ pháp lý sửa đổi" (loại "sua-doi"): 1 thẻ gộp, MỖI DỊCH VỤ là 1 hàng gọn (tên · thời gian bên trái, giá bên
+// phải) thay vì mỗi dịch vụ một thẻ cao như các loại khác — báo giá nhiều dịch vụ sẽ quá dài nếu để mỗi thông tin một dòng.
+// Các hằng số chiều cao hiệu chỉnh bằng pixel thật (xem estimateAmendmentRowHeight).
+const AMEND_ROW_H = 36; // 1 hàng dịch vụ 1 dòng chữ: padding 8+8, chữ 15px (~19), viền trên 1 — đo bằng pixel thật
+const AMEND_ROW_EXTRA_LINE_H = 18; // mỗi dòng chữ thêm khi tên dịch vụ dài phải xuống dòng
+const AMEND_ROW_WRAP_THRESHOLD = 84; // ký tự (tên + " · " + thời gian) vượt ngưỡng này thì ước lượng 2 dòng (đo: dòng EN dài nhất 76 ký tự vẫn 1 dòng)
+const AMEND_ROWS_TOP_MARGIN = 10;
+const AMEND_NOTE_LINE_H = 16;
+const AMEND_NOTE_PADDING_Y = 20; // padding 9+9 + viền 2
+const AMEND_NOTE_CHARS_PER_LINE = 135; // ký tự/dòng của ghi chú combo (chữ 12px, khung ~866px; đo thực tế ~145) — chọn thấp hơn để KHÔNG BAO GIỜ ước lượng thiếu
+const AMEND_NOTE_TOP_MARGIN = 10;
+
 const SECTION_HEADER_H = 34;
 const SECTION_TOP_MARGIN = 32;
 const SECTION_TOTAL_BOX_H = 60;
@@ -138,6 +150,10 @@ function isValidItemShape(item: unknown): item is CompositeQuoteItem {
       );
     case "thanh-lap-doanh-nghiep":
       return it.tier === "goi-1" || it.tier === "goi-2";
+    case "sua-doi":
+      // Chỉ kiểm tra hình dạng (mảng chuỗi) — nội dung (slug có tồn tại, trùng, rỗng...) do
+      // resolveCompositeQuoteItem() từ chối kèm thông báo rõ.
+      return Array.isArray(it.serviceSlugs) && it.serviceSlugs.length <= 100 && it.serviceSlugs.every((v) => typeof v === "string");
     case "ke-toan-thue":
       return (
         (it.group === "A" || it.group === "B" || it.group === "C") &&
@@ -200,7 +216,21 @@ function estimateMergedTitleLines(line: ResolvedQuoteLine): 1 | 2 | 3 {
  * 3 tuỳ có "Tạm tính" hay không) — Đơn giá+Tạm tính (nếu có) nay gộp CHUNG
  * 1 dòng (DualBreakdownLine), nên dù có Tạm tính hay không, luôn còn đúng
  * 2 dòng breakdown: [Đơn giá (+Tạm tính)] + [VAT]. */
+function amendmentRowLines(row: { name: string; duration: string }): number {
+  return row.name.length + row.duration.length + 3 > AMEND_ROW_WRAP_THRESHOLD ? 2 : 1;
+}
+
+/** Ước lượng chiều cao thẻ "Dịch vụ pháp lý sửa đổi" — PHẢI khớp JSX của AmendmentRow() bên dưới. */
+function estimateAmendmentRowHeight(line: ResolvedQuoteLine): number {
+  const a = line.amendment!;
+  const rowsH = a.rows.reduce((sum, r) => sum + AMEND_ROW_H + (amendmentRowLines(r) - 1) * AMEND_ROW_EXTRA_LINE_H, 0);
+  const noteLines = a.comboNote ? Math.ceil(a.comboNote.length / AMEND_NOTE_CHARS_PER_LINE) : 0;
+  const noteH = a.comboNote ? AMEND_NOTE_TOP_MARGIN + AMEND_NOTE_PADDING_Y + noteLines * AMEND_NOTE_LINE_H : 0;
+  return ROW_PADDING_Y + MERGED_TITLE_LINE_H + AMEND_ROWS_TOP_MARGIN + rowsH + noteH + BREAKDOWN_TOP_MARGIN + 2 * BREAKDOWN_LINE_H + TOTAL_ROW_H;
+}
+
 function estimateRowHeight(line: ResolvedQuoteLine): number {
+  if (line.amendment && line.breakdown) return estimateAmendmentRowHeight(line);
   if (!line.breakdown) return FALLBACK_ROW_H;
   return (
     ROW_PADDING_Y +
@@ -251,7 +281,113 @@ function DualBreakdownLine({
   );
 }
 
+/** Thẻ "Dịch vụ pháp lý sửa đổi": mỗi dịch vụ đã chọn = 1 hàng gọn [tên · thời gian] ... [giá gốc gạch ngang (nếu được
+ * giảm) + giá combo]; dưới cùng 1 ghi chú nhỏ về ưu đãi combo rồi Tạm tính/VAT/Thành tiền như các dịch vụ khác. */
+function AmendmentRow({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang }) {
+  const a = line.amendment!;
+  const breakdown = line.breakdown!;
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: 14,
+        border: `1px solid ${QUOTE_COLOR.line}`,
+        backgroundColor: "#ffffff",
+        padding: "20px 22px",
+      }}
+    >
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline" }}>
+        <div style={{ display: "flex", fontSize: 18, fontWeight: 700, color: QUOTE_COLOR.navy }}>{line.title}</div>
+        <div style={{ display: "flex", marginLeft: 8, fontSize: 14, fontWeight: 400, color: QUOTE_COLOR.bodyText }}>
+          {`— ${line.subtitle}`}
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", marginTop: AMEND_ROWS_TOP_MARGIN }}>
+        {a.rows.map((r, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderTop: `1px solid ${QUOTE_COLOR.line}`,
+              padding: "8px 0",
+            }}
+          >
+            <div style={{ display: "flex", flex: 1, flexWrap: "wrap", alignItems: "baseline", paddingRight: 16 }}>
+              <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: QUOTE_COLOR.navy }}>{r.name}</div>
+              <div style={{ display: "flex", marginLeft: 8, fontSize: 13, color: QUOTE_COLOR.bodyText }}>{`· ${r.duration}`}</div>
+            </div>
+            <div style={{ display: "flex", alignItems: "baseline", flexShrink: 0 }}>
+              {r.discounted && (
+                <div style={{ display: "flex", marginRight: 10, fontSize: 13, color: QUOTE_COLOR.bodyText, textDecoration: "line-through" }}>
+                  {formatQuoteCurrency(r.baseAmount, lang)}
+                </div>
+              )}
+              <div style={{ display: "flex", fontSize: 16, fontWeight: 700, color: QUOTE_COLOR.ink }}>
+                {formatQuoteCurrency(r.finalAmount, lang)}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {a.comboNote && (
+        <div
+          style={{
+            display: "flex",
+            marginTop: AMEND_NOTE_TOP_MARGIN,
+            borderRadius: 10,
+            backgroundColor: "#fff7e6",
+            border: "1px solid #f5cd7e",
+            padding: "9px 14px",
+            fontSize: 12,
+            fontWeight: 600,
+            color: "#b45309",
+            lineHeight: `${AMEND_NOTE_LINE_H}px`,
+          }}
+        >
+          {`🎁 ${a.comboNote}`}
+        </div>
+      )}
+
+      <div style={{ display: "flex", flexDirection: "column", marginTop: BREAKDOWN_TOP_MARGIN, gap: 4 }}>
+        {a.rows.length >= 2 ? (
+          <DualBreakdownLine
+            leftLabel={qt("amendmentOriginalTotalLabel", lang)}
+            leftValue={formatQuoteCurrency(a.originalTotal, lang)}
+            rightLabel={qt("amendmentComboSubtotalLabel", lang)}
+            rightValue={formatQuoteCurrency(a.comboTotal, lang)}
+          />
+        ) : (
+          <BreakdownLine label={qt("subtotalLabel", lang)} value={formatQuoteCurrency(a.comboTotal, lang)} />
+        )}
+        <BreakdownLine label={vatLabel(breakdown.vatRatePercent)} value={formatQuoteCurrency(breakdown.vatAmount, lang)} />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginTop: 12,
+          borderTop: `1px solid ${QUOTE_COLOR.line}`,
+          paddingTop: 12,
+        }}
+      >
+        <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: QUOTE_COLOR.navy }}>{qt("totalLabel", lang)}</div>
+        <div style={{ display: "flex", fontSize: 22, fontWeight: 800, color: QUOTE_COLOR.accent }}>
+          {formatQuoteCurrency(breakdown.total, lang)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ItemRow({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang }) {
+  if (line.amendment && line.breakdown) return <AmendmentRow line={line} lang={lang} />;
   const { secondLine, show: showSecondLine } = computeSecondLine(line);
 
   if (!line.breakdown) {
@@ -795,6 +931,13 @@ export async function POST(req: Request) {
   // năng song ngữ). Form nhập liệu luôn tiếng Việt, field này KHÔNG ảnh
   // hưởng gì đến việc tra giá — chỉ đổi nhãn hiển thị trên ảnh.
   const lang: QuoteLang = body.lang === "en" ? "en" : "vi";
+
+  // Combo chỉ có nghĩa trong MỘT danh sách chọn — 2 dòng "sửa đổi" riêng sẽ tự tính combo tách rời, gây hiểu nhầm giá.
+  if (body.items.filter((it) => (it as { type?: unknown })?.type === "sua-doi").length > 1) {
+    return new Response("Chỉ được 1 dòng Dịch vụ pháp lý sửa đổi trong 1 báo giá — hãy tích thêm dịch vụ vào cùng 1 dòng.", {
+      status: 400,
+    });
+  }
 
   const resolvedLines: ResolvedQuoteLine[] = [];
   for (const item of body.items) {
