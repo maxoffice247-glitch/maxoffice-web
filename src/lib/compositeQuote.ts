@@ -544,9 +544,11 @@ function buildBreakdown(params: {
   };
 }
 
-/** % VAT của phí Kế toán & thuế — TẠM 10% (chưa có xác nhận cuối cùng). */
+/** % VAT của phí Kế toán & thuế — GIẢ ĐỊNH 10% đã chốt giữ nguyên, KHÔNG phải xác nhận pháp lý/thuế (hợp đồng chi tiết gửi sau). Đổi ở đây là mọi ảnh báo giá Kế toán & thuế đổi theo. */
 export const ACCOUNTING_VAT_PERCENT = 10;
-/** % VAT của phụ phí Kế toán & thuế — hiện dùng đúng mức của phí Kế toán & thuế; tách hằng số để đổi riêng khi cần. */
+/** % VAT của phụ phí Kế toán & thuế (tờ khai hải quan, xuất hoá đơn hộ, báo cáo tài chính) — GIẢ ĐỊNH dùng đúng mức 10% của phí Kế toán & thuế, cũng chưa phải xác nhận pháp lý;
+ * tách hằng số để đổi riêng khi cần. Các giả định đơn vị tính của từng khoản (hải quan theo mỗi tờ khai, báo cáo tài chính theo số năm, xuất hoá đơn hộ theo tháng) ghi tại
+ * dữ liệu phụ phí trong servicesData.ts (SERVICES_DATA["ke-toan-thue"].pricing.surcharges). */
 export const ACCOUNTING_SURCHARGE_VAT_PERCENT = ACCOUNTING_VAT_PERCENT;
 export const ACCOUNTING_SURCHARGE_QUANTITY_MAX = 99;
 

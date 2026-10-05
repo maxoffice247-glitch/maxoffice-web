@@ -138,7 +138,8 @@ export type AccountingSurcharge = {
   key: AccountingSurchargeKey;
   title: string;
   note?: string;
-  /** Cách thu: "month" = mỗi tháng (cộng vào phí hàng tháng); "year" = mỗi năm; "each" = mỗi lần phát sinh. "year"/"each" là chi phí một lần trong báo giá. */
+  /** Cách thu: "month" = mỗi tháng (cộng vào phí hàng tháng); "year" = mỗi năm; "each" = mỗi lần phát sinh. "year"/"each" là chi phí một lần trong báo giá.
+   * LƯU Ý: với Kế toán & thuế, giá trị này là GIẢ ĐỊNH ĐÃ CHỐT của công cụ báo giá (hải quan = mỗi tờ khai, báo cáo tài chính = theo năm), không phải xác nhận pháp lý — xem comment ở servicesData.ts. */
   billing: "month" | "year" | "each";
   /** Tên đơn vị cho ô số lượng (chỉ khi billing khác "month"), VD "tờ khai", "năm". */
   quantityUnit?: string;

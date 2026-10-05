@@ -738,8 +738,9 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
         {
           key: "hai-quan",
           title: "Tờ khai hải quan",
-          // CHƯA RÕ trong dữ liệu gốc: đơn vị tính (mỗi tờ khai? mỗi tháng?) và ý nghĩa dòng Nhóm A ("100 trang + 1.000.000đ") — dòng đó giữ
-          // nguyên chữ để hiển thị, KHÔNG có `amount` nên không tính được trong công cụ báo giá.
+          // GIẢ ĐỊNH ĐÃ CHỐT (đơn giản hoá, KHÔNG phải xác nhận pháp lý/hợp đồng — hợp đồng chi tiết gửi sau): dữ liệu gốc không ghi đơn vị tính của khoản
+          // này; công cụ báo giá hiểu là TÍNH THEO MỖI TỜ KHAI (ô số lượng = số tờ khai, vào "Chi phí một lần"). Dòng "Nhóm A" ("100 trang + 1.000.000đ")
+          // chưa rõ nghĩa nên CHỈ HIỂN THỊ (giữ nguyên chữ, KHÔNG có `amount`) — công cụ báo giá không cho chọn.
           billing: "each",
           quantityUnit: "tờ khai",
           rows: [
@@ -763,6 +764,8 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
           key: "bao-cao-tai-chinh",
           title: "Báo cáo tài chính",
           note: "Áp dụng chung cả 3 nhóm loại hình.",
+          // GIẢ ĐỊNH ĐÃ CHỐT (không phải xác nhận pháp lý): giá ghi "/năm" nên công cụ báo giá tính theo SỐ NĂM (ô số lượng = số năm, mặc định 1),
+          // vào "Chi phí một lần".
           billing: "year",
           quantityUnit: "năm",
           rows: [
