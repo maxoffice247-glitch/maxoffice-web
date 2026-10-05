@@ -286,3 +286,73 @@ export function paymentScheduleText(lang: QuoteLang) {
         balanceDue: "Còn phải thanh toán",
       };
 }
+
+/* ---------------------------------------------------------------------- */
+/* Kế toán & thuế: phụ phí trong báo giá + ảnh "Bảng giá đầy đủ".           */
+/* Chữ tiếng Việt lấy từ servicesData.ts (cùng nguồn với trang web); phần   */
+/* dưới là KHUNG CÂU + bản tiếng Anh — Claude tự đề xuất, CẦN RÀ SOÁT.      */
+/* ---------------------------------------------------------------------- */
+
+export function accountingText(lang: QuoteLang, vatPercent: number) {
+  return lang === "en"
+    ? {
+        category: "Accounting & Tax",
+        surchargeCardTitle: "Accounting & Tax Surcharges",
+        mainFeeRow: "Accounting & tax fee",
+        perMonth: "per month",
+        priceListTitle: "Accounting & Tax Services Price List",
+        priceListNote: "Average monthly fee by number of invoices/documents per quarter, shown for all 3 business types for easy comparison.",
+        colRange: "Invoices & documents per quarter",
+        surchargeHeading: "Additional fees (if applicable)",
+        vatNote: `Listed prices exclude ${vatPercent}% VAT.`,
+      }
+    : {
+        category: "Kế toán & thuế",
+        surchargeCardTitle: "Phụ phí kế toán & thuế",
+        mainFeeRow: "Phí kế toán & thuế",
+        perMonth: "mỗi tháng",
+        priceListTitle: "Bảng giá dịch vụ kế toán & thuế",
+        priceListNote: "Mức phí trung bình/tháng theo số hoá đơn/quý, hiển thị đồng thời cả 3 nhóm loại hình để dễ so sánh.",
+        colRange: "Số hoá đơn ra/vào, chứng từ mỗi quý",
+        surchargeHeading: "Phí phát sinh thêm (nếu có)",
+        vatNote: `Giá chưa bao gồm VAT ${vatPercent}%.`,
+      };
+}
+
+/** "3 khoản" / "3 items" — số phụ phí trong thẻ phụ phí. */
+export function accountingItemCount(n: number, lang: QuoteLang): string {
+  return lang === "en" ? `${n} ${n === 1 ? "item" : "items"}` : `${n} khoản`;
+}
+
+/** Bản tiếng Anh của 3 nhóm phụ phí (khoá = AccountingSurcharge.key trong servicesData.ts; `rows` theo đúng thứ tự dòng dữ liệu). */
+export const ACCOUNTING_SURCHARGE_EN: Record<
+  string,
+  { title: string; note?: string; rows: string[]; unitOne: string; unitMany: string; valueSuffix: string }
+> = {
+  "hai-quan": {
+    title: "Customs declaration",
+    rows: ["Group A", "Groups B & C: 1-100 pages", "Groups B & C: 100-200 pages"],
+    unitOne: "declaration",
+    unitMany: "declarations",
+    valueSuffix: "",
+  },
+  "hoa-don-ho": {
+    title: "Invoice issuance on behalf of the client",
+    note: "Applies to all 3 business groups.",
+    rows: ["1-30 invoices", "31-60 invoices", "61-100 invoices"],
+    unitOne: "month",
+    unitMany: "months",
+    valueSuffix: "/month",
+  },
+  "bao-cao-tai-chinh": {
+    title: "Financial statements",
+    note: "Applies to all 3 business groups.",
+    rows: ["No activity", "Revenue under VND 3 billion", "Revenue over VND 3 billion"],
+    unitOne: "year",
+    unitMany: "years",
+    valueSuffix: "/year",
+  },
+};
+
+/** Dòng "Nhóm A" của Tờ khai hải quan không có đơn giá số — hiển thị nguyên văn dữ liệu gốc (VI) / bản dịch này (EN). */
+export const ACCOUNTING_CUSTOMS_GROUP_A_VALUE_EN = "100 pages + 1,000,000 VND";

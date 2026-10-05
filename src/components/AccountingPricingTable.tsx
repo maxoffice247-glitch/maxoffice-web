@@ -1,5 +1,6 @@
 import Reveal from "./Reveal";
 import LeadFormButton from "./LeadFormButton";
+import Button from "./Button";
 import ScrollFadeContainer from "./ScrollFadeContainer";
 import { DocumentCheckIcon, WalletIcon, ScaleIcon } from "./icons";
 import type { AccountingPricing } from "./ServicePricingTable";
@@ -27,16 +28,23 @@ export default function AccountingPricingTable({
       </Reveal>
 
       <Reveal className="mx-auto max-w-[900px] overflow-hidden rounded-2xl border border-line bg-white shadow-soft">
-        <ScrollFadeContainer className="overflow-x-auto">
-          <table className="w-full min-w-[680px] border-collapse text-left">
-            <thead>
-              <tr className="border-b border-line">
-                <th className="sticky left-0 z-10 w-[190px] border-r border-line bg-bg-tint px-5 py-3.5 text-[12px] leading-snug font-bold text-navy shadow-[2px_0_6px_rgba(15,27,45,0.08)] sm:w-[220px]">
+        {/* MỘT cấu trúc DOM duy nhất (table/tr/td): dưới md mỗi mức số hoá đơn hiển thị dạng THẺ xếp dọc bằng CSS (display:block/flex, tên
+            nhóm lấy từ data-label qua ::before) nên vừa trọn bề ngang điện thoại, không kéo ngang, không nhân đôi nội dung. Từ md trở lên giữ
+            nguyên bảng 4 cột (cột đầu dính trái) như cũ. Thêm role tường minh vì display khác table* làm trình đọc màn hình mất ngữ nghĩa bảng. */}
+        <ScrollFadeContainer className="md:overflow-x-auto">
+          <table role="table" className="block w-full border-collapse text-left md:table md:min-w-[680px]">
+            <thead role="rowgroup" className="sr-only md:not-sr-only md:table-header-group">
+              <tr role="row" className="border-b border-line">
+                <th
+                  role="columnheader"
+                  className="sticky left-0 z-10 border-r border-line bg-bg-tint px-5 py-3.5 text-[12px] leading-snug font-bold text-navy shadow-[2px_0_6px_rgba(15,27,45,0.08)] md:w-[220px]"
+                >
                   Số hoá đơn ra/vào, chứng từ mỗi quý
                 </th>
                 {pricing.groups.map((group) => (
                   <th
                     key={group.key}
+                    role="columnheader"
                     className="bg-bg-tint px-5 py-3.5 text-right text-[12px] leading-snug font-bold whitespace-nowrap text-navy"
                   >
                     {group.label}
@@ -44,12 +52,19 @@ export default function AccountingPricingTable({
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody role="rowgroup" className="block md:table-row-group">
               {pricing.tiers.map((tier, i) => (
-                <tr key={tier.range}>
+                <tr
+                  key={tier.range}
+                  role="row"
+                  className={`block border-b border-line px-4 py-3.5 md:table-row md:border-b-0 md:p-0 ${
+                    i % 2 === 1 ? "bg-[#f9fbfe] md:bg-transparent" : "bg-white md:bg-transparent"
+                  }`}
+                >
                   <td
-                    className={`sticky left-0 z-10 w-[190px] border-r border-b border-line px-5 py-3 text-[13px] font-medium text-navy shadow-[2px_0_6px_rgba(15,27,45,0.08)] sm:w-[220px] ${
-                      i % 2 === 1 ? "bg-[#f9fbfe]" : "bg-white"
+                    role="cell"
+                    className={`mb-1.5 block text-[15px] leading-snug font-bold text-navy md:sticky md:left-0 md:z-10 md:mb-0 md:table-cell md:w-[220px] md:border-r md:border-b md:border-line md:px-5 md:py-3 md:text-[13px] md:font-medium md:shadow-[2px_0_6px_rgba(15,27,45,0.08)] ${
+                      i % 2 === 1 ? "md:bg-[#f9fbfe]" : "md:bg-white"
                     }`}
                   >
                     {tier.range}
@@ -57,8 +72,10 @@ export default function AccountingPricingTable({
                   {pricing.groups.map((group) => (
                     <td
                       key={group.key}
-                      className={`border-b border-line px-5 py-3 text-right font-mono text-[14.5px] font-bold whitespace-nowrap text-primary ${
-                        i % 2 === 1 ? "bg-bg-tint/50" : ""
+                      role="cell"
+                      data-label={group.label}
+                      className={`flex items-baseline justify-between gap-3 py-0.5 font-mono text-[15px] font-bold text-primary before:font-sans before:text-[14px] before:font-normal before:text-body-text before:content-[attr(data-label)] md:table-cell md:border-b md:border-line md:px-5 md:py-3 md:text-right md:text-[14.5px] md:whitespace-nowrap md:before:content-none ${
+                        i % 2 === 1 ? "md:bg-bg-tint/50" : ""
                       }`}
                     >
                       {tier.prices[group.key]}
@@ -111,10 +128,14 @@ export default function AccountingPricingTable({
         </div>
       </Reveal>
 
-      <div className="mt-8 text-center">
+      <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <LeadFormButton service={serviceName} variant="primary">
           Nhận tư vấn miễn phí
         </LeadFormButton>
+        {/* Mở công cụ Báo giá tổng hợp với loại "Kế toán & thuế" chọn sẵn (?loai=ke-toan). */}
+        <Button href="/tien-ich/tao-bao-gia-tong-hop?loai=ke-toan" variant="ghost">
+          Tạo báo giá kế toán &amp; thuế
+        </Button>
       </div>
     </div>
   );

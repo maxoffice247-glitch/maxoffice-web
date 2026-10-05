@@ -31,6 +31,10 @@ import {
   amendmentComboNote,
   amendmentServiceCount,
   oneTimeFeeShortLabel,
+  accountingText,
+  accountingItemCount,
+  ACCOUNTING_SURCHARGE_EN,
+  ACCOUNTING_CUSTOMS_GROUP_A_VALUE_EN,
   translateAmendmentDuration,
   AMENDMENT_SERVICE_NAMES_EN,
   AMENDMENT_SCOPE_NOTE_EN,
@@ -231,7 +235,16 @@ export type CompositeQuoteItem =
   /** Ảnh "Bảng giá đầy đủ 13 dịch vụ" để gửi khách hỏi giá: không có field nào khác — server tự lấy cả 13 dịch vụ từ
    * AMENDMENT_SERVICES; không combo, không tổng, không QR. */
   | { type: "sua-doi-bang-gia" }
-  | { type: "ke-toan-thue"; group: "A" | "B" | "C"; rangeIndex: number }
+  /** `surcharges`: các khoản phụ phí chọn kèm (xem AccountingSurcharge trong servicesData.ts) — client CHỈ gửi (key, rowIndex, quantity); đơn giá/tên/nhóm
+   * tổng/VAT do server tự tra và tính, mọi field "giá" gửi kèm bị bỏ qua. */
+  | {
+      type: "ke-toan-thue";
+      group: "A" | "B" | "C";
+      rangeIndex: number;
+      surcharges?: { key: string; rowIndex: number; quantity?: number }[];
+    }
+  /** Ảnh "Bảng giá đầy đủ" Kế toán & thuế (ma trận 9 mức x 3 nhóm + 3 khoản phụ phí): không field nào khác, không tổng/QR. */
+  | { type: "ke-toan-bang-gia" }
   | {
       type: "custom";
       serviceSlug: CustomServiceSlug;
@@ -409,6 +422,22 @@ export type ResolvedQuoteLine = {
   amendment?: AmendmentLineDetail;
   /** Chỉ có ở dòng loại "sua-doi-bang-gia" — route ảnh vẽ khối bảng giá riêng, KHÔNG đưa vào khối chi phí/tổng/QR. */
   priceList?: AmendmentPriceListDetail;
+  /** Chỉ có ở dòng loại "ke-toan-bang-gia" — cùng cách xử lý như `priceList` (khối riêng, không vào tổng/QR). */
+  accountingPriceList?: AccountingPriceListDetail;
+  /** Dòng đi kèm sinh ra từ cùng 1 lựa chọn (VD phụ phí Kế toán & thuế thu một lần -> thẻ riêng ở "Chi phí một lần") — route trải phẳng vào danh sách dòng. */
+  extraLines?: ResolvedQuoteLine[];
+};
+
+/** Chi tiết dòng "Bảng giá đầy đủ" Kế toán & thuế. Giá giữ ở dạng chuỗi hiển thị (đúng chữ trên web ở bản tiếng Việt). */
+export type AccountingPriceListDetail = {
+  title: string;
+  note: string;
+  colRange: string;
+  groups: { key: string; label: string }[];
+  tiers: { range: string; prices: string[] }[];
+  surchargeHeading: string;
+  surcharges: { title: string; note?: string; rows: { label: string; value: string }[] }[];
+  vatNote: string;
 };
 
 export type ResolveItemError = { error: string };
@@ -451,6 +480,119 @@ function buildBreakdown(params: {
     vatRatePercent,
     vatAmount,
     total: subtotal + vatAmount,
+  };
+}
+
+/** % VAT của phí Kế toán & thuế — TẠM 10% (chưa có xác nhận cuối cùng). */
+export const ACCOUNTING_VAT_PERCENT = 10;
+/** % VAT của phụ phí Kế toán & thuế — hiện dùng đúng mức của phí Kế toán & thuế; tách hằng số để đổi riêng khi cần. */
+export const ACCOUNTING_SURCHARGE_VAT_PERCENT = ACCOUNTING_VAT_PERCENT;
+export const ACCOUNTING_SURCHARGE_QUANTITY_MAX = 99;
+
+type AccountingExtraRow = { name: string; duration: string; baseAmount: number; finalAmount: number; discounted: boolean };
+
+/**
+ * Kiểm tra + tính các phụ phí Kế toán & thuế khách chọn kèm. Trả `{ error }` nếu có khoản không hợp lệ (route -> 400); ngược lại tách 2 nhóm theo cách thu:
+ * `monthly` (billing "month") nằm CHUNG thẻ phí hàng tháng; `oneOff` (billing "year"/"each") sang thẻ "Chi phí một lần". Thứ tự dòng theo dữ liệu, không theo thứ tự client gửi.
+ */
+function resolveAccountingSurcharges(
+  group: "A" | "B" | "C",
+  raw: unknown,
+  lang: QuoteLang
+): { error: string } | { monthly: AccountingExtraRow[]; oneOff: AccountingExtraRow[] } {
+  const pricing = SERVICES_DATA["ke-toan-thue"].pricing;
+  if (pricing.mode !== "accounting") return { error: "Dữ liệu giá Kế toán & thuế không đúng định dạng." };
+  if (raw === undefined) return { monthly: [], oneOff: [] };
+  if (!Array.isArray(raw)) return { error: "Danh sách phụ phí Kế toán & thuế không hợp lệ." };
+
+  const chosen = new Map<string, { rowIndex: number; quantity: number }>();
+  for (const entry of raw) {
+    const e = (entry ?? {}) as { key?: unknown; rowIndex?: unknown; quantity?: unknown };
+    const surcharge = pricing.surcharges.find((x) => x.key === e.key);
+    if (typeof e.key !== "string" || !surcharge) return { error: `Phụ phí "${String(e.key)}" không tồn tại.` };
+    if (chosen.has(e.key)) return { error: `Phụ phí "${surcharge.title}" bị chọn trùng.` };
+    if (typeof e.rowIndex !== "number" || !Number.isInteger(e.rowIndex) || !surcharge.rows[e.rowIndex]) {
+      return { error: `Mức phụ phí của "${surcharge.title}" không tồn tại.` };
+    }
+    const row = surcharge.rows[e.rowIndex];
+    if (row.amount === undefined) {
+      return { error: `Mức "${row.label}" của "${surcharge.title}" chưa có đơn giá cố định — không tính được trong báo giá.` };
+    }
+    if (row.groups && !row.groups.includes(group)) {
+      return { error: `Mức "${row.label}" của "${surcharge.title}" không áp dụng cho Nhóm ${group}.` };
+    }
+    let quantity = 1;
+    if (e.quantity !== undefined) {
+      if (typeof e.quantity !== "number" || !Number.isInteger(e.quantity) || e.quantity < 1 || e.quantity > ACCOUNTING_SURCHARGE_QUANTITY_MAX) {
+        return { error: `Số lượng của "${surcharge.title}" phải là số nguyên từ 1 đến ${ACCOUNTING_SURCHARGE_QUANTITY_MAX}.` };
+      }
+      if (surcharge.billing === "month" && e.quantity !== 1) {
+        return { error: `"${surcharge.title}" tính theo tháng, không có số lượng.` };
+      }
+      quantity = e.quantity;
+    }
+    chosen.set(e.key, { rowIndex: e.rowIndex, quantity });
+  }
+
+  const monthly: AccountingExtraRow[] = [];
+  const oneOff: AccountingExtraRow[] = [];
+  for (const surcharge of pricing.surcharges) {
+    const pick = chosen.get(surcharge.key);
+    if (!pick) continue;
+    const row = surcharge.rows[pick.rowIndex];
+    const unitPrice = row.amount as number;
+    const en = ACCOUNTING_SURCHARGE_EN[surcharge.key];
+    const title = lang === "en" ? en.title : surcharge.title;
+    const rowLabel = lang === "en" ? en.rows[pick.rowIndex] : row.label;
+    const name = `${title} — ${rowLabel}`;
+    if (surcharge.billing === "month") {
+      monthly.push({ name, duration: accountingText(lang, ACCOUNTING_VAT_PERCENT).perMonth, baseAmount: unitPrice, finalAmount: unitPrice, discounted: false });
+      continue;
+    }
+    const unit =
+      lang === "en" ? (pick.quantity === 1 ? en.unitOne : en.unitMany) : (surcharge.quantityUnit ?? "");
+    const duration =
+      pick.quantity === 1
+        ? `1 ${unit}`
+        : `${pick.quantity} ${unit} × ${formatQuoteCurrency(unitPrice, lang)}`;
+    oneOff.push({ name, duration, baseAmount: unitPrice, finalAmount: unitPrice * pick.quantity, discounted: false });
+  }
+  return { monthly, oneOff };
+}
+
+/** Tách dòng nhiều hàng (dùng chung kiểu hiển thị với "Dịch vụ pháp lý sửa đổi"): mỗi hàng 1 khoản, rồi Tạm tính / VAT / Thành tiền. */
+function multiRowLine(params: {
+  category: string;
+  title: string;
+  subtitle: string;
+  bucket: QuoteBucket;
+  rows: AccountingExtraRow[];
+  /** Phần VAT: danh sách [số tiền, % VAT] — VAT làm tròn riêng từng phần rồi cộng. */
+  vatParts: [number, number][];
+  lang: QuoteLang;
+}): ResolvedQuoteLine {
+  const subtotal = params.rows.reduce((sum, r) => sum + r.finalAmount, 0);
+  const vatAmount = params.vatParts.reduce((sum, [amount, pct]) => sum + Math.round((amount * pct) / 100), 0);
+  return {
+    category: params.category,
+    title: params.title,
+    subtitle: params.subtitle,
+    bucket: params.bucket,
+    breakdown: {
+      baseAmount: subtotal,
+      baseLabel: formatQuoteCurrency(subtotal, params.lang),
+      subtotal,
+      vatRatePercent: params.vatParts[0][1],
+      vatAmount,
+      total: subtotal + vatAmount,
+    },
+    amendment: {
+      rows: params.rows,
+      originalTotal: subtotal,
+      comboTotal: subtotal,
+      discountAmount: 0,
+      comboApplied: false,
+    },
   };
 }
 
@@ -615,20 +757,118 @@ export function resolveCompositeQuoteItem(
       if (baseAmount == null) {
         return { error: "Không đọc được giá Kế toán & thuế từ dữ liệu hệ thống." };
       }
+      const groupTitle = lang === "en" ? group.labelEn ?? group.label : group.label;
+      // row.range đã tự chứa "hoá đơn" (VD: "1-30 hoá đơn", ngoại lệ "Không phát sinh") — chỉ nối thêm "/quý", KHÔNG lặp lại "hoá đơn".
+      const subtitle = `${lang === "en" ? row.rangeEn ?? row.range : row.range}${qt("perQuarterSuffix", lang)}`;
+      const baseLabel = `${lang === "en" ? formatQuoteCurrency(baseAmount, "en") : price}${qt("perMonthSuffix", lang)}`;
+
+      const extras = resolveAccountingSurcharges(item.group, item.surcharges, lang);
+      if ("error" in extras) return { error: extras.error };
+
+      // Không chọn phụ phí nào: giữ NGUYÊN thẻ cũ (ảnh y hệt trước khi có phụ phí).
+      if (extras.monthly.length === 0 && extras.oneOff.length === 0) {
+        return {
+          category: qt("categoryKeToanThue", lang),
+          title: groupTitle,
+          subtitle,
+          bucket: "thang",
+          breakdown: buildBreakdown({ baseAmount, baseLabel, vatRatePercent: ACCOUNTING_VAT_PERCENT }),
+        };
+      }
+
+      const text = accountingText(lang, ACCOUNTING_VAT_PERCENT);
+      const mainRow: AccountingExtraRow = {
+        name: text.mainFeeRow,
+        duration: text.perMonth,
+        baseAmount,
+        finalAmount: baseAmount,
+        discounted: false,
+      };
+      // Phí hàng tháng (phí chính + phụ phí tính theo tháng) ở CHUNG 1 thẻ nhóm "hàng tháng"; phụ phí theo năm/theo lần là thẻ thứ hai ở "Chi phí một lần".
+      const monthlyExtraTotal = extras.monthly.reduce((sum, r) => sum + r.finalAmount, 0);
+      const monthlyLine: ResolvedQuoteLine =
+        extras.monthly.length === 0
+          ? {
+              category: qt("categoryKeToanThue", lang),
+              title: groupTitle,
+              subtitle,
+              bucket: "thang",
+              breakdown: buildBreakdown({ baseAmount, baseLabel, vatRatePercent: ACCOUNTING_VAT_PERCENT }),
+            }
+          : multiRowLine({
+              category: qt("categoryKeToanThue", lang),
+              title: groupTitle,
+              subtitle,
+              bucket: "thang",
+              rows: [mainRow, ...extras.monthly],
+              vatParts: [
+                [baseAmount, ACCOUNTING_VAT_PERCENT],
+                [monthlyExtraTotal, ACCOUNTING_SURCHARGE_VAT_PERCENT],
+              ],
+              lang,
+            });
+      if (extras.oneOff.length > 0) {
+        const oneOffTotal = extras.oneOff.reduce((sum, r) => sum + r.finalAmount, 0);
+        monthlyLine.extraLines = [
+          multiRowLine({
+            category: qt("categoryKeToanThue", lang),
+            title: text.surchargeCardTitle,
+            subtitle: accountingItemCount(extras.oneOff.length, lang),
+            bucket: "mot-lan",
+            rows: extras.oneOff,
+            vatParts: [[oneOffTotal, ACCOUNTING_SURCHARGE_VAT_PERCENT]],
+            lang,
+          }),
+        ];
+      }
+      return monthlyLine;
+    }
+
+    case "ke-toan-bang-gia": {
+      // Không nhận dữ liệu nào từ client: in đủ ma trận 9 mức x 3 nhóm + 3 khoản phụ phí đang hiển thị trên web.
+      const pricing = SERVICES_DATA["ke-toan-thue"].pricing;
+      if (pricing.mode !== "accounting") return { error: "Dữ liệu giá Kế toán & thuế không đúng định dạng." };
+      const text = accountingText(lang, ACCOUNTING_VAT_PERCENT);
+      const money = (display: string) => {
+        if (lang === "vi") return display;
+        const n = parseVndAmount(display);
+        return n == null ? display : formatQuoteCurrency(n, "en");
+      };
       return {
-        category: qt("categoryKeToanThue", lang),
-        title: lang === "en" ? group.labelEn ?? group.label : group.label,
-        // row.range đã tự chứa "hoá đơn" (VD: "1-30 hoá đơn", ngoại lệ
-        // "Không phát sinh") — chỉ nối thêm "/quý", KHÔNG lặp lại "hoá đơn".
-        subtitle: `${lang === "en" ? row.rangeEn ?? row.range : row.range}${qt("perQuarterSuffix", lang)}`,
-        bucket: "thang",
-        breakdown: buildBreakdown({
-          baseAmount,
-          baseLabel: `${lang === "en" ? formatQuoteCurrency(baseAmount, "en") : price}${qt("perMonthSuffix", lang)}`,
-          // Tạm áp 10% (nhóm dịch vụ văn phòng/dịch vụ chung) — CHƯA có xác
-          // nhận cuối cùng từ chủ site, xem báo cáo cuối phiên làm việc.
-          vatRatePercent: 10,
-        }),
+        category: text.category,
+        title: text.priceListTitle,
+        subtitle: "",
+        bucket: "mot-lan", // không dùng: route tách dòng này ra khỏi các khối chi phí
+        breakdown: null,
+        fallbackLabel: text.priceListTitle,
+        accountingPriceList: {
+          title: text.priceListTitle,
+          note: text.priceListNote,
+          colRange: text.colRange,
+          groups: pricing.groups.map((g) => ({ key: g.key, label: lang === "en" ? g.labelEn ?? g.label : g.label })),
+          tiers: pricing.tiers.map((t) => ({
+            range: lang === "en" ? t.rangeEn ?? t.range : t.range,
+            prices: pricing.groups.map((g) => money(t.prices[g.key])),
+          })),
+          surchargeHeading: text.surchargeHeading,
+          surcharges: pricing.surcharges.map((sc) => {
+            const en = ACCOUNTING_SURCHARGE_EN[sc.key];
+            return {
+              title: lang === "en" ? en.title : sc.title,
+              note: lang === "en" ? en.note : sc.note,
+              rows: sc.rows.map((r, i) => ({
+                label: lang === "en" ? en.rows[i] : r.label,
+                value:
+                  lang === "vi"
+                    ? r.value
+                    : r.amount === undefined
+                      ? ACCOUNTING_CUSTOMS_GROUP_A_VALUE_EN
+                      : `${formatQuoteCurrency(r.amount, "en")}${en.valueSuffix}`,
+              })),
+            };
+          }),
+          vatNote: text.vatNote,
+        },
       };
     }
 
@@ -734,6 +974,12 @@ export function getAccountingGroupOptions() {
   return pricing.mode === "accounting" ? pricing.groups : [];
 }
 
+/** Các nhóm phụ phí Kế toán & thuế (đọc thẳng từ servicesData.ts — cùng nguồn với trang web) cho form chọn. */
+export function getAccountingSurchargeOptions() {
+  const pricing = SERVICES_DATA["ke-toan-thue"].pricing;
+  return pricing.mode === "accounting" ? pricing.surcharges : [];
+}
+
 export function getAccountingRangeOptions() {
   const pricing = SERVICES_DATA["ke-toan-thue"].pricing;
   return pricing.mode === "accounting" ? pricing.tiers : [];
@@ -764,7 +1010,7 @@ export function getHoaDonDienTuTierOptions(): { key: string; quantity: string; p
 export function buildCompositeQuoteFilename(
   customer: CompositeQuoteCustomer,
   now: Date = new Date(),
-  kind?: "bang-gia-sua-doi",
+  kind?: "bang-gia-sua-doi" | "bang-gia-ke-toan",
   installmentStage?: InstallmentStage
 ): string {
   const dd = String(now.getDate()).padStart(2, "0");
@@ -772,6 +1018,7 @@ export function buildCompositeQuoteFilename(
   const yy = String(now.getFullYear()).slice(-2);
   // Ảnh "Bảng giá đầy đủ" là tài liệu chung (không gắn với 1 khách) nên dùng tên cố định thay vì tên khách/công ty.
   if (kind === "bang-gia-sua-doi") return `BG-BANG-GIA-SUA-DOI-${dd}${mm}${yy}.png`;
+  if (kind === "bang-gia-ke-toan") return `BG-BANG-GIA-KE-TOAN-${dd}${mm}${yy}.png`;
   const source = customer.companyName?.trim() || customer.name?.trim();
   const slug = source ? slugifyForFilename(source, 25) : "KHACH-LE";
   const stageSuffix = installmentStage ? INSTALLMENT_FILENAME_SUFFIX[installmentStage] : "";

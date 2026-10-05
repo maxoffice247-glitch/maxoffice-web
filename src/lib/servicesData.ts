@@ -18,7 +18,11 @@ import {
 } from "@/components/icons";
 import type { BenefitItem } from "@/components/ServiceBenefits";
 import type { FeatureItem } from "@/components/ServiceFeatures";
-import type { ServicePricing } from "@/components/ServicePricingTable";
+import type {
+  ServicePricing,
+  AccountingGroupKey,
+  AccountingSurchargeRow,
+} from "@/components/ServicePricingTable";
 import type { ComparisonRow } from "@/components/ServiceComparison";
 import type { Testimonial } from "@/components/Testimonials";
 import type { FaqItem } from "@/components/Faq";
@@ -37,6 +41,12 @@ import {
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
+}
+
+/** Dòng phụ phí Kế toán & thuế có đơn giá số: chuỗi hiển thị trên web được SINH từ `amount` (+ hậu tố đơn vị), nên công cụ báo giá và trang web
+ * luôn dùng chung một con số. */
+function surchargeRow(label: string, amount: number, suffix: string, groups?: AccountingGroupKey[]): AccountingSurchargeRow {
+  return { label, value: `${formatVND(amount)}${suffix}`, amount, ...(groups ? { groups } : null) };
 }
 
 function locationNames(slugs: string[]): string[] {
@@ -726,29 +736,39 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       ],
       surcharges: [
         {
+          key: "hai-quan",
           title: "Tờ khai hải quan",
+          // CHƯA RÕ trong dữ liệu gốc: đơn vị tính (mỗi tờ khai? mỗi tháng?) và ý nghĩa dòng Nhóm A ("100 trang + 1.000.000đ") — dòng đó giữ
+          // nguyên chữ để hiển thị, KHÔNG có `amount` nên không tính được trong công cụ báo giá.
+          billing: "each",
+          quantityUnit: "tờ khai",
           rows: [
             { label: "Nhóm A", value: "100 trang + 1.000.000đ" },
-            { label: "Nhóm B & C: 1-100 trang", value: "1.000.000đ" },
-            { label: "Nhóm B & C: 100-200 trang", value: "2.000.000đ" },
+            surchargeRow("Nhóm B & C: 1-100 trang", 1_000_000, "", ["B", "C"]),
+            surchargeRow("Nhóm B & C: 100-200 trang", 2_000_000, "", ["B", "C"]),
           ],
         },
         {
+          key: "hoa-don-ho",
           title: "Xuất hoá đơn hộ",
           note: "Áp dụng chung cả 3 nhóm loại hình.",
+          billing: "month",
           rows: [
-            { label: "1-30 hoá đơn", value: "500.000đ/tháng" },
-            { label: "31-60 hoá đơn", value: "800.000đ/tháng" },
-            { label: "61-100 hoá đơn", value: "1.000.000đ/tháng" },
+            surchargeRow("1-30 hoá đơn", 500_000, "/tháng"),
+            surchargeRow("31-60 hoá đơn", 800_000, "/tháng"),
+            surchargeRow("61-100 hoá đơn", 1_000_000, "/tháng"),
           ],
         },
         {
+          key: "bao-cao-tai-chinh",
           title: "Báo cáo tài chính",
           note: "Áp dụng chung cả 3 nhóm loại hình.",
+          billing: "year",
+          quantityUnit: "năm",
           rows: [
-            { label: "Không phát sinh (KPS)", value: "800.000đ/năm" },
-            { label: "Doanh thu dưới 3 tỷ", value: "1.500.000đ/năm" },
-            { label: "Doanh thu trên 3 tỷ", value: "2.000.000đ/năm" },
+            surchargeRow("Không phát sinh (KPS)", 800_000, "/năm"),
+            surchargeRow("Doanh thu dưới 3 tỷ", 1_500_000, "/năm"),
+            surchargeRow("Doanh thu trên 3 tỷ", 2_000_000, "/năm"),
           ],
         },
       ],

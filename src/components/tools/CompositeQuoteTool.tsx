@@ -13,6 +13,8 @@ import {
   getGpkdTierOptions,
   getAccountingGroupOptions,
   getAccountingRangeOptions,
+  getAccountingSurchargeOptions,
+  ACCOUNTING_SURCHARGE_QUANTITY_MAX,
   getCustomServiceReferencePrice,
   getChuKySoTierOptions,
   getHoaDonDienTuTierOptions,
@@ -87,7 +89,7 @@ const MAX_ROWS = 12;
 
 /** ?loai= hợp lệ duy nhất cho công cụ này — link từ 2 trang bảng "Dịch vụ pháp lý sửa đổi" chọn sẵn loại dịch vụ. Giá trị
  * khác bị bỏ qua. Đọc qua useSyncExternalStore (snapshot server = null) để trang vẫn prerender tĩnh, như form Checklist. */
-const LOAI_PRESETS = ["sua-doi"] as const;
+const LOAI_PRESETS = ["sua-doi", "ke-toan"] as const;
 type LoaiPreset = (typeof LOAI_PRESETS)[number];
 function subscribeNoop() {
   return () => {};
@@ -104,6 +106,12 @@ function readLoaiPreset(): LoaiPreset | null {
 const GPKD_TIERS = getGpkdTierOptions();
 const ACCOUNTING_GROUPS = getAccountingGroupOptions();
 const ACCOUNTING_RANGES = getAccountingRangeOptions();
+const ACCOUNTING_SURCHARGES = getAccountingSurchargeOptions();
+
+/** Các dòng phụ phí chọn được cho 1 nhóm loại hình: chỉ dòng có đơn giá số VÀ áp dụng cho nhóm đó (VD "Nhóm B & C" không dùng cho Nhóm A). */
+function allowedSurchargeRows(sc: (typeof ACCOUNTING_SURCHARGES)[number], group: "A" | "B" | "C"): number[] {
+  return sc.rows.flatMap((r, i) => (r.amount !== undefined && (!r.groups || r.groups.includes(group)) ? [i] : []));
+}
 const CHU_KY_SO_TIERS = getChuKySoTierOptions();
 const HOA_DON_DIEN_TU_TIERS = getHoaDonDienTuTierOptions();
 
@@ -144,6 +152,10 @@ type QuoteRow = {
   amendCombo: boolean;
   /** Dạng ảnh của loại "sua-doi": "chon" = báo giá theo dịch vụ đã chọn (mặc định); "bang-gia" = bảng giá đầy đủ 13 dịch vụ. */
   amendMode: "chon" | "bang-gia";
+  /** Dạng ảnh của loại "ke-toan-thue": "goi" = báo giá theo nhóm + mức đã chọn (mặc định); "bang-gia" = bảng giá đầy đủ (ma trận + phụ phí). */
+  acctMode: "goi" | "bang-gia";
+  /** Phụ phí Kế toán & thuế đang tích, khoá theo AccountingSurcharge.key: bật/tắt, mức (chỉ số dòng dữ liệu) và số lượng (chuỗi chữ số; chỉ cho khoản không tính theo tháng). */
+  acctSur: Record<string, { on: boolean; rowIndex: number; qty: string }>;
 };
 
 function createEmptyRow(): QuoteRow {
@@ -165,6 +177,8 @@ function createEmptyRow(): QuoteRow {
     amendSlugs: [],
     amendCombo: false,
     amendMode: "chon",
+    acctMode: "goi",
+    acctSur: {},
   };
 }
 
@@ -193,7 +207,7 @@ function applyServiceTypeDefaults(row: QuoteRow, type: ServiceTypeKey, firstLoca
     return { ...row, serviceType: type, amendSlugs: [], amendCombo: false, amendMode: "chon" };
   }
   if (type === "ke-toan-thue") {
-    return { ...row, serviceType: type, group: "A", rangeIndex: 0 };
+    return { ...row, serviceType: type, group: "A", rangeIndex: 0, acctMode: "goi", acctSur: {} };
   }
   if (type === "chu-ky-so") {
     return { ...row, serviceType: type, chuKySoTierKey: CHU_KY_SO_TIERS[0]?.key ?? "" };
@@ -228,8 +242,19 @@ function rowToItem(row: QuoteRow): CompositeQuoteItem | null {
     case "sua-doi":
       if (row.amendMode === "bang-gia") return { type: "sua-doi-bang-gia" };
       return row.amendSlugs.length > 0 ? { type: "sua-doi", serviceSlugs: row.amendSlugs, applyCombo: row.amendCombo } : null;
-    case "ke-toan-thue":
-      return { type: "ke-toan-thue", group: row.group, rangeIndex: row.rangeIndex };
+    case "ke-toan-thue": {
+      if (row.acctMode === "bang-gia") return { type: "ke-toan-bang-gia" };
+      const surcharges = ACCOUNTING_SURCHARGES.flatMap((sc) => {
+        const st = row.acctSur[sc.key];
+        const allowed = allowedSurchargeRows(sc, row.group);
+        if (!st?.on || allowed.length === 0) return [];
+        const rowIndex = allowed.includes(st.rowIndex) ? st.rowIndex : allowed[0];
+        // Ô số lượng để trống/0 coi là 1 (chuẩn hoá khi rời ô) — không bao giờ gửi số không hợp lệ.
+        const qty = Math.min(ACCOUNTING_SURCHARGE_QUANTITY_MAX, Math.max(1, Number(st.qty) || 1));
+        return [{ key: sc.key, rowIndex, ...(sc.billing === "month" ? null : { quantity: qty }) }];
+      });
+      return { type: "ke-toan-thue", group: row.group, rangeIndex: row.rangeIndex, ...(surcharges.length ? { surcharges } : null) };
+    }
     case "chu-ky-so":
       return row.chuKySoTierKey ? { type: "chu-ky-so", tierKey: row.chuKySoTierKey } : null;
     case "hoa-don-dien-tu":
@@ -303,7 +328,9 @@ export default function CompositeQuoteTool() {
   const urlPreset = useSyncExternalStore(subscribeNoop, readLoaiPreset, () => null);
   const defaultRows = useMemo<QuoteRow[]>(() => {
     const empty = createEmptyRow();
-    return [urlPreset === "sua-doi" ? { ...empty, serviceType: "sua-doi" } : empty];
+    if (urlPreset === "sua-doi") return [{ ...empty, serviceType: "sua-doi" }];
+    if (urlPreset === "ke-toan") return [{ ...empty, serviceType: "ke-toan-thue" }];
+    return [empty];
   }, [urlPreset]);
   const [userRows, setUserRows] = useState<QuoteRow[] | null>(null);
   const rows = userRows ?? defaultRows;
@@ -401,11 +428,15 @@ export default function CompositeQuoteTool() {
         throw new Error(message || `Server trả về lỗi ${res.status} khi tạo ảnh báo giá.`);
       }
       const blob = await res.blob();
-      // Ảnh "Bảng giá đầy đủ" là tài liệu chung nên có tên file riêng (BG-BANG-GIA-SUA-DOI-DDMMYY.png).
+      // Ảnh "Bảng giá đầy đủ" là tài liệu chung nên có tên file riêng (BG-BANG-GIA-SUA-DOI-DDMMYY.png / BG-BANG-GIA-KE-TOAN-DDMMYY.png).
       const filename = buildCompositeQuoteFilename(
         customer,
         new Date(),
-        items.some((it) => it.type === "sua-doi-bang-gia") ? "bang-gia-sua-doi" : undefined,
+        items.some((it) => it.type === "sua-doi-bang-gia")
+          ? "bang-gia-sua-doi"
+          : items.some((it) => it.type === "ke-toan-bang-gia")
+            ? "bang-gia-ke-toan"
+            : undefined,
         installment?.stage
       );
       setPreviewUrl((old) => {
@@ -492,6 +523,11 @@ export default function CompositeQuoteTool() {
                 voLocations={voLocations}
                 canRemove={rows.length > 1}
                 amendmentTakenElsewhere={row.serviceType !== "sua-doi" && rows.some((r) => r.serviceType === "sua-doi")}
+                priceListTakenElsewhere={rows.some(
+                  (r) =>
+                    r.id !== row.id &&
+                    ((r.serviceType === "sua-doi" && r.amendMode === "bang-gia") || (r.serviceType === "ke-toan-thue" && r.acctMode === "bang-gia"))
+                )}
                 onRemove={() => removeRow(row.id)}
                 onChangeServiceType={(type) => changeServiceType(row.id, type)}
                 onUpdate={(patch) => updateRow(row.id, patch)}
@@ -799,6 +835,7 @@ function QuoteRowEditor({
   voLocations,
   canRemove,
   amendmentTakenElsewhere,
+  priceListTakenElsewhere,
   onRemove,
   onChangeServiceType,
   onUpdate,
@@ -810,6 +847,8 @@ function QuoteRowEditor({
   canRemove: boolean;
   /** Đã có dòng khác chọn "Dịch vụ pháp lý sửa đổi" — chỉ được 1 dòng loại này (combo tính trong 1 danh sách duy nhất). */
   amendmentTakenElsewhere: boolean;
+  /** Dòng khác đã chọn dạng ảnh "Bảng giá đầy đủ" (sửa đổi hoặc kế toán) — mỗi báo giá chỉ 1 ảnh bảng giá. */
+  priceListTakenElsewhere: boolean;
   onRemove: () => void;
   onChangeServiceType: (type: ServiceTypeKey) => void;
   onUpdate: (patch: Partial<QuoteRow>) => void;
@@ -958,6 +997,7 @@ function QuoteRowEditor({
 
       {row.serviceType === "sua-doi" && (
         <AmendmentPicker
+          priceListBlocked={priceListTakenElsewhere && row.amendMode !== "bang-gia"}
           selected={row.amendSlugs}
           applyCombo={row.amendCombo}
           mode={row.amendMode}
@@ -989,42 +1029,7 @@ function QuoteRowEditor({
       )}
 
       {row.serviceType === "ke-toan-thue" && (
-        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div>
-            <label htmlFor={`${uid}-group`} className={labelClass}>
-              Nhóm loại hình
-            </label>
-            <select
-              id={`${uid}-group`}
-              value={row.group}
-              onChange={(e) => onUpdate({ group: e.target.value as "A" | "B" | "C" })}
-              className={`${selectClass} bg-white`}
-            >
-              {ACCOUNTING_GROUPS.map((g) => (
-                <option key={g.key} value={g.key}>
-                  {g.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor={`${uid}-range`} className={labelClass}>
-              Số hoá đơn/quý
-            </label>
-            <select
-              id={`${uid}-range`}
-              value={row.rangeIndex}
-              onChange={(e) => onUpdate({ rangeIndex: Number(e.target.value) })}
-              className={`${selectClass} bg-white`}
-            >
-              {ACCOUNTING_RANGES.map((r, i) => (
-                <option key={r.range} value={i}>
-                  {r.range} ({r.prices[row.group]}/tháng)
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        <AccountingPicker row={row} uid={uid} priceListBlocked={priceListTakenElsewhere && row.acctMode !== "bang-gia"} onUpdate={onUpdate} />
       )}
 
       {row.serviceType === "chu-ky-so" && (
@@ -1141,7 +1146,190 @@ function QuoteRowEditor({
               {preview.breakdown.promo && <span className="text-amber-600"> · 🎁 tặng {preview.breakdown.promo.extraMonths} tháng</span>}
             </div>
           )}
+          {preview.extraLines?.map((extra, i) => (
+            <div key={i} className="mt-1 flex items-center justify-between text-[11.5px] text-body-text">
+              <span>
+                + {extra.title} (một lần, {extra.subtitle})
+              </span>
+              <span className="font-mono font-bold text-primary">{extra.breakdown ? formatVnd(extra.breakdown.total) : ""}</span>
+            </div>
+          ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Phần chọn của loại "Kế toán & thuế". Hai dạng ảnh: (1) "Báo giá theo gói đã chọn" — nhóm A/B/C + mức số hoá đơn/quý + các phụ phí tích chọn (giá đọc
+ * cùng nguồn servicesData.ts với trang web; khoản tính theo tháng nằm chung thẻ phí hàng tháng, khoản theo năm/theo lần sang "Chi phí một lần", server tự tính);
+ * (2) "Bảng giá đầy đủ" — ma trận 9 mức x 3 nhóm + phụ phí, không tổng/QR. Mọi nút/ô cao >= 44px.
+ */
+function AccountingPicker({
+  row,
+  uid,
+  priceListBlocked,
+  onUpdate,
+}: {
+  row: QuoteRow;
+  uid: string;
+  priceListBlocked: boolean;
+  onUpdate: (patch: Partial<QuoteRow>) => void;
+}) {
+  const pill = (active: boolean) =>
+    `flex min-h-[44px] flex-1 items-center justify-center rounded-xl border-[1.5px] px-3 py-2 text-center text-[12.5px] leading-snug font-bold transition-colors duration-200 ${
+      active ? "border-primary bg-primary text-white" : "border-line bg-white text-body-text hover:border-primary/40"
+    }`;
+  const setSur = (key: string, patch: Partial<{ on: boolean; rowIndex: number; qty: string }>) => {
+    const cur = row.acctSur[key] ?? { on: false, rowIndex: 0, qty: "1" };
+    onUpdate({ acctSur: { ...row.acctSur, [key]: { ...cur, ...patch } } });
+  };
+
+  return (
+    <div className="mt-3">
+      <span className={labelClass}>Dạng ảnh</span>
+      <div className="mb-3 flex flex-col gap-2 sm:flex-row" role="group" aria-label="Dạng ảnh báo giá kế toán và thuế">
+        <button type="button" aria-pressed={row.acctMode === "goi"} onClick={() => onUpdate({ acctMode: "goi" })} className={pill(row.acctMode === "goi")}>
+          Báo giá theo gói đã chọn
+        </button>
+        <button
+          type="button"
+          aria-pressed={row.acctMode === "bang-gia"}
+          onClick={() => onUpdate({ acctMode: "bang-gia" })}
+          disabled={priceListBlocked}
+          className={`${pill(row.acctMode === "bang-gia")} disabled:pointer-events-none disabled:opacity-40`}
+        >
+          Bảng giá đầy đủ (không tính tổng)
+        </button>
+      </div>
+
+      {row.acctMode === "bang-gia" ? (
+        <p className="rounded-lg bg-white px-3.5 py-3 text-[12.5px] leading-relaxed text-body-text">
+          Ảnh in đủ bảng giá {ACCOUNTING_RANGES.length} mức số hoá đơn/quý x {ACCOUNTING_GROUPS.length} nhóm loại hình (giá chưa VAT) cùng các khoản phụ phí kèm
+          đơn vị tính để gửi khách hỏi giá. Không có tổng hay mã QR, nên không cần chọn nhóm, mức hay phụ phí.
+        </p>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div>
+              <label htmlFor={`${uid}-group`} className={labelClass}>
+                Nhóm loại hình
+              </label>
+              <select
+                id={`${uid}-group`}
+                value={row.group}
+                onChange={(e) => onUpdate({ group: e.target.value as "A" | "B" | "C" })}
+                className={`${selectClass} bg-white`}
+              >
+                {ACCOUNTING_GROUPS.map((g) => (
+                  <option key={g.key} value={g.key}>
+                    {g.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor={`${uid}-range`} className={labelClass}>
+                Số hoá đơn/quý
+              </label>
+              <select
+                id={`${uid}-range`}
+                value={row.rangeIndex}
+                onChange={(e) => onUpdate({ rangeIndex: Number(e.target.value) })}
+                className={`${selectClass} bg-white`}
+              >
+                {ACCOUNTING_RANGES.map((r, i) => (
+                  <option key={r.range} value={i}>
+                    {r.range} ({r.prices[row.group]}/tháng)
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <fieldset className="mt-3">
+            <legend className="mb-2 text-[12px] font-bold text-body-text">Phụ phí phát sinh (tuỳ chọn, tích được nhiều khoản)</legend>
+            <div className="space-y-2">
+              {ACCOUNTING_SURCHARGES.map((sc) => {
+                const allowed = allowedSurchargeRows(sc, row.group);
+                const st = row.acctSur[sc.key];
+                const disabled = allowed.length === 0;
+                const on = !!st?.on && !disabled;
+                const rowIndex = st && allowed.includes(st.rowIndex) ? st.rowIndex : (allowed[0] ?? 0);
+                const id = `${uid}-sur-${sc.key}`;
+                const qty = Math.min(ACCOUNTING_SURCHARGE_QUANTITY_MAX, Math.max(1, Number(st?.qty) || 1));
+                const unitAmount = sc.rows[rowIndex]?.amount ?? 0;
+                return (
+                  <div key={sc.key} className={`rounded-lg border-[1.5px] bg-white px-3 py-2.5 ${on ? "border-accent/50" : "border-line"} ${disabled ? "opacity-70" : ""}`}>
+                    <label htmlFor={id} className={`flex min-h-[44px] items-start gap-3 ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}>
+                      <input
+                        id={id}
+                        type="checkbox"
+                        checked={on}
+                        disabled={disabled}
+                        onChange={(e) => setSur(sc.key, { on: e.target.checked, rowIndex })}
+                        className="mt-0.5 h-5 w-5 shrink-0 accent-primary"
+                      />
+                      <span className="text-[13px] leading-snug font-semibold text-navy">
+                        {sc.title}
+                        <span className="mt-0.5 block text-[12px] font-normal text-body-text">
+                          {disabled
+                            ? `Nhóm ${row.group} chưa có đơn giá cố định (${sc.rows.find((r) => r.amount === undefined)?.value ?? "liên hệ"}) — liên hệ báo giá riêng.`
+                            : sc.billing === "month"
+                              ? "Tính theo tháng — cộng vào phí hàng tháng."
+                              : `Tính theo ${sc.billing === "year" ? "năm" : "lần"} — vào nhóm Chi phí một lần.`}
+                        </span>
+                      </span>
+                    </label>
+                    {on && (
+                      <div className="mt-2 space-y-2 border-t border-line pt-2.5">
+                        <div>
+                          <label htmlFor={`${id}-row`} className={labelClass}>
+                            Mức
+                          </label>
+                          <select
+                            id={`${id}-row`}
+                            value={rowIndex}
+                            onChange={(e) => setSur(sc.key, { rowIndex: Number(e.target.value) })}
+                            className={`${selectClass} min-h-[44px] bg-white`}
+                          >
+                            {allowed.map((i) => (
+                              <option key={i} value={i}>
+                                {sc.rows[i].label} — {sc.rows[i].value}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        {sc.billing !== "month" && (
+                          <div>
+                            <label htmlFor={`${id}-qty`} className={labelClass}>
+                              Số lượng ({sc.quantityUnit})
+                            </label>
+                            <div className="flex items-center gap-3">
+                              <input
+                                id={`${id}-qty`}
+                                type="text"
+                                inputMode="numeric"
+                                autoComplete="off"
+                                value={st?.qty ?? "1"}
+                                onChange={(e) => setSur(sc.key, { qty: e.target.value.replace(/\D/g, "").slice(0, 2) })}
+                                onBlur={() => setSur(sc.key, { qty: String(qty) })}
+                                className="min-h-[44px] w-24 rounded-xl border border-line bg-white px-3.5 py-2.5 text-[16px] text-ink transition-colors duration-200 focus:border-primary focus:outline-none sm:text-[13.5px]"
+                              />
+                              <span className="text-[12.5px] text-body-text">
+                                {qty > 1 ? `${qty} × ${formatVnd(unitAmount)} = ${formatVnd(qty * unitAmount)}` : formatVnd(unitAmount)}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </fieldset>
+        </>
       )}
     </div>
   );
@@ -1154,11 +1342,13 @@ function QuoteRowEditor({
  * dùng); (2) "Bảng giá đầy đủ 13 dịch vụ" — không cần chọn. Mọi nút/dòng cao >= 44px để dễ chạm trên điện thoại.
  */
 function AmendmentPicker({
+  priceListBlocked,
   selected,
   applyCombo,
   mode,
   onChange,
 }: {
+  priceListBlocked: boolean;
   selected: string[];
   applyCombo: boolean;
   mode: "chon" | "bang-gia";
@@ -1199,7 +1389,8 @@ function AmendmentPicker({
           type="button"
           aria-pressed={mode === "bang-gia"}
           onClick={() => onChange({ amendMode: "bang-gia" })}
-          className={pill(mode === "bang-gia")}
+          disabled={priceListBlocked}
+          className={`${pill(mode === "bang-gia")} disabled:pointer-events-none disabled:opacity-40`}
         >
           Bảng giá đầy đủ 13 dịch vụ (không tính tổng)
         </button>

@@ -124,10 +124,25 @@ export type AccountingTierRow = {
   rangeEn?: string;
   prices: Record<AccountingGroupKey, string>;
 };
+export type AccountingSurchargeKey = "hai-quan" | "hoa-don-ho" | "bao-cao-tai-chinh";
+export type AccountingSurchargeRow = {
+  label: string;
+  /** Chuỗi giá hiển thị trên web — với dòng có `amount` được SINH từ `amount` (xem helper surchargeRow trong servicesData.ts), không gõ tay hai nơi. */
+  value: string;
+  /** Đơn giá số (đồng, chưa VAT) để tính báo giá; undefined = dòng không có đơn giá cố định (chỉ hiển thị, công cụ báo giá không cho chọn). */
+  amount?: number;
+  /** Nhóm loại hình mà dòng này áp dụng; undefined = cả 3 nhóm. */
+  groups?: AccountingGroupKey[];
+};
 export type AccountingSurcharge = {
+  key: AccountingSurchargeKey;
   title: string;
   note?: string;
-  rows: { label: string; value: string }[];
+  /** Cách thu: "month" = mỗi tháng (cộng vào phí hàng tháng); "year" = mỗi năm; "each" = mỗi lần phát sinh. "year"/"each" là chi phí một lần trong báo giá. */
+  billing: "month" | "year" | "each";
+  /** Tên đơn vị cho ô số lượng (chỉ khi billing khác "month"), VD "tờ khai", "năm". */
+  quantityUnit?: string;
+  rows: AccountingSurchargeRow[];
 };
 export type AccountingPricing = {
   mode: "accounting";

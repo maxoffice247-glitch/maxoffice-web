@@ -117,6 +117,21 @@ const SCHEDULE_ROW_BORDER = 1; // viền trên mỗi hàng (trừ hàng đầu)
 const SCHEDULE_ROW_EXTRA_LINE_H = 24; // mỗi dòng chữ thêm khi nhãn (điều kiện thanh toán dài) xuống dòng
 const SCHEDULE_LABEL_CHARS_PER_LINE = 88; // ký tự/dòng của nhãn (chữ 16px, cột nhãn ~790px): đo thực tế nhãn tiếng Việt ~95-99 ký tự, tiếng Anh ~91-94 vẫn 1 dòng — chọn thấp hơn để KHÔNG BAO GIỜ thiếu chiều cao
 
+// Khối "Bảng giá đầy đủ" Kế toán & thuế (loại "ke-toan-bang-gia"): ma trận 9 mức x 3 nhóm + 3 nhóm phụ phí. Hằng số hiệu chỉnh bằng pixel thật (xem accountingPriceListHeight).
+const AP_CARD_BORDER = 2;
+const AP_NOTE_PADDING_Y = 28; // padding 14+14 của dòng ghi chú đầu bảng
+const AP_NOTE_LINE_H = 20;
+const AP_NOTE_CHARS_PER_LINE = 125; // ký tự/dòng của ghi chú (chữ 14px, khung ~920px): đo thực tế câu EN 122 ký tự vẫn vừa 1 dòng (sức chứa ~135)
+const AP_HEADER_PADDING_Y = 24; // header ma trận: padding 12+12 + số dòng x AP_HEADER_LINE_H
+const AP_HEADER_LINE_H = 17;
+const AP_GROUP_COL_W = 200;
+const AP_GROUP_CHARS_PER_LINE = 24; // ký tự/dòng của tên nhóm ở header (chữ 13px đậm, cột 200px - padding)
+const AP_ROW_H = 44; // 1 dòng ma trận chữ 16px: padding 12+12, chữ ~19, viền trên 1
+const AP_SUR_HEADING_H = 52; // tiêu đề "Phí phát sinh thêm" 16px + margin
+const AP_SUR_HEAD_ROW_H = 38; // dòng tên nhóm phụ phí
+const AP_SUR_ROW_H = 40; // dòng phụ phí chữ 16px: padding 10+10, chữ ~19, viền trên 1
+const AP_VAT_NOTE_H = 29; // margin 10 + 1 dòng chữ 12.5px (~16) + dư 3px an toàn
+
 const SECTION_HEADER_H = 34;
 const SECTION_TOP_MARGIN = 32;
 const SECTION_TOTAL_BOX_H = 60;
@@ -186,10 +201,15 @@ function isValidItemShape(item: unknown): item is CompositeQuoteItem {
       // Chỉ kiểm tra hình dạng (mảng chuỗi) — nội dung (slug có tồn tại, trùng, rỗng...) do
       // resolveCompositeQuoteItem() từ chối kèm thông báo rõ.
       return Array.isArray(it.serviceSlugs) && it.serviceSlugs.length <= 100 && it.serviceSlugs.every((v) => typeof v === "string");
+    case "ke-toan-bang-gia":
+      return true; // không có field nào cần kiểm tra — server tự lấy toàn bộ bảng giá từ dữ liệu Kế toán & thuế
     case "ke-toan-thue":
       return (
         (it.group === "A" || it.group === "B" || it.group === "C") &&
-        typeof it.rangeIndex === "number"
+        typeof it.rangeIndex === "number" &&
+        // Chỉ kiểm tra hình dạng (mảng object) — khoá/mức/số lượng hợp lệ hay không do resolveCompositeQuoteItem() từ chối kèm thông báo rõ.
+        (it.surcharges === undefined ||
+          (Array.isArray(it.surcharges) && it.surcharges.length <= 10 && it.surcharges.every((x) => x !== null && typeof x === "object")))
       );
     case "custom":
       return (
@@ -617,6 +637,134 @@ function PriceListBlock({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLa
       </div>
       <div style={{ display: "flex", marginTop: 10, paddingLeft: 4, fontSize: 12.5, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>
         {pl.vatNote}
+      </div>
+    </div>
+  );
+}
+
+function accountingHeaderLines(line: ResolvedQuoteLine): number {
+  const apl = line.accountingPriceList!;
+  return Math.max(1, ...apl.groups.map((g) => Math.ceil(g.label.length / AP_GROUP_CHARS_PER_LINE)));
+}
+
+/** Chiều cao khối "Bảng giá đầy đủ" Kế toán & thuế — PHẢI khớp JSX của AccountingPriceListBlock() bên dưới. */
+function accountingPriceListHeight(line: ResolvedQuoteLine): number {
+  const apl = line.accountingPriceList!;
+  const noteLines = Math.ceil(apl.note.length / AP_NOTE_CHARS_PER_LINE);
+  const matrixH = AP_NOTE_PADDING_Y + noteLines * AP_NOTE_LINE_H + AP_HEADER_PADDING_Y + accountingHeaderLines(line) * AP_HEADER_LINE_H + apl.tiers.length * AP_ROW_H;
+  const surRows = apl.surcharges.reduce((sum, sc) => sum + AP_SUR_HEAD_ROW_H + sc.rows.length * AP_SUR_ROW_H, 0);
+  return (
+    SECTION_TOP_MARGIN + PL_TITLE_BLOCK_H + AP_CARD_BORDER + matrixH + AP_SUR_HEADING_H + AP_CARD_BORDER + surRows + AP_VAT_NOTE_H
+  );
+}
+
+/** Ảnh "Bảng giá đầy đủ" Kế toán & thuế: ma trận số hoá đơn/quý x 3 nhóm (giá chưa VAT) + danh sách phụ phí kèm đơn vị tính; KHÔNG tổng/QR/combo. */
+function AccountingPriceListBlock({ line }: { line: ResolvedQuoteLine }) {
+  const apl = line.accountingPriceList!;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: SECTION_TOP_MARGIN }}>
+      <div style={{ display: "flex", fontSize: 20, fontWeight: 700, color: QUOTE_COLOR.navy, marginBottom: 16 }}>📋 {apl.title}</div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 14,
+          border: `1px solid ${QUOTE_COLOR.line}`,
+          backgroundColor: "#ffffff",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ display: "flex", padding: "14px 22px", fontSize: 14, color: QUOTE_COLOR.bodyText, lineHeight: `${AP_NOTE_LINE_H}px` }}>
+          {apl.note}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: QUOTE_COLOR.bgTint,
+            padding: "12px 22px",
+            fontSize: 13,
+            fontWeight: 700,
+            lineHeight: `${AP_HEADER_LINE_H}px`,
+            color: QUOTE_COLOR.navy,
+          }}
+        >
+          <div style={{ display: "flex", flex: 1, paddingRight: 8 }}>{apl.colRange}</div>
+          {apl.groups.map((g) => (
+            <div key={g.key} style={{ display: "flex", width: AP_GROUP_COL_W, justifyContent: "flex-end", textAlign: "right" }}>
+              {g.label}
+            </div>
+          ))}
+        </div>
+        {apl.tiers.map((t, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "12px 22px",
+              borderTop: `1px solid ${QUOTE_COLOR.line}`,
+              backgroundColor: i % 2 === 1 ? "#f9fbfe" : "#ffffff",
+            }}
+          >
+            <div style={{ display: "flex", flex: 1, paddingRight: 8, fontSize: 16, fontWeight: 700, color: QUOTE_COLOR.navy }}>{t.range}</div>
+            {t.prices.map((price, j) => (
+              <div key={j} style={{ display: "flex", width: AP_GROUP_COL_W, justifyContent: "flex-end", fontSize: 16, fontWeight: 700, color: QUOTE_COLOR.ink }}>
+                {price}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: "flex", fontSize: 16, fontWeight: 700, color: QUOTE_COLOR.navy, marginTop: 24, marginBottom: 12 }}>{apl.surchargeHeading}</div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 14,
+          border: `1px solid ${QUOTE_COLOR.line}`,
+          backgroundColor: "#ffffff",
+          overflow: "hidden",
+        }}
+      >
+        {apl.surcharges.map((sc, si) => (
+          <div key={si} style={{ display: "flex", flexDirection: "column" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+                backgroundColor: QUOTE_COLOR.bgTint,
+                padding: "10px 22px",
+                borderTop: si > 0 ? `1px solid ${QUOTE_COLOR.line}` : "none",
+                height: AP_SUR_HEAD_ROW_H,
+              }}
+            >
+              <div style={{ display: "flex", fontSize: 14, fontWeight: 700, color: QUOTE_COLOR.navy }}>{sc.title}</div>
+              {sc.note && <div style={{ display: "flex", fontSize: 12.5, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>{sc.note}</div>}
+            </div>
+            {sc.rows.map((r, ri) => (
+              <div
+                key={ri}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "10px 22px",
+                  borderTop: `1px solid ${QUOTE_COLOR.line}`,
+                  backgroundColor: ri % 2 === 1 ? "#f9fbfe" : "#ffffff",
+                }}
+              >
+                <div style={{ display: "flex", flex: 1, paddingRight: 12, fontSize: 16, color: QUOTE_COLOR.navy }}>{r.label}</div>
+                <div style={{ display: "flex", fontSize: 16, fontWeight: 700, color: QUOTE_COLOR.ink }}>{r.value}</div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", marginTop: 10, paddingLeft: 4, fontSize: 12.5, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>
+        {apl.vatNote}
       </div>
     </div>
   );
@@ -1174,6 +1322,12 @@ export async function POST(req: Request) {
     });
   }
 
+  // Mỗi báo giá chỉ 1 ảnh "Bảng giá đầy đủ" (sửa đổi HOẶC kế toán & thuế) — 2 bảng lớn trong 1 ảnh sẽ quá dài.
+  const priceListTypes = new Set(["sua-doi-bang-gia", "ke-toan-bang-gia"]);
+  if (body.items.filter((it) => priceListTypes.has((it as { type?: string })?.type ?? "")).length > 1) {
+    return new Response("Chỉ được 1 dòng \"Bảng giá đầy đủ\" trong 1 báo giá.", { status: 400 });
+  }
+
   const resolvedLines: ResolvedQuoteLine[] = [];
   for (const item of body.items) {
     if (!isValidItemShape(item)) {
@@ -1184,6 +1338,8 @@ export async function POST(req: Request) {
       return new Response(result.error, { status: 400 });
     }
     resolvedLines.push(result);
+    // Dòng đi kèm sinh ra từ cùng lựa chọn (VD phụ phí Kế toán & thuế thu một lần -> thẻ ở "Chi phí một lần").
+    if (result.extraLines) resolvedLines.push(...result.extraLines);
   }
 
   // "Họ và tên" + "SĐT" GỘP CHUNG 1 DÒNG (cả 2 đều ngắn, không cần tách
@@ -1203,8 +1359,8 @@ export async function POST(req: Request) {
   const customerLineCount = (nameAndPhoneParts.length > 0 ? 1 : 0) + (companyRow ? 1 : 0);
 
   // Dòng "Bảng giá đầy đủ" (nếu có) tách khỏi mọi khối chi phí/tổng/QR — chỉ là bảng liệt kê giá.
-  const priceListLine = resolvedLines.find((l) => l.priceList) ?? null;
-  const costLines = resolvedLines.filter((l) => !l.priceList);
+  const priceListLine = resolvedLines.find((l) => l.priceList || l.accountingPriceList) ?? null;
+  const costLines = resolvedLines.filter((l) => !l.priceList && !l.accountingPriceList);
 
   const byBucket = new Map<QuoteBucket, ResolvedQuoteLine[]>();
   for (const bucket of BUCKET_ORDER) byBucket.set(bucket, []);
@@ -1275,7 +1431,7 @@ export async function POST(req: Request) {
   const height =
     HEADER_H +
     customerBlockH +
-    (priceListLine ? priceListHeight(priceListLine) : 0) +
+    (priceListLine ? (priceListLine.accountingPriceList ? accountingPriceListHeight(priceListLine) : priceListHeight(priceListLine)) : 0) +
     BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!, lang), 0) +
     grandTotalHeight(maxOfficeLines, lang) +
     overallTotalHeight(showOverallTotal, lang) +
@@ -1343,7 +1499,12 @@ export async function POST(req: Request) {
           </div>
         )}
 
-        {priceListLine && <PriceListBlock line={priceListLine} lang={lang} />}
+        {priceListLine &&
+          (priceListLine.accountingPriceList ? (
+            <AccountingPriceListBlock line={priceListLine} />
+          ) : (
+            <PriceListBlock line={priceListLine} lang={lang} />
+          ))}
 
         {BUCKET_ORDER.map((bucket) => (
           <Section key={bucket} bucket={bucket} lines={byBucket.get(bucket)!} lang={lang} />
