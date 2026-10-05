@@ -130,25 +130,36 @@ export default function DichVuPhapLySuaDoiPage() {
           />
           <Reveal>
             <div className="overflow-hidden rounded-2xl border border-line bg-white shadow-card">
-              <table className="w-full border-collapse text-left text-[14px]">
-                <thead>
-                  <tr className="bg-bg-tint text-[13px] font-bold text-navy">
-                    <th className="px-5 py-4">Dịch vụ</th>
-                    <th className="px-5 py-4 whitespace-nowrap">Giá</th>
-                    <th className="px-5 py-4 whitespace-nowrap">Thời gian</th>
+              {/* MỘT cấu trúc DOM (table/tr/td); dưới md mỗi dòng là THẺ xếp dọc bằng CSS (nhãn từ data-label qua ::before),
+                  không bị cắt/kéo ngang trên điện thoại; từ md giữ nguyên bảng như cũ. role tường minh để giữ ngữ nghĩa bảng. */}
+              <table role="table" className="block w-full border-collapse text-left text-[14px] md:table">
+                <thead role="rowgroup" className="sr-only md:not-sr-only md:table-header-group">
+                  <tr role="row" className="bg-bg-tint text-[13px] font-bold text-navy">
+                    <th role="columnheader" className="px-5 py-4">Dịch vụ</th>
+                    <th role="columnheader" className="px-5 py-4 whitespace-nowrap">Giá</th>
+                    <th role="columnheader" className="px-5 py-4 whitespace-nowrap">Thời gian</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody role="rowgroup" className="block md:table-row-group">
                   {AMENDMENT_SERVICES.map((s, i) => (
                     <tr
                       key={s.slug}
-                      className={`border-t border-line ${i % 2 === 1 ? "bg-bg-tint/50" : ""}`}
+                      role="row"
+                      className={`flex flex-wrap items-baseline gap-x-4 gap-y-1 border-t border-line px-4 py-3.5 first:border-t-0 md:table-row md:p-0 md:first:border-t ${
+                        i % 2 === 1 ? "bg-bg-tint/50" : ""
+                      }`}
                     >
-                      <td className="px-5 py-4 font-medium text-navy">{s.name}</td>
-                      <td className="px-5 py-4 font-bold whitespace-nowrap text-primary">
+                      <td role="cell" data-label="Dịch vụ" className="w-full leading-snug font-semibold text-navy md:table-cell md:leading-normal md:w-auto md:px-5 md:py-4 md:font-medium">
+                        {s.name}
+                      </td>
+                      <td role="cell" data-label="Giá" className="text-[15px] font-bold whitespace-nowrap text-primary md:table-cell md:px-5 md:py-4 md:text-[14px]">
                         {formatVND(s.price)}
                       </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-body-text">
+                      <td
+                        role="cell"
+                        data-label="Thời gian"
+                        className="ml-auto text-[12.5px] text-body-text before:mr-1 before:text-[11.5px] before:font-semibold before:text-body-text/70 before:content-[attr(data-label)_':'] md:ml-0 md:table-cell md:px-5 md:py-4 md:text-[14px] md:whitespace-nowrap md:before:content-none"
+                      >
                         {s.duration}
                       </td>
                     </tr>
@@ -159,7 +170,7 @@ export default function DichVuPhapLySuaDoiPage() {
           </Reveal>
 
           <Reveal>
-            <div className="mt-7 rounded-2xl border-2 border-accent/25 bg-accent/5 p-6 sm:p-7">
+            <div className="mt-7 rounded-2xl border-2 border-accent/25 bg-accent/5 p-5 sm:p-7">
               <h3 className="mb-2.5 flex items-center gap-2 text-[16px] font-bold text-navy">
                 <BadgePercentIcon className="text-accent" />
                 Ưu đãi combo khi đặt từ 2 dịch vụ trở lên
