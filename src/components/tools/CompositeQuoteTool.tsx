@@ -22,7 +22,7 @@ import {
   type CustomServiceSlug,
   type MonthOption,
 } from "@/lib/compositeQuote";
-import type { QuoteLang } from "@/lib/quoteImageDictionary";
+import { oneTimeFeeCheckboxLabel, type QuoteLang } from "@/lib/quoteImageDictionary";
 import {
   VIETQR_ACCOUNT_KEYS,
   DEFAULT_VIETQR_ACCOUNT_KEY,
@@ -109,6 +109,9 @@ type QuoteRow = {
    * đơn giá × số tháng) và có tự động kèm ưu đãi dài hạn hay không (xem
    * compositeQuote.ts). Mặc định 12 — kỳ hạn phổ biến nhất khi tư vấn. */
   months: MonthOption;
+  /** Chỉ dùng cho Văn phòng ảo khi GÓI có phụ phí thu một lần (addOn, VD "Bảng hiệu công ty" gói LITE): có thu khoản này không. MẶC ĐỊNH TÍCH (true) — bỏ
+   * tích khi khách gia hạn hoặc đã có bảng hiệu. Đổi chi nhánh/gói thì đặt lại true. Gói không có phụ phí: bỏ qua. */
+  voSignage: boolean;
   tier: "goi-1" | "goi-2";
   group: "A" | "B" | "C";
   rangeIndex: number;
@@ -137,6 +140,7 @@ function createEmptyRow(): QuoteRow {
     locationSlug: "",
     planKey: "",
     months: 12,
+    voSignage: true,
     tier: "goi-1",
     group: "A",
     rangeIndex: 0,
@@ -166,6 +170,7 @@ function applyServiceTypeDefaults(row: QuoteRow, type: ServiceTypeKey, firstLoca
       locationSlug: firstLocationSlug,
       planKey: firstPlanAt(allPlans, firstLocationSlug),
       months: 12,
+      voSignage: true,
     };
   }
   if (type === "thanh-lap-doanh-nghiep") {
@@ -196,7 +201,14 @@ function rowToItem(row: QuoteRow): CompositeQuoteItem | null {
   switch (row.serviceType) {
     case "van-phong-ao":
       return row.locationSlug && row.planKey
-        ? { type: "van-phong-ao", locationSlug: row.locationSlug, planKey: row.planKey, months: row.months }
+        ? {
+            type: "van-phong-ao",
+            locationSlug: row.locationSlug,
+            planKey: row.planKey,
+            months: row.months,
+            // Chỉ gửi khi bỏ tích; tích (mặc định) thì để server tự theo dữ liệu gói. Gói không có phụ phí: server bỏ qua `false`.
+            ...(row.voSignage ? null : { includeSurcharge: false }),
+          }
         : null;
     case "thanh-lap-doanh-nghiep":
       return { type: "thanh-lap-doanh-nghiep", tier: row.tier };
@@ -604,6 +616,8 @@ function QuoteRowEditor({
     () => allVoPlans.filter((p) => p.locationSlug === row.locationSlug),
     [allVoPlans, row.locationSlug]
   );
+  // Phụ phí thu một lần của gói đang chọn (từ dữ liệu gói) — có thì hiện ô tích "Có làm bảng hiệu…".
+  const signageFee = plansAtLocation.find((p) => p.planKey === row.planKey)?.oneTimeFee;
 
   return (
     <div className="rounded-xl border border-line bg-bg-tint p-4">
@@ -657,7 +671,7 @@ function QuoteRowEditor({
               value={row.locationSlug}
               onChange={(e) => {
                 const locationSlug = e.target.value;
-                onUpdate({ locationSlug, planKey: firstPlanAt(allVoPlans, locationSlug) });
+                onUpdate({ locationSlug, planKey: firstPlanAt(allVoPlans, locationSlug), voSignage: true });
               }}
               className={`${selectClass} bg-white`}
             >
@@ -675,7 +689,7 @@ function QuoteRowEditor({
             <select
               id={`${uid}-plan`}
               value={row.planKey}
-              onChange={(e) => onUpdate({ planKey: e.target.value })}
+              onChange={(e) => onUpdate({ planKey: e.target.value, voSignage: true })}
               className={`${selectClass} bg-white`}
             >
               {plansAtLocation.map((plan) => (
@@ -705,6 +719,30 @@ function QuoteRowEditor({
               ))}
             </div>
           </div>
+          {signageFee && (
+            <div className="sm:col-span-2">
+              <label
+                htmlFor={`${uid}-signage`}
+                className={`flex min-h-[44px] cursor-pointer items-start gap-3 rounded-lg border-[1.5px] px-3 py-2.5 transition-colors duration-200 ${
+                  row.voSignage ? "border-accent/50 bg-accent/5" : "border-line bg-white hover:border-primary/40"
+                }`}
+              >
+                <input
+                  id={`${uid}-signage`}
+                  type="checkbox"
+                  checked={row.voSignage}
+                  onChange={(e) => onUpdate({ voSignage: e.target.checked })}
+                  className="mt-0.5 h-5 w-5 shrink-0 accent-primary"
+                />
+                <span className="text-[13px] leading-snug font-semibold text-navy">
+                  {oneTimeFeeCheckboxLabel(signageFee)}
+                  <span className="mt-0.5 block text-[12px] font-normal text-body-text">
+                    Bỏ tích nếu khách gia hạn hoặc đã có bảng hiệu. Không tính ưu đãi tặng tháng cho khoản này.
+                  </span>
+                </span>
+              </label>
+            </div>
+          )}
         </div>
       )}
 
@@ -887,8 +925,9 @@ function QuoteRowEditor({
           </div>
           {preview.breakdown && (
             <div className="mt-1 text-[11.5px] text-body-text">
-              Tạm tính {formatVnd(preview.breakdown.subtotal)} + VAT {preview.breakdown.vatRatePercent}% (
-              {formatVnd(preview.breakdown.vatAmount)})
+              Tạm tính {formatVnd(preview.breakdown.subtotal)}
+              {preview.breakdown.surcharge && ` (gồm phí thu 1 lần ${formatVnd(preview.breakdown.surcharge.amount)})`}{" "}
+              + VAT {preview.breakdown.vatRatePercent}% ({formatVnd(preview.breakdown.vatAmount)})
               {preview.breakdown.promo && <span className="text-amber-600"> · 🎁 tặng {preview.breakdown.promo.extraMonths} tháng</span>}
             </div>
           )}

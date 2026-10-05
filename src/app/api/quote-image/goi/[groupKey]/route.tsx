@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { getPlanGroup, formatVoPrice, type PlanGroup } from "@/lib/planFinder";
+import { oneTimeFeePlanLine } from "@/lib/quoteImageDictionary";
 
 /**
  * Bản báo giá TỔNG HỢP (1 gói áp dụng ở NHIỀU chi nhánh) render ở server —
@@ -59,6 +60,13 @@ const COLOR = {
   accent: "#dc3530",
   amberDark: "#b45309",
 };
+
+// Dòng phụ phí thu một lần dưới giá thuê (nhóm gói có addOn) — cùng kiểu với ảnh từng gói; hằng số hiệu chỉnh bằng pixel thật.
+const FEE_FONT_SIZE = 17;
+const FEE_LINE_H = 24;
+const FEE_BLOCK_TOP_MARGIN = 20;
+const FEE_BLOCK_PADDING_TOP = 16;
+const FEE_CHARS_PER_LINE = 95; // ký tự/dòng (chữ 17px đậm 600, khung ~900px) — ước lượng thấp để KHÔNG BAO GIỜ thiếu chiều cao
 
 type PlanGroupLocation = PlanGroup["locations"][number];
 type LocationGroup = { locations: PlanGroupLocation[]; promotions: string[] | null };
@@ -270,7 +278,10 @@ export async function GET(_req: Request, { params }: { params: Promise<{ groupKe
 
   // ---- Ước lượng chiều cao ----
   const HEADER_H = 136;
-  const priceBlockContentH = 48 + (group.addonNote ? 20 + 40 : 0);
+  const fee = group.oneTimeFee;
+  const feeLine = fee ? oneTimeFeePlanLine(fee) : "";
+  const feeH = fee ? FEE_BLOCK_TOP_MARGIN + FEE_BLOCK_PADDING_TOP + 1 + Math.ceil(feeLine.length / FEE_CHARS_PER_LINE) * FEE_LINE_H : 0;
+  const priceBlockContentH = 48 + feeH;
   const PRICE_BLOCK_H = 56 + priceBlockContentH;
   const FEATURES_BLOCK_H = 36 + 44 + featureRows * 50;
   const rowsHeight = rows.reduce((sum, row) => sum + Math.max(...row.map((b) => b.heightEstimate)), 0);
@@ -353,19 +364,20 @@ export async function GET(_req: Request, { params }: { params: Promise<{ groupKe
               <div style={{ display: "flex", fontSize: 15, color: COLOR.bodyText }}>/tháng · chưa gồm VAT 10%</div>
             </div>
           </div>
-          {group.addonNote && (
+          {fee && (
             <div
               style={{
                 display: "flex",
-                marginTop: 20,
-                paddingTop: 16,
+                marginTop: FEE_BLOCK_TOP_MARGIN,
+                paddingTop: FEE_BLOCK_PADDING_TOP,
                 borderTop: `1px solid ${COLOR.line}`,
-                fontSize: 14,
+                fontSize: FEE_FONT_SIZE,
+                fontWeight: 600,
                 color: COLOR.amberDark,
-                lineHeight: 1.5,
+                lineHeight: `${FEE_LINE_H}px`,
               }}
             >
-              * {group.addonNote}
+              {feeLine}
             </div>
           )}
         </div>

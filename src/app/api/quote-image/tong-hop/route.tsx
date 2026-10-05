@@ -72,6 +72,9 @@ const MERGED_TITLE_WRAP_THRESHOLD_3_LINES = 150; // nhãn tự nhập cực dài
 const PROMO_BADGE_H = 44; // đủ cho 1 dòng text dài (~90 ký tự) ở 940px rộng
 const BREAKDOWN_LINE_H = 24;
 const BREAKDOWN_TOP_MARGIN = 10;
+// Thẻ Văn phòng ảo có phụ phí thu một lần: thêm 1 dòng breakdown (phụ phí + Tạm tính gộp chung 1 dòng, chữ 14px ~17px) + khoảng cách 4px giữa các dòng
+// — đo thực tế mỗi thẻ cao thêm đúng 21px.
+const SURCHARGE_LINE_H = 21;
 const TOTAL_ROW_H = 56; // khối "Thành tiền" viền trên
 const FALLBACK_ROW_H = 78; // dòng "custom" không tách được số (giữ như thiết kế cũ)
 const ROW_GAP = 14;
@@ -254,8 +257,16 @@ function estimateRowHeight(line: ResolvedQuoteLine): number {
     (line.breakdown.promo ? PROMO_BADGE_H : 0) +
     BREAKDOWN_TOP_MARGIN +
     2 * BREAKDOWN_LINE_H +
+    (line.breakdown.surcharge ? SURCHARGE_LINE_H : 0) +
     TOTAL_ROW_H
   );
+}
+
+/** Nhãn VAT của 1 dòng: "VAT 10%"; chỉ khi phụ phí có mức VAT KHÁC tiền thuê (đổi ONE_TIME_SURCHARGE_VAT_PERCENT) mới ghi "VAT 10% / 8%". */
+function breakdownVatLabel(b: NonNullable<ResolvedQuoteLine["breakdown"]>): string {
+  return b.surcharge && b.surcharge.vatRatePercent !== b.vatRatePercent
+    ? `${vatLabel(b.vatRatePercent)} / ${b.surcharge.vatRatePercent}%`
+    : vatLabel(b.vatRatePercent);
 }
 
 function BreakdownLine({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
@@ -480,13 +491,21 @@ function ItemRow({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang }) {
           <DualBreakdownLine
             leftLabel={qt("unitPriceLabel", lang)}
             leftValue={`${breakdown.baseLabel} × ${breakdown.months} ${qt("monthsUnit", lang)}`}
-            rightLabel={qt("subtotalLabel", lang)}
-            rightValue={formatQuoteCurrency(breakdown.subtotal, lang)}
+            rightLabel={breakdown.surcharge ? qt("rentSubtotalLabel", lang) : qt("subtotalLabel", lang)}
+            rightValue={formatQuoteCurrency(breakdown.rentSubtotal ?? breakdown.subtotal, lang)}
           />
         ) : (
           <BreakdownLine label={qt("unitPriceLabel", lang)} value={breakdown.baseLabel} />
         )}
-        <BreakdownLine label={vatLabel(breakdown.vatRatePercent)} value={formatQuoteCurrency(breakdown.vatAmount, lang)} />
+        {breakdown.surcharge && (
+          <DualBreakdownLine
+            leftLabel={breakdown.surcharge.label}
+            leftValue={formatQuoteCurrency(breakdown.surcharge.amount, lang)}
+            rightLabel={qt("subtotalLabel", lang)}
+            rightValue={formatQuoteCurrency(breakdown.subtotal, lang)}
+          />
+        )}
+        <BreakdownLine label={breakdownVatLabel(breakdown)} value={formatQuoteCurrency(breakdown.vatAmount, lang)} />
       </div>
 
       <div

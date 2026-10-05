@@ -23,12 +23,14 @@
  * đúng text đã nhập, không tính VAT, không cộng vào tổng khối.
  */
 import { getOfferedPlan } from "./planFinder";
+import { ONE_TIME_SURCHARGE_VAT_PERCENT } from "./virtualOfficePlans";
 import { SERVICES_DATA, CHU_KY_SO_TIERS, HOA_DON_DIEN_TU_TIERS } from "./servicesData";
 import {
   qt,
   formatQuoteCurrency,
   amendmentComboNote,
   amendmentServiceCount,
+  oneTimeFeeShortLabel,
   translateAmendmentDuration,
   AMENDMENT_SERVICE_NAMES_EN,
   AMENDMENT_SCOPE_NOTE_EN,
@@ -216,7 +218,9 @@ export type CompositeQuoteCustomer = {
 };
 
 export type CompositeQuoteItem =
-  | { type: "van-phong-ao"; locationSlug: string; planKey: string; months: MonthOption }
+  /** `includeSurcharge`: có thu phụ phí một lần của gói (addOn, VD "Bảng hiệu công ty" gói LITE) không. CHỈ boolean thật mới được đọc; thiếu/sai kiểu -> mặc
+   * định theo dữ liệu gói (gói có phụ phí = true). Gói KHÔNG có phụ phí mà client gửi true -> lỗi. Số tiền/nhãn luôn lấy từ dữ liệu gói, không từ client. */
+  | { type: "van-phong-ao"; locationSlug: string; planKey: string; months: MonthOption; includeSurcharge?: boolean }
   | { type: "thanh-lap-doanh-nghiep"; tier: "goi-1" | "goi-2" }
   /** "Dịch vụ pháp lý sửa đổi": client CHỈ gửi danh sách slug dịch vụ đã chọn (AMENDMENT_SERVICES trong setupFees.ts) và cờ
    * `applyCombo`. Giá gốc, giá combo, VAT đều do server tự tính (calculateAmendmentCombo) — mọi field "giá" client gửi kèm bị bỏ qua.
@@ -279,7 +283,12 @@ export type QuoteBreakdown = {
   baseLabel: string;
   months?: number;
   promo?: { extraMonths: number; totalMonths: number; label: string };
-  /** = baseAmount * (months ?? 1) — "Tạm tính", CHƯA gồm VAT. */
+  /** Phụ phí THU MỘT LẦN kèm theo (VD "Bảng hiệu công ty" gói LITE) — chỉ có khi dòng đang tính khoản này. KHÔNG nhân số tháng, KHÔNG dính ưu đãi
+   * tặng tháng (chỉ áp cho tiền thuê); đã nằm trong `subtotal`/`vatAmount`/`total`. */
+  surcharge?: { label: string; amount: number; vatRatePercent: number };
+  /** Tiền thuê thuần = baseAmount * months — chỉ có khi có `surcharge` (khi đó `subtotal` = rentSubtotal + surcharge.amount). */
+  rentSubtotal?: number;
+  /** = baseAmount * (months ?? 1) [+ phụ phí một lần] — "Tạm tính", CHƯA gồm VAT. */
   subtotal: number;
   vatRatePercent: number;
   vatAmount: number;
@@ -353,15 +362,22 @@ function buildBreakdown(params: {
   months?: number;
   promo?: { extraMonths: number; totalMonths: number; label: string };
   vatRatePercent: number;
+  /** Phụ phí thu một lần (đã tra từ dữ liệu gói) — VAT tính RIÊNG theo `vatRatePercent` của nó rồi cộng vào VAT chung. */
+  surcharge?: { label: string; amount: number; vatRatePercent: number };
 }): QuoteBreakdown {
-  const { baseAmount, baseLabel, months, promo, vatRatePercent } = params;
-  const subtotal = baseAmount * (months ?? 1);
-  const vatAmount = Math.round((subtotal * vatRatePercent) / 100);
+  const { baseAmount, baseLabel, months, promo, vatRatePercent, surcharge } = params;
+  const rentSubtotal = baseAmount * (months ?? 1);
+  const surchargeAmount = surcharge?.amount ?? 0;
+  const subtotal = rentSubtotal + surchargeAmount;
+  const vatAmount =
+    Math.round((rentSubtotal * vatRatePercent) / 100) +
+    (surcharge ? Math.round((surchargeAmount * surcharge.vatRatePercent) / 100) : 0);
   return {
     baseAmount,
     baseLabel,
     months,
     promo,
+    ...(surcharge ? { surcharge, rentSubtotal } : null),
     subtotal,
     vatRatePercent,
     vatAmount,
@@ -388,6 +404,14 @@ export function resolveCompositeQuoteItem(
       // ngữ nên ghép trực tiếp ở đây thay vì 1 khoá dict chung (xem comment
       // đầu quoteImageDictionary.ts).
       const planDisplayName = lang === "en" ? plan.planNameEn ?? plan.planName : plan.planName;
+      // Phụ phí thu một lần: chỉ khi GÓI THẬT SỰ có (plan.oneTimeFee, từ addOn trong dữ liệu gói). Chỉ boolean thật mới được đọc; thiếu/sai kiểu ->
+      // mặc định theo dữ liệu gói (có phụ phí = thu). Gói không có phụ phí mà client yêu cầu thu -> từ chối thay vì bỏ qua âm thầm.
+      const fee = plan.oneTimeFee;
+      const rawInclude = (item as { includeSurcharge?: unknown }).includeSurcharge;
+      if (!fee && rawInclude === true) {
+        return { error: `Gói "${plan.planName}" tại "${plan.locationName}" không có phụ phí thu một lần — bỏ chọn khoản phí này.` };
+      }
+      const chargeFee = fee ? (typeof rawInclude === "boolean" ? rawInclude : true) : false;
       return {
         category: qt("categoryVanPhongAo", lang),
         title: lang === "en" ? `${planDisplayName} Package` : `Gói ${planDisplayName}`,
@@ -399,6 +423,10 @@ export function resolveCompositeQuoteItem(
           months: item.months,
           promo: monthPromo(item.locationSlug, item.months, plan.price, lang),
           vatRatePercent: 10,
+          surcharge:
+            fee && chargeFee
+              ? { label: oneTimeFeeShortLabel(lang, fee), amount: fee.price, vatRatePercent: ONE_TIME_SURCHARGE_VAT_PERCENT }
+              : undefined,
         }),
       };
     }

@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { getOfferedPlan, formatVoPrice } from "@/lib/planFinder";
 import { LOCATIONS_DATA, resolveTimedPromotions, getPromotionsForPlanPrice } from "@/lib/locationsData";
+import { oneTimeFeePlanLine } from "@/lib/quoteImageDictionary";
 
 /**
  * Tạo ảnh báo giá 1 chi nhánh HOÀN TOÀN Ở SERVER (Satori/next-og), thay cho
@@ -71,7 +72,15 @@ const COLOR = {
   line: "#e5e9f0",
   bgTint: "#f3f7fc",
   accent: "#dc3530",
+  amberDark: "#b45309",
 };
+
+// Dòng phụ phí thu một lần dưới giá thuê (gói có addOn): chữ 17px, tối đa ~2 dòng ở khung ~900px — hằng số hiệu chỉnh bằng pixel thật.
+const FEE_FONT_SIZE = 17;
+const FEE_LINE_H = 24;
+const FEE_BLOCK_TOP_MARGIN = 20;
+const FEE_BLOCK_PADDING_TOP = 16;
+const FEE_CHARS_PER_LINE = 95; // ký tự/dòng (chữ 17px đậm 600, khung ~900px) — ước lượng thấp để KHÔNG BAO GIỜ thiếu chiều cao
 
 /**
  * Khối "Tiện ích nổi bật tại chi nhánh này" — CHỈ cho các gói có tính năng
@@ -180,7 +189,10 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
     (promotions.length ? 16 + 26 + promotions.length * 24 : 0) +
     (highlights.length ? 20 + 26 + highlights.length * 52 : 0);
   const PHOTO_BLOCK_H = Math.max(360, infoColH) + 48 + 32;
-  const PRICE_BLOCK_H = 40 + 104;
+  const fee = plan.oneTimeFee;
+  const feeLine = fee ? oneTimeFeePlanLine(fee) : "";
+  const feeH = fee ? FEE_BLOCK_TOP_MARGIN + FEE_BLOCK_PADDING_TOP + 1 + Math.ceil(feeLine.length / FEE_CHARS_PER_LINE) * FEE_LINE_H : 0;
+  const PRICE_BLOCK_H = 40 + 104 + feeH;
   const FEATURES_BLOCK_H = 36 + 44 + featureRows * 50;
   const FOOTER_H = 40 + 28 + 60 + 48;
   const height = HEADER_H + PHOTO_BLOCK_H + PRICE_BLOCK_H + FEATURES_BLOCK_H + FOOTER_H;
@@ -340,15 +352,15 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             margin: `0 ${MARGIN_X}px`,
             marginTop: 40,
-            alignItems: "center",
-            justifyContent: "space-between",
             borderRadius: 16,
             backgroundColor: COLOR.bgTint,
             padding: "28px 32px",
           }}
         >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div
               style={{
@@ -372,6 +384,24 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
             </div>
             <div style={{ display: "flex", fontSize: 15, color: COLOR.bodyText }}>/tháng · chưa gồm VAT 10%</div>
           </div>
+        </div>
+          {/* Phụ phí thu một lần (addOn của gói) — hiện RIÊNG bên dưới giá thuê, không cộng vào giá niêm yết tháng. */}
+          {fee && (
+            <div
+              style={{
+                display: "flex",
+                marginTop: FEE_BLOCK_TOP_MARGIN,
+                paddingTop: FEE_BLOCK_PADDING_TOP,
+                borderTop: `1px solid ${COLOR.line}`,
+                fontSize: FEE_FONT_SIZE,
+                fontWeight: 600,
+                color: COLOR.amberDark,
+                lineHeight: `${FEE_LINE_H}px`,
+              }}
+            >
+              {feeLine}
+            </div>
+          )}
         </div>
 
         {/* Danh sách tính năng */}

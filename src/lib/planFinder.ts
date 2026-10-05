@@ -32,9 +32,12 @@ import {
   SILVER_GOLD_PREMIUM_VO_PLANS,
   SILVER_GOLD_PREMIUM_LOCATIONS,
   type PhamVanDongPlan,
+  type VirtualOfficePlan,
   type SilverGoldPremiumQ1Q3Plan,
   type SilverGoldPremiumPlan,
 } from "./virtualOfficePlans";
+
+export type OneTimeFee = NonNullable<VirtualOfficePlan["addOn"]>;
 
 export type OfferedPlan = {
   locationSlug: string;
@@ -55,6 +58,9 @@ export type OfferedPlan = {
   features: string[];
   /** Ghi chú phụ phí tuỳ chọn (vd. bảng hiệu công ty của gói LITE) — không phải tính năng đi kèm sẵn. */
   addonNote?: string;
+  /** Phụ phí THU MỘT LẦN dạng cấu trúc (cùng nguồn với addonNote: addOn trong virtualOfficePlans.ts) — các ảnh báo giá đọc field này để ghi
+   * rõ khoản phí riêng, không cộng vào giá niêm yết tháng. Gói không có phụ phí để undefined. */
+  oneTimeFee?: OneTimeFee;
 };
 
 function withPhamVanDongStyleFeatures(p: {
@@ -234,6 +240,7 @@ export function getAllOfferedPlans(): OfferedPlan[] {
           addonNote: p.addOn
             ? `${p.addOn.label}: +${p.addOn.price.toLocaleString("vi-VN")}đ (${p.addOn.note})`
             : undefined,
+          oneTimeFee: p.addOn,
         });
       }
     }
@@ -321,6 +328,7 @@ export type PlanGroup = {
   duration: string;
   features: string[];
   addonNote?: string;
+  oneTimeFee?: OneTimeFee;
   locations: PlanGroupLocation[];
 };
 
@@ -393,6 +401,7 @@ export function getGroupedPlans(): PlanGroup[] {
       duration: plan.duration,
       features: plan.features,
       addonNote: plan.addonNote,
+      oneTimeFee: plan.oneTimeFee,
       locations,
     };
   });

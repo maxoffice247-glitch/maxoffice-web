@@ -12,8 +12,15 @@ export type VirtualOfficePlan = {
   price: number;
   duration: string;
   features: string[];
-  addOn?: { label: string; price: number; note: string };
+  /** Phụ phí THU MỘT LẦN (không cộng vào giá thuê tháng, không thu lại khi gia hạn) — hiện chỉ gói LITE ("Bảng hiệu công ty"). Mọi ảnh báo giá
+   * đọc đúng field này: gói nào có addOn thì tự được xử lý, không viết cứng tên gói/số tiền ở nơi khác. `labelEn`/`noteEn` là bản tiếng Anh
+   * của label/note (Claude tự đề xuất — cần rà soát) dùng cho ảnh báo giá tổng hợp bản English. */
+  addOn?: { label: string; labelEn: string; price: number; note: string; noteEn: string };
 };
+
+/** % VAT áp cho phụ phí thu một lần (addOn). TẠM 10% — cùng mức VAT của Văn phòng ảo; chờ xác nhận mức chính thức, đổi ở đây là ảnh
+ * báo giá tổng hợp tự theo. */
+export const ONE_TIME_SURCHARGE_VAT_PERCENT = 10;
 
 export const VIRTUAL_OFFICE_PLANS: Record<VirtualOfficePlanKey, VirtualOfficePlan> = {
   "lite": {
@@ -24,8 +31,10 @@ export const VIRTUAL_OFFICE_PLANS: Record<VirtualOfficePlanKey, VirtualOfficePla
     features: ["Địa chỉ đăng ký kinh doanh (ĐKKD)", "Lễ tân", "Wifi", "Tham gia Workshop"],
     addOn: {
       label: "Bảng hiệu công ty",
+      labelEn: "Company signage",
       price: 500000,
       note: "Thu duy nhất 1 lần khi làm bảng hiệu ban đầu, không thu lại khi gia hạn hợp đồng các kỳ sau",
+      noteEn: "Charged once when the signage is first made; not charged again when the contract is renewed",
     },
   },
   start: {

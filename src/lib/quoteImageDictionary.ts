@@ -36,6 +36,8 @@ export const QUOTE_DICT = {
   unitPriceLabel: { vi: "Đơn giá", en: "Unit Price" },
   subtotalLabel: { vi: "Tạm tính (chưa VAT)", en: "Subtotal (excl. VAT)" },
   totalLabel: { vi: "Thành tiền", en: "Total" },
+  // Dòng "Tiền thuê" khi thẻ Văn phòng ảo có thêm phụ phí thu một lần (tách riêng khỏi dòng phụ phí để "Tạm tính" gồm cả hai).
+  rentSubtotalLabel: { vi: "Tiền thuê", en: "Rent" },
   monthsUnit: { vi: "tháng", en: "months" },
   scanToPayTitle: { vi: "Quét mã để chuyển khoản", en: "Scan to Pay" },
   suggestedAmountLabel: { vi: "Số tiền gợi ý", en: "Suggested amount" },
@@ -204,4 +206,37 @@ export function priceListVatNote(lang: QuoteLang, vatPercent: number): string {
   return lang === "en"
     ? `Listed prices exclude VAT; the VAT-inclusive price adds ${vatPercent}% VAT.`
     : `Giá chưa bao gồm VAT ${vatPercent}%; giá đã gồm VAT là giá cộng thêm VAT ${vatPercent}%.`;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Phụ phí THU MỘT LẦN của gói Văn phòng ảo (addOn trong                    */
+/* virtualOfficePlans.ts, hiện: "Bảng hiệu công ty" của gói LITE). Chữ lấy  */
+/* từ label/note trong DỮ LIỆU GÓI — chỉ khung câu nằm ở đây. Bản tiếng    */
+/* Anh là Claude tự đề xuất, CẦN RÀ SOÁT.                                    */
+/* ---------------------------------------------------------------------- */
+
+type OneTimeFeeText = { label: string; labelEn: string; price: number; note: string; noteEn: string };
+
+function lowerFirst(text: string): string {
+  return text.charAt(0).toLowerCase() + text.slice(1);
+}
+
+/** "Phí bảng hiệu công ty" / "Company signage fee". */
+export function oneTimeFeeName(lang: QuoteLang, fee: Pick<OneTimeFeeText, "label" | "labelEn">): string {
+  return lang === "en" ? `${fee.labelEn} fee` : `Phí ${lowerFirst(fee.label)}`;
+}
+
+/** Dòng phụ gọn trong thẻ Văn phòng ảo của báo giá tổng hợp (không kèm số tiền): "Phí bảng hiệu công ty (thu 1 lần)" / "Company signage fee (one-time)". */
+export function oneTimeFeeShortLabel(lang: QuoteLang, fee: Pick<OneTimeFeeText, "label" | "labelEn">): string {
+  return `${oneTimeFeeName(lang, fee)} ${lang === "en" ? "(one-time)" : "(thu 1 lần)"}`;
+}
+
+/** Câu đầy đủ dưới dòng giá thuê ở ảnh báo giá TỪNG GÓI/NHÓM GÓI (chỉ tiếng Việt): "+ Phí bảng hiệu công ty 500.000đ (thu duy nhất 1 lần khi làm …)". */
+export function oneTimeFeePlanLine(fee: OneTimeFeeText): string {
+  return `+ ${oneTimeFeeName("vi", fee)} ${formatQuoteCurrency(fee.price, "vi")} (${lowerFirst(fee.note)})`;
+}
+
+/** Nhãn ô tích ở form (chỉ tiếng Việt): "Có làm bảng hiệu công ty (thu 500.000đ một lần)". */
+export function oneTimeFeeCheckboxLabel(fee: OneTimeFeeText): string {
+  return `Có làm ${lowerFirst(fee.label)} (thu ${formatQuoteCurrency(fee.price, "vi")} một lần)`;
 }
