@@ -109,14 +109,15 @@ const PL_TITLE_BLOCK_H = 40; // tiêu đề 20px (~24) + margin dưới 16 — �
 const PL_VAT_NOTE_H = 26; // margin 10 + 1 dòng chữ 12.5px (~16) — đo thực tế
 const PL_CARD_BORDER = 2;
 
-// Khối "Lịch thanh toán" (thanh toán theo đợt): thẻ nền nhạt, tiêu đề + 3 hàng [nhãn | số tiền]. Hằng số hiệu chỉnh bằng pixel thật (xem scheduleHeight).
+// Khối "Lịch thanh toán" (đặt cọc): thẻ nền nhạt, tiêu đề + 2-3 hàng [nhãn | số tiền], mỗi hàng có thể có chú thích nhỏ. Hằng số hiệu chỉnh bằng pixel thật (xem scheduleHeight).
 const SCHEDULE_TOP_MARGIN = 32;
 const SCHEDULE_PADDING_Y = 40; // padding 20+20
 const SCHEDULE_TITLE_H = 27; // tiêu đề 14px (~17) + margin dưới 10
 const SCHEDULE_ROW_H = 38; // 1 dòng chữ 16px: padding 7+7, lineHeight 24
 const SCHEDULE_ROW_BORDER = 1; // viền trên mỗi hàng (trừ hàng đầu)
 const SCHEDULE_ROW_EXTRA_LINE_H = 24;
-const SCHEDULE_NOTE_H = 18; // chú thích nhỏ (chữ 13px, lineHeight 18) dưới nhãn hàng "còn lại" khi có nhóm thu hộ // mỗi dòng chữ thêm khi nhãn (điều kiện thanh toán dài) xuống dòng
+const SCHEDULE_NOTE_H = 18; // mỗi dòng chú thích nhỏ (chữ 13px, lineHeight 18) dưới nhãn hàng: tách công ty/thu hộ, điều kiện hoàn cọc
+const SCHEDULE_NOTE_CHARS_PER_LINE = 105; // ký tự/dòng của chú thích (chữ 13px, cột ~790px) — ước lượng thấp để KHÔNG BAO GIỜ thiếu chiều cao
 const SCHEDULE_LABEL_CHARS_PER_LINE = 88; // ký tự/dòng của nhãn (chữ 16px, cột nhãn ~790px): đo thực tế nhãn tiếng Việt ~95-99 ký tự, tiếng Anh ~91-94 vẫn 1 dòng — chọn thấp hơn để KHÔNG BAO GIỜ thiếu chiều cao
 
 // Khối "Bảng giá đầy đủ" Kế toán & thuế (loại "ke-toan-bang-gia"): ma trận 9 mức x 3 nhóm + 3 nhóm phụ phí. Hằng số hiệu chỉnh bằng pixel thật (xem accountingPriceListHeight).
@@ -848,10 +849,10 @@ function Section({ bucket, lines, lang }: { bucket: QuoteBucket; lines: Resolved
   );
 }
 
-/** Các hàng của khối "Lịch thanh toán" — DÙNG CHUNG giữa PaymentSchedule() (render) và scheduleHeight() (ước lượng chiều cao). Khối nằm ngay dưới ô tổng toàn
- * bộ khi có nhóm thu hộ nên khi đó bỏ hàng "Tổng cộng" (tránh hiện 2 lần cùng 1 con số). */
+/** Các hàng của khối "Lịch thanh toán" — DÙNG CHUNG giữa PaymentSchedule() (render) và scheduleHeight() (ước lượng chiều cao). Không có hàng "Tổng" và không có số "G - D":
+ * đặt cọc KHÔNG trừ vào tổng, khách chuyển đủ 100% rồi MAX OFFICE hoàn lại cọc (xem installmentScheduleRows). */
 function scheduleRows(plan: InstallmentPlan, lang: QuoteLang) {
-  return installmentScheduleRows(plan, lang, { withTotal: plan.thuHo === 0, includeCondition: true });
+  return installmentScheduleRows(plan, lang);
 }
 
 function scheduleHeight(plan: InstallmentPlan | null, lang: QuoteLang): number {
@@ -862,14 +863,14 @@ function scheduleHeight(plan: InstallmentPlan | null, lang: QuoteLang): number {
       SCHEDULE_ROW_H +
       (i > 0 ? SCHEDULE_ROW_BORDER : 0) +
       (Math.ceil(r.label.length / SCHEDULE_LABEL_CHARS_PER_LINE) - 1) * SCHEDULE_ROW_EXTRA_LINE_H +
-      (r.note ? SCHEDULE_NOTE_H : 0),
+      (r.note ? Math.ceil(r.note.length / SCHEDULE_NOTE_CHARS_PER_LINE) * SCHEDULE_NOTE_H : 0),
     0
   );
   return SCHEDULE_TOP_MARGIN + SCHEDULE_PADDING_Y + SCHEDULE_TITLE_H + rowsH;
 }
 
-/** Khối "Lịch thanh toán" — chỉ tính trên TỔNG ĐÃ GỒM VAT, không có dòng VAT/hoá đơn riêng từng đợt. Dòng nhấn (màu đỏ, đậm) là số tiền đang nằm trong mã QR
- * của nhóm MAX OFFICE (đợt 1) hoặc toàn bộ số còn phải thanh toán (đợt 2). Có nhóm thu hộ: tính theo G (xem installmentScheduleRows). */
+/** Khối "Lịch thanh toán" (đặt cọc) — chỉ tính trên TỔNG ĐÃ GỒM VAT, không có dòng VAT/hoá đơn riêng từng đợt. Dòng nhấn (màu đỏ, đậm): đợt 1 = tiền cọc (số trong mã QR
+ * công ty); đợt 2 = số cần thanh toán đủ G (= tổng các mã QR). */
 function PaymentSchedule({ plan, lang }: { plan: InstallmentPlan; lang: QuoteLang }) {
   const t = paymentScheduleText(lang);
   const rows = scheduleRows(plan, lang);
@@ -1387,7 +1388,7 @@ export async function POST(req: Request) {
   const maxOfficeQrAmount = groupQrAmount(maxOfficeLines);
   const thuHoQrAmount = groupQrAmount(thuHoLines);
 
-  // Thanh toán theo đợt (đặt cọc) — CHỈ nhóm MAX OFFICE; nhóm thu hộ giữ nguyên số tiền/QR. null = tắt: ảnh y hệt trước khi có tính năng.
+  // Đặt cọc (đợt 1) / đã đặt cọc, thanh toán đủ (đợt 2) — cọc CHỈ tính trên nhóm MAX OFFICE và KHÔNG trừ vào tổng; nhóm thu hộ giữ nguyên số tiền/QR. null = tắt: ảnh y hệt trước khi có tính năng.
   const installmentResult = resolveInstallment(body, maxOfficeQrAmount, thuHoQrAmount ?? 0);
   if (installmentResult && "error" in installmentResult) {
     return new Response(installmentResult.error, { status: 400 });
@@ -1411,14 +1412,14 @@ export async function POST(req: Request) {
   // buildQrNote() trong vietQr.ts để biết lý do).
   const maxOfficeQrNote = isNonEmptyString(body.qrNote)
     ? body.qrNote.trim()
-    : installment
-      ? buildInstallmentQrNote(customer, INSTALLMENT_QR_SUFFIX[installment.stage])
+    : installment?.stage === "deposit"
+      ? buildInstallmentQrNote(customer, INSTALLMENT_QR_SUFFIX.deposit)
       : buildQrNote(customer);
-  // Số tiền QR nhóm MAX OFFICE: tắt đợt = tổng nhóm; đợt 1 = tiền cọc; đợt 2 = phần còn lại (server tự tính).
+  // Số tiền QR nhóm MAX OFFICE: không đặt cọc = tổng nhóm Tc; đợt 1 = tiền cọc D; đợt 2 (đã đặt cọc, thanh toán đủ) = Tc như báo giá thường (server tự tính).
   const maxOfficePayAmount = installment ? installment.qrAmount : maxOfficeQrAmount;
 
   const showMaxOfficeQr = Boolean(body.showQr) && maxOfficeQrAmount != null;
-  // Đợt 1 (đặt cọc): CHỈ mã QR công ty (số tiền D); khoản thu hộ thanh toán cùng đợt còn lại nên QR thu hộ chỉ hiện ở đợt 2 (số tiền Tt) hoặc khi không đặt cọc.
+  // Đợt 1 (đặt cọc): CHỈ mã QR công ty (số tiền D); khoản thu hộ thanh toán cùng đợt thanh toán đủ nên QR thu hộ hiện ở đợt 2 (số tiền Tt, như báo giá thường) hoặc khi không đặt cọc.
   const showThuHoQr = Boolean(body.showQr) && thuHoQrAmount != null && installment?.stage !== "deposit";
 
   const [maxOfficeQrDataUri, thuHoQrDataUri] = await Promise.all([

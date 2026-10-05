@@ -21,7 +21,7 @@ import {
   buildCompositeQuoteFilename,
   maxOfficeGroupTotal,
   thuHoGroupTotal,
-  installmentScheduleRows,
+  installmentSummaryRows,
   resolveInstallment,
   INSTALLMENT_QR_SUFFIX,
   CUSTOM_SERVICE_META,
@@ -34,8 +34,10 @@ import {
 import {
   oneTimeFeeCheckboxLabel,
   DEPOSIT_LABEL,
-  DEFAULT_BALANCE_CONDITION,
-  BALANCE_CONDITION_MAX,
+  DEFAULT_FULL_PAYMENT_TIMING,
+  FULL_PAYMENT_TIMING_MAX,
+  DEFAULT_REFUND_CONDITION,
+  REFUND_CONDITION_MAX,
   type QuoteLang,
 } from "@/lib/quoteImageDictionary";
 import {
@@ -314,11 +316,13 @@ export default function CompositeQuoteTool() {
   // được". CHỈ áp dụng cho QR "Dịch vụ MAX OFFICE" (xem route.tsx) — QR thu
   // hộ (Chữ ký số/Hoá đơn điện tử) luôn tự sinh, không có ô sửa riêng.
   const [qrNoteManual, setQrNoteManual] = useState<string | null>(null);
-  // Thanh toán theo đợt (đặt cọc) — MẶC ĐỊNH TẮT. Chỉ áp dụng nhóm "Dịch vụ MAX OFFICE" (ẩn khi báo giá không có nhóm này).
+  // Đặt cọc — MẶC ĐỊNH TẮT. Chỉ áp dụng nhóm "Dịch vụ MAX OFFICE" (ẩn khi báo giá không có nhóm này). Quy trình thật: khách đặt cọc D (đợt 1), khi hoàn tất
+  // chuyển ĐỦ 100% tổng báo giá (đợt 2), sau đó MAX OFFICE hoàn lại D — cọc không trừ vào tổng.
   const [installOn, setInstallOn] = useState(false);
   const [depositRaw, setDepositRaw] = useState("");
   const [installStage, setInstallStage] = useState<InstallmentStage>("deposit");
-  const [balanceCondition, setBalanceCondition] = useState<string>(DEFAULT_BALANCE_CONDITION.vi);
+  const [fullPaymentTiming, setFullPaymentTiming] = useState<string>(DEFAULT_FULL_PAYMENT_TIMING.vi);
+  const [refundCondition, setRefundCondition] = useState<string>(DEFAULT_REFUND_CONDITION.vi);
   // Ngôn ngữ của ẢNH XUẤT RA — mặc định "vi" (hành vi y hệt trước khi có
   // tính năng song ngữ nếu nhân viên không chủ động đổi). CHỈ ảnh hưởng ảnh
   // PNG cuối cùng, KHÔNG đổi ngôn ngữ form nhập liệu này (luôn tiếng Việt)
@@ -375,7 +379,11 @@ export default function CompositeQuoteTool() {
   const depositNum = depositRaw ? Number(depositRaw) : NaN;
   const installResult =
     installOn && installAvailable
-      ? resolveInstallment({ depositAmount: depositNum, installmentStage: installStage, balanceCondition }, maxOfficeTotal, thuHoTotal)
+      ? resolveInstallment(
+          { depositAmount: depositNum, installmentStage: installStage, fullPaymentTiming, refundCondition },
+          maxOfficeTotal,
+          thuHoTotal
+        )
       : null;
   const installment = installResult && !("error" in installResult) ? installResult : null;
   // Đang bật mà số tiền chưa hợp lệ -> chặn tạo ảnh (không âm thầm quay về tổng đầy đủ).
@@ -386,12 +394,13 @@ export default function CompositeQuoteTool() {
   // Gợi ý tự sinh — CÙNG logic ưu tiên Tên công ty > Tên khách > SĐT > mặc
   // định đang dùng ở server (buildQrNote() trong vietQr.ts, import thẳng từ
   // đó để không lặp lại logic ở 2 nơi dễ lệch nhau).
-  // Thanh toán theo đợt: mặc định thêm " dat coc" / " thanh toan con lai" ở cuối (vẫn sửa đè được như mọi gợi ý).
-  const autoQrNote = installment
-    ? buildInstallmentQrNote(
-        { name: customerName, phone: customerPhone, companyName: customerCompany },
-        INSTALLMENT_QR_SUFFIX[installment.stage]
-      )
+  // Đợt 1 (đặt cọc): mặc định thêm " dat coc" ở cuối (vẫn sửa đè được như mọi gợi ý). Đợt 2 là thanh toán đủ bình thường: nội dung như báo giá thường.
+  const autoQrNote =
+    installment?.stage === "deposit"
+      ? buildInstallmentQrNote(
+          { name: customerName, phone: customerPhone, companyName: customerCompany },
+          INSTALLMENT_QR_SUFFIX.deposit
+        )
     : buildQrNote({ name: customerName, phone: customerPhone, companyName: customerCompany });
   const qrNote = qrNoteManual ?? autoQrNote;
 
@@ -419,7 +428,8 @@ export default function CompositeQuoteTool() {
             ? {
                 depositAmount: installment.deposit,
                 installmentStage: installment.stage,
-                balanceCondition: installment.condition,
+                fullPaymentTiming: installment.timing,
+                refundCondition: installment.refundCondition,
               }
             : null),
         }),
@@ -619,10 +629,11 @@ export default function CompositeQuoteTool() {
                 />
                 <span>
                   <span className="block text-[13.5px] font-bold text-navy">
-                    Khách thanh toán theo đợt ({DEPOSIT_LABEL.vi.toLowerCase()})
+                    Khách {DEPOSIT_LABEL.vi.toLowerCase()} trước (tiền cọc hoàn lại sau khi thanh toán đủ)
                   </span>
                   <span className="block text-[12px] text-body-text">
-                    Tắt mặc định. Chỉ áp dụng cho nhóm Dịch vụ MAX OFFICE (đã gồm VAT); nhóm thu hộ Chữ ký số/Hoá đơn điện tử giữ nguyên số tiền và mã QR riêng.
+                    Tắt mặc định. Khách chuyển đủ 100% tổng báo giá khi hoàn tất (nhóm MAX OFFICE vào tài khoản công ty, nhóm thu hộ vào tài khoản thu hộ), rồi MAX OFFICE
+                    hoàn lại tiền cọc — cọc không trừ vào tổng và chỉ tính trên nhóm Dịch vụ MAX OFFICE.
                   </span>
                 </span>
               </label>
@@ -635,7 +646,7 @@ export default function CompositeQuoteTool() {
                       {(
                         [
                           { value: "deposit", label: `${DEPOSIT_LABEL.vi} (đợt 1)` },
-                          { value: "balance", label: "Thanh toán phần còn lại (đợt 2)" },
+                          { value: "full", label: `Đã ${DEPOSIT_LABEL.vi.toLowerCase()}: thanh toán đủ 100% (đợt 2)` },
                         ] as const
                       ).map((opt) => (
                         <button
@@ -657,7 +668,7 @@ export default function CompositeQuoteTool() {
 
                   <div>
                     <label htmlFor="install-deposit" className={labelClass}>
-                      {installStage === "balance"
+                      {installStage === "full"
                         ? `Số tiền đã ${DEPOSIT_LABEL.vi.toLowerCase()} (đợt 1)`
                         : `Số tiền ${DEPOSIT_LABEL.vi.toLowerCase()} (đợt 1)`}
                     </label>
@@ -699,48 +710,56 @@ export default function CompositeQuoteTool() {
                     )}
                     {installBlocking && !installError && (
                       <p className="mt-1.5 text-[12.5px] font-semibold text-accent">
-                        Nhập số tiền {DEPOSIT_LABEL.vi.toLowerCase()} để tạo báo giá theo đợt (hoặc bỏ tích ô trên).
+                        Nhập số tiền {DEPOSIT_LABEL.vi.toLowerCase()} để tạo báo giá có đặt cọc (hoặc bỏ tích ô trên).
                       </p>
                     )}
                   </div>
 
-                  {installStage === "deposit" && (
-                    <div>
-                      <label htmlFor="install-condition" className={labelClass}>
-                        Điều kiện thanh toán phần còn lại (tuỳ chọn)
-                      </label>
-                      <input
-                        id="install-condition"
-                        type="text"
-                        value={balanceCondition}
-                        maxLength={BALANCE_CONDITION_MAX}
-                        onChange={(e) => setBalanceCondition(e.target.value)}
-                        autoComplete="off"
-                        className="min-h-[44px] w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-[16px] text-ink placeholder:text-[14px] placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none sm:text-[13.5px]"
-                      />
-                    </div>
-                  )}
+                  <div>
+                    <label htmlFor="install-timing" className={labelClass}>
+                      Thời điểm thanh toán đủ (tuỳ chọn)
+                    </label>
+                    <input
+                      id="install-timing"
+                      type="text"
+                      value={fullPaymentTiming}
+                      maxLength={FULL_PAYMENT_TIMING_MAX}
+                      onChange={(e) => setFullPaymentTiming(e.target.value)}
+                      autoComplete="off"
+                      className="min-h-[44px] w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-[16px] text-ink placeholder:text-[14px] placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none sm:text-[13.5px]"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="install-refund" className={labelClass}>
+                      Điều kiện hoàn cọc (tuỳ chọn)
+                    </label>
+                    <textarea
+                      id="install-refund"
+                      rows={3}
+                      value={refundCondition}
+                      maxLength={REFUND_CONDITION_MAX}
+                      onChange={(e) => setRefundCondition(e.target.value)}
+                      className="min-h-[88px] w-full resize-y rounded-xl border border-line bg-white px-3.5 py-2.5 text-[16px] leading-snug text-ink transition-colors duration-200 focus:border-primary focus:outline-none sm:text-[13.5px]"
+                    />
+                  </div>
 
                   {installment && (
                     <div aria-live="polite" className="rounded-lg bg-white px-3.5 py-3 text-[13px]">
-                      {installmentScheduleRows(installment, "vi", { withTotal: true, includeCondition: false }).map((r) => (
-                        <div key={r.label} className="py-0.5">
-                          <div className="flex items-center justify-between gap-3">
-                            <span className={r.emphasis ? "font-bold text-navy" : "text-body-text"}>{r.label}</span>
-                            <span className={`shrink-0 font-mono ${r.emphasis ? "font-bold text-accent" : "font-bold text-ink"}`}>
-                              {formatVnd(r.amount)}
-                            </span>
-                          </div>
-                          {r.note && <div className="text-[11.5px] leading-snug text-body-text">{r.note}</div>}
+                      {installmentSummaryRows(installment).map((r) => (
+                        <div key={r.label} className="flex items-center justify-between gap-3 py-0.5">
+                          <span className={r.emphasis ? "font-bold text-navy" : "text-body-text"}>{r.label}</span>
+                          <span className={`shrink-0 font-mono ${r.emphasis ? "font-bold text-accent" : "font-bold text-ink"}`}>
+                            {formatVnd(r.amount)}
+                          </span>
                         </div>
                       ))}
                       {showQr && (
                         <div className="mt-1.5 text-[11.5px] text-body-text">
-                          {installment.thuHo > 0
-                            ? installment.stage === "deposit"
-                              ? `Ảnh chỉ có mã QR công ty, điền sẵn số tiền ${DEPOSIT_LABEL.vi.toLowerCase()}; khoản thu hộ thanh toán cùng đợt còn lại.`
-                              : "Ảnh có 2 mã QR: công ty (phần còn lại của nhóm MAX OFFICE) và thu hộ — tổng 2 mã bằng số còn phải thanh toán."
-                            : `Mã QR nhóm MAX OFFICE sẽ điền sẵn số tiền ${installment.stage === "deposit" ? DEPOSIT_LABEL.vi.toLowerCase() : "còn lại"}.`}
+                          {installment.stage === "deposit"
+                            ? `Ảnh chỉ có mã QR công ty, điền sẵn số tiền ${DEPOSIT_LABEL.vi.toLowerCase()}${installment.thuHo > 0 ? "; khoản thu hộ thanh toán cùng đợt thanh toán đủ" : ""}.`
+                            : installment.thuHo > 0
+                              ? "Ảnh có 2 mã QR như báo giá thường: công ty (nhóm MAX OFFICE) và thu hộ — tổng 2 mã bằng số cần thanh toán."
+                              : "Mã QR nhóm MAX OFFICE điền sẵn tổng nhóm MAX OFFICE, như báo giá thường."}
                         </div>
                       )}
                     </div>
