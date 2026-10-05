@@ -41,6 +41,8 @@ import {
   priceListVatNote,
   DEFAULT_BALANCE_CONDITION,
   BALANCE_CONDITION_MAX,
+  balanceConditionText,
+  paymentScheduleText,
   type QuoteLang,
   type QuoteDictKey,
 } from "./quoteImageDictionary";
@@ -305,16 +307,66 @@ export const INSTALLMENT_FILENAME_SUFFIX = { deposit: "-COC", balance: "-CON-LAI
 export type InstallmentStage = "deposit" | "balance";
 export type InstallmentPlan = {
   stage: InstallmentStage;
-  /** Tổng nhóm MAX OFFICE (đã gồm VAT). */
+  /** Tc: tổng nhóm MAX OFFICE (đã gồm VAT). */
   total: number;
+  /** D: tiền đặt cọc — chỉ áp dụng nhóm MAX OFFICE (0 < D < Tc). */
   deposit: number;
-  /** = total - deposit. */
+  /** Tc - D: phần còn lại CỦA NHÓM MAX OFFICE (tài khoản công ty). */
   balance: number;
+  /** Tt: tổng nhóm thu hộ (đã gồm VAT), 0 nếu báo giá không có nhóm này. Không bị đặt cọc, được thanh toán cùng đợt còn lại. */
+  thuHo: number;
+  /** G = Tc + Tt: tổng toàn bộ báo giá. */
+  grand: number;
+  /** G - D: còn lại TOÀN BỘ sau đặt cọc = (Tc - D) + Tt. */
+  balanceAll: number;
   /** Điều kiện thanh toán phần còn lại ("" = không ghi). */
   condition: string;
-  /** Số tiền QR của nhóm MAX OFFICE: đợt 1 = deposit, đợt 2 = balance. */
+  /** Số tiền QR của nhóm MAX OFFICE (tài khoản công ty): đợt 1 = D, đợt 2 = Tc - D. QR thu hộ (nếu có) do route xử lý riêng: không hiện ở đợt 1, số tiền Tt ở đợt 2 — nên ở đợt 2 tổng các QR = G - D. */
   qrAmount: number;
 };
+
+export type ScheduleRow = { label: string; amount: number; emphasis: boolean; /** Chú thích nhỏ dưới nhãn (chỉ khi có nhóm thu hộ). */ note?: string };
+
+/**
+ * Các hàng của khối "Lịch thanh toán" (ảnh) và phần tóm tắt ở form — DÙNG CHUNG để chữ/số không lệch nhau.
+ * - Không có nhóm thu hộ (plan.thuHo = 0): 3 hàng Tổng / Đặt cọc / Còn lại (đợt 1) hoặc Tổng / Đã đặt cọc / Còn phải thanh toán (đợt 2), tính theo Tc.
+ * - Có nhóm thu hộ: tính theo G; `withTotal` = false (ảnh: khối nằm ngay dưới ô tổng toàn bộ nên không lặp lại) thì bỏ hàng Tổng; hàng "còn lại" có chú thích tách
+ *   tài khoản công ty (Tc - D) và tài khoản thu hộ (Tt).
+ * `includeCondition`: ghi điều kiện thanh toán vào nhãn "Còn lại" (ảnh có, form không).
+ */
+export function installmentScheduleRows(
+  plan: InstallmentPlan,
+  lang: QuoteLang,
+  opts: { withTotal: boolean; includeCondition: boolean }
+): ScheduleRow[] {
+  const t = paymentScheduleText(lang);
+  const fmt = (n: number) => formatQuoteCurrency(n, lang);
+  const hasThuHo = plan.thuHo > 0;
+  const condition = opts.includeCondition ? balanceConditionText(plan.condition, lang) : "";
+  const withCondition = (label: string) => (condition ? `${label} (${condition})` : label);
+  const split = hasThuHo ? t.splitNote(fmt(plan.balance), fmt(plan.thuHo)) : undefined;
+  const totalRow: ScheduleRow = {
+    label: hasThuHo ? t.totalAll : t.total,
+    amount: hasThuHo ? plan.grand : plan.total,
+    emphasis: false,
+  };
+  const rows: ScheduleRow[] =
+    plan.stage === "deposit"
+      ? [
+          { label: hasThuHo ? t.depositStage1Company : t.depositStage1, amount: plan.deposit, emphasis: true },
+          {
+            label: withCondition(hasThuHo ? t.remainingAfter : t.remaining),
+            amount: hasThuHo ? plan.balanceAll : plan.balance,
+            emphasis: false,
+            note: split,
+          },
+        ]
+      : [
+          { label: t.depositPaid, amount: plan.deposit, emphasis: false },
+          { label: t.balanceDue, amount: hasThuHo ? plan.balanceAll : plan.balance, emphasis: true, note: split },
+        ];
+  return opts.withTotal ? [totalRow, ...rows] : rows;
+}
 
 /** Tổng "Thành tiền" (đã gồm VAT) của nhóm MAX OFFICE — các dòng KHÔNG thuộc bucket thu hộ và tách được số; null nếu không có dòng nào. DÙNG CHUNG form + server. */
 export function maxOfficeGroupTotal(lines: ResolvedQuoteLine[]): number | null {
@@ -324,13 +376,19 @@ export function maxOfficeGroupTotal(lines: ResolvedQuoteLine[]): number | null {
   return total > 0 ? total : null;
 }
 
+/** Tổng "Thành tiền" (đã gồm VAT) của nhóm thu hộ (Chữ ký số / Hoá đơn điện tử); 0 nếu không có dòng nào. */
+export function thuHoGroupTotal(lines: ResolvedQuoteLine[]): number {
+  return lines.filter((l) => l.bucket === "thu-ho").reduce((sum, l) => sum + (l.breakdown?.total ?? 0), 0);
+}
+
 /**
  * Đọc + kiểm tra cấu hình thanh toán theo đợt. Trả null = TẮT (thiếu/sai kiểu `depositAmount` hoặc `installmentStage`); `{ error }` = bật nhưng số
  * không hợp lệ (route trả 400); ngược lại là kế hoạch đã tính. Chỉ tin số do client gửi ở `depositAmount` — phần còn lại/QR luôn tự tính.
  */
 export function resolveInstallment(
   input: { depositAmount?: unknown; installmentStage?: unknown; balanceCondition?: unknown },
-  maxOfficeTotal: number | null
+  maxOfficeTotal: number | null,
+  thuHoTotal: number = 0
 ): InstallmentPlan | { error: string } | null {
   const { depositAmount, installmentStage, balanceCondition } = input;
   if (typeof depositAmount !== "number" || !Number.isFinite(depositAmount)) return null;
@@ -353,6 +411,9 @@ export function resolveInstallment(
     total: maxOfficeTotal,
     deposit: depositAmount,
     balance,
+    thuHo: thuHoTotal,
+    grand: maxOfficeTotal + thuHoTotal,
+    balanceAll: balance + thuHoTotal,
     condition,
     qrAmount: installmentStage === "deposit" ? depositAmount : balance,
   };

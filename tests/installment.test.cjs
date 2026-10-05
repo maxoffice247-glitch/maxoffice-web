@@ -121,3 +121,86 @@ test("nội dung chuyển khoản mặc định theo đợt luôn giữ hậu t�
   }
   assert.equal(vq.VIETQR_NOTE_MAX_CHARS, 40);
 });
+
+/* ---------------- Có nhóm thu hộ: Tc, Tt, G, D ---------------- */
+const TC = 5_899_720; // nhóm MAX OFFICE
+const TT = 1_045_000; // nhóm thu hộ
+const G = TC + TT; // 6.944.720
+const D = 2_000_000;
+const plan = (stage, o = {}) => quote.resolveInstallment({ depositAmount: D, installmentStage: stage, ...o }, TC, TT);
+
+test("số tay: Tc 5.899.720, Tt 1.045.000, G 6.944.720, D 2.000.000", () => {
+  const p1 = plan("deposit");
+  assert.deepEqual(
+    { total: p1.total, thuHo: p1.thuHo, grand: p1.grand, deposit: p1.deposit, balance: p1.balance, balanceAll: p1.balanceAll, qr: p1.qrAmount },
+    { total: TC, thuHo: TT, grand: 6_944_720, deposit: D, balance: 3_899_720, balanceAll: 4_944_720, qr: D }
+  );
+  const p2 = plan("balance");
+  assert.equal(p2.qrAmount, 3_899_720); // QR công ty đợt 2
+  assert.equal(p2.thuHo, TT); // QR thu hộ đợt 2 = Tt
+  assert.equal(p2.qrAmount + p2.thuHo, 4_944_720); // tổng hai QR = G - D
+});
+
+test("tự động: đợt 2 luôn có tổng các QR = G - D; đợt 1 chỉ QR công ty = D; ràng buộc 0 < D < Tc không đổi", () => {
+  let seed = 12345;
+  const rnd = (n) => {
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    return seed % n;
+  };
+  for (let i = 0; i < 2000; i++) {
+    const tc = 1000 + rnd(50_000_000);
+    const tt = rnd(3) === 0 ? 0 : 1 + rnd(5_000_000);
+    const d = 1 + rnd(tc - 1);
+    const p1 = quote.resolveInstallment({ depositAmount: d, installmentStage: "deposit" }, tc, tt);
+    const p2 = quote.resolveInstallment({ depositAmount: d, installmentStage: "balance" }, tc, tt);
+    assert.equal(p1.qrAmount, d);
+    assert.equal(p1.balanceAll, tc + tt - d);
+    assert.equal(p2.qrAmount + p2.thuHo, tc + tt - d, `tc=${tc} tt=${tt} d=${d}`);
+    assert.equal(p2.grand, tc + tt);
+  }
+  // cọc phải nhỏ hơn Tc (không phải G)
+  assert.ok("error" in quote.resolveInstallment({ depositAmount: TC, installmentStage: "deposit" }, TC, TT));
+  assert.ok("error" in quote.resolveInstallment({ depositAmount: TC + 1, installmentStage: "deposit" }, TC, TT));
+  assert.ok(!("error" in quote.resolveInstallment({ depositAmount: TC - 1, installmentStage: "deposit" }, TC, TT)));
+});
+
+test("hàng của khối Lịch thanh toán: có thu hộ tính theo G, bỏ hàng Tổng trên ảnh, kèm chú thích tách đôi", () => {
+  const rows1 = quote.installmentScheduleRows(plan("deposit"), "vi", { withTotal: false, includeCondition: true });
+  assert.deepEqual(rows1.map((r) => [r.label, r.amount]), [
+    ["Đặt cọc (đợt 1) — chuyển tài khoản công ty", D],
+    ["Còn lại sau đặt cọc (khi nhận kết quả hồ sơ)", 4_944_720],
+  ]);
+  assert.equal(rows1[1].note, "gồm tài khoản công ty (3.899.720đ) và tài khoản thu hộ (1.045.000đ)");
+  const rows2 = quote.installmentScheduleRows(plan("balance"), "vi", { withTotal: false, includeCondition: true });
+  assert.deepEqual(rows2.map((r) => [r.label, r.amount, r.emphasis]), [
+    ["Đã đặt cọc", D, false],
+    ["Còn phải thanh toán", 4_944_720, true],
+  ]);
+  assert.equal(rows2[1].note, rows1[1].note);
+  // form: có hàng Tổng toàn bộ = G
+  const form = quote.installmentScheduleRows(plan("deposit"), "vi", { withTotal: true, includeCondition: false });
+  assert.deepEqual([form[0].label, form[0].amount], ["Tổng cộng toàn bộ (đã gồm VAT)", G]);
+  assert.equal(form[2].label, "Còn lại sau đặt cọc");
+  // tiếng Anh
+  const en = quote.installmentScheduleRows(plan("balance"), "en", { withTotal: false, includeCondition: true });
+  assert.equal(en[1].label, "Balance due");
+  assert.equal(en[1].note, "incl. company account (3,899,720 VND) and collection account (1,045,000 VND)");
+  assert.equal(quote.installmentScheduleRows(plan("deposit"), "en", { withTotal: false, includeCondition: true })[1].label, "Remaining balance after deposit (upon receipt of the application results)");
+});
+
+test("không có nhóm thu hộ: các hàng y hệt cũ (Tổng / Đặt cọc / Còn lại, điều kiện trong nhãn)", () => {
+  const p = quote.resolveInstallment({ depositAmount: D, installmentStage: "deposit" }, 4_496_800);
+  assert.equal(p.thuHo, 0);
+  const rows = quote.installmentScheduleRows(p, "vi", { withTotal: true, includeCondition: true });
+  assert.deepEqual(rows.map((r) => [r.label, r.amount, r.note]), [
+    ["Tổng cộng (đã gồm VAT)", 4_496_800, undefined],
+    ["Đặt cọc (đợt 1)", D, undefined],
+    ["Còn lại (khi nhận kết quả hồ sơ)", 2_496_800, undefined],
+  ]);
+});
+
+test("thuHoGroupTotal: tổng nhóm thu hộ", () => {
+  const ls = [lite, cks].map((it) => quote.resolveCompositeQuoteItem(it, "vi"));
+  assert.equal(quote.thuHoGroupTotal(ls), 1_045_000);
+  assert.equal(quote.thuHoGroupTotal([ls[0]]), 0);
+});

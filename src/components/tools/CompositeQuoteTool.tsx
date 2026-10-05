@@ -20,6 +20,8 @@ import {
   getHoaDonDienTuTierOptions,
   buildCompositeQuoteFilename,
   maxOfficeGroupTotal,
+  thuHoGroupTotal,
+  installmentScheduleRows,
   resolveInstallment,
   INSTALLMENT_QR_SUFFIX,
   CUSTOM_SERVICE_META,
@@ -31,7 +33,6 @@ import {
 } from "@/lib/compositeQuote";
 import {
   oneTimeFeeCheckboxLabel,
-  paymentScheduleText,
   DEPOSIT_LABEL,
   DEFAULT_BALANCE_CONDITION,
   BALANCE_CONDITION_MAX,
@@ -362,19 +363,19 @@ export default function CompositeQuoteTool() {
     [rows]
   );
 
-  // Tổng nhóm MAX OFFICE (đã gồm VAT) — tính bằng CÙNG hàm với server. null = không có nhóm này (chỉ thu hộ/rỗng) -> ẩn tuỳ chọn đặt cọc.
-  const maxOfficeTotal = useMemo(() => {
+  // Tổng nhóm MAX OFFICE (Tc) và nhóm thu hộ (Tt), đã gồm VAT — tính bằng CÙNG hàm với server. Tc null = không có nhóm MAX OFFICE (chỉ thu hộ/rỗng) -> ẩn tuỳ chọn đặt cọc.
+  const { maxOfficeTotal, thuHoTotal } = useMemo(() => {
     const lines = items.flatMap((it) => {
       const r = resolveCompositeQuoteItem(it);
       return "error" in r ? [] : [r];
     });
-    return maxOfficeGroupTotal(lines);
+    return { maxOfficeTotal: maxOfficeGroupTotal(lines), thuHoTotal: thuHoGroupTotal(lines) };
   }, [items]);
   const installAvailable = maxOfficeTotal != null;
   const depositNum = depositRaw ? Number(depositRaw) : NaN;
   const installResult =
     installOn && installAvailable
-      ? resolveInstallment({ depositAmount: depositNum, installmentStage: installStage, balanceCondition }, maxOfficeTotal)
+      ? resolveInstallment({ depositAmount: depositNum, installmentStage: installStage, balanceCondition }, maxOfficeTotal, thuHoTotal)
       : null;
   const installment = installResult && !("error" in installResult) ? installResult : null;
   // Đang bật mà số tiền chưa hợp lệ -> chặn tạo ảnh (không âm thầm quay về tổng đầy đủ).
@@ -682,9 +683,9 @@ export default function CompositeQuoteTool() {
                           key={pct}
                           type="button"
                           onClick={() => setDepositRaw(String(Math.round((maxOfficeTotal * pct) / 100)))}
-                          className="inline-flex min-h-[44px] min-w-[64px] items-center justify-center rounded-full border-[1.5px] border-primary/40 bg-white px-4 text-[13px] font-bold text-primary transition-colors duration-200 hover:border-primary hover:bg-primary-tint"
+                          className="inline-flex min-h-[44px] min-w-[64px] items-center justify-center rounded-full border-[1.5px] border-primary/40 bg-white px-4 py-1 text-center text-[13px] leading-snug font-bold text-primary transition-colors duration-200 hover:border-primary hover:bg-primary-tint"
                         >
-                          {pct}%
+                          {thuHoTotal > 0 ? `${pct}% của dịch vụ MAX OFFICE` : `${pct}%`}
                         </button>
                       ))}
                     </div>
@@ -722,33 +723,24 @@ export default function CompositeQuoteTool() {
 
                   {installment && (
                     <div aria-live="polite" className="rounded-lg bg-white px-3.5 py-3 text-[13px]">
-                      {(() => {
-                        const t = paymentScheduleText("vi");
-                        const rows =
-                          installment.stage === "deposit"
-                            ? [
-                                [t.total, installment.total, false],
-                                [t.depositStage1, installment.deposit, true],
-                                [t.remaining, installment.balance, false],
-                              ]
-                            : [
-                                [t.total, installment.total, false],
-                                [t.depositPaid, installment.deposit, false],
-                                [t.balanceDue, installment.balance, true],
-                              ];
-                        return rows.map(([label, amount, strong]) => (
-                          <div key={String(label)} className="flex items-center justify-between gap-3 py-0.5">
-                            <span className={strong ? "font-bold text-navy" : "text-body-text"}>{label as string}</span>
-                            <span className={`font-mono ${strong ? "font-bold text-accent" : "font-bold text-ink"}`}>
-                              {formatVnd(amount as number)}
+                      {installmentScheduleRows(installment, "vi", { withTotal: true, includeCondition: false }).map((r) => (
+                        <div key={r.label} className="py-0.5">
+                          <div className="flex items-center justify-between gap-3">
+                            <span className={r.emphasis ? "font-bold text-navy" : "text-body-text"}>{r.label}</span>
+                            <span className={`shrink-0 font-mono ${r.emphasis ? "font-bold text-accent" : "font-bold text-ink"}`}>
+                              {formatVnd(r.amount)}
                             </span>
                           </div>
-                        ));
-                      })()}
+                          {r.note && <div className="text-[11.5px] leading-snug text-body-text">{r.note}</div>}
+                        </div>
+                      ))}
                       {showQr && (
                         <div className="mt-1.5 text-[11.5px] text-body-text">
-                          Mã QR nhóm MAX OFFICE sẽ điền sẵn số tiền{" "}
-                          {installment.stage === "deposit" ? DEPOSIT_LABEL.vi.toLowerCase() : "còn lại"}.
+                          {installment.thuHo > 0
+                            ? installment.stage === "deposit"
+                              ? `Ảnh chỉ có mã QR công ty, điền sẵn số tiền ${DEPOSIT_LABEL.vi.toLowerCase()}; khoản thu hộ thanh toán cùng đợt còn lại.`
+                              : "Ảnh có 2 mã QR: công ty (phần còn lại của nhóm MAX OFFICE) và thu hộ — tổng 2 mã bằng số còn phải thanh toán."
+                            : `Mã QR nhóm MAX OFFICE sẽ điền sẵn số tiền ${installment.stage === "deposit" ? DEPOSIT_LABEL.vi.toLowerCase() : "còn lại"}.`}
                         </div>
                       )}
                     </div>

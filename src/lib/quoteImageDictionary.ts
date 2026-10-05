@@ -95,14 +95,8 @@ export const QUOTE_DICT = {
   // tổng cộng này thành "...DỊCH VỤ MAX OFFICE" để không gây hiểu lầm là đã
   // gồm cả tiền thu hộ (xem route.tsx — 2 khoản này tách sổ hoàn toàn).
   grandTotalMaxOfficeLabel: { vi: "TỔNG CỘNG DỊCH VỤ MAX OFFICE", en: "TOTAL MAX OFFICE SERVICES" },
-  // Khi báo giá có CẢ 2 nhóm (MAX OFFICE + thu hộ), thêm 1 dòng tổng GỘP CẢ
-  // 2 khoản (dùng chung "grandTotalLabel" ở trên — cùng ý nghĩa "toàn bộ báo
-  // giá") ngay dưới 2 khối tổng riêng, kèm ghi chú nhỏ là trả qua 2 kênh
-  // khác nhau — tránh khách hiểu nhầm có 1 khoản duy nhất cần chuyển.
-  overallTotalSplitNote: {
-    vi: "Thanh toán qua 2 kênh riêng biệt bên dưới — không phải 1 khoản chuyển duy nhất",
-    en: "Paid via 2 separate channels below — not a single transfer",
-  },
+  // Khi báo giá có CẢ 2 nhóm (MAX OFFICE + thu hộ), 1 dòng tổng GỘP CẢ 2 khoản (dùng chung "grandTotalLabel" ở trên) là con số tổng DUY NHẤT; 2 dòng
+  // chú thích nhỏ dưới nó tách số tiền theo tài khoản nhận — xem overallBreakdownText() ở cuối file.
   // 2 category "thu hộ" — tiền 2 dịch vụ này KHÔNG vào tài khoản MAX OFFICE
   // (xem THU_HO_ACCOUNT trong vietQr.ts).
   categoryChuKySo: { vi: "Chữ ký số", en: "Digital Signature" },
@@ -263,27 +257,41 @@ export function balanceConditionText(condition: string, lang: QuoteLang): string
   return lang === "en" && condition === DEFAULT_BALANCE_CONDITION.vi ? DEFAULT_BALANCE_CONDITION.en : condition;
 }
 
-/** Khung câu của khối "Lịch thanh toán" trên ảnh. */
+/** Hai dòng chú thích nhỏ dưới ô "Tổng cộng toàn bộ báo giá" khi báo giá có CẢ nhóm MAX OFFICE lẫn nhóm thu hộ (mỗi dòng: nhãn + số tiền đã gồm VAT). */
+export function overallBreakdownText(lang: QuoteLang) {
+  return lang === "en"
+    ? { company: "Of which: transfer to company account", thuHo: "Transfer to collection account (digital signature / e-invoice)" }
+    : { company: "Trong đó: chuyển tài khoản công ty", thuHo: "Chuyển tài khoản thu hộ (Chữ ký số / Hoá đơn điện tử)" };
+}
+
+/** Khung câu của khối "Lịch thanh toán" trên ảnh (và phần tóm tắt ở form). */
 export function paymentScheduleText(lang: QuoteLang) {
   const dep = DEPOSIT_LABEL[lang];
+  const depLower = `${dep.charAt(0).toLowerCase()}${dep.slice(1)}`;
   return lang === "en"
     ? {
         title: "Payment Schedule",
-        titleMaxOffice: "Payment Schedule — MAX OFFICE Services",
         total: "Total (incl. VAT)",
+        totalAll: "Total, all services (incl. VAT)",
         depositStage1: `${dep} (installment 1)`,
+        depositStage1Company: `${dep} (installment 1) — transfer to company account`,
         remaining: "Remaining balance",
+        remainingAfter: `Remaining balance after ${depLower}`,
         depositPaid: `${dep} paid`,
         balanceDue: "Balance due",
+        splitNote: (company: string, collection: string) => `incl. company account (${company}) and collection account (${collection})`,
       }
     : {
         title: "Lịch thanh toán",
-        titleMaxOffice: "Lịch thanh toán — Dịch vụ MAX OFFICE",
         total: "Tổng cộng (đã gồm VAT)",
+        totalAll: "Tổng cộng toàn bộ (đã gồm VAT)",
         depositStage1: `${dep} (đợt 1)`,
+        depositStage1Company: `${dep} (đợt 1) — chuyển tài khoản công ty`,
         remaining: "Còn lại",
-        depositPaid: `Đã ${dep.charAt(0).toLowerCase()}${dep.slice(1)}`,
+        remainingAfter: `Còn lại sau ${depLower}`,
+        depositPaid: `Đã ${depLower}`,
         balanceDue: "Còn phải thanh toán",
+        splitNote: (company: string, collection: string) => `gồm tài khoản công ty (${company}) và tài khoản thu hộ (${collection})`,
       };
 }
 
