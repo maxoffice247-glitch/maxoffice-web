@@ -198,13 +198,13 @@ export default function LeadCapturePopup() {
 
                 <form onSubmit={handleSubmit} className="short:space-y-2 space-y-3">
                   <label htmlFor={`${uid}-name`} className="sr-only">
-                    Họ tên
+                    Tên của bạn
                   </label>
                   <input
                     id={`${uid}-name`}
                     required
                     type="text"
-                    placeholder="Họ tên của bạn"
+                    placeholder="Ví dụ: Anh Nam"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="short:py-2.5 w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] text-ink placeholder:text-body-text/60 transition-colors duration-200 focus:border-primary focus:outline-none"

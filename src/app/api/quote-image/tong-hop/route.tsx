@@ -297,7 +297,7 @@ function estimateRowHeight(line: ResolvedQuoteLine): number {
   );
 }
 
-/** Nhãn VAT của 1 dòng: "VAT 10%"; chỉ khi phụ phí có mức VAT KHÁC tiền thuê (đổi ONE_TIME_SURCHARGE_VAT_PERCENT) mới ghi "VAT 10% / 8%". */
+/** Nhãn VAT của 1 dòng: "VAT 10%"; khi phụ phí có mức VAT KHÁC tiền thuê (phí bảng hiệu 8% — ONE_TIME_SURCHARGE_VAT_PERCENT) ghi cả hai mức: "VAT 10% / 8%". Số tiền VAT hiển thị là tổng đã tính riêng từng khoản. */
 function breakdownVatLabel(b: NonNullable<ResolvedQuoteLine["breakdown"]>): string {
   return b.surcharge && b.surcharge.vatRatePercent !== b.vatRatePercent
     ? `${vatLabel(b.vatRatePercent)} / ${b.surcharge.vatRatePercent}%`

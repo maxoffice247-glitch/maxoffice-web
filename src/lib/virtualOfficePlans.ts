@@ -18,9 +18,9 @@ export type VirtualOfficePlan = {
   addOn?: { label: string; labelEn: string; price: number; note: string; noteEn: string };
 };
 
-/** % VAT áp cho phụ phí thu một lần (addOn). TẠM 10% — cùng mức VAT của Văn phòng ảo; chờ xác nhận mức chính thức, đổi ở đây là ảnh
- * báo giá tổng hợp tự theo. */
-export const ONE_TIME_SURCHARGE_VAT_PERCENT = 10;
+/** % VAT áp cho phụ phí thu một lần (addOn, hiện: phí bảng hiệu công ty gói LITE) — 8%, đã xác nhận; KHÁC tiền thuê Văn phòng ảo (10%). VAT tính riêng từng khoản:
+ * tiền thuê x 10% + phụ phí x 8%. Đổi ở đây là ảnh báo giá tổng hợp tự theo. */
+export const ONE_TIME_SURCHARGE_VAT_PERCENT = 8;
 
 export const VIRTUAL_OFFICE_PLANS: Record<VirtualOfficePlanKey, VirtualOfficePlan> = {
   "lite": {

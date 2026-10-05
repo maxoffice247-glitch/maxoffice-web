@@ -6,7 +6,7 @@ const { SRC } = require("./ts-register.cjs");
 const quote = require(SRC + "lib/compositeQuote.ts");
 const dict = require(SRC + "lib/quoteImageDictionary.ts");
 
-const TOTAL = 4_496_800; // LITE 299.000đ x 12 tháng + bảng hiệu 500.000đ, VAT 10%
+const TOTAL = 4_486_800; // LITE 299.000đ x 12 tháng + bảng hiệu 500.000đ, VAT 10% tiền thuê + 8% bảng hiệu
 const lines = (items) => items.map((it) => quote.resolveCompositeQuoteItem(it, "vi"));
 const lite = { type: "van-phong-ao", locationSlug: "song-thao", planKey: "lite", months: 12 };
 const cks = { type: "chu-ky-so", tierKey: "1-nam" };
@@ -22,15 +22,15 @@ test("đợt 1: cọc 2.000.000 -> QR 2.000.000, còn lại 2.496.800", () => {
   const r = quote.resolveInstallment({ depositAmount: 2_000_000, installmentStage: "deposit" }, TOTAL);
   assert.deepEqual(
     { total: r.total, deposit: r.deposit, balance: r.balance, qrAmount: r.qrAmount, stage: r.stage },
-    { total: TOTAL, deposit: 2_000_000, balance: 2_496_800, qrAmount: 2_000_000, stage: "deposit" }
+    { total: TOTAL, deposit: 2_000_000, balance: 2_486_800, qrAmount: 2_000_000, stage: "deposit" }
   );
 });
 
 test("đợt 2: QR = phần còn lại 2.496.800, đã cọc 2.000.000", () => {
   const r = quote.resolveInstallment({ depositAmount: 2_000_000, installmentStage: "balance" }, TOTAL);
-  assert.equal(r.qrAmount, 2_496_800);
+  assert.equal(r.qrAmount, 2_486_800);
   assert.equal(r.deposit, 2_000_000);
-  assert.equal(r.balance, 2_496_800);
+  assert.equal(r.balance, 2_486_800);
 });
 
 test("cọc 0, âm, bằng tổng, lớn hơn tổng, không nguyên -> lỗi", () => {
@@ -75,7 +75,7 @@ test("số tiền khác client gửi kèm bị bỏ qua", () => {
     { depositAmount: 2_000_000, installmentStage: "deposit", balanceAmount: 1, qrAmount: 1, total: 1, balance: 1 },
     TOTAL
   );
-  assert.equal(r.balance, 2_496_800);
+  assert.equal(r.balance, 2_486_800);
   assert.equal(r.qrAmount, 2_000_000);
 });
 

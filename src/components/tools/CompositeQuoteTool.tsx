@@ -468,9 +468,9 @@ export default function CompositeQuoteTool() {
     <section className="py-9">
       <div className="mx-auto max-w-[900px] px-5 sm:px-8">
         <SectionHead
-          eyebrow="Công cụ nội bộ"
+          eyebrow="Công cụ tạo báo giá"
           title="Tạo báo giá tổng hợp"
-          description="Chọn nhiều dịch vụ khác nhau, xuất ra 1 ảnh báo giá duy nhất để gửi khách hàng."
+          description="Tạo ảnh báo giá nhiều dịch vụ gửi khách trong vài giây."
         />
 
         <Reveal className="rounded-2xl border border-line bg-white p-6 sm:p-8">
@@ -1134,7 +1134,11 @@ function QuoteRowEditor({
             <div className="mt-1 text-[11.5px] text-body-text">
               Tạm tính {formatVnd(preview.breakdown.subtotal)}
               {preview.breakdown.surcharge && ` (gồm phí thu 1 lần ${formatVnd(preview.breakdown.surcharge.amount)})`}{" "}
-              + VAT {preview.breakdown.vatRatePercent}% ({formatVnd(preview.breakdown.vatAmount)})
+              + VAT{" "}
+              {preview.breakdown.surcharge && preview.breakdown.surcharge.vatRatePercent !== preview.breakdown.vatRatePercent
+                ? `${preview.breakdown.vatRatePercent}% / ${preview.breakdown.surcharge.vatRatePercent}%`
+                : `${preview.breakdown.vatRatePercent}%`}{" "}
+              ({formatVnd(preview.breakdown.vatAmount)})
               {preview.breakdown.promo && <span className="text-amber-600"> · 🎁 tặng {preview.breakdown.promo.extraMonths} tháng</span>}
             </div>
           )}
