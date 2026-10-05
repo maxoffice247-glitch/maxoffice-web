@@ -57,6 +57,11 @@ export const QUOTE_DICT = {
   // Nhóm "Dịch vụ pháp lý sửa đổi" (loại "sua-doi" trong compositeQuote.ts) — tên 13 dịch vụ ở AMENDMENT_SERVICE_NAMES_EN
   // bên dưới, thời gian dịch qua translateAmendmentDuration().
   categoryPhapLySuaDoi: { vi: "Dịch vụ pháp lý sửa đổi", en: "Legal Amendment Services" },
+  // Dạng ảnh "Bảng giá đầy đủ 13 dịch vụ" (loại "sua-doi-bang-gia") — liệt kê giá, KHÔNG tính tổng/combo/QR.
+  priceListTitle: { vi: "Bảng giá dịch vụ pháp lý sửa đổi", en: "Legal Amendment Services Price List" },
+  priceListColService: { vi: "Dịch vụ", en: "Service" },
+  priceListColDuration: { vi: "Thời gian", en: "Duration" },
+  priceListColExcl: { vi: "Giá chưa VAT", en: "Price (excl. VAT)" },
   amendmentOriginalTotalLabel: { vi: "Tổng giá gốc", en: "List price total" },
   amendmentComboSubtotalLabel: { vi: "Tạm tính sau combo (chưa VAT)", en: "After combo (excl. VAT)" },
   // Ghi chú ưu đãi combo — dựng từ hằng số ở setupFees.ts nên số tiền luôn khớp; câu cố định ở hàm
@@ -183,4 +188,20 @@ export function amendmentComboNote(
 /** "3 dịch vụ" / "3 services" ("1 service" ở số ít) — đếm số dịch vụ sửa đổi trong dòng tiêu đề thẻ trên ảnh. */
 export function amendmentServiceCount(n: number, lang: QuoteLang): string {
   return lang === "en" ? `${n} ${n === 1 ? "service" : "services"}` : `${n} dịch vụ`;
+}
+
+/** Tiêu đề cột "Giá đã gồm VAT 8%" / "Price (incl. 8% VAT)" — số % truyền từ AMENDMENT_VAT_PERCENT. */
+export function priceListColIncl(lang: QuoteLang, vatPercent: number): string {
+  return lang === "en" ? `Price (incl. ${vatPercent}% VAT)` : `Giá đã gồm VAT ${vatPercent}%`;
+}
+
+/** Câu phạm vi áp dụng (bản tiếng Anh) — bản tiếng Việt lấy từ AMENDMENT_SCOPE_NOTE (setupFees.ts) cho khớp đúng chữ trên web. */
+export const AMENDMENT_SCOPE_NOTE_EN =
+  "Applies equally to household businesses, limited liability companies and joint-stock companies — regardless of business type.";
+
+/** Ghi chú VAT dưới bảng giá đầy đủ. */
+export function priceListVatNote(lang: QuoteLang, vatPercent: number): string {
+  return lang === "en"
+    ? `Listed prices exclude VAT; the VAT-inclusive price adds ${vatPercent}% VAT.`
+    : `Giá chưa bao gồm VAT ${vatPercent}%; giá đã gồm VAT là giá cộng thêm VAT ${vatPercent}%.`;
 }

@@ -31,11 +31,16 @@ import {
   amendmentServiceCount,
   translateAmendmentDuration,
   AMENDMENT_SERVICE_NAMES_EN,
+  AMENDMENT_SCOPE_NOTE_EN,
+  priceListVatNote,
   type QuoteLang,
   type QuoteDictKey,
 } from "./quoteImageDictionary";
 import {
   AMENDMENT_VAT_PERCENT,
+  AMENDMENT_SERVICES,
+  AMENDMENT_SCOPE_NOTE,
+  amendmentPriceInclVat,
   AMENDMENT_COMBO_THRESHOLD,
   AMENDMENT_COMBO_HIGH_PRICE,
   AMENDMENT_COMBO_LOW_PRICE,
@@ -213,9 +218,13 @@ export type CompositeQuoteCustomer = {
 export type CompositeQuoteItem =
   | { type: "van-phong-ao"; locationSlug: string; planKey: string; months: MonthOption }
   | { type: "thanh-lap-doanh-nghiep"; tier: "goi-1" | "goi-2" }
-  /** "Dịch vụ pháp lý sửa đổi": client CHỈ gửi danh sách slug dịch vụ đã chọn (AMENDMENT_SERVICES trong setupFees.ts).
-   * Giá gốc, giá combo, VAT đều do server tự tính (calculateAmendmentCombo) — mọi field "giá" client gửi kèm bị bỏ qua. */
-  | { type: "sua-doi"; serviceSlugs: string[] }
+  /** "Dịch vụ pháp lý sửa đổi": client CHỈ gửi danh sách slug dịch vụ đã chọn (AMENDMENT_SERVICES trong setupFees.ts) và cờ
+   * `applyCombo`. Giá gốc, giá combo, VAT đều do server tự tính (calculateAmendmentCombo) — mọi field "giá" client gửi kèm bị bỏ qua.
+   * `applyCombo` CHỈ có hiệu lực khi === true (thiếu/sai kiểu/giá trị lạ -> false = mọi dịch vụ tính giá gốc). */
+  | { type: "sua-doi"; serviceSlugs: string[]; applyCombo?: boolean }
+  /** Ảnh "Bảng giá đầy đủ 13 dịch vụ" để gửi khách hỏi giá: không có field nào khác — server tự lấy cả 13 dịch vụ từ
+   * AMENDMENT_SERVICES; không combo, không tổng, không QR. */
+  | { type: "sua-doi-bang-gia" }
   | { type: "ke-toan-thue"; group: "A" | "B" | "C"; rangeIndex: number }
   | {
       type: "custom";
@@ -292,10 +301,20 @@ export type AmendmentLineDetail = {
   originalTotal: number;
   /** Tổng sau combo (chưa VAT) = breakdown.subtotal. */
   comboTotal: number;
-  /** Số tiền được giảm nhờ combo = originalTotal - comboTotal. */
+  /** Số tiền được giảm nhờ combo = originalTotal - comboTotal (0 khi tắt combo). */
   discountAmount: number;
-  /** Chú thích ưu đãi combo — chỉ có khi chọn từ 2 dịch vụ trở lên. */
+  /** Nhân viên có bật combo VÀ đủ điều kiện (từ 2 dịch vụ trở lên) — quyết định ảnh có gạch ngang giá/chú thích/dòng "Tổng giá gốc". */
+  comboApplied: boolean;
+  /** Chú thích ưu đãi combo — chỉ có khi comboApplied. */
   comboNote?: string;
+};
+
+/** Chi tiết dòng "Bảng giá đầy đủ" (loại "sua-doi-bang-gia") — chỉ liệt kê giá, không tính tổng. */
+export type AmendmentPriceListDetail = {
+  rows: { name: string; duration: string; priceExclVat: number; priceInclVat: number }[];
+  vatPercent: number;
+  scopeNote: string;
+  vatNote: string;
 };
 
 export type ResolvedQuoteLine = {
@@ -310,6 +329,8 @@ export type ResolvedQuoteLine = {
   fallbackLabel?: string;
   /** Chỉ có ở dòng loại "sua-doi" — route ảnh dựa vào field này để vẽ dạng gọn nhiều hàng. */
   amendment?: AmendmentLineDetail;
+  /** Chỉ có ở dòng loại "sua-doi-bang-gia" — route ảnh vẽ khối bảng giá riêng, KHÔNG đưa vào khối chi phí/tổng/QR. */
+  priceList?: AmendmentPriceListDetail;
 };
 
 export type ResolveItemError = { error: string };
@@ -410,10 +431,13 @@ export function resolveCompositeQuoteItem(
     }
 
     case "sua-doi": {
-      // Server luôn tự kiểm tra + tự tính: chỉ đọc item.serviceSlugs, bỏ qua mọi field khác (kể cả "giá" client gửi kèm).
+      // Server luôn tự kiểm tra + tự tính: chỉ đọc item.serviceSlugs và cờ applyCombo, bỏ qua mọi field khác (kể cả "giá" client gửi kèm).
       const selection = validateAmendmentSelection(item.serviceSlugs);
       if (!selection.ok) return { error: selection.error };
-      const combo = calculateAmendmentCombo(selection.slugs);
+      // Chỉ đúng boolean true mới bật combo; mọi giá trị khác (thiếu, "true", 1, null...) coi là TẮT.
+      const applyCombo = (item as { applyCombo?: unknown }).applyCombo === true;
+      const combo = calculateAmendmentCombo(selection.slugs, applyCombo);
+      const comboApplied = applyCombo && combo.items.length >= 2;
       const originalTotal = combo.items.reduce((sum, it) => sum + it.price, 0);
       const comboTotal = combo.total;
       const vatAmount = Math.round((comboTotal * AMENDMENT_VAT_PERCENT) / 100);
@@ -443,14 +467,38 @@ export function resolveCompositeQuoteItem(
           originalTotal,
           comboTotal,
           discountAmount: originalTotal - comboTotal,
-          comboNote:
-            n >= 2
+          comboApplied,
+          comboNote: comboApplied
               ? amendmentComboNote(lang, {
                   threshold: AMENDMENT_COMBO_THRESHOLD,
                   high: AMENDMENT_COMBO_HIGH_PRICE,
                   low: AMENDMENT_COMBO_LOW_PRICE,
                 })
               : undefined,
+        },
+      };
+    }
+
+    case "sua-doi-bang-gia": {
+      // Không nhận bất kỳ dữ liệu nào từ client: luôn in đủ AMENDMENT_SERVICES theo thứ tự trong bảng.
+      const categoryName = qt("categoryPhapLySuaDoi", lang);
+      return {
+        category: categoryName,
+        title: qt("priceListTitle", lang),
+        subtitle: amendmentServiceCount(AMENDMENT_SERVICES.length, lang),
+        bucket: "mot-lan", // không dùng: route tách dòng này ra khỏi các khối chi phí
+        breakdown: null,
+        fallbackLabel: amendmentServiceCount(AMENDMENT_SERVICES.length, lang),
+        priceList: {
+          rows: AMENDMENT_SERVICES.map((svc) => ({
+            name: lang === "en" ? (AMENDMENT_SERVICE_NAMES_EN[svc.slug] ?? svc.name) : svc.name,
+            duration: translateAmendmentDuration(svc.duration, lang),
+            priceExclVat: svc.price,
+            priceInclVat: amendmentPriceInclVat(svc.price),
+          })),
+          vatPercent: AMENDMENT_VAT_PERCENT,
+          scopeNote: lang === "en" ? AMENDMENT_SCOPE_NOTE_EN : AMENDMENT_SCOPE_NOTE,
+          vatNote: priceListVatNote(lang, AMENDMENT_VAT_PERCENT),
         },
       };
     }
@@ -616,11 +664,17 @@ export function getHoaDonDienTuTierOptions(): { key: string; quantity: string; p
  * PDF (khác PaymentRequestTool), nên áp dụng quy ước tên file mới cho đúng
  * định dạng file THẬT SỰ đang tải về.
  */
-export function buildCompositeQuoteFilename(customer: CompositeQuoteCustomer, now: Date = new Date()): string {
-  const source = customer.companyName?.trim() || customer.name?.trim();
-  const slug = source ? slugifyForFilename(source, 25) : "KHACH-LE";
+export function buildCompositeQuoteFilename(
+  customer: CompositeQuoteCustomer,
+  now: Date = new Date(),
+  kind?: "bang-gia-sua-doi"
+): string {
   const dd = String(now.getDate()).padStart(2, "0");
   const mm = String(now.getMonth() + 1).padStart(2, "0");
   const yy = String(now.getFullYear()).slice(-2);
+  // Ảnh "Bảng giá đầy đủ" là tài liệu chung (không gắn với 1 khách) nên dùng tên cố định thay vì tên khách/công ty.
+  if (kind === "bang-gia-sua-doi") return `BG-BANG-GIA-SUA-DOI-${dd}${mm}${yy}.png`;
+  const source = customer.companyName?.trim() || customer.name?.trim();
+  const slug = source ? slugifyForFilename(source, 25) : "KHACH-LE";
   return `BG-${slug}-${dd}${mm}${yy}.png`;
 }

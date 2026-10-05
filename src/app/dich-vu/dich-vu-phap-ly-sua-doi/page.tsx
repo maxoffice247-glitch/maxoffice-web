@@ -16,7 +16,7 @@ import {
   ClockIcon,
   ArrowRightSmallIcon,
 } from "@/components/icons";
-import { AMENDMENT_SERVICES, COMBO_DISCOUNT_RULE } from "@/lib/setupFees";
+import { AMENDMENT_SCOPE_NOTE, AMENDMENT_SERVICES, COMBO_DISCOUNT_RULE } from "@/lib/setupFees";
 import { SITE_URL } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
@@ -127,7 +127,7 @@ export default function DichVuPhapLySuaDoiPage() {
           <SectionHead
             eyebrow="Bảng giá"
             title="13 dịch vụ pháp lý sửa đổi phổ biến"
-            description="Áp dụng chung cho Hộ kinh doanh, Công ty TNHH và Công ty Cổ phần — không phân biệt loại hình."
+            description={AMENDMENT_SCOPE_NOTE}
           />
           <Reveal>
             <div className="overflow-hidden rounded-2xl border border-line bg-white shadow-card">

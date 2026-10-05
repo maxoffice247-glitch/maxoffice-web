@@ -4,7 +4,7 @@ import LeadFormButton from "./LeadFormButton";
 import Button from "./Button";
 import ScrollFadeContainer from "./ScrollFadeContainer";
 import { BadgePercentIcon } from "./icons";
-import { AMENDMENT_SERVICES, COMBO_DISCOUNT_RULE } from "@/lib/setupFees";
+import { AMENDMENT_SCOPE_NOTE, AMENDMENT_SERVICES, COMBO_DISCOUNT_RULE } from "@/lib/setupFees";
 
 function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ";
@@ -17,7 +17,7 @@ export default function AmendmentPricingTable() {
         <SectionHead
           eyebrow="Bảng giá"
           title="Dịch vụ pháp lý sửa đổi"
-          description="Áp dụng chung cho Hộ kinh doanh, Công ty TNHH và Công ty Cổ phần — không phân biệt loại hình."
+          description={AMENDMENT_SCOPE_NOTE}
         />
 
         <Reveal className="overflow-hidden rounded-2xl border border-line bg-white shadow-soft">

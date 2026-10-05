@@ -5,7 +5,7 @@ import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import { PlusIcon, CloseIcon, DownloadIcon, ShareIcon, SpinnerIcon, PhoneIcon } from "../icons";
 import { shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
-import { AMENDMENT_SERVICES, calculateAmendmentCombo, formatAmendmentVnd } from "@/lib/setupFees";
+import { AMENDMENT_SERVICES, AMENDMENT_VAT_PERCENT, calculateAmendmentCombo, formatAmendmentVnd } from "@/lib/setupFees";
 import { getAllOfferedPlans, formatVoPrice, type OfferedPlan } from "@/lib/planFinder";
 import {
   resolveCompositeQuoteItem,
@@ -124,6 +124,10 @@ type QuoteRow = {
   hoaDonTierKey: string;
   /** Slug các dịch vụ pháp lý sửa đổi đang tích (loại "sua-doi") — tick nhiều, combo tính ở server. */
   amendSlugs: string[];
+  /** Ưu đãi combo cho nhóm sửa đổi — MẶC ĐỊNH TẮT (báo giá thực tế gần như luôn tính giá gốc). */
+  amendCombo: boolean;
+  /** Dạng ảnh của loại "sua-doi": "chon" = báo giá theo dịch vụ đã chọn (mặc định); "bang-gia" = bảng giá đầy đủ 13 dịch vụ. */
+  amendMode: "chon" | "bang-gia";
 };
 
 function createEmptyRow(): QuoteRow {
@@ -142,6 +146,8 @@ function createEmptyRow(): QuoteRow {
     chuKySoTierKey: "",
     hoaDonTierKey: "",
     amendSlugs: [],
+    amendCombo: false,
+    amendMode: "chon",
   };
 }
 
@@ -166,7 +172,7 @@ function applyServiceTypeDefaults(row: QuoteRow, type: ServiceTypeKey, firstLoca
     return { ...row, serviceType: type, tier: "goi-1" };
   }
   if (type === "sua-doi") {
-    return { ...row, serviceType: type, amendSlugs: [] };
+    return { ...row, serviceType: type, amendSlugs: [], amendCombo: false, amendMode: "chon" };
   }
   if (type === "ke-toan-thue") {
     return { ...row, serviceType: type, group: "A", rangeIndex: 0 };
@@ -195,7 +201,8 @@ function rowToItem(row: QuoteRow): CompositeQuoteItem | null {
     case "thanh-lap-doanh-nghiep":
       return { type: "thanh-lap-doanh-nghiep", tier: row.tier };
     case "sua-doi":
-      return row.amendSlugs.length > 0 ? { type: "sua-doi", serviceSlugs: row.amendSlugs } : null;
+      if (row.amendMode === "bang-gia") return { type: "sua-doi-bang-gia" };
+      return row.amendSlugs.length > 0 ? { type: "sua-doi", serviceSlugs: row.amendSlugs, applyCombo: row.amendCombo } : null;
     case "ke-toan-thue":
       return { type: "ke-toan-thue", group: row.group, rangeIndex: row.rangeIndex };
     case "chu-ky-so":
@@ -328,7 +335,12 @@ export default function CompositeQuoteTool() {
         throw new Error(message || `Server trả về lỗi ${res.status} khi tạo ảnh báo giá.`);
       }
       const blob = await res.blob();
-      const filename = buildCompositeQuoteFilename(customer);
+      // Ảnh "Bảng giá đầy đủ" là tài liệu chung nên có tên file riêng (BG-BANG-GIA-SUA-DOI-DDMMYY.png).
+      const filename = buildCompositeQuoteFilename(
+        customer,
+        new Date(),
+        items.some((it) => it.type === "sua-doi-bang-gia") ? "bang-gia-sua-doi" : undefined
+      );
       setPreviewUrl((old) => {
         if (old) URL.revokeObjectURL(old);
         return URL.createObjectURL(blob);
@@ -697,7 +709,12 @@ function QuoteRowEditor({
       )}
 
       {row.serviceType === "sua-doi" && (
-        <AmendmentPicker selected={row.amendSlugs} onChange={(amendSlugs) => onUpdate({ amendSlugs })} />
+        <AmendmentPicker
+          selected={row.amendSlugs}
+          applyCombo={row.amendCombo}
+          mode={row.amendMode}
+          onChange={onUpdate}
+        />
       )}
 
       {row.serviceType === "thanh-lap-doanh-nghiep" && (
@@ -882,83 +899,163 @@ function QuoteRowEditor({
 }
 
 /**
- * Danh sách ô tích (chọn nhiều) 13 dịch vụ pháp lý sửa đổi — đọc cùng nguồn AMENDMENT_SERVICES với bảng trên web. Phía dưới
- * hiện NGAY tổng tạm tính sau combo + số tiền được giảm (calculateAmendmentCombo — cùng hàm server dùng để tính ảnh), cập nhật
- * khi tích. Mỗi dòng cao >= 44px để dễ chạm trên điện thoại.
+ * Phần chọn của loại "Dịch vụ pháp lý sửa đổi". Hai dạng ảnh: (1) "Báo giá theo dịch vụ đã chọn" — danh sách 13 ô tích (đọc cùng
+ * nguồn AMENDMENT_SERVICES với bảng web), ô "Áp dụng ưu đãi combo" MẶC ĐỊNH TẮT (tắt: mọi dịch vụ tính giá gốc), tổng bên dưới theo
+ * trạng thái ô tích và gợi ý "Bật combo để giảm X đồng" khi đang tắt mà chọn từ 2 dịch vụ (calculateAmendmentCombo — cùng hàm server
+ * dùng); (2) "Bảng giá đầy đủ 13 dịch vụ" — không cần chọn. Mọi nút/dòng cao >= 44px để dễ chạm trên điện thoại.
  */
-function AmendmentPicker({ selected, onChange }: { selected: string[]; onChange: (slugs: string[]) => void }) {
+function AmendmentPicker({
+  selected,
+  applyCombo,
+  mode,
+  onChange,
+}: {
+  selected: string[];
+  applyCombo: boolean;
+  mode: "chon" | "bang-gia";
+  onChange: (patch: Partial<QuoteRow>) => void;
+}) {
   const uid = useId();
-  const combo = useMemo(() => calculateAmendmentCombo(selected), [selected]);
-  const finalBySlug = useMemo(() => new Map(combo.items.map((it) => [it.slug, it])), [combo]);
-  const originalTotal = combo.items.reduce((sum, it) => sum + it.price, 0);
-  const discount = originalTotal - combo.total;
+  const allSlugs = useMemo(() => AMENDMENT_SERVICES.map((s) => s.slug), []);
+  const result = useMemo(() => calculateAmendmentCombo(selected, applyCombo), [selected, applyCombo]);
+  const withCombo = useMemo(() => calculateAmendmentCombo(selected, true), [selected]);
+  const finalBySlug = useMemo(() => new Map(result.items.map((it) => [it.slug, it])), [result]);
+  const originalTotal = result.items.reduce((sum, it) => sum + it.price, 0);
+  const discount = originalTotal - result.total; // 0 khi combo tắt
+  const possibleSaving = originalTotal - withCombo.total; // số tiền giảm nếu BẬT combo
 
   const toggle = (slug: string, checked: boolean) => {
     // Giữ thứ tự theo bảng để danh sách gửi lên ổn định, không phụ thuộc thứ tự khách tích.
     const next = new Set(selected);
     if (checked) next.add(slug);
     else next.delete(slug);
-    onChange(AMENDMENT_SERVICES.filter((s) => next.has(s.slug)).map((s) => s.slug));
+    onChange({ amendSlugs: AMENDMENT_SERVICES.filter((s) => next.has(s.slug)).map((s) => s.slug) });
   };
 
+  const pill = (active: boolean) =>
+    `flex min-h-[44px] flex-1 items-center justify-center rounded-xl border-[1.5px] px-3 py-2 text-center text-[12.5px] leading-snug font-bold transition-colors duration-200 ${
+      active ? "border-primary bg-primary text-white" : "border-line bg-white text-body-text hover:border-primary/40"
+    }`;
+  const smallBtn =
+    "inline-flex min-h-[44px] items-center justify-center rounded-full border-[1.5px] border-line bg-white px-4 text-[12.5px] font-bold text-primary transition-colors duration-200 hover:border-primary hover:bg-primary-tint disabled:pointer-events-none disabled:opacity-40";
+
   return (
-    <fieldset className="mt-3">
-      <legend className={labelClass}>Chọn các dịch vụ cần báo giá (tích được nhiều dịch vụ)</legend>
-      <div className="space-y-2">
-        {AMENDMENT_SERVICES.map((svc) => {
-          const checked = selected.includes(svc.slug);
-          const calc = finalBySlug.get(svc.slug);
-          const showCombo = checked && calc?.discounted;
-          const id = `${uid}-${svc.slug}`;
-          return (
-            <label
-              key={svc.slug}
-              htmlFor={id}
-              className={`flex min-h-[44px] cursor-pointer items-start gap-3 rounded-lg border-[1.5px] bg-white px-3 py-2.5 transition-colors duration-200 ${
-                checked ? "border-primary bg-primary-tint/50" : "border-line hover:border-primary/40"
-              }`}
-            >
-              <input
-                id={id}
-                type="checkbox"
-                checked={checked}
-                onChange={(e) => toggle(svc.slug, e.target.checked)}
-                className="mt-0.5 h-5 w-5 shrink-0 accent-primary"
-              />
-              <span className="min-w-0 flex-1">
-                <span className="block text-[13.5px] leading-snug font-semibold text-navy">{svc.name}</span>
-                <span className="mt-0.5 flex flex-wrap items-baseline gap-x-2 text-[12.5px] text-body-text">
-                  {showCombo && <s className="text-body-text/70">{formatAmendmentVnd(svc.price)}</s>}
-                  <span className={`font-mono font-bold ${showCombo ? "text-accent" : "text-primary"}`}>
-                    {formatAmendmentVnd(showCombo && calc ? calc.finalPrice : svc.price)}
-                  </span>
-                  <span>· {svc.duration}</span>
-                </span>
-              </span>
-            </label>
-          );
-        })}
+    <div className="mt-3">
+      <span className={labelClass}>Dạng ảnh</span>
+      <div className="mb-3 flex flex-col gap-2 sm:flex-row" role="group" aria-label="Dạng ảnh báo giá sửa đổi">
+        <button type="button" aria-pressed={mode === "chon"} onClick={() => onChange({ amendMode: "chon" })} className={pill(mode === "chon")}>
+          Báo giá theo dịch vụ đã chọn
+        </button>
+        <button
+          type="button"
+          aria-pressed={mode === "bang-gia"}
+          onClick={() => onChange({ amendMode: "bang-gia" })}
+          className={pill(mode === "bang-gia")}
+        >
+          Bảng giá đầy đủ 13 dịch vụ (không tính tổng)
+        </button>
       </div>
-      <div aria-live="polite" className="mt-3 rounded-lg bg-white px-3.5 py-3 text-[13px]">
-        {selected.length === 0 ? (
-          <span className="text-body-text">Tích ít nhất 1 dịch vụ để xem tổng tạm tính.</span>
-        ) : (
-          <>
-            <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-              <span className="text-body-text">Tạm tính sau combo (chưa VAT)</span>
-              <span className="font-mono text-[15px] font-bold text-primary">{formatAmendmentVnd(combo.total)}</span>
+
+      {mode === "bang-gia" ? (
+        <p className="rounded-lg bg-white px-3.5 py-3 text-[12.5px] leading-relaxed text-body-text">
+          Ảnh in đủ 13 dịch vụ (tên, thời gian, giá chưa VAT, giá đã gồm VAT {AMENDMENT_VAT_PERCENT}%) để gửi khách hỏi giá. Không có
+          tổng, combo hay mã QR, nên không cần chọn dịch vụ.
+        </p>
+      ) : (
+        <fieldset>
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <legend className="text-[12px] font-bold text-body-text">Chọn các dịch vụ cần báo giá (tích được nhiều dịch vụ)</legend>
+            <div className="flex gap-2">
+              <button type="button" onClick={() => onChange({ amendSlugs: allSlugs })} disabled={selected.length === allSlugs.length} className={smallBtn}>
+                Chọn tất cả
+              </button>
+              <button type="button" onClick={() => onChange({ amendSlugs: [] })} disabled={selected.length === 0} className={smallBtn}>
+                Bỏ chọn tất cả
+              </button>
             </div>
-            {discount > 0 ? (
-              <div className="mt-1 flex flex-wrap items-baseline justify-between gap-x-3 text-[12.5px]">
-                <span className="text-body-text">Giảm so với giá gốc ({formatAmendmentVnd(originalTotal)})</span>
-                <span className="font-mono font-bold text-accent">−{formatAmendmentVnd(discount)}</span>
-              </div>
+          </div>
+          <div className="space-y-2">
+            {AMENDMENT_SERVICES.map((svc) => {
+              const checked = selected.includes(svc.slug);
+              const calc = finalBySlug.get(svc.slug);
+              const showCombo = checked && !!calc?.discounted;
+              const id = `${uid}-${svc.slug}`;
+              return (
+                <label
+                  key={svc.slug}
+                  htmlFor={id}
+                  className={`flex min-h-[44px] cursor-pointer items-start gap-3 rounded-lg border-[1.5px] bg-white px-3 py-2.5 transition-colors duration-200 ${
+                    checked ? "border-primary bg-primary-tint/50" : "border-line hover:border-primary/40"
+                  }`}
+                >
+                  <input
+                    id={id}
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) => toggle(svc.slug, e.target.checked)}
+                    className="mt-0.5 h-5 w-5 shrink-0 accent-primary"
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[13.5px] leading-snug font-semibold text-navy">{svc.name}</span>
+                    <span className="mt-0.5 flex flex-wrap items-baseline gap-x-2 text-[12.5px] text-body-text">
+                      {showCombo && <s className="text-body-text/70">{formatAmendmentVnd(svc.price)}</s>}
+                      <span className={`font-mono font-bold ${showCombo ? "text-accent" : "text-primary"}`}>
+                        {formatAmendmentVnd(showCombo && calc ? calc.finalPrice : svc.price)}
+                      </span>
+                      <span>· {svc.duration}</span>
+                    </span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+
+          <label
+            htmlFor={`${uid}-combo`}
+            className={`mt-3 flex min-h-[44px] cursor-pointer items-start gap-3 rounded-lg border-[1.5px] px-3 py-2.5 transition-colors duration-200 ${
+              applyCombo ? "border-accent/50 bg-accent/5" : "border-line bg-white hover:border-primary/40"
+            }`}
+          >
+            <input
+              id={`${uid}-combo`}
+              type="checkbox"
+              checked={applyCombo}
+              onChange={(e) => onChange({ amendCombo: e.target.checked })}
+              className="mt-0.5 h-5 w-5 shrink-0 accent-primary"
+            />
+            <span className="text-[13px] leading-snug font-semibold text-navy">
+              Áp dụng ưu đãi combo (khi khách làm nhiều dịch vụ cùng lúc)
+            </span>
+          </label>
+
+          <div aria-live="polite" className="mt-3 rounded-lg bg-white px-3.5 py-3 text-[13px]">
+            {selected.length === 0 ? (
+              <span className="text-body-text">Tích ít nhất 1 dịch vụ để xem tổng tạm tính.</span>
             ) : (
-              <div className="mt-1 text-[12.5px] text-body-text">Chọn từ 2 dịch vụ trở lên để được ưu đãi combo.</div>
+              <>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                  <span className="text-body-text">{applyCombo ? "Tạm tính sau combo (chưa VAT)" : "Tạm tính (chưa VAT)"}</span>
+                  <span className="font-mono text-[15px] font-bold text-primary">{formatAmendmentVnd(result.total)}</span>
+                </div>
+                {applyCombo && discount > 0 && (
+                  <div className="mt-1 flex flex-wrap items-baseline justify-between gap-x-3 text-[12.5px]">
+                    <span className="text-body-text">Giảm so với giá gốc ({formatAmendmentVnd(originalTotal)})</span>
+                    <span className="font-mono font-bold text-accent">−{formatAmendmentVnd(discount)}</span>
+                  </div>
+                )}
+                {applyCombo && discount === 0 && (
+                  <div className="mt-1 text-[12.5px] text-body-text">Chọn từ 2 dịch vụ trở lên để được ưu đãi combo.</div>
+                )}
+                {!applyCombo && selected.length >= 2 && possibleSaving > 0 && (
+                  <div className="mt-1 text-[12.5px] font-semibold text-amber-dark">
+                    Bật combo để giảm {formatAmendmentVnd(possibleSaving).replace("đ", "")} đồng
+                  </div>
+                )}
+              </>
             )}
-          </>
-        )}
-      </div>
-    </fieldset>
+          </div>
+        </fieldset>
+      )}
+    </div>
   );
 }

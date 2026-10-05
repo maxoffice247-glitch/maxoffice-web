@@ -16,6 +16,7 @@ import {
   type ResolvedQuoteLine,
   type QuoteBucket,
 } from "@/lib/compositeQuote";
+import { priceListColIncl } from "@/lib/quoteImageDictionary";
 import { amountToVietnameseWords } from "@/lib/numberToWords";
 import {
   buildVietQrImageUrl,
@@ -87,6 +88,19 @@ const AMEND_NOTE_PADDING_Y = 20; // padding 9+9 + viền 2
 const AMEND_NOTE_CHARS_PER_LINE = 135; // ký tự/dòng của ghi chú combo (chữ 12px, khung ~866px; đo thực tế ~145) — chọn thấp hơn để KHÔNG BAO GIỜ ước lượng thiếu
 const AMEND_NOTE_TOP_MARGIN = 10;
 
+// Khối "Bảng giá đầy đủ" (loại "sua-doi-bang-gia"): bảng 13 dòng, mỗi dòng 1 hàng — tên · thời gian · giá chưa VAT · giá đã gồm VAT.
+// Cỡ chữ lớn hơn thẻ báo giá để dễ đọc khi khách xem ảnh trên điện thoại. Hằng số hiệu chỉnh bằng pixel thật.
+const PL_NOTE_PADDING_Y = 28; // padding 14+14 của dòng "Áp dụng chung..."
+const PL_NOTE_LINE_H = 20;
+const PL_NOTE_CHARS_PER_LINE = 130; // ký tự/dòng của câu phạm vi (chữ 14px, khung ~920px; đo: câu EN 125 ký tự vừa 1 dòng, sức chứa ~138)
+const PL_HEADER_ROW_H = 41;
+const PL_ROW_H = 44; // 1 dòng chữ 16px: padding 12+12, chữ ~19, viền trên 1 — đo thực tế 44px/hàng
+const PL_ROW_EXTRA_LINE_H = 19; // mỗi dòng chữ thêm khi tên dịch vụ dài phải xuống dòng
+const PL_NAME_WRAP_THRESHOLD = 62; // ký tự: tên dài hơn ngưỡng này ước lượng 2 dòng (đo: VI 60 ký tự và EN 60 ký tự vừa 1 dòng, EN 65 ký tự xuống 2 dòng)
+const PL_TITLE_BLOCK_H = 40; // tiêu đề 20px (~24) + margin dưới 16 — đo thực tế
+const PL_VAT_NOTE_H = 26; // margin 10 + 1 dòng chữ 12.5px (~16) — đo thực tế
+const PL_CARD_BORDER = 2;
+
 const SECTION_HEADER_H = 34;
 const SECTION_TOP_MARGIN = 32;
 const SECTION_TOTAL_BOX_H = 60;
@@ -150,6 +164,8 @@ function isValidItemShape(item: unknown): item is CompositeQuoteItem {
       );
     case "thanh-lap-doanh-nghiep":
       return it.tier === "goi-1" || it.tier === "goi-2";
+    case "sua-doi-bang-gia":
+      return true; // không có field nào cần kiểm tra — server tự lấy cả 13 dịch vụ từ AMENDMENT_SERVICES
     case "sua-doi":
       // Chỉ kiểm tra hình dạng (mảng chuỗi) — nội dung (slug có tồn tại, trùng, rỗng...) do
       // resolveCompositeQuoteItem() từ chối kèm thông báo rõ.
@@ -354,7 +370,7 @@ function AmendmentRow({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang
       )}
 
       <div style={{ display: "flex", flexDirection: "column", marginTop: BREAKDOWN_TOP_MARGIN, gap: 4 }}>
-        {a.rows.length >= 2 ? (
+        {a.comboApplied ? (
           <DualBreakdownLine
             leftLabel={qt("amendmentOriginalTotalLabel", lang)}
             leftValue={formatQuoteCurrency(a.originalTotal, lang)}
@@ -487,6 +503,88 @@ function ItemRow({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang }) {
         <div style={{ display: "flex", fontSize: 22, fontWeight: 800, color: QUOTE_COLOR.accent }}>
           {formatQuoteCurrency(breakdown.total, lang)}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function priceListRowLines(name: string): number {
+  return name.length > PL_NAME_WRAP_THRESHOLD ? 2 : 1;
+}
+
+/** Chiều cao khối "Bảng giá đầy đủ" — PHẢI khớp JSX của PriceListBlock() bên dưới. */
+function priceListHeight(line: ResolvedQuoteLine): number {
+  const pl = line.priceList!;
+  const noteLines = Math.ceil(pl.scopeNote.length / PL_NOTE_CHARS_PER_LINE);
+  const rowsH = pl.rows.reduce((sum, r) => sum + PL_ROW_H + (priceListRowLines(r.name) - 1) * PL_ROW_EXTRA_LINE_H, 0);
+  return (
+    SECTION_TOP_MARGIN + PL_TITLE_BLOCK_H + PL_CARD_BORDER + PL_NOTE_PADDING_Y + noteLines * PL_NOTE_LINE_H + PL_HEADER_ROW_H + rowsH + PL_VAT_NOTE_H
+  );
+}
+
+/** Ảnh "Bảng giá đầy đủ": liệt kê cả 13 dịch vụ (giá chưa VAT + giá đã gồm VAT), KHÔNG combo/tổng/QR/"Chi phí một lần". */
+function PriceListBlock({ line, lang }: { line: ResolvedQuoteLine; lang: QuoteLang }) {
+  const pl = line.priceList!;
+  const colDuration = 96;
+  const colExcl = 150;
+  const colIncl = 170;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: SECTION_TOP_MARGIN }}>
+      <div style={{ display: "flex", fontSize: 20, fontWeight: 700, color: QUOTE_COLOR.navy, marginBottom: 16 }}>📋 {line.title}</div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 14,
+          border: `1px solid ${QUOTE_COLOR.line}`,
+          backgroundColor: "#ffffff",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ display: "flex", padding: "14px 22px", fontSize: 14, color: QUOTE_COLOR.bodyText, lineHeight: `${PL_NOTE_LINE_H}px` }}>
+          {pl.scopeNote}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: QUOTE_COLOR.bgTint,
+            padding: "0 22px",
+            height: PL_HEADER_ROW_H,
+            fontSize: 13,
+            fontWeight: 700,
+            color: QUOTE_COLOR.navy,
+          }}
+        >
+          <div style={{ display: "flex", flex: 1 }}>{qt("priceListColService", lang)}</div>
+          <div style={{ display: "flex", width: colDuration }}>{qt("priceListColDuration", lang)}</div>
+          <div style={{ display: "flex", width: colExcl, justifyContent: "flex-end" }}>{qt("priceListColExcl", lang)}</div>
+          <div style={{ display: "flex", width: colIncl, justifyContent: "flex-end" }}>{priceListColIncl(lang, pl.vatPercent)}</div>
+        </div>
+        {pl.rows.map((r, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "12px 22px",
+              borderTop: `1px solid ${QUOTE_COLOR.line}`,
+              backgroundColor: i % 2 === 1 ? "#f9fbfe" : "#ffffff",
+            }}
+          >
+            <div style={{ display: "flex", flex: 1, paddingRight: 12, fontSize: 16, fontWeight: 700, color: QUOTE_COLOR.navy }}>{r.name}</div>
+            <div style={{ display: "flex", width: colDuration, fontSize: 14, color: QUOTE_COLOR.bodyText }}>{r.duration}</div>
+            <div style={{ display: "flex", width: colExcl, justifyContent: "flex-end", fontSize: 16, color: QUOTE_COLOR.ink }}>
+              {formatQuoteCurrency(r.priceExclVat, lang)}
+            </div>
+            <div style={{ display: "flex", width: colIncl, justifyContent: "flex-end", fontSize: 16, fontWeight: 800, color: QUOTE_COLOR.accent }}>
+              {formatQuoteCurrency(r.priceInclVat, lang)}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", marginTop: 10, paddingLeft: 4, fontSize: 12.5, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>
+        {pl.vatNote}
       </div>
     </div>
   );
@@ -932,8 +1030,10 @@ export async function POST(req: Request) {
   // hưởng gì đến việc tra giá — chỉ đổi nhãn hiển thị trên ảnh.
   const lang: QuoteLang = body.lang === "en" ? "en" : "vi";
 
-  // Combo chỉ có nghĩa trong MỘT danh sách chọn — 2 dòng "sửa đổi" riêng sẽ tự tính combo tách rời, gây hiểu nhầm giá.
-  if (body.items.filter((it) => (it as { type?: unknown })?.type === "sua-doi").length > 1) {
+  // Combo chỉ có nghĩa trong MỘT danh sách chọn — 2 dòng "sửa đổi" riêng sẽ tự tính combo tách rời, gây hiểu nhầm giá. Dòng
+  // "Bảng giá đầy đủ" cũng chỉ 1 (và không đi kèm dòng "sửa đổi" khác trong cùng báo giá).
+  const amendmentTypes = new Set(["sua-doi", "sua-doi-bang-gia"]);
+  if (body.items.filter((it) => amendmentTypes.has((it as { type?: string })?.type ?? "")).length > 1) {
     return new Response("Chỉ được 1 dòng Dịch vụ pháp lý sửa đổi trong 1 báo giá — hãy tích thêm dịch vụ vào cùng 1 dòng.", {
       status: 400,
     });
@@ -967,16 +1067,20 @@ export async function POST(req: Request) {
     : null;
   const customerLineCount = (nameAndPhoneParts.length > 0 ? 1 : 0) + (companyRow ? 1 : 0);
 
+  // Dòng "Bảng giá đầy đủ" (nếu có) tách khỏi mọi khối chi phí/tổng/QR — chỉ là bảng liệt kê giá.
+  const priceListLine = resolvedLines.find((l) => l.priceList) ?? null;
+  const costLines = resolvedLines.filter((l) => !l.priceList);
+
   const byBucket = new Map<QuoteBucket, ResolvedQuoteLine[]>();
   for (const bucket of BUCKET_ORDER) byBucket.set(bucket, []);
-  for (const line of resolvedLines) byBucket.get(line.bucket)!.push(line);
+  for (const line of costLines) byBucket.get(line.bucket)!.push(line);
 
   // Tách 2 nhóm tổng theo TÀI KHOẢN NHẬN TIỀN (xem comment splitByPaymentGroup
   // + QuoteBucket trong compositeQuote.ts) — "Dịch vụ MAX OFFICE" dùng khối
   // "Tổng cộng" + QR tài khoản công ty hiện có, "Dịch vụ thu hộ" (Chữ ký
   // số/Hoá đơn điện tử) có khối tổng + QR RIÊNG, tài khoản cố định
   // THU_HO_ACCOUNT, KHÔNG được gộp lẫn với tiền MAX OFFICE.
-  const { maxOfficeLines, thuHoLines } = splitByPaymentGroup(resolvedLines);
+  const { maxOfficeLines, thuHoLines } = splitByPaymentGroup(costLines);
   const hasThuHo = thuHoLines.length > 0;
   const maxOfficeQrAmount = groupQrAmount(maxOfficeLines);
   const thuHoQrAmount = groupQrAmount(thuHoLines);
@@ -1023,6 +1127,7 @@ export async function POST(req: Request) {
   const height =
     HEADER_H +
     customerBlockH +
+    (priceListLine ? priceListHeight(priceListLine) : 0) +
     BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!, lang), 0) +
     grandTotalHeight(maxOfficeLines, lang) +
     overallTotalHeight(showOverallTotal, lang) +
@@ -1088,6 +1193,8 @@ export async function POST(req: Request) {
             </div>
           </div>
         )}
+
+        {priceListLine && <PriceListBlock line={priceListLine} lang={lang} />}
 
         {BUCKET_ORDER.map((bucket) => (
           <Section key={bucket} bucket={bucket} lines={byBucket.get(bucket)!} lang={lang} />

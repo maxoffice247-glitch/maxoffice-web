@@ -77,10 +77,12 @@ export const AMENDMENT_SERVICES: AmendmentService[] = [
   },
 ];
 
-/**
- * VAT cho nhóm "Dịch vụ pháp lý sửa đổi" khi xuất ảnh Báo giá tổng hợp. TẠM dùng 8% giống Thành lập doanh nghiệp
- * (CHƯA có xác nhận cuối cùng của chủ site) — đổi MỘT chỗ này là cả công cụ báo giá đổi theo.
- */
+/** Câu phạm vi áp dụng hiển thị trên web (bảng giá) VÀ trên ảnh "Bảng giá đầy đủ" — dùng chung một chuỗi để không lệch. */
+export const AMENDMENT_SCOPE_NOTE =
+  "Áp dụng chung cho Hộ kinh doanh, Công ty TNHH và Công ty Cổ phần — không phân biệt loại hình.";
+
+/** VAT của nhóm "Dịch vụ pháp lý sửa đổi" (ảnh Báo giá tổng hợp + Bảng giá đầy đủ): 8% — mức đã được xác nhận. Đổi MỘT chỗ này
+ * là cả công cụ báo giá đổi theo. */
 export const AMENDMENT_VAT_PERCENT = 8;
 
 /** Combo: giá gốc TRÊN ngưỡng này thì dịch vụ "còn lại" tính AMENDMENT_COMBO_HIGH_PRICE; từ ngưỡng TRỞ XUỐNG (kể cả
@@ -99,21 +101,34 @@ export function formatAmendmentVnd(n: number): string {
 // mọi nơi; nội dung giữ nguyên từng chữ so với bản viết cứng trước đây (có test đối chiếu).
 export const COMBO_DISCOUNT_RULE = `Khi đặt từ 2 dịch vụ sửa đổi trở lên cùng lúc: dịch vụ có giá trị lớn nhất tính giá đầy đủ; các dịch vụ còn lại — giá gốc trên ${formatAmendmentVnd(AMENDMENT_COMBO_THRESHOLD)} giảm còn ${formatAmendmentVnd(AMENDMENT_COMBO_HIGH_PRICE)}, giá gốc từ ${formatAmendmentVnd(AMENDMENT_COMBO_THRESHOLD)} trở xuống giảm còn ${formatAmendmentVnd(AMENDMENT_COMBO_LOW_PRICE)}.`;
 
+/** Giá đã gồm VAT (làm tròn đồng) của một dịch vụ sửa đổi — dùng cho ảnh "Bảng giá đầy đủ". */
+export function amendmentPriceInclVat(price: number): number {
+  return price + Math.round((price * AMENDMENT_VAT_PERCENT) / 100);
+}
+
 export type AmendmentComboItem = AmendmentService & { finalPrice: number; discounted: boolean };
 
 /**
- * HÀM THUẦN tính combo — nguồn DUY NHẤT cho cả công cụ "Tính chi phí thành lập" lẫn "Báo giá tổng hợp" (server).
- * Quy tắc: từ 2 dịch vụ trở lên thì dịch vụ có giá gốc lớn nhất tính đủ; mỗi dịch vụ còn lại tính
- * AMENDMENT_COMBO_HIGH_PRICE (giá gốc > ngưỡng) hoặc AMENDMENT_COMBO_LOW_PRICE (giá gốc <= ngưỡng). Chọn 1 dịch vụ thì
- * tính giá gốc. Nhiều dịch vụ cùng giá lớn nhất: chỉ MỘT dịch vụ tính đủ — dịch vụ đứng trước trong bảng (sắp xếp ổn
- * định). Slug lạ bị bỏ qua và slug trùng chỉ tính một lần (muốn từ chối đầu vào sai thì dùng
- * validateAmendmentSelection() trước). Kết quả xếp theo giá gốc giảm dần.
+ * HÀM THUẦN tính giá nhóm dịch vụ sửa đổi — nguồn DUY NHẤT cho công cụ "Tính chi phí thành lập" lẫn "Báo giá tổng hợp" (server).
+ *
+ * `applyCombo` (mặc định TRUE — giữ hành vi cũ của công cụ tính chi phí; Báo giá tổng hợp truyền false trừ khi nhân viên bật):
+ * - false: mọi dịch vụ đã chọn tính GIÁ GỐC, kết quả theo thứ tự trong bảng.
+ * - true: từ 2 dịch vụ trở lên thì dịch vụ giá gốc lớn nhất tính đủ; mỗi dịch vụ còn lại tính AMENDMENT_COMBO_HIGH_PRICE (giá gốc
+ *   > ngưỡng) hoặc AMENDMENT_COMBO_LOW_PRICE (giá gốc <= ngưỡng, kể cả đúng bằng). Chọn 1 dịch vụ thì tính giá gốc. Nhiều dịch vụ
+ *   cùng giá lớn nhất: chỉ MỘT dịch vụ tính đủ — dịch vụ đứng trước trong bảng (sắp xếp ổn định). Kết quả xếp theo giá gốc giảm dần.
+ * Slug lạ bị bỏ qua và slug trùng chỉ tính một lần (muốn từ chối đầu vào sai thì dùng validateAmendmentSelection() trước).
  */
 export function calculateAmendmentCombo(
-  selectedSlugs: string[]
+  selectedSlugs: string[],
+  applyCombo: boolean = true
 ): { items: AmendmentComboItem[]; total: number } {
   const selected = AMENDMENT_SERVICES.filter((s) => selectedSlugs.includes(s.slug));
   if (selected.length === 0) return { items: [], total: 0 };
+
+  if (!applyCombo) {
+    const items: AmendmentComboItem[] = selected.map((s) => ({ ...s, finalPrice: s.price, discounted: false }));
+    return { items, total: items.reduce((sum, it) => sum + it.finalPrice, 0) };
+  }
 
   const sorted = [...selected].sort((a, b) => b.price - a.price);
   const items: AmendmentComboItem[] = sorted.map((s, i) => {
