@@ -181,6 +181,11 @@ const GRAND_TOTAL_BOX_H = 60; // thu gọn vừa nội dung (alignSelf:"flex-sta
 const GRAND_TOTAL_WORDS_H = 20; // "Bằng chữ" 1 dòng, fontSize 13 — đo thực tế thấp hơn mốc 26 dùng cho SECTION_WORDS_H
 const GRAND_TOTAL_NOTE_H = 18;
 
+// MÀU Ô TỔNG CHÍNH (khối tổng cộng của cả báo giá): MỘT hằng số dùng chung cho cả ô tổng gộp OverallTotal (có cả MAX OFFICE và thu hộ) lẫn ô GrandTotal (chỉ nhóm MAX OFFICE,
+// từ 2 dịch vụ) — nền accent (đỏ), chữ trắng — để mọi báo giá có ô tổng chính đều cùng một màu. Dòng tổng của TỪNG nhóm chi phí (thuê, hàng tháng, một lần, theo giờ, thu hộ) KHÔNG dùng hằng số này.
+const TOTAL_BOX_BG = QUOTE_COLOR.accent;
+const TOTAL_BOX_TEXT = "#ffffff";
+
 // Ô "Tổng toàn bộ báo giá MAX OFFICE và thu hộ" gộp CẢ 2 nhóm — chỉ hiện khi có đủ cả 2 (xem showOverallTotal trong POST()) và khi đó là ô tổng DUY NHẤT
 // (không còn khối navy "Tổng cộng dịch vụ MAX OFFICE"); nền accent (đỏ), "Bằng chữ" nằm ngay trong ô.
 const OVERALL_TOTAL_TOP_MARGIN = 32;
@@ -1026,7 +1031,7 @@ function grandTotalHeight(maxOfficeLines: ResolvedQuoteLine[], lang: QuoteLang):
   );
 }
 
-/** Khối tổng nhóm MAX OFFICE (navy) — chỉ hiện khi báo giá KHÔNG có nhóm thu hộ (khi có cả 2 nhóm, ô tổng gộp OverallTotal là ô tổng duy nhất). */
+/** Khối tổng nhóm MAX OFFICE (nền accent đỏ, cùng TOTAL_BOX_BG với ô tổng gộp) — chỉ hiện khi báo giá KHÔNG có nhóm thu hộ (khi có cả 2 nhóm, ô tổng gộp OverallTotal là ô tổng duy nhất). */
 function GrandTotal({ maxOfficeLines, lang, bare }: { maxOfficeLines: ResolvedQuoteLine[]; lang: QuoteLang; bare?: boolean }) {
   const { total, show, hasExcluded } = computeGrandTotal(maxOfficeLines);
   if (!show) return null;
@@ -1046,14 +1051,14 @@ function GrandTotal({ maxOfficeLines, lang, bare }: { maxOfficeLines: ResolvedQu
           alignItems: "center",
           gap: 20,
           borderRadius: 14,
-          backgroundColor: QUOTE_COLOR.navy,
+          backgroundColor: TOTAL_BOX_BG,
           padding: "14px 20px",
         }}
       >
-        <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: "#fff" }}>
+        <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: TOTAL_BOX_TEXT }}>
           {qt("grandTotalLabel", lang)}
         </div>
-        <div style={{ display: "flex", fontSize: 24, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(total, lang)}</div>
+        <div style={{ display: "flex", fontSize: 24, fontWeight: 800, color: TOTAL_BOX_TEXT }}>{formatQuoteCurrency(total, lang)}</div>
       </div>
       {lang === "vi" && (
         <div style={{ display: "flex", marginTop: 8, paddingLeft: 4 }}>
@@ -1132,13 +1137,13 @@ function OverallTotal({
           alignSelf: "flex-start",
           maxWidth: colWidth ?? CONTENT_WIDTH,
           borderRadius: 14,
-          backgroundColor: QUOTE_COLOR.accent,
+          backgroundColor: TOTAL_BOX_BG,
           padding: "14px 20px",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: "#fff" }}>{qt("overallTotalLabel", lang)}</div>
-          <div style={{ display: "flex", flexShrink: 0, fontSize: 24, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(amount, lang)}</div>
+          <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: TOTAL_BOX_TEXT }}>{qt("overallTotalLabel", lang)}</div>
+          <div style={{ display: "flex", flexShrink: 0, fontSize: 24, fontWeight: 800, color: TOTAL_BOX_TEXT }}>{formatQuoteCurrency(amount, lang)}</div>
         </div>
         {words && (
           <div style={{ display: "flex", marginTop: 6, fontSize: 13, fontStyle: "italic", color: "rgba(255,255,255,0.92)" }}>
