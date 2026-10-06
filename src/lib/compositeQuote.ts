@@ -39,10 +39,8 @@ import {
   AMENDMENT_SERVICE_NAMES_EN,
   AMENDMENT_SCOPE_NOTE_EN,
   priceListVatNote,
-  DEFAULT_FULL_PAYMENT_TIMING,
-  FULL_PAYMENT_TIMING_MAX,
-  DEFAULT_REFUND_CONDITION,
-  REFUND_CONDITION_MAX,
+  DEFAULT_BALANCE_TIMING,
+  BALANCE_TIMING_MAX,
   defaultAwareText,
   paymentScheduleText,
   type QuoteLang,
@@ -292,80 +290,92 @@ export type CompositeQuoteRequestBody = {
    * field vẫn hoạt động đúng như trước). Form nhập liệu LUÔN tiếng Việt,
    * field này chỉ quyết định nhãn/tên hiển thị trên ảnh PNG cuối cùng. */
   lang?: QuoteLang;
-  /** Đặt cọc cho nhóm "Dịch vụ MAX OFFICE" — xem resolveInstallment(). QUY TRÌNH THẬT: khách đặt cọc D (đợt 1, "deposit") từ tài khoản cá nhân vào tài khoản
-   * công ty; khi hoàn tất hồ sơ khách chuyển ĐỦ 100% tổng báo giá (đợt 2, "full"); sau đó MAX OFFICE HOÀN LẠI D — cọc KHÔNG trừ vào tổng. Mặc định TẮT: chỉ BẬT khi
-   * `depositAmount` là số VÀ `installmentStage` hợp lệ; thiếu hoặc sai kiểu = tắt (ảnh y hệt báo giá thường). Server tự tính số tiền QR, bỏ qua mọi số tiền khác client gửi.
-   * "balance" là BÍ DANH cũ của "full" (client cũ còn trong bộ nhớ đệm vẫn chạy được). */
+  /** Thanh toán theo đợt (đặt cọc) cho nhóm "Dịch vụ MAX OFFICE" — xem resolveInstallment(). `installmentStage`: "deposit" (đợt 1: đặt cọc D, còn lại G - D) | "full" (đợt 2:
+   * thanh toán 100% tổng báo giá G) | "remaining" (đợt 2: phần còn lại sau cọc G - D); "balance" là BÍ DANH cũ của "full" (client cũ còn trong bộ nhớ đệm vẫn chạy được).
+   * Mặc định TẮT: giá trị lạ/thiếu = tắt (ảnh y hệt báo giá thường). "deposit"/"remaining" cần `depositAmount` là số hợp lệ (0 < D < tổng nhóm MAX OFFICE, sai -> 400);
+   * "full" không cần D (nếu có gửi số thì vẫn kiểm tra). Server tự tính số tiền QR, bỏ qua mọi số tiền khác client gửi; trường lạ/cũ bị bỏ qua (không lỗi). */
   depositAmount?: number;
-  installmentStage?: "deposit" | "full" | "balance";
-  /** "Thời điểm thanh toán đủ" (hiện ở ảnh đợt 1). Thiếu/sai kiểu = câu mặc định; chuỗi rỗng = không ghi. */
+  installmentStage?: "deposit" | "full" | "remaining" | "balance";
+  /** "Thời điểm thanh toán phần còn lại" (hiện ở ảnh đợt 1). Thiếu/sai kiểu = câu mặc định; chuỗi rỗng = không ghi. */
+  balanceTiming?: string;
+  /** Tên cũ của `balanceTiming` (client cũ: fullPaymentTiming, balanceCondition) — chỉ đọc khi `balanceTiming` không được gửi. */
   fullPaymentTiming?: string;
-  /** "Điều kiện hoàn cọc" (hiện ở cả 2 đợt). Thiếu/sai kiểu = câu mặc định; chuỗi rỗng = không ghi. */
-  refundCondition?: string;
-  /** Tên cũ của `fullPaymentTiming` (client cũ) — chỉ đọc khi `fullPaymentTiming` không được gửi. */
   balanceCondition?: string;
   items: CompositeQuoteItem[];
 };
 
-/** Hậu tố mặc định của nội dung chuyển khoản ĐỢT 1 (nhân viên vẫn sửa được ở form) — quy ước cố định, không theo nhãn DEPOSIT_LABEL. Đợt 2 là thanh toán đủ bình thường: nội dung như báo giá thường. */
-export const INSTALLMENT_QR_SUFFIX = { deposit: " dat coc" } as const;
-/** Hậu tố tên file ảnh theo đợt (đợt 1 / đợt 2 đã đặt cọc). */
-export const INSTALLMENT_FILENAME_SUFFIX = { deposit: "-COC", full: "-DA-COC" } as const;
+/** Hậu tố mặc định của nội dung chuyển khoản (nhân viên vẫn sửa được ở form) — quy ước cố định, không theo nhãn DEPOSIT_LABEL: đợt 1 " dat coc", đợt 2 "phần còn lại" " thanh toan con lai";
+ * đợt 2 "100%" là thanh toán đủ bình thường nên không có hậu tố. */
+export const INSTALLMENT_QR_SUFFIX = { deposit: " dat coc", remaining: " thanh toan con lai" } as const;
+/** Hậu tố tên file ảnh theo đợt: đợt 1, đợt 2 (100% tổng), đợt 2 (phần còn lại sau cọc). */
+export const INSTALLMENT_FILENAME_SUFFIX = { deposit: "-COC", full: "-DOT2", remaining: "-CON-LAI" } as const;
 
-export type InstallmentStage = "deposit" | "full";
+export type InstallmentStage = "deposit" | "full" | "remaining";
 export type InstallmentPlan = {
   stage: InstallmentStage;
   /** Tc: tổng nhóm MAX OFFICE (đã gồm VAT). */
   total: number;
-  /** D: tiền đặt cọc — chỉ áp dụng nhóm MAX OFFICE (0 < D < Tc). KHÔNG trừ vào tổng: sẽ được hoàn lại sau khi thanh toán đủ. */
+  /** D: tiền đặt cọc — chỉ áp dụng nhóm MAX OFFICE (0 < D < Tc). 0 khi đợt 2 "100%" không gửi D (ảnh đó không ghi số cọc). */
   deposit: number;
-  /** Tt: tổng nhóm thu hộ (đã gồm VAT), 0 nếu báo giá không có nhóm này. Thanh toán cùng đợt thanh toán đủ, không bị đặt cọc. */
+  /** Tt: tổng nhóm thu hộ (đã gồm VAT), 0 nếu báo giá không có nhóm này. Không bị đặt cọc, thanh toán cùng đợt "còn lại"/đợt 2. */
   thuHo: number;
-  /** G = Tc + Tt: tổng toàn bộ báo giá = số khách phải chuyển đủ khi hoàn tất. */
+  /** G = Tc + Tt: tổng toàn bộ báo giá. */
   grand: number;
-  /** Thời điểm thanh toán đủ ("" = không ghi). */
+  /** Tc - D: phần còn lại CỦA NHÓM MAX OFFICE (tài khoản công ty). Chỉ có nghĩa khi có D. */
+  companyBalance: number;
+  /** G - D: còn lại TOÀN BỘ sau cọc = (Tc - D) + Tt. Chỉ có nghĩa khi có D. */
+  balance: number;
+  /** Thời điểm thanh toán phần còn lại ("" = không ghi). */
   timing: string;
-  /** Điều kiện hoàn cọc ("" = không ghi). */
-  refundCondition: string;
-  /** Số tiền QR của nhóm MAX OFFICE (tài khoản công ty): đợt 1 = D; đợt 2 = Tc (như báo giá thường). QR thu hộ do route xử lý riêng: không hiện ở đợt 1; đợt 2 = Tt — nên đợt 2 tổng các QR = G. */
+  /** Số tiền QR của nhóm MAX OFFICE (tài khoản công ty): đợt 1 = D; "full" = Tc; "remaining" = Tc - D. QR thu hộ do route xử lý riêng: không hiện ở đợt 1; "full"/"remaining" = Tt — nên
+   * "full": tổng các QR = G; "remaining": tổng các QR = G - D. */
   qrAmount: number;
 };
 
 export type ScheduleRow = { label: string; amount: number; emphasis: boolean; /** Chú thích nhỏ dưới nhãn. */ note?: string };
 
 /**
- * Các hàng của khối "Lịch thanh toán" trên ảnh. KHÔNG có hàng "Tổng" (khối nằm ngay dưới ô tổng/ khối tổng) và KHÔNG có số "G - D": cọc không trừ vào tổng.
- * - Đợt 1: "Đặt cọc (đợt 1) — chuyển tài khoản công ty: D" (nhấn) / "Thanh toán đủ (<thời điểm>): G" (+ chú thích tách công ty/thu hộ khi có thu hộ) / "Hoàn lại tiền đặt cọc: D" kèm điều kiện hoàn cọc.
- * - Đợt 2: "Đã đặt cọc: D" kèm điều kiện hoàn cọc / "Cần thanh toán: G" (nhấn, + chú thích tách khi có thu hộ).
+ * Các hàng của khối "Lịch thanh toán" trên ảnh. Khối KHÔNG có hàng "Tổng" (đã có ô tổng/khối tổng ngay cạnh) và KHÔNG nói gì về hoàn tiền cọc.
+ * - Đợt 1 ("deposit"): "Đặt cọc (đợt 1): D" (nhấn) / "Còn lại (<thời điểm>): G - D" (+ chú thích tách (Tc - D) và Tt khi có thu hộ).
+ * - Đợt 2 "100%" ("full"): "Thanh toán đợt 2: G" (nhấn, + chú thích tách Tc và Tt khi có thu hộ); không nhắc cọc.
+ * - Đợt 2 "phần còn lại" ("remaining"): "Đã đặt cọc: D" / "Còn phải thanh toán: G - D" (nhấn, + chú thích tách (Tc - D) và Tt khi có thu hộ).
  */
 export function installmentScheduleRows(plan: InstallmentPlan, lang: QuoteLang): ScheduleRow[] {
   const t = paymentScheduleText(lang);
   const fmt = (n: number) => formatQuoteCurrency(n, lang);
-  const split = plan.thuHo > 0 ? t.splitNote(fmt(plan.total), fmt(plan.thuHo)) : undefined;
-  const refund = defaultAwareText(plan.refundCondition, DEFAULT_REFUND_CONDITION, lang) || undefined;
+  const hasThuHo = plan.thuHo > 0;
+  if (plan.stage === "full") {
+    return [{ label: t.payment2, amount: plan.grand, emphasis: true, note: hasThuHo ? t.splitNote(fmt(plan.total), fmt(plan.thuHo)) : undefined }];
+  }
+  const split = hasThuHo ? t.splitNote(fmt(plan.companyBalance), fmt(plan.thuHo)) : undefined;
   if (plan.stage === "deposit") {
-    const timing = defaultAwareText(plan.timing, DEFAULT_FULL_PAYMENT_TIMING, lang);
+    const timing = defaultAwareText(plan.timing, DEFAULT_BALANCE_TIMING, lang);
     return [
-      { label: t.depositStage1Company, amount: plan.deposit, emphasis: true },
-      { label: timing ? t.fullPaymentTiming(timing) : t.fullPayment, amount: plan.grand, emphasis: false, note: split },
-      { label: t.refundDeposit, amount: plan.deposit, emphasis: false, note: refund },
+      { label: t.depositStage1, amount: plan.deposit, emphasis: true },
+      { label: timing ? t.balanceTiming(timing) : t.balance, amount: plan.balance, emphasis: false, note: split },
     ];
   }
   return [
-    { label: t.depositPaid, amount: plan.deposit, emphasis: false, note: refund },
-    { label: t.amountDue, amount: plan.grand, emphasis: true, note: split },
+    { label: t.depositPaid, amount: plan.deposit, emphasis: false },
+    { label: t.amountDue, amount: plan.balance, emphasis: true, note: split },
   ];
 }
 
-/** Bốn dòng tóm tắt trong FORM khi bật đặt cọc (tiếng Việt): Tổng toàn bộ / Đặt cọc / Thanh toán đủ khi hoàn tất / Hoàn lại cọc sau khi thanh toán đủ. */
+/**
+ * Các dòng tóm tắt trong FORM khi bật đặt cọc (tiếng Việt): Tổng toàn bộ (G) / Đặt cọc (D) / Còn lại (G - D); đợt 2 thêm dòng số tiền thanh toán theo lựa chọn (100% tổng = G hoặc phần
+ * còn lại = G - D). Đợt 2 "100%" chưa nhập cọc thì chỉ có Tổng và dòng thanh toán.
+ */
 export function installmentSummaryRows(plan: InstallmentPlan): { label: string; amount: number; emphasis: boolean }[] {
   const t = paymentScheduleText("vi");
-  return [
-    { label: t.formTotal, amount: plan.grand, emphasis: false },
-    { label: plan.stage === "full" ? t.depositPaid : t.formDeposit, amount: plan.deposit, emphasis: plan.stage === "deposit" },
-    { label: t.formFullOnComplete, amount: plan.grand, emphasis: plan.stage === "full" },
-    { label: t.formRefund, amount: plan.deposit, emphasis: false },
-  ];
+  const hasDeposit = plan.deposit > 0;
+  const rows = [{ label: t.formTotal, amount: plan.grand, emphasis: false }];
+  if (hasDeposit) {
+    rows.push({ label: t.formDeposit, amount: plan.deposit, emphasis: plan.stage === "deposit" });
+    rows.push({ label: t.formBalance, amount: plan.balance, emphasis: false });
+  }
+  if (plan.stage === "full") rows.push({ label: t.formPayment2Full, amount: plan.grand, emphasis: true });
+  if (plan.stage === "remaining") rows.push({ label: t.formPayment2Remaining, amount: plan.balance, emphasis: true });
+  return rows;
 }
 
 /** Tổng "Thành tiền" (đã gồm VAT) của nhóm MAX OFFICE — các dòng KHÔNG thuộc bucket thu hộ và tách được số; null nếu không có dòng nào. DÙNG CHUNG form + server. */
@@ -382,45 +392,59 @@ export function thuHoGroupTotal(lines: ResolvedQuoteLine[]): number {
 }
 
 /**
- * Đọc + kiểm tra cấu hình đặt cọc. Trả null = TẮT (thiếu/sai kiểu `depositAmount` hoặc `installmentStage`); `{ error }` = bật nhưng số không hợp lệ
+ * Đọc + kiểm tra cấu hình thanh toán theo đợt. Trả null = TẮT (installmentStage lạ/thiếu; hoặc "deposit"/"remaining" mà `depositAmount` thiếu/sai kiểu); `{ error }` = bật nhưng số không hợp lệ
  * (route trả 400); ngược lại là kế hoạch đã tính. Chỉ tin số do client gửi ở `depositAmount` — số tiền QR/tổng luôn tự tính.
  */
 export function resolveInstallment(
   input: {
     depositAmount?: unknown;
     installmentStage?: unknown;
+    balanceTiming?: unknown;
     fullPaymentTiming?: unknown;
-    refundCondition?: unknown;
     balanceCondition?: unknown;
   },
   maxOfficeTotal: number | null,
   thuHoTotal: number = 0
 ): InstallmentPlan | { error: string } | null {
-  const { depositAmount, installmentStage, fullPaymentTiming, refundCondition, balanceCondition } = input;
-  if (typeof depositAmount !== "number" || !Number.isFinite(depositAmount)) return null;
+  const { depositAmount, installmentStage, balanceTiming, fullPaymentTiming, balanceCondition } = input;
   // "balance" = bí danh cũ của "full".
   const stage: InstallmentStage | null =
-    installmentStage === "deposit" ? "deposit" : installmentStage === "full" || installmentStage === "balance" ? "full" : null;
+    installmentStage === "deposit"
+      ? "deposit"
+      : installmentStage === "remaining"
+        ? "remaining"
+        : installmentStage === "full" || installmentStage === "balance"
+          ? "full"
+          : null;
   if (stage === null) return null;
+  const hasDepositNumber = typeof depositAmount === "number" && Number.isFinite(depositAmount);
+  // Đợt 1 và đợt 2 "phần còn lại" cần số cọc; đợt 2 "100%" không cần (ảnh không ghi số cọc) nhưng nếu có gửi số thì vẫn kiểm tra.
+  if (!hasDepositNumber && stage !== "full") return null;
   if (maxOfficeTotal == null) {
-    return { error: "Đặt cọc chỉ áp dụng cho nhóm Dịch vụ MAX OFFICE — báo giá này không có dịch vụ nào thuộc nhóm đó." };
+    return { error: "Thanh toán theo đợt chỉ áp dụng cho nhóm Dịch vụ MAX OFFICE — báo giá này không có dịch vụ nào thuộc nhóm đó." };
   }
-  if (!Number.isInteger(depositAmount)) return { error: "Số tiền đặt cọc phải là số nguyên đồng." };
-  if (depositAmount <= 0) return { error: "Số tiền đặt cọc phải lớn hơn 0." };
-  if (depositAmount >= maxOfficeTotal) {
-    return { error: "Số tiền đặt cọc phải nhỏ hơn tổng nhóm Dịch vụ MAX OFFICE (đã gồm VAT)." };
+  let deposit = 0;
+  if (hasDepositNumber) {
+    deposit = depositAmount as number;
+    if (!Number.isInteger(deposit)) return { error: "Số tiền đặt cọc phải là số nguyên đồng." };
+    if (deposit <= 0) return { error: "Số tiền đặt cọc phải lớn hơn 0." };
+    if (deposit >= maxOfficeTotal) {
+      return { error: "Số tiền đặt cọc phải nhỏ hơn tổng nhóm Dịch vụ MAX OFFICE (đã gồm VAT)." };
+    }
   }
-  const text = (raw: unknown, fallback: string, max: number) =>
-    typeof raw === "string" ? raw.trim().slice(0, max) : fallback;
+  const timingRaw = balanceTiming !== undefined ? balanceTiming : fullPaymentTiming !== undefined ? fullPaymentTiming : balanceCondition;
+  const timing = typeof timingRaw === "string" ? timingRaw.trim().slice(0, BALANCE_TIMING_MAX) : DEFAULT_BALANCE_TIMING.vi;
+  const grand = maxOfficeTotal + thuHoTotal;
   return {
     stage,
     total: maxOfficeTotal,
-    deposit: depositAmount,
+    deposit,
     thuHo: thuHoTotal,
-    grand: maxOfficeTotal + thuHoTotal,
-    timing: text(fullPaymentTiming !== undefined ? fullPaymentTiming : balanceCondition, DEFAULT_FULL_PAYMENT_TIMING.vi, FULL_PAYMENT_TIMING_MAX),
-    refundCondition: text(refundCondition, DEFAULT_REFUND_CONDITION.vi, REFUND_CONDITION_MAX),
-    qrAmount: stage === "deposit" ? depositAmount : maxOfficeTotal,
+    grand,
+    companyBalance: maxOfficeTotal - deposit,
+    balance: grand - deposit,
+    timing,
+    qrAmount: stage === "deposit" ? deposit : stage === "remaining" ? maxOfficeTotal - deposit : maxOfficeTotal,
   };
 }
 

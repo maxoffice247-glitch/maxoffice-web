@@ -116,9 +116,21 @@ const SCHEDULE_TITLE_H = 27; // tiêu đề 14px (~17) + margin dưới 10
 const SCHEDULE_ROW_H = 38; // 1 dòng chữ 16px: padding 7+7, lineHeight 24
 const SCHEDULE_ROW_BORDER = 1; // viền trên mỗi hàng (trừ hàng đầu)
 const SCHEDULE_ROW_EXTRA_LINE_H = 24;
-const SCHEDULE_NOTE_H = 18; // mỗi dòng chú thích nhỏ (chữ 13px, lineHeight 18) dưới nhãn hàng: tách công ty/thu hộ, điều kiện hoàn cọc
-const SCHEDULE_NOTE_CHARS_PER_LINE = 105; // ký tự/dòng của chú thích (chữ 13px, cột ~790px) — ước lượng thấp để KHÔNG BAO GIỜ thiếu chiều cao
-const SCHEDULE_LABEL_CHARS_PER_LINE = 88; // ký tự/dòng của nhãn (chữ 16px, cột nhãn ~790px): đo thực tế nhãn tiếng Việt ~95-99 ký tự, tiếng Anh ~91-94 vẫn 1 dòng — chọn thấp hơn để KHÔNG BAO GIỜ thiếu chiều cao
+const SCHEDULE_NOTE_H = 18; // mỗi dòng chú thích nhỏ (chữ 13px, lineHeight 18) dưới nhãn hàng: tách công ty/thu hộ
+// Khối "Lịch thanh toán" có 3 độ rộng: "full" (cả bề ngang nội dung, khi xếp dọc như cũ), "wide" (cột trái ~624px khi ghép cùng hàng với 1 mã QR), "narrow" (cột phải ~384px khi xếp cạnh ô tổng
+// trong trường hợp 2 mã QR) — số ký tự/dòng của nhãn và chú thích khác nhau theo độ rộng. Hiệu chỉnh bằng pixel thật.
+type ScheduleWidth = "full" | "wide" | "narrow";
+// (số tiền tiếng Anh dài hơn nhờ hậu tố " VND" nên chừa ít chỗ hơn cho nhãn/chú thích)
+const SCHEDULE_LABEL_CPL: Record<ScheduleWidth, Record<QuoteLang, number>> = {
+  full: { vi: 88, en: 88 },
+  wide: { vi: 50, en: 48 },
+  narrow: { vi: 22, en: 16 },
+};
+const SCHEDULE_NOTE_CPL: Record<ScheduleWidth, Record<QuoteLang, number>> = {
+  full: { vi: 105, en: 105 },
+  wide: { vi: 72, en: 60 },
+  narrow: { vi: 28, en: 20 },
+};
 
 // Khối "Bảng giá đầy đủ" Kế toán & thuế (loại "ke-toan-bang-gia"): ma trận 9 mức x 3 nhóm + 3 nhóm phụ phí. Hằng số hiệu chỉnh bằng pixel thật (xem accountingPriceListHeight).
 const AP_CARD_BORDER = 2;
@@ -152,6 +164,18 @@ const THU_HO_QR_NOTE_H = 20; // dòng cảnh báo "chuyển vào TK đơn vị c
 // cảnh báo đỏ, thường xuống 2 dòng).
 const QR_ROW_H = 365;
 
+// Bố cục "chữ về tiền | QR": khi báo giá có ĐÚNG 1 mã QR và có ô tổng hoặc Lịch thanh toán, các khối chữ xếp cột trái, thẻ QR dọc cột phải (cùng 1 hàng, căn giữa dọc).
+// Khi có 2 QR và Lịch thanh toán: ô tổng (cột trái) cạnh Lịch thanh toán (cột phải), hàng 2 QR cạnh nhau ngay bên dưới như cũ. Hằng số hiệu chỉnh bằng pixel thật.
+const MONEY_ROW_TOP_MARGIN = 32;
+const MONEY_ROW_GAP = 24; // khoảng cách giữa 2 cột
+const MONEY_COL_GAP = 24; // khoảng cách dọc giữa các khối trong cột trái
+const QR_SIDE_W = 320; // thẻ QR dọc
+const QR_SIDE_LEFT_W = CONTENT_WIDTH - QR_SIDE_W - MONEY_ROW_GAP; // 624
+const TS_LEFT_W = 560; // ô tổng ở hàng [ô tổng | Lịch thanh toán]
+const TS_RIGHT_W = CONTENT_WIDTH - TS_LEFT_W - MONEY_ROW_GAP; // 384
+const QR_SIDE_ACCOUNT_CPL = 36; // ký tự/dòng của tên tài khoản (chữ 14px, thẻ 320px - padding 48)
+const QR_SIDE_LINE_H = 19;
+const OVERALL_LABEL_EXTRA_H = 20; // thêm khi nhãn ô tổng gộp phải xuống dòng ở cột hẹp
 const GRAND_TOTAL_TOP_MARGIN = 32; // giống SECTION_TOP_MARGIN, cùng nhịp cách giữa các khối
 const GRAND_TOTAL_BOX_H = 60; // thu gọn vừa nội dung (alignSelf:"flex-start") — padding "14px 20px" (28) + nội dung (font 24)
 const GRAND_TOTAL_WORDS_H = 20; // "Bằng chữ" 1 dòng, fontSize 13 — đo thực tế thấp hơn mốc 26 dùng cho SECTION_WORDS_H
@@ -854,29 +878,33 @@ function Section({ bucket, lines, lang }: { bucket: QuoteBucket; lines: Resolved
   );
 }
 
-/** Các hàng của khối "Lịch thanh toán" — DÙNG CHUNG giữa PaymentSchedule() (render) và scheduleHeight() (ước lượng chiều cao). Không có hàng "Tổng" và không có số "G - D":
- * đặt cọc KHÔNG trừ vào tổng, khách chuyển đủ 100% rồi MAX OFFICE hoàn lại cọc (xem installmentScheduleRows). */
+/** Các hàng của khối "Lịch thanh toán" — DÙNG CHUNG giữa PaymentSchedule() (render) và scheduleContentHeight() (ước lượng chiều cao). Nội dung từng đợt: xem installmentScheduleRows(). */
 function scheduleRows(plan: InstallmentPlan, lang: QuoteLang) {
   return installmentScheduleRows(plan, lang);
 }
 
-function scheduleHeight(plan: InstallmentPlan | null, lang: QuoteLang): number {
-  if (!plan) return 0;
+/** Chiều cao khối Lịch thanh toán KHÔNG tính margin trên (caller cộng SCHEDULE_TOP_MARGIN hoặc dùng trong hàng ghép). */
+function scheduleContentHeight(plan: InstallmentPlan, lang: QuoteLang, width: ScheduleWidth): number {
   const rowsH = scheduleRows(plan, lang).reduce(
     (sum, r, i) =>
       sum +
       SCHEDULE_ROW_H +
       (i > 0 ? SCHEDULE_ROW_BORDER : 0) +
-      (Math.ceil(r.label.length / SCHEDULE_LABEL_CHARS_PER_LINE) - 1) * SCHEDULE_ROW_EXTRA_LINE_H +
-      (r.note ? Math.ceil(r.note.length / SCHEDULE_NOTE_CHARS_PER_LINE) * SCHEDULE_NOTE_H : 0),
+      (Math.ceil(r.label.length / SCHEDULE_LABEL_CPL[width][lang]) - 1) * SCHEDULE_ROW_EXTRA_LINE_H +
+      (r.note ? Math.ceil(r.note.length / SCHEDULE_NOTE_CPL[width][lang]) * SCHEDULE_NOTE_H : 0),
     0
   );
-  return SCHEDULE_TOP_MARGIN + SCHEDULE_PADDING_Y + SCHEDULE_TITLE_H + rowsH;
+  return SCHEDULE_PADDING_Y + SCHEDULE_TITLE_H + rowsH;
+}
+
+function scheduleHeight(plan: InstallmentPlan | null, lang: QuoteLang): number {
+  if (!plan) return 0;
+  return SCHEDULE_TOP_MARGIN + scheduleContentHeight(plan, lang, "full");
 }
 
 /** Khối "Lịch thanh toán" (đặt cọc) — chỉ tính trên TỔNG ĐÃ GỒM VAT, không có dòng VAT/hoá đơn riêng từng đợt. Dòng nhấn (màu đỏ, đậm): đợt 1 = tiền cọc (số trong mã QR
  * công ty); đợt 2 = số cần thanh toán đủ G (= tổng các mã QR). */
-function PaymentSchedule({ plan, lang }: { plan: InstallmentPlan; lang: QuoteLang }) {
+function PaymentSchedule({ plan, lang, bare }: { plan: InstallmentPlan; lang: QuoteLang; bare?: boolean }) {
   const t = paymentScheduleText(lang);
   const rows = scheduleRows(plan, lang);
   return (
@@ -884,8 +912,8 @@ function PaymentSchedule({ plan, lang }: { plan: InstallmentPlan; lang: QuoteLan
       style={{
         display: "flex",
         flexDirection: "column",
-        margin: `0 ${MARGIN_X}px`,
-        marginTop: SCHEDULE_TOP_MARGIN,
+        // `bare`: nằm trong hàng ghép — lề do hàng quyết định.
+        ...(bare ? { alignSelf: "stretch" } : { margin: `0 ${MARGIN_X}px`, marginTop: SCHEDULE_TOP_MARGIN }),
         borderRadius: 16,
         backgroundColor: QUOTE_COLOR.bgTint,
         padding: "20px 24px",
@@ -999,11 +1027,18 @@ function grandTotalHeight(maxOfficeLines: ResolvedQuoteLine[], lang: QuoteLang):
 }
 
 /** Khối tổng nhóm MAX OFFICE (navy) — chỉ hiện khi báo giá KHÔNG có nhóm thu hộ (khi có cả 2 nhóm, ô tổng gộp OverallTotal là ô tổng duy nhất). */
-function GrandTotal({ maxOfficeLines, lang }: { maxOfficeLines: ResolvedQuoteLine[]; lang: QuoteLang }) {
+function GrandTotal({ maxOfficeLines, lang, bare }: { maxOfficeLines: ResolvedQuoteLine[]; lang: QuoteLang; bare?: boolean }) {
   const { total, show, hasExcluded } = computeGrandTotal(maxOfficeLines);
   if (!show) return null;
   return (
-    <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: GRAND_TOTAL_TOP_MARGIN }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        // `bare`: nằm trong hàng ghép — lề do hàng quyết định.
+        ...(bare ? null : { margin: `0 ${MARGIN_X}px`, marginTop: GRAND_TOTAL_TOP_MARGIN }),
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -1034,6 +1069,13 @@ function GrandTotal({ maxOfficeLines, lang }: { maxOfficeLines: ResolvedQuoteLin
   );
 }
 
+/** Nhãn ô tổng gộp có phải xuống 2 dòng ở cột rộng `colWidth` không (nhãn + số tiền cùng hàng, nhãn co lại khi hết chỗ) — ước lượng bề rộng chữ: nhãn 15px đậm ~7.0px/ký tự, số tiền 24px đậm ~12px/ký tự (đo: tiếng Anh vừa 1 dòng ở cột 624px, xuống 2 dòng ở cột 560px). */
+function overallLabelWraps(lang: QuoteLang, amount: number, colWidth: number): boolean {
+  const labelPx = qt("overallTotalLabel", lang).length * 7.0;
+  const amountPx = formatQuoteCurrency(amount, lang).length * 12;
+  return labelPx + amountPx + 20 > colWidth - 40;
+}
+
 function overallTotalHeight(show: boolean, lang: QuoteLang, amount: number, hasExcluded: boolean): number {
   if (!show) return 0;
   const words = lang === "vi" ? amountToVietnameseWords(amount) : "";
@@ -1057,12 +1099,15 @@ function OverallTotal({
   thuHoAmount,
   hasExcluded,
   lang,
+  colWidth,
 }: {
   amount: number;
   maxOfficeAmount: number;
   thuHoAmount: number;
   hasExcluded: boolean;
   lang: QuoteLang;
+  /** Có giá trị = nằm trong hàng ghép (không lề ngoài), rộng đúng `colWidth`; nhãn tự xuống dòng nếu không vừa cùng hàng với số tiền. */
+  colWidth?: number;
 }) {
   const b = overallBreakdownText(lang);
   const words = lang === "vi" ? amountToVietnameseWords(amount) : "";
@@ -1074,14 +1119,18 @@ function OverallTotal({
   );
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: OVERALL_TOTAL_TOP_MARGIN }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        ...(colWidth ? { width: colWidth } : { margin: `0 ${MARGIN_X}px`, marginTop: OVERALL_TOTAL_TOP_MARGIN }),
+      }}
     >
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignSelf: "flex-start",
-          maxWidth: CONTENT_WIDTH,
+          maxWidth: colWidth ?? CONTENT_WIDTH,
           borderRadius: 14,
           backgroundColor: QUOTE_COLOR.accent,
           padding: "14px 20px",
@@ -1089,7 +1138,7 @@ function OverallTotal({
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: "#fff" }}>{qt("overallTotalLabel", lang)}</div>
-          <div style={{ display: "flex", fontSize: 24, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(amount, lang)}</div>
+          <div style={{ display: "flex", flexShrink: 0, fontSize: 24, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(amount, lang)}</div>
         </div>
         {words && (
           <div style={{ display: "flex", marginTop: 6, fontSize: 13, fontStyle: "italic", color: "rgba(255,255,255,0.92)" }}>
@@ -1215,6 +1264,53 @@ function QrPaymentBlock({
   );
 }
 
+/** Thẻ QR DỌC (QR 160px — không nhỏ hơn khối QR ngang cũ — ở trên, chữ căn giữa bên dưới) cho cột phải của hàng ghép [chữ về tiền | 1 mã QR]. */
+function QrSideCard({
+  dataUri,
+  title,
+  accountLabel,
+  amount,
+  lang,
+  extraNote,
+}: {
+  dataUri: string;
+  title: string;
+  accountLabel: string;
+  amount: number | null;
+  lang: QuoteLang;
+  extraNote?: string;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: QR_SIDE_W,
+        flexShrink: 0,
+        borderRadius: 16,
+        backgroundColor: QUOTE_COLOR.bgTint,
+        padding: "24px 24px",
+      }}
+    >
+      <div style={{ display: "flex", fontSize: 17, fontWeight: 700, color: QUOTE_COLOR.navy, textAlign: "center" }}>{title}</div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={dataUri} alt="" width={160} height={160} style={{ marginTop: 12, borderRadius: 8, backgroundColor: "#fff" }} />
+      <div style={{ display: "flex", marginTop: 12, fontSize: 14, color: QUOTE_COLOR.bodyText, textAlign: "center" }}>{accountLabel}</div>
+      {amount != null && (
+        <div style={{ display: "flex", marginTop: 2, fontSize: 14, color: QUOTE_COLOR.bodyText, textAlign: "center" }}>
+          {qt("suggestedAmountLabel", lang)}: {formatQuoteCurrency(amount, lang)}
+        </div>
+      )}
+      {extraNote && (
+        <div style={{ display: "flex", marginTop: 6, fontSize: 12, fontWeight: 700, color: QUOTE_COLOR.accent, textAlign: "center" }}>
+          {extraNote}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** 1 cột trong QrPaymentRow — QR ở trên, nhãn nhóm + tài khoản + số tiền +
  * ghi chú ở dưới, TẤT CẢ CĂN GIỮA trong phạm vi cột (khác QrPaymentBlock
  * căn trái/ngang). `flex: 1` để 2 cột chia đều chiều rộng còn lại. */
@@ -1305,6 +1401,12 @@ function QrPaymentRow({
       </div>
     </div>
   );
+}
+
+/** Chiều cao thẻ QR dọc (QrSideCard) — tên tài khoản dài hơn QR_SIDE_ACCOUNT_CPL ký tự xuống 2 dòng, thêm dòng cảnh báo nếu có. */
+function qrSideCardHeight(accountLabel: string, hasAmount: boolean, hasExtraNote: boolean): number {
+  const accLines = Math.ceil(accountLabel.length / QR_SIDE_ACCOUNT_CPL);
+  return 24 + 22 + 12 + 160 + 12 + accLines * QR_SIDE_LINE_H + (hasAmount ? 2 + QR_SIDE_LINE_H : 0) + (hasExtraNote ? 6 + 32 : 0) + 24 - 5;
 }
 
 export async function POST(req: Request) {
@@ -1416,10 +1518,10 @@ export async function POST(req: Request) {
   // buildQrNote() trong vietQr.ts để biết lý do).
   const maxOfficeQrNote = isNonEmptyString(body.qrNote)
     ? body.qrNote.trim()
-    : installment?.stage === "deposit"
-      ? buildInstallmentQrNote(customer, INSTALLMENT_QR_SUFFIX.deposit)
+    : installment?.stage === "deposit" || installment?.stage === "remaining"
+      ? buildInstallmentQrNote(customer, INSTALLMENT_QR_SUFFIX[installment.stage])
       : buildQrNote(customer);
-  // Số tiền QR nhóm MAX OFFICE: không đặt cọc = tổng nhóm Tc; đợt 1 = tiền cọc D; đợt 2 (đã đặt cọc, thanh toán đủ) = Tc như báo giá thường (server tự tính).
+  // Số tiền QR nhóm MAX OFFICE (server tự tính): không đặt cọc = Tc; đợt 1 = D; đợt 2 "100%" = Tc; đợt 2 "phần còn lại" = Tc - D.
   const maxOfficePayAmount = installment ? installment.qrAmount : maxOfficeQrAmount;
 
   const showMaxOfficeQr = Boolean(body.showQr) && maxOfficeQrAmount != null;
@@ -1445,20 +1547,81 @@ export async function POST(req: Request) {
 
   const customerBlockH = customerLineCount > 0 ? 24 + 40 + 30 + customerLineCount * CUSTOMER_ROW_H : 0;
 
+  // ---- Bố cục tiền: [ô tổng / Lịch thanh toán] và [mã QR] ----
+  const qrCount = (maxOfficeQrDataUri ? 1 : 0) + (thuHoQrDataUri ? 1 : 0);
+  const grandShown = !showOverallTotal && computeGrandTotal(maxOfficeLines).show;
+  const hasTotalsBox = showOverallTotal || grandShown;
+  // "qr-side": ĐÚNG 1 mã QR + có ô tổng hoặc Lịch thanh toán -> [cột trái chữ | cột phải thẻ QR dọc] cùng 1 hàng.
+  // "totals-schedule": 2 mã QR + Lịch thanh toán -> [ô tổng | Lịch thanh toán] cùng 1 hàng, rồi hàng 2 QR như cũ.
+  // "stack": mọi trường hợp còn lại giữ nguyên xếp dọc như cũ (không QR; 1 QR không có ô tổng/lịch; 2 QR không đặt cọc).
+  const moneyLayout: "stack" | "qr-side" | "totals-schedule" =
+    qrCount === 1 && (hasTotalsBox || installment)
+      ? "qr-side"
+      : qrCount === 2 && installment && showOverallTotal
+        ? "totals-schedule"
+        : "stack";
+  const singleQr = maxOfficeQrDataUri
+    ? {
+        dataUri: maxOfficeQrDataUri,
+        title: qt("scanToPayTitle", lang),
+        accountLabel: vietQrAccountLabel(qrAccountKey),
+        amount: maxOfficePayAmount,
+        extraNote: undefined as string | undefined,
+      }
+    : thuHoQrDataUri
+      ? {
+          dataUri: thuHoQrDataUri,
+          title: qt("scanToPayTitle", lang),
+          accountLabel: thuHoAccountLabel(),
+          amount: thuHoQrAmount,
+          extraNote: qt("thuHoQrNote", lang) as string | undefined,
+        }
+      : null;
+  const totalsContentH = (colWidth: number) =>
+    showOverallTotal
+      ? overallTotalHeight(true, lang, overallTotalAmount, hasExcludedMaxOffice) -
+        OVERALL_TOTAL_TOP_MARGIN +
+        (overallLabelWraps(lang, overallTotalAmount, colWidth) ? OVERALL_LABEL_EXTRA_H : 0)
+      : grandShown
+        ? grandTotalHeight(maxOfficeLines, lang) - GRAND_TOTAL_TOP_MARGIN
+        : 0;
+
+  // Khoảng ước lượng dư SẴN CÓ của khối "Tổng cộng" nhóm MAX OFFICE (có từ 2 dịch vụ): giữ lại ở các bố cục ghép để đáy trắng không đổi so với ảnh không QR/không cọc cùng nội dung.
+  const cg = computeGrandTotal(maxOfficeLines);
+  const grandSlack = cg.show ? (lang === "vi" ? GRAND_TOTAL_REMOVED_SLACK_VI : GRAND_TOTAL_REMOVED_SLACK_EN) + (cg.hasExcluded ? GRAND_TOTAL_REMOVED_NOTE_SLACK : 0) : 0;
+  let moneyHeight: number;
+  if (moneyLayout === "qr-side" && singleQr) {
+    const leftH =
+      totalsContentH(QR_SIDE_LEFT_W) +
+      (hasTotalsBox && installment ? MONEY_COL_GAP : 0) +
+      (installment ? scheduleContentHeight(installment, lang, "wide") : 0);
+    const rightH = qrSideCardHeight(singleQr.accountLabel, singleQr.amount != null, !!singleQr.extraNote);
+    moneyHeight = MONEY_ROW_TOP_MARGIN + Math.max(leftH, rightH) + grandSlack;
+  } else if (moneyLayout === "totals-schedule" && installment) {
+    moneyHeight =
+      MONEY_ROW_TOP_MARGIN +
+      Math.max(totalsContentH(TS_LEFT_W), scheduleContentHeight(installment, lang, "narrow")) +
+      grandSlack +
+      qrSectionHeight(maxOfficeQrDataUri, thuHoQrDataUri);
+  } else {
+    moneyHeight =
+      (showOverallTotal
+        ? computeGrandTotal(maxOfficeLines).show
+          ? (lang === "vi" ? GRAND_TOTAL_REMOVED_SLACK_VI : GRAND_TOTAL_REMOVED_SLACK_EN) +
+            (computeGrandTotal(maxOfficeLines).hasExcluded ? GRAND_TOTAL_REMOVED_NOTE_SLACK : 0)
+          : 0
+        : grandTotalHeight(maxOfficeLines, lang)) +
+      overallTotalHeight(showOverallTotal, lang, overallTotalAmount, hasExcludedMaxOffice) +
+      scheduleHeight(installment, lang) +
+      qrSectionHeight(maxOfficeQrDataUri, thuHoQrDataUri);
+  }
+
   const height =
     HEADER_H +
     customerBlockH +
     (priceListLine ? (priceListLine.accountingPriceList ? accountingPriceListHeight(priceListLine) : priceListHeight(priceListLine)) : 0) +
     BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!, lang), 0) +
-    (showOverallTotal
-      ? computeGrandTotal(maxOfficeLines).show
-        ? (lang === "vi" ? GRAND_TOTAL_REMOVED_SLACK_VI : GRAND_TOTAL_REMOVED_SLACK_EN) +
-          (computeGrandTotal(maxOfficeLines).hasExcluded ? GRAND_TOTAL_REMOVED_NOTE_SLACK : 0)
-        : 0
-      : grandTotalHeight(maxOfficeLines, lang)) +
-    overallTotalHeight(showOverallTotal, lang, overallTotalAmount, hasExcludedMaxOffice) +
-    scheduleHeight(installment, lang) +
-    qrSectionHeight(maxOfficeQrDataUri, thuHoQrDataUri) +
+    moneyHeight +
     FOOTER_H;
 
   return new ImageResponse(
@@ -1532,9 +1695,73 @@ export async function POST(req: Request) {
           <Section key={bucket} bucket={bucket} lines={byBucket.get(bucket)!} lang={lang} />
         ))}
 
-        {!showOverallTotal && <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} />}
+        {/* LƯU Ý: không dùng Fragment nhiều con ở đây — Satori coi Fragment là một khung flex NGANG ngầm định, làm các khối xếp cạnh nhau thay vì xếp dọc. */}
+        {moneyLayout === "qr-side" && singleQr && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: MONEY_ROW_GAP,
+              margin: `0 ${MARGIN_X}px`,
+              marginTop: MONEY_ROW_TOP_MARGIN,
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", width: QR_SIDE_LEFT_W, flexShrink: 0, gap: MONEY_COL_GAP }}>
+              {grandShown && <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} bare />}
+              {showOverallTotal && (
+                <OverallTotal
+                  amount={overallTotalAmount}
+                  maxOfficeAmount={maxOfficeQrAmount ?? 0}
+                  thuHoAmount={thuHoQrAmount ?? 0}
+                  hasExcluded={hasExcludedMaxOffice}
+                  lang={lang}
+                  colWidth={QR_SIDE_LEFT_W}
+                />
+              )}
+              {installment && <PaymentSchedule plan={installment} lang={lang} bare />}
+            </div>
+            <QrSideCard
+              dataUri={singleQr.dataUri}
+              title={singleQr.title}
+              accountLabel={singleQr.accountLabel}
+              amount={singleQr.amount}
+              lang={lang}
+              extraNote={singleQr.extraNote}
+            />
+          </div>
+        )}
 
-        {showOverallTotal && (
+        {moneyLayout === "totals-schedule" && installment && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: MONEY_ROW_GAP,
+              margin: `0 ${MARGIN_X}px`,
+              marginTop: MONEY_ROW_TOP_MARGIN,
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", width: TS_LEFT_W, flexShrink: 0 }}>
+              <OverallTotal
+                amount={overallTotalAmount}
+                maxOfficeAmount={maxOfficeQrAmount ?? 0}
+                thuHoAmount={thuHoQrAmount ?? 0}
+                hasExcluded={hasExcludedMaxOffice}
+                lang={lang}
+                colWidth={TS_LEFT_W}
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", width: TS_RIGHT_W, flexShrink: 0 }}>
+              <PaymentSchedule plan={installment} lang={lang} bare />
+            </div>
+          </div>
+        )}
+
+        {moneyLayout === "stack" && !showOverallTotal && <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} />}
+
+        {moneyLayout === "stack" && showOverallTotal && (
           <OverallTotal
             amount={overallTotalAmount}
             maxOfficeAmount={maxOfficeQrAmount ?? 0}
@@ -1544,9 +1771,9 @@ export async function POST(req: Request) {
           />
         )}
 
-        {installment && <PaymentSchedule plan={installment} lang={lang} />}
+        {moneyLayout === "stack" && installment && <PaymentSchedule plan={installment} lang={lang} />}
 
-        {maxOfficeQrDataUri && thuHoQrDataUri ? (
+        {maxOfficeQrDataUri && thuHoQrDataUri && (
           <QrPaymentRow
             left={{
               dataUri: maxOfficeQrDataUri,
@@ -1563,28 +1790,31 @@ export async function POST(req: Request) {
             }}
             lang={lang}
           />
-        ) : (
-          <>
-            {maxOfficeQrDataUri && (
-              <QrPaymentBlock
-                dataUri={maxOfficeQrDataUri}
-                title={qt("scanToPayTitle", lang)}
-                accountLabel={vietQrAccountLabel(qrAccountKey)}
-                amount={maxOfficePayAmount}
-                lang={lang}
-              />
-            )}
-            {thuHoQrDataUri && (
-              <QrPaymentBlock
-                dataUri={thuHoQrDataUri}
-                title={qt("scanToPayTitle", lang)}
-                accountLabel={thuHoAccountLabel()}
-                amount={thuHoQrAmount}
-                lang={lang}
-                extraNote={qt("thuHoQrNote", lang)}
-              />
-            )}
-          </>
+        )}
+
+        {/* Khung bọc flex NGANG giữ đúng hành vi Fragment cũ (thẻ QR ôm vừa nội dung, không giãn hết bề ngang) — giữ nguyên từng pixel ảnh 1 QR không có ô tổng/lịch. */}
+        {moneyLayout === "stack" && qrCount === 1 && maxOfficeQrDataUri && (
+          <div style={{ display: "flex" }}>
+            <QrPaymentBlock
+              dataUri={maxOfficeQrDataUri}
+              title={qt("scanToPayTitle", lang)}
+              accountLabel={vietQrAccountLabel(qrAccountKey)}
+              amount={maxOfficePayAmount}
+              lang={lang}
+            />
+          </div>
+        )}
+        {moneyLayout === "stack" && qrCount === 1 && thuHoQrDataUri && (
+          <div style={{ display: "flex" }}>
+            <QrPaymentBlock
+              dataUri={thuHoQrDataUri}
+              title={qt("scanToPayTitle", lang)}
+              accountLabel={thuHoAccountLabel()}
+              amount={thuHoQrAmount}
+              lang={lang}
+              extraNote={qt("thuHoQrNote", lang)}
+            />
+          </div>
         )}
 
         <QuoteFooterRow lang={lang} />

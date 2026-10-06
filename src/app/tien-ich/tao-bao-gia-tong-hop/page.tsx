@@ -51,11 +51,11 @@ const FAQS = [
   },
   {
     q: "Mã QR trên ảnh báo giá hoạt động thế nào?",
-    a: "Bật ô \"Hiện mã QR chuyển khoản\": ảnh có mã QR VietQR của tài khoản công ty (chọn từ danh sách có sẵn), điền sẵn số tiền tổng các dịch vụ MAX OFFICE; nội dung chuyển khoản tự gợi ý theo thông tin khách và sửa được. Nếu báo giá có Chữ ký số hoặc Hoá đơn điện tử, ảnh thêm mã QR thứ hai cho tài khoản thu hộ với số tiền của nhóm đó, vì khoản này không chuyển vào tài khoản công ty.",
+    a: "Bật ô \"Hiện mã QR chuyển khoản\": ảnh có mã QR VietQR của tài khoản công ty (chọn từ danh sách có sẵn), điền sẵn số tiền tổng các dịch vụ MAX OFFICE; nội dung chuyển khoản tự gợi ý theo thông tin khách và sửa được. Nếu báo giá có Chữ ký số hoặc Hoá đơn điện tử, ảnh thêm mã QR thứ hai cho tài khoản thu hộ với số tiền của nhóm đó, vì khoản này không chuyển vào tài khoản công ty. Khi ảnh có đúng một mã QR, mã nằm cạnh ô tổng cộng hoặc Lịch thanh toán (nếu có) cho gọn; khi có hai mã QR, hai mã nằm cạnh nhau bên dưới.",
   },
   {
     q: "Tính năng đặt cọc trong báo giá dùng như thế nào?",
-    a: "Khi báo giá có dịch vụ MAX OFFICE, bật ô \"Khách đặt cọc trước\" rồi nhập số tiền cọc (hoặc bấm 30% / 50% tổng các dịch vụ MAX OFFICE). Ảnh đợt 1 ghi số tiền đặt cọc kèm mã QR chuyển vào tài khoản công ty, số tiền khách thanh toán đủ và khoản hoàn lại tiền đặt cọc. Ảnh đợt 2 dùng sau khi khách đã đặt cọc: ghi \"Đã đặt cọc\" và số cần thanh toán đủ, mã QR như báo giá thường. Tiền cọc không trừ vào tổng. Thời điểm thanh toán đủ và điều kiện hoàn cọc ghi trên ảnh là câu có sẵn, người tạo báo giá sửa được. Cọc chỉ tính trên nhóm dịch vụ MAX OFFICE (không áp dụng cho Chữ ký số và Hoá đơn điện tử), phải lớn hơn 0 và nhỏ hơn tổng nhóm đó.",
+    a: "Khi báo giá có dịch vụ MAX OFFICE, bật ô \"Khách thanh toán theo đợt (đặt cọc)\" rồi nhập số tiền đặt cọc (hoặc bấm 30% / 50% tổng các dịch vụ MAX OFFICE). Ảnh đợt 1 ghi số tiền đặt cọc và số còn lại kèm thời điểm thanh toán phần còn lại (sửa được); mã QR chuyển vào tài khoản công ty điền sẵn số tiền đặt cọc. Với ảnh đợt 2, bạn chọn số tiền thanh toán: 100% tổng báo giá, hoặc phần còn lại sau cọc (ảnh ghi số đã đặt cọc và số còn phải thanh toán). Số tiền đặt cọc chỉ tính trên nhóm dịch vụ MAX OFFICE (không áp dụng cho Chữ ký số và Hoá đơn điện tử, khoản thu hộ nằm trong phần còn lại), phải lớn hơn 0 và nhỏ hơn tổng nhóm đó.",
   },
   {
     q: "Phí bảng hiệu của gói LITE có được tính trong báo giá không?",

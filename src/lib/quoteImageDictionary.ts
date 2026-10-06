@@ -236,31 +236,23 @@ export function oneTimeFeeCheckboxLabel(fee: OneTimeFeeText): string {
 }
 
 /* ---------------------------------------------------------------------- */
-/* Đặt cọc — chỉ cho nhóm "Dịch vụ MAX OFFICE".                              */
-/* QUY TRÌNH THẬT: khách chưa có công ty nên đặt cọc từ tài khoản cá nhân    */
-/* vào tài khoản công ty; khi hoàn tất hồ sơ khách chuyển ĐỦ 100% tổng báo   */
-/* giá (MAX OFFICE -> tài khoản công ty, thu hộ -> tài khoản thu hộ); sau đó */
-/* MAX OFFICE HOÀN LẠI tiền cọc. Cọc KHÔNG bị trừ vào tổng.                  */
+/* Thanh toán theo đợt (đặt cọc) — cọc CHỈ tính trên nhóm "Dịch vụ MAX      */
+/* OFFICE". Đợt 1: Đặt cọc D + Còn lại G - D. Đợt 2 chọn 1 trong 2: 100%    */
+/* tổng báo giá G ("full") hoặc phần còn lại sau cọc G - D ("remaining").    */
+/* Ảnh/form/FAQ KHÔNG nói gì về việc hoàn tiền cọc (tránh khách hiểu nhầm).   */
 /* Bản tiếng Anh là Claude tự đề xuất, CẦN RÀ SOÁT.                          */
 /* ---------------------------------------------------------------------- */
 
-/** Nhãn khoản tiền trả trước — ĐỔI Ở ĐÂY là đổi toàn bộ chữ (form lẫn ảnh): vd "Tạm ứng" / "Advance". Hậu tố tên file (-COC / -DA-COC) và nội dung
- * chuyển khoản (" dat coc") là quy ước cố định riêng, không theo nhãn này. */
+/** Nhãn khoản tiền trả trước — ĐỔI Ở ĐÂY là đổi toàn bộ chữ (form lẫn ảnh): vd "Tạm ứng" / "Advance". Hậu tố tên file (-COC / -DOT2 / -CON-LAI) và nội dung
+ * chuyển khoản (" dat coc" / " thanh toan con lai") là quy ước cố định riêng, không theo nhãn này. */
 export const DEPOSIT_LABEL: Record<QuoteLang, string> = { vi: "Đặt cọc", en: "Deposit" };
 
-/** "Thời điểm thanh toán đủ" mặc định — nhân viên sửa tự do ở form. Ảnh tiếng Anh chỉ dịch được ĐÚNG câu mặc định này; câu tự gõ giữ nguyên chữ đã nhập. */
-export const DEFAULT_FULL_PAYMENT_TIMING: Record<QuoteLang, string> = {
+/** "Thời điểm thanh toán phần còn lại" mặc định — nhân viên sửa tự do ở form. Ảnh tiếng Anh chỉ dịch được ĐÚNG câu mặc định này; câu tự gõ giữ nguyên chữ đã nhập. */
+export const DEFAULT_BALANCE_TIMING: Record<QuoteLang, string> = {
   vi: "khi nhận kết quả hồ sơ",
   en: "upon receipt of the application results",
 };
-export const FULL_PAYMENT_TIMING_MAX = 120;
-
-/** "Điều kiện hoàn cọc" mặc định — nhân viên sửa tự do ở form (cùng quy tắc dịch như trên). */
-export const DEFAULT_REFUND_CONDITION: Record<QuoteLang, string> = {
-  vi: "Tiền đặt cọc sẽ được MAX OFFICE hoàn lại vào tài khoản cá nhân của bạn sau khi bạn thanh toán đủ",
-  en: "The deposit will be refunded to your personal account after you complete the full payment",
-};
-export const REFUND_CONDITION_MAX = 200;
+export const BALANCE_TIMING_MAX = 120;
 
 /** Văn bản nhân viên có thể sửa: đúng câu mặc định tiếng Việt thì dịch sang tiếng Anh khi ảnh là English; câu tự gõ giữ nguyên. */
 export function defaultAwareText(text: string, defaults: Record<QuoteLang, string>, lang: QuoteLang): string {
@@ -281,31 +273,33 @@ export function paymentScheduleText(lang: QuoteLang) {
   return lang === "en"
     ? {
         title: "Payment Schedule",
-        depositStage1Company: `${dep} (installment 1) — transfer to company account`,
-        fullPayment: "Full payment",
-        fullPaymentTiming: (timing: string) => `Full payment (${timing})`,
-        refundDeposit: `${dep} refund`,
+        depositStage1: `${dep} (installment 1)`,
+        balanceTiming: (timing: string) => `Remaining balance (${timing})`,
+        balance: "Remaining balance",
+        payment2: "Payment, installment 2",
         depositPaid: `${dep} paid`,
-        amountDue: "Amount due",
+        amountDue: "Balance due",
         splitNote: (company: string, collection: string) => `incl. company account (${company}) and collection account (${collection})`,
         formTotal: "Total, all services (incl. VAT)",
         formDeposit: dep,
-        formFullOnComplete: "Full payment on completion",
-        formRefund: "Deposit refunded after full payment",
+        formBalance: "Remaining balance",
+        formPayment2Full: "Installment 2 payment (100% of the total)",
+        formPayment2Remaining: "Installment 2 payment (balance after deposit)",
       }
     : {
         title: "Lịch thanh toán",
-        depositStage1Company: `${dep} (đợt 1) — chuyển tài khoản công ty`,
-        fullPayment: "Thanh toán đủ",
-        fullPaymentTiming: (timing: string) => `Thanh toán đủ (${timing})`,
-        refundDeposit: `Hoàn lại tiền ${depLower}`,
+        depositStage1: `${dep} (đợt 1)`,
+        balanceTiming: (timing: string) => `Còn lại (${timing})`,
+        balance: "Còn lại",
+        payment2: "Thanh toán đợt 2",
         depositPaid: `Đã ${depLower}`,
-        amountDue: "Cần thanh toán",
+        amountDue: "Còn phải thanh toán",
         splitNote: (company: string, collection: string) => `gồm tài khoản công ty (${company}) và tài khoản thu hộ (${collection})`,
         formTotal: "Tổng toàn bộ (đã gồm VAT)",
         formDeposit: dep,
-        formFullOnComplete: "Thanh toán đủ khi hoàn tất",
-        formRefund: "Hoàn lại cọc sau khi thanh toán đủ",
+        formBalance: "Còn lại",
+        formPayment2Full: "Thanh toán đợt 2 (100% tổng báo giá)",
+        formPayment2Remaining: "Thanh toán đợt 2 (phần còn lại sau cọc)",
       };
 }
 
