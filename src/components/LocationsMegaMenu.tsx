@@ -5,13 +5,8 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDownIcon, MapPinIcon, PhoneIcon, SearchIcon } from "./icons";
 import Button from "./Button";
-import {
-  getGroupedLocations,
-  stripLocationNameCuSuffix,
-  ACTIVE_BRANCH_COUNT,
-  type LocationListItem,
-} from "@/lib/locationsData";
-import { CLUSTER_COLORS } from "@/lib/locationClusterColors";
+import { stripLocationNameCuSuffix, ACTIVE_BRANCH_COUNT, type LocationListItem } from "@/lib/locationsData";
+import { getDefaultLocationsMenuLayout } from "@/lib/locationsMenuLayout";
 import { getCheapestPriceForLocation, formatVoPriceShort } from "@/lib/virtualOfficePlans";
 import { useNavIndicator } from "./NavIndicator";
 import { useDropdownKeyboardClose } from "./useDropdownKeyboardClose";
@@ -56,7 +51,6 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const { registerRef, setHoveredKey } = useNavIndicator();
-  const { multiBranchGroups } = getGroupedLocations();
 
   const handleEnter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -72,6 +66,10 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
   // handleLeave hẹn giờ, dành cho chuột).
   useDropdownKeyboardClose(open, () => setOpen(false), rootRef);
 
+  // Bố cục 2 dải trung tâm/ngoại ô, cột cân bằng — tính từ dữ liệu tĩnh (xem locationsMenuLayout.ts), không đo DOM nên không nhảy bố cục. Chỉ tính khi menu MỞ (lần
+  // đầu ~10ms rồi nhớ lại) để không cộng thêm việc cho luồng chính lúc tải trang — menu này được hydrate ngay cả khi chưa ai mở.
+  const bands = open ? getDefaultLocationsMenuLayout() : [];
+
   const stateClasses = isActive
     ? "font-bold text-accent"
     : `font-semibold hover:text-accent ${solid ? "text-ink" : "text-white/90"}`;
@@ -82,7 +80,9 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
         registerRef("chi-nhanh", node);
         rootRef.current = node;
       }}
-      className="relative flex items-center"
+      // KHÔNG đặt `relative` ở đây: để panel (absolute) neo vào cả dải điều hướng (NavIndicatorProvider đã `relative`) và canh giữa theo dải đó — panel rộng 1040px canh
+      // theo riêng nút "Chi nhánh" sẽ tràn mép trái ở màn 1280px. Vị trí dọc không đổi vì dải điều hướng và nút cao bằng nhau.
+      className="flex items-center"
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
@@ -109,61 +109,33 @@ export default function LocationsMegaMenu({ solid, isActive }: { solid: boolean;
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.22, ease: [0.22, 0.9, 0.32, 1] }}
-            className="absolute top-[calc(100%+18px)] left-1/2 z-50 w-[860px] max-w-[92vw] -translate-x-1/2"
+            className="absolute top-[calc(100%+18px)] left-1/2 z-50 w-[1040px] max-w-[94vw] -translate-x-1/2"
           >
             <div className="overflow-hidden rounded-2xl border border-line bg-white shadow-[0_30px_70px_rgba(11,31,58,0.22)]">
-              <div className="scrollbar-thin max-h-[60vh] overflow-y-auto p-5">
-                {multiBranchGroups.map((group) => (
-                  <div key={group.area.slug} className="mb-3.5 last:mb-0">
-                    {group.subGroups ? (
-                      // Khu vực 2 chi nhánh ghép thêm 1 khu vực 1-chi-nhánh
-                      // cho đủ hàng. KHÔNG viền quanh khối (khác /dia-diem —
-                      // /dia-diem giữ nguyên viền màu, không đổi) — dropdown
-                      // đồng nhất mọi khu vực (1, 2 hay nhiều chi nhánh) đều
-                      // không viền, CHỈ dùng màu chữ tiêu đề (colorIndex →
-                      // color.text, xem locationClusterColors.ts) làm dấu
-                      // hiệu phân biệt 2 khu vực trong cùng hàng.
-                      <div className="flex flex-col gap-2 sm:flex-row">
-                        {group.subGroups.map((sub) => {
-                          const color = CLUSTER_COLORS[sub.colorIndex % CLUSTER_COLORS.length];
-                          return (
-                            <div
-                              key={sub.area.slug}
-                              className={`min-w-0 p-1.5 ${
-                                sub.locations.length >= 2
-                                  ? "sm:basis-2/3"
-                                  : group.subGroups!.some((s) => s.locations.length >= 2)
-                                    ? "sm:basis-1/3"
-                                    : "sm:basis-1/2"
-                              }`}
-                            >
-                              <p className={`mb-1 flex items-center gap-1.5 px-1 text-[10px] font-bold tracking-[0.06em] uppercase ${color.text}`}>
-                                {sub.area.name}
-                                <span className={`rounded-full px-1.5 py-0.5 text-[9.5px] tracking-normal whitespace-nowrap normal-case ${color.badge}`}>
-                                  {sub.locations.length} chi nhánh
-                                </span>
+              {/* Cao tối đa theo màn hình (header ~76px + khoảng hở 18px + thanh chân menu ~72px); thấp hơn nội dung thì cuộn trong menu. */}
+              <div className="scrollbar-thin max-h-[calc(100vh-12rem)] overflow-y-auto p-5">
+                {bands.map((band, bi) => (
+                  <div key={band.zone} className={bi > 0 ? "mt-5 border-t border-line pt-5" : ""}>
+                    <p className="mb-3 px-1 text-[11px] font-bold tracking-[0.1em] text-primary uppercase">{band.label}</p>
+                    <div className="grid grid-cols-4 items-start gap-x-3">
+                      {band.columns.map((col, ci) => (
+                        <div key={ci} className="flex min-w-0 flex-col gap-3.5">
+                          {col.map((seg) => (
+                            <div key={`${seg.area.slug}-${seg.continued ? "tiep" : "dau"}`}>
+                              <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
+                                {seg.area.name}
+                                {seg.continued && <span className="ml-1 font-semibold tracking-normal normal-case text-body-text/50">· tiếp</span>}
                               </p>
-                              <div className={`grid gap-1 ${sub.locations.length >= 2 ? "grid-cols-2" : "grid-cols-1"}`}>
-                                {sub.locations.map((loc) => (
+                              <div className="flex flex-col gap-1">
+                                {seg.locations.map((loc) => (
                                   <MegaMenuLocationItem key={loc.slug} loc={loc} />
                                 ))}
                               </div>
                             </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <>
-                        <p className="mb-1.5 px-1 text-[11px] font-bold tracking-[0.08em] text-body-text/70 uppercase">
-                          {group.area.name}
-                        </p>
-                        <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
-                          {group.locations.map((loc) => (
-                            <MegaMenuLocationItem key={loc.slug} loc={loc} />
                           ))}
                         </div>
-                      </>
-                    )}
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>

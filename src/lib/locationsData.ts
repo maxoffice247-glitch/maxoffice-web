@@ -35,8 +35,13 @@ export type TimedPromoVersion = {
   promotions: string[];
 };
 
+/** Phân nhóm khu vực để sắp xếp dropdown "Chi nhánh" ở header (LocationsMegaMenu): dải "Khu vực trung tâm" trên, "Khu vực ngoại ô" dưới. */
+export type AreaZone = "trung-tam" | "ngoai-o";
+
 export type AreaInfo = {
   slug: string;
+  /** NGUỒN DUY NHẤT cho nhóm trung tâm/ngoại ô của khu vực (chỉ dùng cho cách trình bày menu header; không ảnh hưởng URL/sitemap/thứ tự ở /dia-diem). Khu vực mới thêm vào AREAS bắt buộc khai báo. */
+  zone: AreaZone;
   /** Tên đầy đủ dùng cho breadcrumb, tiêu đề trang, meta — mô tả khu vực địa lý thông thường, không phải đơn vị hành chính chính thức (TP.HCM đã bỏ cấp Quận từ 1/7/2025). */
   name: string;
   description: string;
@@ -74,62 +79,76 @@ const AREA_BINH_TAN = { slug: "quan-binh-tan-cu", name: "Quận Bình Tân (cũ)
 export const AREAS: AreaInfo[] = [
   {
     ...AREA_TAN_BINH,
+    zone: "ngoai-o",
     description:
       "Khu vực tập trung nhiều chi nhánh MAX OFFICE nhất, gần sân bay Tân Sơn Nhất, trải khắp các phường Tân Sơn Hoà, Tân Sơn Nhất, Bảy Hiền và Tân Bình.",
   },
   {
     ...AREA_QUAN_1,
+    zone: "trung-tam",
     description:
       "Khu vực trung tâm hành chính, tài chính và thương mại sầm uất bậc nhất TP.HCM, thuộc phường Tân Định.",
   },
   {
     ...AREA_GO_VAP,
+    zone: "ngoai-o",
     description: "Khu vực dân cư đông đúc phía Bắc thành phố, không xa sân bay Tân Sơn Nhất.",
   },
   {
     ...AREA_TAN_PHU,
+    zone: "ngoai-o",
     description: "Khu vực phát triển nhanh phía Tây thành phố, gần Aeon Mall Tân Phú Celadon.",
   },
   {
     ...AREA_QUAN_10,
+    zone: "trung-tam",
     description: "Khu vực gần Ga Sài Gòn, kết nối thuận tiện đến Quận 1 và Quận 3.",
   },
   {
     ...AREA_THU_DUC,
+    zone: "ngoai-o",
     description: "Khu vực cửa ngõ Đông Bắc thành phố, gần các trường đại học lớn và sông Sài Gòn.",
   },
   {
     ...AREA_QUAN_7,
+    zone: "ngoai-o",
     description: "Khu vực Nam Sài Gòn, gần Khu chế xuất Tân Thuận và khu đô thị Phú Mỹ Hưng.",
   },
   {
     ...AREA_QUAN_3,
+    zone: "trung-tam",
     description: "Khu vực trung tâm, gần Quận 1, nổi tiếng với các tuyến phố yên tĩnh và nhiều toà nhà văn phòng lâu năm.",
   },
   {
     ...AREA_BINH_THANH,
+    zone: "trung-tam",
     description: "Khu vực cửa ngõ Đông Bắc trung tâm thành phố, gần cầu Sài Gòn, kênh Nhiêu Lộc - Thị Nghè và nhiều toà nhà văn phòng dọc trục Ung Văn Khiêm.",
   },
   {
     ...AREA_PHU_NHUAN,
+    zone: "trung-tam",
     description: "Khu vực trung tâm giáp Quận 1, Quận 3, Tân Bình và Bình Thạnh, gần chợ Phú Nhuận và sân bay Tân Sơn Nhất.",
   },
   {
     ...AREA_QUAN_4,
+    zone: "trung-tam",
     description: "Khu vực chỉ cách trung tâm Quận 1 một nhịp cầu, nổi tiếng với phố ẩm thực Vĩnh Khánh và Bến Nhà Rồng lịch sử.",
   },
   {
     ...AREA_QUAN_5,
+    zone: "trung-tam",
     description:
       "Khu vực Chợ Lớn — trung tâm thương mại lâu đời của cộng đồng người Hoa, dọc trục Trần Hưng Đạo nối liền Quận 1 và Quận 5, gần chợ An Đông, Bệnh viện Chợ Rẫy và Đại học Y Dược TP.HCM.",
   },
   {
     ...AREA_QUAN_12,
+    zone: "ngoai-o",
     description:
       "Khu vực cửa ngõ Tây Bắc TP.HCM, giáp Hóc Môn, có đại lộ Trường Chinh 10 làn xe — trục giao thông lớn và sầm uất nhất khu vực chạy qua.",
   },
   {
     ...AREA_BINH_TAN,
+    zone: "ngoai-o",
     description:
       "Khu vực cửa ngõ Tây Nam TP.HCM, mặt tiền đường Vành Đai Trong (Vành đai 2), kết nối thuận tiện sang Quận 1, Quận 6, Quận 8 và Bình Chánh.",
   },
