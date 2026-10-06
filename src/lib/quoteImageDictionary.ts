@@ -91,12 +91,12 @@ export const QUOTE_DICT = {
     vi: "* Chưa gồm các dịch vụ báo giá riêng ở trên (chưa tách được số cụ thể)",
     en: "* Excludes custom-quoted items above (no fixed amount yet)",
   },
-  // Khi báo giá CÓ CẢ dịch vụ thu hộ (Chữ ký số/Hoá đơn điện tử), đổi nhãn
-  // tổng cộng này thành "...DỊCH VỤ MAX OFFICE" để không gây hiểu lầm là đã
-  // gồm cả tiền thu hộ (xem route.tsx — 2 khoản này tách sổ hoàn toàn).
-  grandTotalMaxOfficeLabel: { vi: "TỔNG CỘNG DỊCH VỤ MAX OFFICE", en: "TOTAL MAX OFFICE SERVICES" },
-  // Khi báo giá có CẢ 2 nhóm (MAX OFFICE + thu hộ), 1 dòng tổng GỘP CẢ 2 khoản (dùng chung "grandTotalLabel" ở trên) là con số tổng DUY NHẤT; 2 dòng
-  // chú thích nhỏ dưới nó tách số tiền theo tài khoản nhận — xem overallBreakdownText() ở cuối file.
+  // Khi báo giá có CẢ 2 nhóm (MAX OFFICE + thu hộ), CHỈ có 1 ô tổng GỘP CẢ 2 khoản với nhãn này (số tiền bằng chữ nằm ngay trong ô, bản tiếng Việt); 2 dòng chú thích nhỏ
+  // dưới ô tách số tiền theo tài khoản nhận — xem overallBreakdownText() ở cuối file. (Bản tiếng Anh vốn không có "Bằng chữ".)
+  overallTotalLabel: {
+    vi: "Tổng toàn bộ báo giá MAX OFFICE và thu hộ",
+    en: "Grand total, MAX OFFICE and collected-on-behalf services",
+  },
   // 2 category "thu hộ" — tiền 2 dịch vụ này KHÔNG vào tài khoản MAX OFFICE
   // (xem THU_HO_ACCOUNT trong vietQr.ts).
   categoryChuKySo: { vi: "Chữ ký số", en: "Digital Signature" },

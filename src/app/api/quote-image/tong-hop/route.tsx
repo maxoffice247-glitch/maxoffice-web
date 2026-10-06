@@ -32,7 +32,7 @@ import {
   THU_HO_ACCOUNT,
   detectImageMimeType,
   isVietQrAccountKey,
-  DEFAULT_VIETQR_ACCOUNT_KEY,
+  COMPOSITE_QUOTE_DEFAULT_ACCOUNT_KEY,
 } from "@/lib/vietQr";
 import { qt, formatQuoteCurrency, vatLabel, type QuoteLang, type QuoteDictKey } from "@/lib/quoteImageDictionary";
 
@@ -157,15 +157,20 @@ const GRAND_TOTAL_BOX_H = 60; // thu gọn vừa nội dung (alignSelf:"flex-sta
 const GRAND_TOTAL_WORDS_H = 20; // "Bằng chữ" 1 dòng, fontSize 13 — đo thực tế thấp hơn mốc 26 dùng cho SECTION_WORDS_H
 const GRAND_TOTAL_NOTE_H = 18;
 
-// Dòng "TỔNG CỘNG TOÀN BỘ BÁO GIÁ" gộp CẢ 2 nhóm — chỉ hiện khi có đủ cả 2
-// (xem showOverallTotal trong POST()). Cùng cỡ box với GRAND_TOTAL_BOX_H
-// nhưng nền accent (đỏ) thay vì navy để phân biệt rõ với khối "Tổng cộng
-// DỊCH VỤ MAX OFFICE" đứng ngay phía trên (navy) — tránh 2 khối liền kề giống
-// hệt nhau gây rối mắt.
+// Ô "Tổng toàn bộ báo giá MAX OFFICE và thu hộ" gộp CẢ 2 nhóm — chỉ hiện khi có đủ cả 2 (xem showOverallTotal trong POST()) và khi đó là ô tổng DUY NHẤT
+// (không còn khối navy "Tổng cộng dịch vụ MAX OFFICE"); nền accent (đỏ), "Bằng chữ" nằm ngay trong ô.
 const OVERALL_TOTAL_TOP_MARGIN = 32;
-const OVERALL_TOTAL_BOX_H = 60; // thu gọn vừa nội dung, cùng cỡ với GRAND_TOTAL_BOX_H
+const OVERALL_TOTAL_BOX_H = 60; // thu gọn vừa nội dung (nhãn + số tiền cùng hàng), cùng cỡ với GRAND_TOTAL_BOX_H
+const OVERALL_TOTAL_WORDS_IN_BOX_H = 26; // dòng "Bằng chữ" (chữ 13px) NGAY TRONG ô tổng: margin trên 6 + 1 dòng — hiệu chỉnh bằng pixel thật (chỉ bản tiếng Việt)
+const OVERALL_TOTAL_WORDS_CHARS_PER_LINE = 130; // ký tự/dòng của "Bằng chữ" trong ô (chữ 13px nghiêng, ô tối đa ~968px) — ước lượng thấp để KHÔNG BAO GIỜ thiếu chiều cao
+const OVERALL_TOTAL_WORDS_LINE_H = 17;
+// Phần ước lượng dư SẴN CÓ của khối navy "Tổng cộng dịch vụ MAX OFFICE" (đo: 7px bản tiếng Việt, 3px bản tiếng Anh) — khi khối này bị bỏ (có nhóm thu hộ) vẫn giữ lại
+// khoảng dư đó để đáy trắng của ảnh KHÔNG đổi so với trước (yêu cầu: giữ nguyên đáy trắng).
+const GRAND_TOTAL_REMOVED_SLACK_VI = 7;
+const GRAND_TOTAL_REMOVED_SLACK_EN = 3;
+const GRAND_TOTAL_REMOVED_NOTE_SLACK = 3; // thêm khi khối navy bị bỏ vốn có ghi chú "Chưa gồm các dịch vụ báo giá riêng" (ước lượng cũ 24, thực tế 21)
+const OVERALL_TOTAL_EXCLUDED_NOTE_H = 21; // ghi chú "Chưa gồm các dịch vụ báo giá riêng" (margin 6 + 1 dòng 12px) khi có dòng chưa tách được số
 const OVERALL_TOTAL_SPLIT_NOTE_H = 37; // 2 dòng chú thích nhỏ (chữ 13px) tách số tiền theo tài khoản nhận, dưới ô tổng toàn bộ — hiệu chỉnh bằng pixel thật
-const OVERALL_TOTAL_WORDS_H = 20;
 
 const BUCKET_META: Record<QuoteBucket, { titleKey: QuoteDictKey; icon: string; totalKey: QuoteDictKey }> = {
   "thue-vpa": { titleKey: "bucketVpaTitle", icon: "🏢", totalKey: "bucketVpaTotal" },
@@ -993,18 +998,8 @@ function grandTotalHeight(maxOfficeLines: ResolvedQuoteLine[], lang: QuoteLang):
   );
 }
 
-/** `hasThuHo`: báo giá có đang CÙNG LÚC chứa dịch vụ thu hộ không — CHỈ đổi
- * nhãn hiển thị (để không gây hiểu lầm là tổng này đã gồm cả tiền thu hộ),
- * không đổi cách tính (luôn chỉ tính `maxOfficeLines` truyền vào). */
-function GrandTotal({
-  maxOfficeLines,
-  lang,
-  hasThuHo,
-}: {
-  maxOfficeLines: ResolvedQuoteLine[];
-  lang: QuoteLang;
-  hasThuHo: boolean;
-}) {
+/** Khối tổng nhóm MAX OFFICE (navy) — chỉ hiện khi báo giá KHÔNG có nhóm thu hộ (khi có cả 2 nhóm, ô tổng gộp OverallTotal là ô tổng duy nhất). */
+function GrandTotal({ maxOfficeLines, lang }: { maxOfficeLines: ResolvedQuoteLine[]; lang: QuoteLang }) {
   const { total, show, hasExcluded } = computeGrandTotal(maxOfficeLines);
   if (!show) return null;
   return (
@@ -1021,7 +1016,7 @@ function GrandTotal({
         }}
       >
         <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: "#fff" }}>
-          {qt(hasThuHo ? "grandTotalMaxOfficeLabel" : "grandTotalLabel", lang)}
+          {qt("grandTotalLabel", lang)}
         </div>
         <div style={{ display: "flex", fontSize: 24, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(total, lang)}</div>
       </div>
@@ -1039,37 +1034,38 @@ function GrandTotal({
   );
 }
 
-function overallTotalHeight(show: boolean, lang: QuoteLang): number {
+function overallTotalHeight(show: boolean, lang: QuoteLang, amount: number, hasExcluded: boolean): number {
   if (!show) return 0;
+  const words = lang === "vi" ? amountToVietnameseWords(amount) : "";
+  const wordsLines = words ? Math.ceil(words.length / OVERALL_TOTAL_WORDS_CHARS_PER_LINE) : 0;
   return (
     OVERALL_TOTAL_TOP_MARGIN +
     OVERALL_TOTAL_BOX_H +
+    (wordsLines > 0 ? OVERALL_TOTAL_WORDS_IN_BOX_H + (wordsLines - 1) * OVERALL_TOTAL_WORDS_LINE_H : 0) +
     6 +
     OVERALL_TOTAL_SPLIT_NOTE_H +
-    (lang === "vi" ? 4 + OVERALL_TOTAL_WORDS_H : 0)
+    (hasExcluded ? OVERALL_TOTAL_EXCLUDED_NOTE_H : 0)
   );
 }
 
-/** Dòng tổng GỘP CẢ 2 nhóm — CHỈ hiện khi báo giá có ĐỦ CẢ "Dịch vụ MAX
- * OFFICE" lẫn "Dịch vụ thu hộ" (nếu chỉ có 1 nhóm, khối tổng của nhóm đó
- * — GrandTotal hoặc box tổng trong Section bucket "thu-ho" — đã đủ, hiện
- * thêm dòng này là trùng lặp không cần thiết, xem showOverallTotal ở
- * POST()). Dùng chung nhãn "grandTotalLabel" (TỔNG CỘNG TOÀN BỘ BÁO GIÁ) vì
- * cùng ý nghĩa — đây MỚI thật sự là tổng của TOÀN BỘ báo giá, khác
- * GrandTotal ở trên chỉ tính riêng phần MAX OFFICE. */
+/** Ô tổng GỘP CẢ 2 nhóm — CHỈ hiện khi báo giá có ĐỦ CẢ "Dịch vụ MAX OFFICE" lẫn "Dịch vụ thu hộ" (nếu chỉ có 1 nhóm, khối tổng của nhóm đó đã đủ), xem
+ * showOverallTotal ở POST(). Khi đó đây là ô tổng DUY NHẤT: nhãn "Tổng toàn bộ báo giá MAX OFFICE và thu hộ" + số tiền G cùng hàng, dòng "Bằng chữ" (chỉ bản tiếng
+ * Việt) nằm NGAY TRONG ô; dưới ô là 2 dòng chú thích nhỏ tách số tiền theo tài khoản nhận (và ghi chú nếu có dịch vụ chưa tách được số). */
 function OverallTotal({
   amount,
   maxOfficeAmount,
   thuHoAmount,
+  hasExcluded,
   lang,
 }: {
   amount: number;
   maxOfficeAmount: number;
   thuHoAmount: number;
+  hasExcluded: boolean;
   lang: QuoteLang;
 }) {
   const b = overallBreakdownText(lang);
-  // 2 dòng chú thích nhỏ tách số tiền theo TÀI KHOẢN NHẬN (thay cho câu cũ "Thanh toán qua 2 kênh riêng biệt") — con số tổng lớn ở trên là DUY NHẤT.
+  const words = lang === "vi" ? amountToVietnameseWords(amount) : "";
   const noteRow = (label: string, value: number, marginTop: number) => (
     <div style={{ display: "flex", marginTop, paddingLeft: 4, fontSize: 13, color: QUOTE_COLOR.bodyText }}>
       <div style={{ display: "flex" }}>{label}:</div>
@@ -1083,22 +1079,29 @@ function OverallTotal({
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
           alignSelf: "flex-start",
-          alignItems: "center",
-          gap: 20,
+          maxWidth: CONTENT_WIDTH,
           borderRadius: 14,
           backgroundColor: QUOTE_COLOR.accent,
           padding: "14px 20px",
         }}
       >
-        <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: "#fff" }}>{qt("grandTotalLabel", lang)}</div>
-        <div style={{ display: "flex", fontSize: 24, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(amount, lang)}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: "#fff" }}>{qt("overallTotalLabel", lang)}</div>
+          <div style={{ display: "flex", fontSize: 24, fontWeight: 800, color: "#fff" }}>{formatQuoteCurrency(amount, lang)}</div>
+        </div>
+        {words && (
+          <div style={{ display: "flex", marginTop: 6, fontSize: 13, fontStyle: "italic", color: "rgba(255,255,255,0.92)" }}>
+            Bằng chữ: {words}
+          </div>
+        )}
       </div>
       {noteRow(b.company, maxOfficeAmount, 6)}
       {noteRow(b.thuHo, thuHoAmount, 2)}
-      {lang === "vi" && (
-        <div style={{ display: "flex", marginTop: 4, paddingLeft: 4 }}>
-          <AmountInWords amount={amount} />
+      {hasExcluded && (
+        <div style={{ display: "flex", marginTop: 6, paddingLeft: 4, fontSize: 12, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>
+          {qt("grandTotalExcludedNote", lang)}
         </div>
       )}
     </div>
@@ -1384,7 +1387,6 @@ export async function POST(req: Request) {
   // số/Hoá đơn điện tử) có khối tổng + QR RIÊNG, tài khoản cố định
   // THU_HO_ACCOUNT, KHÔNG được gộp lẫn với tiền MAX OFFICE.
   const { maxOfficeLines, thuHoLines } = splitByPaymentGroup(costLines);
-  const hasThuHo = thuHoLines.length > 0;
   const maxOfficeQrAmount = groupQrAmount(maxOfficeLines);
   const thuHoQrAmount = groupQrAmount(thuHoLines);
 
@@ -1399,13 +1401,15 @@ export async function POST(req: Request) {
   // 1 nhóm, khối tổng của nhóm đó đã đủ, xem OverallTotal()).
   const showOverallTotal = maxOfficeQrAmount != null && thuHoQrAmount != null;
   const overallTotalAmount = (maxOfficeQrAmount ?? 0) + (thuHoQrAmount ?? 0);
+  // Có dịch vụ MAX OFFICE chưa tách được số (VD "Liên hệ báo giá") — không cộng vào tổng, ghi chú dưới ô tổng gộp (trước đây ghi chú này nằm ở khối navy đã bỏ).
+  const hasExcludedMaxOffice = maxOfficeLines.some((l) => l.breakdown == null);
 
   // KHÔNG tin thẳng body.qrAccountKey — chỉ chấp nhận khi khớp đúng 1 trong
   // các key đã khai báo sẵn ở VIETQR_ACCOUNTS, rơi về tài khoản mặc định
   // (đúng hành vi trước khi có nhiều tài khoản) nếu thiếu hoặc sai key. CHỈ
   // áp dụng cho QR "Dịch vụ MAX OFFICE" — QR thu hộ luôn dùng THU_HO_ACCOUNT
   // cố định, không đọc field này.
-  const qrAccountKey = isVietQrAccountKey(body.qrAccountKey) ? body.qrAccountKey : DEFAULT_VIETQR_ACCOUNT_KEY;
+  const qrAccountKey = isVietQrAccountKey(body.qrAccountKey) ? body.qrAccountKey : COMPOSITE_QUOTE_DEFAULT_ACCOUNT_KEY;
 
   // Nội dung chuyển khoản do nhân viên tự sửa (nếu có) — CHỈ áp dụng QR "Dịch
   // vụ MAX OFFICE"; QR thu hộ luôn tự sinh, không đọc field này (xem
@@ -1446,8 +1450,13 @@ export async function POST(req: Request) {
     customerBlockH +
     (priceListLine ? (priceListLine.accountingPriceList ? accountingPriceListHeight(priceListLine) : priceListHeight(priceListLine)) : 0) +
     BUCKET_ORDER.reduce((sum, bucket) => sum + sectionHeight(byBucket.get(bucket)!, lang), 0) +
-    grandTotalHeight(maxOfficeLines, lang) +
-    overallTotalHeight(showOverallTotal, lang) +
+    (showOverallTotal
+      ? computeGrandTotal(maxOfficeLines).show
+        ? (lang === "vi" ? GRAND_TOTAL_REMOVED_SLACK_VI : GRAND_TOTAL_REMOVED_SLACK_EN) +
+          (computeGrandTotal(maxOfficeLines).hasExcluded ? GRAND_TOTAL_REMOVED_NOTE_SLACK : 0)
+        : 0
+      : grandTotalHeight(maxOfficeLines, lang)) +
+    overallTotalHeight(showOverallTotal, lang, overallTotalAmount, hasExcludedMaxOffice) +
     scheduleHeight(installment, lang) +
     qrSectionHeight(maxOfficeQrDataUri, thuHoQrDataUri) +
     FOOTER_H;
@@ -1523,13 +1532,14 @@ export async function POST(req: Request) {
           <Section key={bucket} bucket={bucket} lines={byBucket.get(bucket)!} lang={lang} />
         ))}
 
-        <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} hasThuHo={hasThuHo} />
+        {!showOverallTotal && <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} />}
 
         {showOverallTotal && (
           <OverallTotal
             amount={overallTotalAmount}
             maxOfficeAmount={maxOfficeQrAmount ?? 0}
             thuHoAmount={thuHoQrAmount ?? 0}
+            hasExcluded={hasExcludedMaxOffice}
             lang={lang}
           />
         )}

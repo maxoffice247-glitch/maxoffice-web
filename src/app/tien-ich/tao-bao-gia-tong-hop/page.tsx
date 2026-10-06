@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     q: "Ảnh báo giá có dòng tổng cộng không?",
-    a: "Có. Mỗi nhóm chi phí (thuê Văn phòng ảo, hàng tháng, một lần, theo giờ) có dòng tổng riêng khi nhóm đó có từ 2 dịch vụ trở lên. Khi báo giá có từ 2 dịch vụ MAX OFFICE trở lên, ảnh thêm ô \"Tổng cộng toàn bộ báo giá\" (đã gồm VAT) cộng tất cả các dịch vụ đó; dịch vụ nhập giá chưa tách được số (VD \"Liên hệ báo giá\") không được cộng và có ghi chú ngay dưới ô tổng. Riêng Chữ ký số và Hoá đơn điện tử là khoản MAX OFFICE thu hộ nên tách thành nhóm riêng. Khi báo giá có cả dịch vụ MAX OFFICE lẫn dịch vụ thu hộ, ô \"Tổng cộng toàn bộ báo giá\" cộng cả hai, kèm hai dòng nhỏ ghi số tiền chuyển vào tài khoản công ty và vào tài khoản thu hộ.",
+    a: "Có. Mỗi nhóm chi phí (thuê Văn phòng ảo, hàng tháng, một lần, theo giờ) có dòng tổng riêng khi nhóm đó có từ 2 dịch vụ trở lên. Khi báo giá chỉ có dịch vụ MAX OFFICE và từ 2 dịch vụ trở lên, ảnh thêm ô \"Tổng cộng toàn bộ báo giá\" (đã gồm VAT) cộng tất cả các dịch vụ đó; dịch vụ nhập giá chưa tách được số (VD \"Liên hệ báo giá\") không được cộng và có ghi chú ngay dưới ô tổng. Riêng Chữ ký số và Hoá đơn điện tử là khoản MAX OFFICE thu hộ nên tách thành nhóm riêng. Khi báo giá có cả dịch vụ MAX OFFICE lẫn dịch vụ thu hộ, ảnh chỉ có một ô tổng \"Tổng toàn bộ báo giá MAX OFFICE và thu hộ\" (đã gồm VAT, cộng cả hai nhóm), số tiền bằng chữ nằm ngay trong ô, kèm hai dòng nhỏ ghi số tiền chuyển vào tài khoản công ty và vào tài khoản thu hộ.",
   },
   {
     q: "Mã QR trên ảnh báo giá hoạt động thế nào?",

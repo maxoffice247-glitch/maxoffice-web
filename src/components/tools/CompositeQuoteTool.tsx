@@ -41,8 +41,8 @@ import {
   type QuoteLang,
 } from "@/lib/quoteImageDictionary";
 import {
-  VIETQR_ACCOUNT_KEYS,
-  DEFAULT_VIETQR_ACCOUNT_KEY,
+  COMPOSITE_QUOTE_ACCOUNT_KEYS,
+  COMPOSITE_QUOTE_DEFAULT_ACCOUNT_KEY,
   vietQrAccountLabel,
   buildQrNote,
   buildInstallmentQrNote,
@@ -306,9 +306,8 @@ export default function CompositeQuoteTool() {
   // Mặc định TẮT theo đúng yêu cầu — QR chuyển khoản là tuỳ chọn thêm vào
   // ảnh, không phải mặc định của mọi báo giá.
   const [showQr, setShowQr] = useState(false);
-  // Mặc định đúng tài khoản đã dùng TRƯỚC khi có tính năng chọn nhiều tài
-  // khoản — không đổi hành vi cũ nếu nhân viên không chủ động đổi lựa chọn.
-  const [qrAccountKey, setQrAccountKey] = useState<VietQrAccountKey>(DEFAULT_VIETQR_ACCOUNT_KEY);
+  // Mặc định tài khoản công ty 16868889 (COMPOSITE_QUOTE_DEFAULT_ACCOUNT_KEY, cùng giá trị dự phòng ở server); tài khoản cũ 1117777888 vẫn chọn được bằng nút bên dưới.
+  const [qrAccountKey, setQrAccountKey] = useState<VietQrAccountKey>(COMPOSITE_QUOTE_DEFAULT_ACCOUNT_KEY);
   // Nội dung chuyển khoản — null nghĩa là "chưa sửa tay", khi đó LUÔN hiện
   // đúng gợi ý tự sinh (cập nhật theo thông tin khách hàng mới nhất). Ngay
   // khi nhân viên gõ bất kỳ gì vào ô này (kể cả xoá trắng), chuyển sang chuỗi
@@ -582,19 +581,20 @@ export default function CompositeQuoteTool() {
                   Chọn tài khoản nhận — chỉ chọn từ danh sách, không tự nhập được
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {VIETQR_ACCOUNT_KEYS.map((key) => (
+                  {COMPOSITE_QUOTE_ACCOUNT_KEYS.map((key) => (
                     <button
                       key={key}
                       type="button"
                       aria-pressed={qrAccountKey === key}
                       onClick={() => setQrAccountKey(key)}
-                      className={`rounded-full border-[1.5px] px-3.5 py-2 text-[12.5px] font-bold transition-all duration-200 ${
+                      className={`min-h-[44px] rounded-full border-[1.5px] px-3.5 py-2 text-[12.5px] leading-snug font-bold transition-all duration-200 ${
                         qrAccountKey === key
                           ? "border-primary bg-primary text-white"
                           : "border-line bg-white text-body-text hover:border-primary/40"
                       }`}
                     >
                       {vietQrAccountLabel(key)}
+                      {key === COMPOSITE_QUOTE_DEFAULT_ACCOUNT_KEY ? " (mặc định)" : ""}
                     </button>
                   ))}
                 </div>

@@ -25,10 +25,14 @@ export const VIETQR_ACCOUNTS: Record<
   "16868889": { bankCode: "TCB", accountNumber: "16868889", accountName: "CÔNG TY TNHH MAX OFFICE" },
 };
 
-/** Tài khoản mặc định khi bật QR mà không đổi lựa chọn — GIỮ NGUYÊN tài
- * khoản đã dùng trước khi có tính năng chọn nhiều tài khoản này, để không
- * đổi hành vi mặc định đã có. */
+/** Tài khoản mặc định CŨ — vẫn là mặc định khởi tạo của công cụ "Đề nghị thanh toán" (PaymentRequestTool, tự đổi theo loại công ty sau đó). KHÔNG dùng cho công cụ
+ * Báo giá tổng hợp — công cụ đó có mặc định riêng bên dưới. */
 export const DEFAULT_VIETQR_ACCOUNT_KEY: VietQrAccountKey = "1117777888";
+
+/** Tài khoản công ty MẶC ĐỊNH của công cụ Báo giá tổng hợp: 16868889 (Techcombank, CÔNG TY TNHH MAX OFFICE). Dùng cho CẢ giá trị khởi tạo ở form LẪN giá trị dự phòng ở
+ * server khi request không gửi tài khoản hợp lệ (client cũ còn trong bộ nhớ đệm); request gửi tài khoản rõ ràng thì giữ nguyên lựa chọn đó. Tài khoản cũ 1117777888
+ * vẫn chọn được bằng nút chọn tài khoản. */
+export const COMPOSITE_QUOTE_DEFAULT_ACCOUNT_KEY: VietQrAccountKey = "16868889";
 
 /** Thứ tự hiển thị trên form — liệt kê TƯỜNG MINH thay vì
  * `Object.keys(VIETQR_ACCOUNTS)`: cả 2 key hiện tại đều là chuỗi toàn chữ
@@ -38,6 +42,9 @@ export const DEFAULT_VIETQR_ACCOUNT_KEY: VietQrAccountKey = "1117777888";
  * "1117777888"]) — dựa vào Object.keys() sẽ vô tình đẩy tài khoản mặc định
  * xuống vị trí 2, gây hiểu nhầm khi hiển thị. */
 export const VIETQR_ACCOUNT_KEYS: VietQrAccountKey[] = ["1117777888", "16868889"];
+
+/** Thứ tự nút chọn tài khoản ở công cụ Báo giá tổng hợp: tài khoản mặc định (COMPOSITE_QUOTE_DEFAULT_ACCOUNT_KEY) đứng đầu. */
+export const COMPOSITE_QUOTE_ACCOUNT_KEYS: VietQrAccountKey[] = ["16868889", "1117777888"];
 
 export function isVietQrAccountKey(value: unknown): value is VietQrAccountKey {
   return typeof value === "string" && Object.hasOwn(VIETQR_ACCOUNTS, value);
