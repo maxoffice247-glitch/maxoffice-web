@@ -146,7 +146,7 @@ export default async function PlanDetailPage({
           </div>
 
           <div className="lg:sticky lg:top-24">
-            <PlanDetailActions plan={plan} />
+            <PlanDetailActions plan={plan} branchPlanCount={getAllOfferedPlans().filter((p) => p.locationSlug === slug).length} />
           </div>
         </div>
       </section>

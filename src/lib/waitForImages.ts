@@ -91,3 +91,25 @@ function getServerCanShareFiles(): boolean {
 export function useCanShareFiles(): boolean {
   return useSyncExternalStore(subscribeNever, canShareFiles, getServerCanShareFiles);
 }
+
+/**
+ * Tải ảnh báo giá "tất cả các gói của chi nhánh" (GET /api/quote-image/{slug}/tat-ca)
+ * rồi chia sẻ (di động có Web Share file) hoặc tải về — cùng cách làm ở
+ * PlanDetailActions/PlanGroupDetailActions. Trả về blob để nơi gọi dựng
+ * xem trước nếu cần; ném lỗi nếu server không trả ảnh.
+ */
+export async function fetchAndSaveBranchQuote(slug: string, shareTitle: string, canShare: boolean): Promise<Blob> {
+  const res = await fetch(`/api/quote-image/${slug}/tat-ca`);
+  if (!res.ok) throw new Error(`Server trả về lỗi ${res.status} khi tạo ảnh báo giá.`);
+  const blob = await res.blob();
+  const filename = `bao-gia-${slug}-tat-ca-goi.png`;
+  if (canShare && (await shareQuotePng(blob, filename, shareTitle))) return blob;
+  const blobUrl = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.download = filename;
+  link.href = blobUrl;
+  link.click();
+  // Trì hoãn revoke — thu hồi ngay có thể huỷ tải trên vài trình duyệt (Safari).
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+  return blob;
+}

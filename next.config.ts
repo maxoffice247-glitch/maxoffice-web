@@ -85,6 +85,8 @@ const nextConfig: NextConfig = {
     // vì dev/build không áp dụng giới hạn trace này khi phục vụ request.
     "/api/quote-image/\\[slug\\]/\\[plan\\]": ["./public/images/quote/**", "./public/images/logo-red.png"],
     "/api/quote-image/goi/\\[groupKey\\]": ["./public/images/quote/**", "./public/images/logo-red.png"],
+    // Ảnh "Báo giá tất cả các gói" (dùng chung font/logo qua quoteImageShared; không đọc ảnh mặt tiền) — chỉ cần logo.
+    "/api/quote-image/\\[slug\\]/tat-ca": ["./public/images/logo-red.png"],
   },
   async redirects() {
     return [

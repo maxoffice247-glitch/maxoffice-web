@@ -131,6 +131,20 @@ function WebIcon({ color }: { color: string }) {
   );
 }
 
+function PhoneIcon({ color }: { color: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" style={{ display: "flex" }}>
+      <path
+        d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"
+        fill="none"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function EmailIcon({ color }: { color: string }) {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" style={{ display: "flex" }}>
@@ -150,7 +164,8 @@ function EmailIcon({ color }: { color: string }) {
 export function QuoteFooterRow({
   lang = "vi",
   marginX = MARGIN_X,
-}: { lang?: QuoteLang; marginX?: number } = {}) {
+  hotlineIcon = false,
+}: { lang?: QuoteLang; marginX?: number; /** Thêm icon điện thoại trước Hotline (mặc định tắt — các ảnh hiện có giữ nguyên từng pixel). */ hotlineIcon?: boolean } = {}) {
   return (
     <div
       style={{
@@ -164,7 +179,8 @@ export function QuoteFooterRow({
         paddingBottom: 40,
       }}
     >
-      <div style={{ display: "flex", fontSize: 18, fontWeight: 800, color: QUOTE_COLOR.navy }}>
+      <div style={{ display: "flex", alignItems: "center", gap: hotlineIcon ? 8 : 0, fontSize: 18, fontWeight: 800, color: QUOTE_COLOR.navy }}>
+        {hotlineIcon && <PhoneIcon color={QUOTE_COLOR.navy} />}
         {qt("hotlineLabel", lang)}: 089 8082 188
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: QUOTE_COLOR.bodyText }}>

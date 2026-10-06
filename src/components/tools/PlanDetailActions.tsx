@@ -5,7 +5,7 @@ import Link from "next/link";
 import { DownloadIcon, PhoneIcon, ShareIcon, SpinnerIcon } from "../icons";
 import type { OfferedPlan } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
-import { shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
+import { fetchAndSaveBranchQuote, shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
 
 /**
  * TRƯỚC ĐÂY: dựng 1 bản PlanQuoteCard off-screen rồi dùng html-to-image để
@@ -27,7 +27,10 @@ import { shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
  * khách chỉ cần TẢI VỀ 1 file PNG có sẵn, không phải tự "chụp" gì nữa, nên
  * né hoàn toàn giới hạn của Safari nói trên.
  */
-export default function PlanDetailActions({ plan }: { plan: OfferedPlan }) {
+export default function PlanDetailActions({ plan, branchPlanCount = 1 }: { plan: OfferedPlan; branchPlanCount?: number }) {
+  // Nút thứ 3 "Báo giá tất cả các gói" chỉ hiện khi chi nhánh có từ 2 gói
+  // (route /api/quote-image/{slug}/tat-ca trả 404 với chi nhánh 1 gói).
+  const [allStatus, setAllStatus] = useState<"idle" | "generating" | "error">("idle");
   const [status, setStatus] = useState<"idle" | "generating" | "error">("idle");
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
   // Xem trước ảnh vừa tải về ngay trên trang — giữ lại từ luồng cũ, vẫn hữu
@@ -73,6 +76,16 @@ export default function PlanDetailActions({ plan }: { plan: OfferedPlan }) {
     }
   };
 
+  const handleAllPlans = async () => {
+    setAllStatus("generating");
+    try {
+      await fetchAndSaveBranchQuote(plan.locationSlug, `Báo giá các gói - ${plan.locationName}`, canShare);
+      setAllStatus("idle");
+    } catch {
+      setAllStatus("error");
+    }
+  };
+
   return (
     <div className="rounded-2xl border border-line bg-white p-6">
       <p className="mb-1 text-[13px] text-body-text">Gói {plan.planName} tại {plan.locationName}</p>
@@ -109,6 +122,28 @@ export default function PlanDetailActions({ plan }: { plan: OfferedPlan }) {
           Không tạo được ảnh báo giá, vui lòng thử lại.
           {errorDetail && <span className="block break-words text-[11px] text-body-text">({errorDetail})</span>}
         </p>
+      )}
+      {branchPlanCount >= 2 && (
+        <>
+          <button
+            type="button"
+            onClick={handleAllPlans}
+            disabled={allStatus === "generating"}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border-2 border-line px-6 py-3.5 text-[15px] font-bold text-primary transition-all duration-300 hover:-translate-y-0.5 hover:border-primary disabled:pointer-events-none disabled:opacity-60"
+          >
+            {allStatus === "generating" ? (
+              <SpinnerIcon className="h-4 w-4" />
+            ) : canShare ? (
+              <ShareIcon className="h-4 w-4" />
+            ) : (
+              <DownloadIcon className="h-4 w-4" />
+            )}
+            {allStatus === "generating" ? "Đang tạo báo giá..." : "Báo giá tất cả các gói"}
+          </button>
+          {allStatus === "error" && (
+            <p className="mt-2 text-center text-[12.5px] text-accent">Không tạo được ảnh báo giá, vui lòng thử lại.</p>
+          )}
+        </>
       )}
       {previewUrl && (
         <div className="mt-3 overflow-hidden rounded-xl border border-line">
