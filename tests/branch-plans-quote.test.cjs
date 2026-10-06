@@ -24,9 +24,8 @@ test("mọi chi nhánh: tên/giá/địa chỉ/ưu đãi từng gói khớp 100%
       assert.equal(qp.planName, p.planName);
       assert.equal(qp.price, p.price);
       assert.equal(qp.priceText, formatVoPrice(p.price));
-      // quyền lợi hiển thị luôn là tập con của features gốc
-      for (const f of qp.highlights.items) assert.ok(p.features.includes(f), `${slug}/${qp.planKey}: ${f}`);
-      assert.ok(qp.highlights.items.length <= bq.HIGHLIGHT_MAX);
+      // hiện ĐỦ toàn bộ quyền lợi, đúng thứ tự dữ liệu (không cắt bớt)
+      assert.deepEqual(qp.features, p.features, `${slug}/${qp.planKey}`);
       // phụ phí một lần CHỈ ở gói có addOn
       assert.equal(Boolean(qp.oneTimeFeeLine), Boolean(p.oneTimeFee), `${slug}/${qp.planKey}`);
       // ưu đãi của gói = đúng nhóm chứa tên gói, bằng getPromotionsForPlanPrice
@@ -39,19 +38,11 @@ test("mọi chi nhánh: tên/giá/địa chỉ/ưu đãi từng gói khớp 100%
   }
 });
 
-test("quyền lợi: gói cao chứa trọn gói trước thì chỉ hiện phần thêm; không thì hiện đầu danh sách", () => {
-  const prev = { planName: "A", features: ["a", "b"] };
-  const up = bq.selectPlanHighlights({ features: ["a", "b", "c", "d"] }, prev);
-  assert.deepEqual(up, { includesPlanName: "A", items: ["c", "d"], more: 0 });
-  const other = bq.selectPlanHighlights({ features: ["x", "y"] }, prev);
-  assert.deepEqual(other, { items: ["x", "y"], more: 0 });
-  // không cộng dồn: quyền lợi khác biệt (không có ở mọi gói) lên trước; "Không có" bị bỏ
-  const all = [["c1", "c2", "x: Không có"], ["c1", "c2", "d1", "d2"]];
-  assert.deepEqual(bq.selectPlanHighlights({ features: all[0] }, undefined, all), { items: ["c1", "c2"], more: 0 });
-  assert.deepEqual(bq.selectPlanHighlights({ features: all[1] }, { planName: "A", features: ["zz"] }, all), { items: ["d1", "d2", "c1", "c2"], more: 0 });
-  const many = bq.selectPlanHighlights({ features: Array.from({ length: 8 }, (_, i) => "f" + i) });
-  assert.equal(many.items.length, 5);
-  assert.equal(many.more, 3);
+test('quyền lợi dạng "...: Không có" được nhận diện để vẽ dấu "–"', () => {
+  assert.equal(bq.isNegativeFeature("Phòng họp: Không có"), true);
+  assert.equal(bq.isNegativeFeature("Không có"), true);
+  assert.equal(bq.isNegativeFeature("Phòng họp: Free 6 giờ/tháng"), false);
+  assert.equal(bq.isNegativeFeature("Lễ tân"), false);
 });
 
 test("chi nhánh ≥499K và <499K có nhóm ưu đãi riêng; chi nhánh không tồn tại -> null", () => {

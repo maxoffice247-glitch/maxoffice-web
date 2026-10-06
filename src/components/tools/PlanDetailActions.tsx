@@ -5,7 +5,7 @@ import Link from "next/link";
 import { DownloadIcon, PhoneIcon, ShareIcon, SpinnerIcon } from "../icons";
 import type { OfferedPlan } from "@/lib/planFinder";
 import { formatVoPrice } from "@/lib/planFinder";
-import { fetchAndSaveBranchQuote, shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
+import { fetchBranchQuoteBlob, saveBranchQuote, shareQuotePng, useCanShareFiles } from "@/lib/waitForImages";
 
 /**
  * TRƯỚC ĐÂY: dựng 1 bản PlanQuoteCard off-screen rồi dùng html-to-image để
@@ -79,7 +79,13 @@ export default function PlanDetailActions({ plan, branchPlanCount = 1 }: { plan:
   const handleAllPlans = async () => {
     setAllStatus("generating");
     try {
-      await fetchAndSaveBranchQuote(plan.locationSlug, `Báo giá các gói - ${plan.locationName}`, canShare);
+      const blob = await fetchBranchQuoteBlob(plan.locationSlug);
+      // Cũng hiện xem trước ngay dưới nút, như ảnh báo giá của gói này.
+      setPreviewUrl((old) => {
+        if (old) URL.revokeObjectURL(old);
+        return URL.createObjectURL(blob);
+      });
+      await saveBranchQuote(blob, plan.locationSlug, `Báo giá các gói - ${plan.locationName}`, canShare);
       setAllStatus("idle");
     } catch {
       setAllStatus("error");

@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
-import { buildBranchQuoteModel, PRICE_VAT_NOTE, type BranchQuoteModel, type BranchQuotePlan, type PromoGroup } from "@/lib/branchPlansQuote";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { buildBranchQuoteModel, isNegativeFeature, PRICE_VAT_NOTE, type BranchQuoteModel, type BranchQuotePlan, type PromoGroup } from "@/lib/branchPlansQuote";
 import {
   CARD_WIDTH,
   MARGIN_X,
@@ -18,8 +20,10 @@ import {
  * DỮ LIỆU: toàn bộ lấy qua buildBranchQuoteModel() (src/lib/branchPlansQuote.ts) — cùng nguồn với ảnh từng gói, không viết cứng giá/tên gói/ưu đãi. Không có tổng cộng,
  * không QR, không nhãn "bán chạy/khuyên dùng". Chi nhánh chỉ có 1 gói -> 404 (dùng ảnh báo giá gói). Font/logo dùng chung với route ảnh báo giá tổng hợp (quoteImageShared).
  *
- * BỐ CỤC: 2-3 gói xếp CẠNH NHAU (mỗi gói 1 cột); từ 4 gói xếp lưới 2 cột; các thẻ cùng hàng cao bằng nhau. Ưu đãi hợp đồng dài hạn gộp thành khối toàn bề ngang dưới các
- * thẻ. Satori cần chiều cao cố định nên chiều cao ước lượng theo số gói và độ dài chữ (hằng số bên dưới hiệu chỉnh bằng pixel thật; ước lượng thiên về dư).
+ * BỐ CỤC (từ trên xuống): header chung -> KHỐI GIỚI THIỆU: ảnh mặt tiền toà nhà bên trái (cùng file public/images/quote/dia-diem-{slug}.jpg với ảnh từng gói; khung theo ĐÚNG tỉ lệ
+ * ảnh — ảnh dọc hẹp, ảnh ngang rộng — nên không viền trắng/không cắt) + bên phải tên chi nhánh, địa chỉ pháp lý và khung ưu đãi hợp đồng dài hạn (gộp theo nhóm gói) để khối cân với
+ * ảnh -> các thẻ gói: 2-3 gói xếp CẠNH NHAU, từ 4 gói lưới 2 cột; thẻ cùng hàng cao bằng nhau; mỗi thẻ liệt kê ĐỦ toàn bộ quyền lợi (không ẩn) -> footer. Satori cần chiều cao cố
+ * định nên chiều cao ước lượng theo số gói và độ dài chữ (hằng số hiệu chỉnh bằng pixel thật; ước lượng thiên về dư).
  */
 export const runtime = "nodejs";
 
@@ -38,13 +42,41 @@ function cardWidthFor(n: number): number {
   return Math.floor((CONTENT_WIDTH - GRID_GAP * (cols - 1)) / cols);
 }
 
-/** Số ký tự/dòng ước lượng theo bề rộng khả dụng và cỡ chữ (hệ số px/ký tự thiên về lớn để dư dòng hơn thiếu: xuống dòng theo từ làm mất 1 phần bề rộng mỗi dòng). */
-function charsPerLine(widthPx: number, fontPx: number, wide = false): number {
-  return Math.max(8, Math.floor(widthPx / (fontPx * (wide ? 0.62 : 0.56))));
+/**
+ * Ước lượng bề rộng 1 ký tự (đơn vị em) của Inter theo nhóm ký tự — đủ chính xác để mô phỏng xuống dòng theo TỪ (chữ có dấu tính theo chữ cái gốc). Hằng số hiệu chỉnh
+ * bằng chiều rộng chữ đo trên ảnh thật; phần dư an toàn nằm ở BOTTOM_SLACK (dư chỉ thành khoảng trắng trước footer, thiếu thì footer bị đẩy/cắt) — đo trên 32 chi nhánh: ước lượng thấp hơn thật tối đa ~0px, dư 9-37px trước khi cộng BOTTOM_SLACK.
+ */
+function charEm(ch: string): number {
+  const c = ch.normalize("NFD")[0] ?? ch;
+  if (c === " ") return 0.28;
+  if ("iljI.,:;'!|()/[]".includes(c)) return 0.27;
+  if ("tfrJ1-–".includes(c)) return 0.37;
+  if ("mwMW@%".includes(c)) return 0.85;
+  if (c >= "0" && c <= "9") return 0.62;
+  if (c >= "A" && c <= "Z") return 0.66;
+  if (c.charCodeAt(0) > 0x2000) return 0.75; // ký hiệu lạ (•, ✓, emoji...)
+  return 0.55;
 }
 
-function lines(text: string, widthPx: number, fontPx: number, wide = false): number {
-  return Math.max(1, Math.ceil(text.length / charsPerLine(widthPx, fontPx, wide)));
+const SAFETY = 1;
+const BOTTOM_SLACK = 20;
+
+/** Số dòng sau khi xuống dòng theo từ trong bề rộng widthPx ở cỡ chữ fontPx (bold nở thêm ~7%). */
+function lines(text: string, widthPx: number, fontPx: number, bold = false): number {
+  const scale = fontPx * SAFETY * (bold ? 1.07 : 1);
+  const spaceW = charEm(" ") * scale;
+  let count = 1;
+  let x = 0;
+  for (const word of text.split(" ")) {
+    const w = [...word].reduce((sum, ch) => sum + charEm(ch) * scale, 0);
+    if (x === 0) x = w;
+    else if (x + spaceW + w <= widthPx) x += spaceW + w;
+    else {
+      count++;
+      x = w;
+    }
+  }
+  return count;
 }
 
 function planCardHeight(plan: BranchQuotePlan, cardW: number): number {
@@ -55,23 +87,73 @@ function planCardHeight(plan: BranchQuotePlan, cardW: number): number {
   h += 48; // giá
   h += 22; // ghi chú VAT
   h += 16 + 1 + 16; // đường kẻ
-  if (plan.highlights.includesPlanName) h += lines(`Gồm tất cả quyền lợi gói ${plan.highlights.includesPlanName}, thêm:`, inner, 16, true) * 21 + 10;
-  h += plan.highlights.items.reduce((sum, f, i) => sum + lines(f, featureW, FONT) * FEATURE_LINE_H + (i > 0 ? FEATURE_GAP : 0), 0);
-  if (plan.highlights.more > 0) h += 10 + 21;
+  h += plan.features.reduce((sum, f, i) => sum + lines(f, featureW, FONT) * FEATURE_LINE_H + (i > 0 ? FEATURE_GAP : 0), 0);
   if (plan.oneTimeFeeLine) h += 14 + 1 + 14 + lines(plan.oneTimeFeeLine, inner, 16, true) * 22;
   return h + 6; // dư an toàn: Satori cần chiều cao cố định, thà thừa vài px còn hơn ép/cắt chữ
 }
 
-function promoBlockHeight(groups: PromoGroup[]): number {
+/** Chiều cao khung ưu đãi (đặt ở cột phải cạnh ảnh mặt tiền) với bề rộng chữ bodyW. */
+function promoBlockHeight(groups: PromoGroup[], bodyW: number): number {
   if (groups.length === 0) return 0;
-  const bodyW = CONTENT_WIDTH - 40;
-  let h = 32 + 2 + 36 + 22; // lề trên + viền + padding + tiêu đề
+  let h = 2 + 36 + 22; // viền + padding + tiêu đề
   for (const g of groups) {
-    if (groups.length > 1) h += 6 + 22; // nhãn nhóm
+    if (groups.length > 1) h += 6 + lines(`Áp dụng cho gói ${g.planNames.join(", ")}`, bodyW, 16, true) * 22;
     for (const l of g.lines) h += 6 + lines(l, bodyW - 14, 16) * 22;
     h += 8;
   }
-  return h;
+  return h + 6;
+}
+
+const PHOTO_MIN_W = 210;
+const PHOTO_MAX_W = 400;
+const INTRO_GAP = 28;
+const INTRO_MIN_H = 330;
+const INTRO_MAX_H = 470;
+
+/** Chiều cao cột phải (tên + địa chỉ + khung ưu đãi) khi cột rộng rightW; đã gồm khoảng dư an toàn. */
+function rightColHeight(model: BranchQuoteModel, rightW: number): number {
+  return (
+    lines(model.locationName, rightW, 32, true) * 38 +
+    6 +
+    lines(model.address, rightW, 18) * 26 +
+    (model.promoGroups.length > 0 ? 20 + promoBlockHeight(model.promoGroups, rightW - 42) + 24 : 0)
+  );
+}
+
+/**
+ * Bố cục khối giới thiệu: ảnh mặt tiền theo ĐÚNG tỉ lệ thật (aspect = w/h) và cao bằng cả cột phải, nên ảnh và cột chữ cùng mép trên/dưới. Cột phải càng hẹp (ảnh càng rộng)
+ * càng cao, nên lặp vài vòng cho hội tụ; ảnh dọc hẹp -> cột chữ rộng và thấp, ảnh ngang -> ảnh rộng tối đa 400 (nếu chiều cao còn dư thì đệm nền nhạt 2 bên trên/dưới).
+ */
+function introLayout(model: BranchQuoteModel, aspect: number): { photoW: number; introH: number } {
+  let h = INTRO_MIN_H;
+  let photoW = PHOTO_MIN_W;
+  for (let i = 0; i < 4; i++) {
+    photoW = Math.min(PHOTO_MAX_W, Math.max(PHOTO_MIN_W, Math.round(h * aspect)));
+    const need = Math.min(INTRO_MAX_H, Math.max(INTRO_MIN_H, rightColHeight(model, CONTENT_WIDTH - photoW - INTRO_GAP)));
+    if (need <= h) break;
+    h = need;
+  }
+  const introH = Math.max(h, rightColHeight(model, CONTENT_WIDTH - photoW - INTRO_GAP));
+  return { photoW, introH };
+}
+
+/** Đọc tỉ lệ w/h từ header JPEG (đoạn SOFn). null nếu không đọc được. */
+function jpegAspect(buf: Buffer): number | null {
+  let i = 2;
+  while (i + 9 < buf.length) {
+    if (buf[i] !== 0xff) {
+      i++;
+      continue;
+    }
+    const m = buf[i + 1];
+    if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) {
+      const h = buf.readUInt16BE(i + 5);
+      const w = buf.readUInt16BE(i + 7);
+      return h > 0 ? w / h : null;
+    }
+    i += 2 + buf.readUInt16BE(i + 2);
+  }
+  return null;
 }
 
 function layoutHeights(model: BranchQuoteModel) {
@@ -85,15 +167,13 @@ function layoutHeights(model: BranchQuoteModel) {
   return { cols, cardW, rows, gridH };
 }
 
-function PlanCard({ plan, width, minHeight }: { plan: BranchQuotePlan; width: number; minHeight: number }) {
-  const hl = plan.highlights;
+function PlanCard({ plan, width }: { plan: BranchQuotePlan; width: number }) {
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         width,
-        height: minHeight,
         borderRadius: 20,
         backgroundColor: QUOTE_COLOR.bgTint,
         padding: CARD_PAD,
@@ -105,38 +185,31 @@ function PlanCard({ plan, width, minHeight }: { plan: BranchQuotePlan; width: nu
       <div style={{ display: "flex", flexShrink: 0, fontSize: 40, fontWeight: 800, color: QUOTE_COLOR.accent, lineHeight: "48px" }}>{plan.priceText}</div>
       <div style={{ display: "flex", flexShrink: 0, fontSize: 16, color: QUOTE_COLOR.bodyText, lineHeight: "22px" }}>{PRICE_VAT_NOTE}</div>
       <div style={{ display: "flex", flexDirection: "column", flexShrink: 0, marginTop: 16, paddingTop: 16, borderTop: `1px solid ${QUOTE_COLOR.line}` }}>
-        {hl.includesPlanName && (
-          <div style={{ display: "flex", fontSize: 16, fontWeight: 700, color: QUOTE_COLOR.navy, lineHeight: "21px", marginBottom: 10 }}>
-            Gồm tất cả quyền lợi gói {hl.includesPlanName}, thêm:
-          </div>
-        )}
-        {hl.items.map((f, i) => (
-          <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: i > 0 ? FEATURE_GAP : 0 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 24,
-                height: 24,
-                flexShrink: 0,
-                borderRadius: 9999,
-                backgroundColor: QUOTE_COLOR.primaryTint,
-                color: QUOTE_COLOR.primary,
-                fontSize: 14,
-                fontWeight: 700,
-              }}
-            >
-              ✓
+        {plan.features.map((f, i) => {
+          const no = isNegativeFeature(f);
+          return (
+            <div key={f} style={{ display: "flex", flexShrink: 0, alignItems: "flex-start", gap: 10, marginTop: i > 0 ? FEATURE_GAP : 0 }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 24,
+                  height: 24,
+                  flexShrink: 0,
+                  borderRadius: 9999,
+                  backgroundColor: no ? "#e8ecf2" : QUOTE_COLOR.primaryTint,
+                  color: no ? QUOTE_COLOR.bodyText : QUOTE_COLOR.primary,
+                  fontSize: 14,
+                  fontWeight: 700,
+                }}
+              >
+                {no ? "–" : "✓"}
+              </div>
+              <div style={{ display: "flex", flex: 1, fontSize: FONT, color: no ? QUOTE_COLOR.bodyText : QUOTE_COLOR.ink, lineHeight: `${FEATURE_LINE_H}px` }}>{f}</div>
             </div>
-            <div style={{ display: "flex", flex: 1, fontSize: FONT, color: QUOTE_COLOR.ink, lineHeight: `${FEATURE_LINE_H}px` }}>{f}</div>
-          </div>
-        ))}
-        {hl.more > 0 && (
-          <div style={{ display: "flex", marginTop: 10, fontSize: 16, fontStyle: "italic", color: QUOTE_COLOR.bodyText, lineHeight: "21px" }}>
-            + {hl.more} quyền lợi khác
-          </div>
-        )}
+          );
+        })}
       </div>
       {plan.oneTimeFeeLine && (
         <div
@@ -166,8 +239,7 @@ function PromoBlock({ groups }: { groups: PromoGroup[] }) {
       style={{
         display: "flex",
         flexDirection: "column",
-        margin: `0 ${MARGIN_X}px`,
-        marginTop: 32,
+        flexShrink: 0,
         borderRadius: 16,
         border: "1px solid rgba(220,53,48,0.25)",
         backgroundColor: "rgba(220,53,48,0.08)",
@@ -202,14 +274,22 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
     return new Response("Chi nhánh này chỉ có 1 gói — dùng ảnh báo giá của gói đó (/api/quote-image/{slug}/{plan}).", { status: 404 });
   }
 
-  const [fonts, logoSrc] = await Promise.all([loadQuoteImageFonts(), loadQuoteImageLogo()]);
+  const facadePath = join(process.cwd(), "public", "images", "quote", `dia-diem-${slug}.jpg`);
+  const [fonts, logoSrc, facadeBuf] = await Promise.all([loadQuoteImageFonts(), loadQuoteImageLogo(), readFile(facadePath).catch(() => null)]);
+  const facadeSrc = facadeBuf ? `data:image/jpeg;base64,${facadeBuf.toString("base64")}` : null;
   const dateLabel = `Ngày tạo: ${new Date().toLocaleDateString("vi-VN")}`;
 
-  const { cols, cardW, rows, gridH } = layoutHeights(model);
+  // Khối giới thiệu: ảnh mặt tiền (trái) + tên/địa chỉ/ưu đãi (phải).
+  const aspect = (facadeBuf && jpegAspect(facadeBuf)) || 0.75;
+  const { photoW, introH } = introLayout(model, aspect);
+  // ảnh vừa khít khung theo tỉ lệ thật (contain): chiều cao ảnh = min(introH, photoW / aspect)
+  const photoImgH = Math.min(introH, Math.round(photoW / aspect));
+  const photoImgW = Math.round(photoImgH * aspect);
+
+  const { cols, cardW, gridH } = layoutHeights(model);
   const HEADER_H = 148;
-  const BRANCH_BLOCK_H = 36 + 6 + lines(model.address, CONTENT_WIDTH, 18) * 26 + 28;
   const FOOTER_H = 140;
-  const height = HEADER_H + BRANCH_BLOCK_H + gridH + promoBlockHeight(model.promoGroups) + FOOTER_H;
+  const height = HEADER_H + 8 + introH + 28 + gridH + 32 + BOTTOM_SLACK + FOOTER_H;
 
   // Thẻ xếp theo hàng; mỗi hàng có chiều cao = thẻ cao nhất trong hàng (các thẻ cùng hàng cao bằng nhau).
   const rowsOfPlans: BranchQuotePlan[][] = [];
@@ -220,23 +300,49 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
       <div style={{ width: CARD_WIDTH, height, display: "flex", flexDirection: "column", backgroundColor: "#ffffff", fontFamily: "Inter" }}>
         <QuoteHeaderRow logoSrc={logoSrc} badgeLabel="Bảng giá văn phòng ảo" dateLabel={dateLabel} />
 
-        <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px` }}>
-          <div style={{ display: "flex", fontSize: 32, fontWeight: 800, color: QUOTE_COLOR.navy, lineHeight: "36px" }}>{model.locationName}</div>
-          <div style={{ display: "flex", marginTop: 6, fontSize: 18, color: QUOTE_COLOR.bodyText, lineHeight: "26px" }}>{model.address}</div>
+        <div style={{ display: "flex", flexDirection: "row", gap: INTRO_GAP, margin: `0 ${MARGIN_X}px`, marginTop: 8, height: introH }}>
+          {facadeSrc && (
+            <div
+              style={{
+                display: "flex",
+                width: photoW,
+                height: introH,
+                flexShrink: 0,
+                borderRadius: 16,
+                backgroundColor: QUOTE_COLOR.bgTint,
+                overflow: "hidden",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={facadeSrc} alt="" width={photoImgW} height={photoImgH} style={{ objectFit: "contain" }} />
+            </div>
+          )}
+          {/* Tên + địa chỉ ở trên, khung ưu đãi ở dưới: hai mép khớp mép trên/dưới của ảnh mặt tiền. */}
+          <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between" }}>
+            <div style={{ display: "flex", flexDirection: "column", flexShrink: 0 }}>
+              <div style={{ display: "flex", fontSize: 32, fontWeight: 800, color: QUOTE_COLOR.navy, lineHeight: "38px" }}>{model.locationName}</div>
+              <div style={{ display: "flex", marginTop: 6, fontSize: 18, color: QUOTE_COLOR.bodyText, lineHeight: "26px" }}>{model.address}</div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", marginTop: 20 }}>
+              <PromoBlock groups={model.promoGroups} />
+            </div>
+          </div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: GRID_GAP, margin: `0 ${MARGIN_X}px`, marginTop: 28 }}>
           {rowsOfPlans.map((row, ri) => (
+            // alignItems stretch (mặc định): thẻ cùng hàng cao bằng nhau theo nội dung THẬT; phần ước lượng dư dồn vào khoảng trắng trước footer.
             <div key={ri} style={{ display: "flex", flexDirection: "row", gap: GRID_GAP }}>
               {row.map((plan) => (
-                <PlanCard key={plan.planKey} plan={plan} width={cardW} minHeight={rows[ri]} />
+                <PlanCard key={plan.planKey} plan={plan} width={cardW} />
               ))}
             </div>
           ))}
         </div>
 
-        <PromoBlock groups={model.promoGroups} />
-
+        <div style={{ display: "flex", flex: 1 }} />
         <QuoteFooterRow hotlineIcon />
       </div>
     ),

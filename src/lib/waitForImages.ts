@@ -92,18 +92,23 @@ export function useCanShareFiles(): boolean {
   return useSyncExternalStore(subscribeNever, canShareFiles, getServerCanShareFiles);
 }
 
-/**
- * Tải ảnh báo giá "tất cả các gói của chi nhánh" (GET /api/quote-image/{slug}/tat-ca)
- * rồi chia sẻ (di động có Web Share file) hoặc tải về — cùng cách làm ở
- * PlanDetailActions/PlanGroupDetailActions. Trả về blob để nơi gọi dựng
- * xem trước nếu cần; ném lỗi nếu server không trả ảnh.
- */
-export async function fetchAndSaveBranchQuote(slug: string, shareTitle: string, canShare: boolean): Promise<Blob> {
+/** Tên file tải về của ảnh "Báo giá tất cả các gói" (cùng kiểu `bao-gia-<slug>-...` của ảnh từng gói). */
+export const branchQuoteFilename = (slug: string) => `bao-gia-${slug}-tat-ca-goi.png`;
+
+/** Tải ảnh báo giá "tất cả các gói của chi nhánh" (GET /api/quote-image/{slug}/tat-ca); ném lỗi nếu server không trả ảnh. */
+export async function fetchBranchQuoteBlob(slug: string): Promise<Blob> {
   const res = await fetch(`/api/quote-image/${slug}/tat-ca`);
   if (!res.ok) throw new Error(`Server trả về lỗi ${res.status} khi tạo ảnh báo giá.`);
-  const blob = await res.blob();
-  const filename = `bao-gia-${slug}-tat-ca-goi.png`;
-  if (canShare && (await shareQuotePng(blob, filename, shareTitle))) return blob;
+  return res.blob();
+}
+
+/**
+ * Lưu ảnh: di động có Web Share file thì mở sheet chia sẻ, ngược lại (hoặc nếu chia sẻ thất bại ngoài Huỷ) tải file về — cùng cách làm ở
+ * PlanDetailActions/PlanGroupDetailActions.
+ */
+export async function saveBranchQuote(blob: Blob, slug: string, shareTitle: string, canShare: boolean): Promise<void> {
+  const filename = branchQuoteFilename(slug);
+  if (canShare && (await shareQuotePng(blob, filename, shareTitle))) return;
   const blobUrl = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.download = filename;
@@ -111,5 +116,4 @@ export async function fetchAndSaveBranchQuote(slug: string, shareTitle: string, 
   link.click();
   // Trì hoãn revoke — thu hồi ngay có thể huỷ tải trên vài trình duyệt (Safari).
   setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
-  return blob;
 }

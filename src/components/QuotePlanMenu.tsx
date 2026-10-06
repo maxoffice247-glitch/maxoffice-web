@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { ChevronDownIcon, DownloadIcon, ShareIcon, SpinnerIcon } from "./icons";
-import { fetchAndSaveBranchQuote, useCanShareFiles } from "@/lib/waitForImages";
+import { fetchBranchQuoteBlob, saveBranchQuote, useCanShareFiles } from "@/lib/waitForImages";
 
 export type QuotePlanOption = { key: string; name: string };
 
@@ -26,14 +27,34 @@ export type QuotePlanOption = { key: string; name: string };
  *
  * Khi chi nhánh có từ 2 gói trở lên, đầu dropdown có thêm mục "Báo giá tất cả
  * các gói" — tải/chia sẻ 1 ảnh so sánh mọi gói của chi nhánh
- * (/api/quote-image/{slug}/tat-ca) để gửi khách mới tìm hiểu. Chi nhánh chỉ
- * có 1 gói thì route đó trả 404 nên mục này không hiện.
+ * (/api/quote-image/{slug}/tat-ca) để gửi khách mới tìm hiểu. Bấm mục này tạo
+ * ảnh rồi mở hộp XEM TRƯỚC ảnh (như "Xem trước ảnh vừa tạo" ở trang chi tiết
+ * gói) với nút Chia sẻ/Tải ảnh. Chi nhánh chỉ có 1 gói thì route đó trả 404
+ * nên mục này không hiện.
  */
 export default function QuotePlanMenu({ slug, plans }: { slug: string; plans: QuotePlanOption[] }) {
   const [open, setOpen] = useState(false);
   const [allStatus, setAllStatus] = useState<"idle" | "generating" | "error">("idle");
   const canShare = useCanShareFiles();
+  const [preview, setPreview] = useState<{ url: string; blob: Blob } | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+
+  // Hộp xem trước: Esc để đóng, khoá cuộn nền, thu hồi blob URL khi đóng.
+  useEffect(() => {
+    if (!preview) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPreview(null);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const url = preview.url;
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      URL.revokeObjectURL(url);
+    };
+  }, [preview]);
 
   useEffect(() => {
     if (!open) return;
@@ -56,7 +77,8 @@ export default function QuotePlanMenu({ slug, plans }: { slug: string; plans: Qu
   const handleAllPlans = async () => {
     setAllStatus("generating");
     try {
-      await fetchAndSaveBranchQuote(slug, "Báo giá các gói văn phòng ảo", canShare);
+      const blob = await fetchBranchQuoteBlob(slug);
+      setPreview({ url: URL.createObjectURL(blob), blob });
       setAllStatus("idle");
       setOpen(false);
     } catch {
@@ -66,6 +88,49 @@ export default function QuotePlanMenu({ slug, plans }: { slug: string; plans: Qu
 
   return (
     <div ref={rootRef} className="relative shrink-0">
+      {preview &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Xem trước báo giá tất cả các gói"
+            className="fixed inset-0 z-[300] flex items-center justify-center bg-navy/60 p-3 sm:p-6"
+            onClick={() => setPreview(null)}
+          >
+            <div
+              className="flex max-h-full w-full max-w-[560px] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_24px_60px_rgba(11,31,58,0.35)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
+                <p className="text-[14px] font-bold text-navy">Xem trước báo giá tất cả các gói</p>
+                <button
+                  type="button"
+                  onClick={() => setPreview(null)}
+                  aria-label="Đóng xem trước"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[22px] leading-none text-body-text hover:bg-bg-tint"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto bg-bg-tint p-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={preview.url} alt="Xem trước báo giá tất cả các gói" className="w-full rounded-lg border border-line bg-white" />
+              </div>
+              <div className="border-t border-line p-3">
+                <button
+                  type="button"
+                  onClick={() => saveBranchQuote(preview.blob, slug, "Báo giá các gói văn phòng ảo", canShare).catch(() => {})}
+                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-[15px] font-bold text-white hover:bg-accent-dark"
+                >
+                  {canShare ? <ShareIcon className="h-4 w-4" /> : <DownloadIcon className="h-4 w-4" />}
+                  {canShare ? "Chia sẻ báo giá" : "Tải ảnh báo giá"}
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
