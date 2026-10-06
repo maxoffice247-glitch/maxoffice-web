@@ -909,7 +909,7 @@ function scheduleHeight(plan: InstallmentPlan | null, lang: QuoteLang): number {
 
 /** Khối "Lịch thanh toán" (đặt cọc) — chỉ tính trên TỔNG ĐÃ GỒM VAT, không có dòng VAT/hoá đơn riêng từng đợt. Dòng nhấn (màu đỏ, đậm): đợt 1 = tiền cọc (số trong mã QR
  * công ty); đợt 2 = số cần thanh toán đủ G (= tổng các mã QR). */
-function PaymentSchedule({ plan, lang, bare }: { plan: InstallmentPlan; lang: QuoteLang; bare?: boolean }) {
+function PaymentSchedule({ plan, lang, bare, fill }: { plan: InstallmentPlan; lang: QuoteLang; bare?: boolean; fill?: boolean }) {
   const t = paymentScheduleText(lang);
   const rows = scheduleRows(plan, lang);
   return (
@@ -919,6 +919,8 @@ function PaymentSchedule({ plan, lang, bare }: { plan: InstallmentPlan; lang: Qu
         flexDirection: "column",
         // `bare`: nằm trong hàng ghép — lề do hàng quyết định.
         ...(bare ? { alignSelf: "stretch" } : { margin: `0 ${MARGIN_X}px`, marginTop: SCHEDULE_TOP_MARGIN }),
+        // `fill` (flexGrow, KHÔNG dùng flex:1 — flex-basis 0 làm Satori tính chiều cao hàng = 0): đứng cạnh ô tổng cùng hàng -> cao kéo giãn theo khối cao hơn, các dòng căn đều trong khối.
+        ...(fill ? { flexGrow: 1, justifyContent: "space-between" } : null),
         borderRadius: 16,
         backgroundColor: QUOTE_COLOR.bgTint,
         padding: "20px 24px",
@@ -1032,7 +1034,18 @@ function grandTotalHeight(maxOfficeLines: ResolvedQuoteLine[], lang: QuoteLang):
 }
 
 /** Khối tổng nhóm MAX OFFICE (nền accent đỏ, cùng TOTAL_BOX_BG với ô tổng gộp) — chỉ hiện khi báo giá KHÔNG có nhóm thu hộ (khi có cả 2 nhóm, ô tổng gộp OverallTotal là ô tổng duy nhất). */
-function GrandTotal({ maxOfficeLines, lang, bare }: { maxOfficeLines: ResolvedQuoteLine[]; lang: QuoteLang; bare?: boolean }) {
+function GrandTotal({
+  maxOfficeLines,
+  lang,
+  bare,
+  stretch,
+}: {
+  maxOfficeLines: ResolvedQuoteLine[];
+  lang: QuoteLang;
+  bare?: boolean;
+  /** "width": xếp chồng với khối Lịch thanh toán cùng cột -> ô tổng rộng đúng bằng cột (mép trái/phải thẳng hàng), số tiền căn phải như các dòng của Lịch thanh toán. */
+  stretch?: "width";
+}) {
   const { total, show, hasExcluded } = computeGrandTotal(maxOfficeLines);
   if (!show) return null;
   return (
@@ -1047,8 +1060,9 @@ function GrandTotal({ maxOfficeLines, lang, bare }: { maxOfficeLines: ResolvedQu
       <div
         style={{
           display: "flex",
-          alignSelf: "flex-start",
+          alignSelf: stretch ? "stretch" : "flex-start",
           alignItems: "center",
+          justifyContent: stretch ? "space-between" : "flex-start",
           gap: 20,
           borderRadius: 14,
           backgroundColor: TOTAL_BOX_BG,
@@ -1095,6 +1109,11 @@ function overallTotalHeight(show: boolean, lang: QuoteLang, amount: number, hasE
   );
 }
 
+/** Chiều cao phần chú thích dưới ô tổng gộp (2 dòng tách theo tài khoản nhận + ghi chú nếu có dịch vụ chưa tách được số) — đúng các thành phần cuối của overallTotalHeight(). */
+function overallNotesH(hasExcluded: boolean): number {
+  return 6 + OVERALL_TOTAL_SPLIT_NOTE_H + (hasExcluded ? OVERALL_TOTAL_EXCLUDED_NOTE_H : 0);
+}
+
 /** Ô tổng GỘP CẢ 2 nhóm — CHỈ hiện khi báo giá có ĐỦ CẢ "Dịch vụ MAX OFFICE" lẫn "Dịch vụ thu hộ" (nếu chỉ có 1 nhóm, khối tổng của nhóm đó đã đủ), xem
  * showOverallTotal ở POST(). Khi đó đây là ô tổng DUY NHẤT: nhãn "Tổng toàn bộ báo giá MAX OFFICE và thu hộ" + số tiền G cùng hàng, dòng "Bằng chữ" (chỉ bản tiếng
  * Việt) nằm NGAY TRONG ô; dưới ô là 2 dòng chú thích nhỏ tách số tiền theo tài khoản nhận (và ghi chú nếu có dịch vụ chưa tách được số). */
@@ -1105,6 +1124,8 @@ function OverallTotal({
   hasExcluded,
   lang,
   colWidth,
+  stretch,
+  section = "all",
 }: {
   amount: number;
   maxOfficeAmount: number;
@@ -1113,6 +1134,10 @@ function OverallTotal({
   lang: QuoteLang;
   /** Có giá trị = nằm trong hàng ghép (không lề ngoài), rộng đúng `colWidth`; nhãn tự xuống dòng nếu không vừa cùng hàng với số tiền. */
   colWidth?: number;
+  /** "width": xếp chồng với Lịch thanh toán cùng cột -> ô tổng rộng đúng bằng cột. "box": đứng cạnh Lịch thanh toán cùng hàng -> rộng đúng cột VÀ cao kéo giãn theo khối cao hơn (nội dung căn đều trong ô). */
+  stretch?: "width" | "box";
+  /** "box": chỉ vẽ ô đỏ; "notes": chỉ vẽ các dòng chú thích dưới ô (hàng ô tổng | Lịch thanh toán vẽ riêng 2 phần để ô đỏ cao bằng thẻ Lịch, chú thích nằm dưới hàng); mặc định "all". */
+  section?: "all" | "box" | "notes";
 }) {
   const b = overallBreakdownText(lang);
   const words = lang === "vi" ? amountToVietnameseWords(amount) : "";
@@ -1128,20 +1153,23 @@ function OverallTotal({
         display: "flex",
         flexDirection: "column",
         ...(colWidth ? { width: colWidth } : { margin: `0 ${MARGIN_X}px`, marginTop: OVERALL_TOTAL_TOP_MARGIN }),
+        ...(stretch === "box" ? { flexGrow: 1 } : null),
       }}
     >
+      {section !== "notes" && (
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          alignSelf: "flex-start",
+          alignSelf: stretch ? "stretch" : "flex-start",
+          ...(stretch === "box" ? { flexGrow: 1, justifyContent: "space-around" } : null),
           maxWidth: colWidth ?? CONTENT_WIDTH,
           borderRadius: 14,
           backgroundColor: TOTAL_BOX_BG,
           padding: "14px 20px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 20, ...(stretch ? { justifyContent: "space-between" } : null) }}>
           <div style={{ display: "flex", fontSize: 15, fontWeight: 700, color: TOTAL_BOX_TEXT }}>{qt("overallTotalLabel", lang)}</div>
           <div style={{ display: "flex", flexShrink: 0, fontSize: 24, fontWeight: 800, color: TOTAL_BOX_TEXT }}>{formatQuoteCurrency(amount, lang)}</div>
         </div>
@@ -1151,9 +1179,10 @@ function OverallTotal({
           </div>
         )}
       </div>
-      {noteRow(b.company, maxOfficeAmount, 6)}
-      {noteRow(b.thuHo, thuHoAmount, 2)}
-      {hasExcluded && (
+      )}
+      {section !== "box" && noteRow(b.company, maxOfficeAmount, 6)}
+      {section !== "box" && noteRow(b.thuHo, thuHoAmount, 2)}
+      {section !== "box" && hasExcluded && (
         <div style={{ display: "flex", marginTop: 6, paddingLeft: 4, fontSize: 12, fontStyle: "italic", color: QUOTE_COLOR.bodyText }}>
           {qt("grandTotalExcludedNote", lang)}
         </div>
@@ -1605,7 +1634,9 @@ export async function POST(req: Request) {
   } else if (moneyLayout === "totals-schedule" && installment) {
     moneyHeight =
       MONEY_ROW_TOP_MARGIN +
-      Math.max(totalsContentH(TS_LEFT_W), scheduleContentHeight(installment, lang, "narrow")) +
+      // ô đỏ và thẻ Lịch cao bằng nhau (khối cao hơn quyết định); chú thích của ô tổng nằm dưới hàng
+      Math.max(totalsContentH(TS_LEFT_W) - overallNotesH(hasExcludedMaxOffice), scheduleContentHeight(installment, lang, "narrow")) +
+      overallNotesH(hasExcludedMaxOffice) +
       grandSlack +
       qrSectionHeight(maxOfficeQrDataUri, thuHoQrDataUri);
   } else {
@@ -1713,7 +1744,7 @@ export async function POST(req: Request) {
             }}
           >
             <div style={{ display: "flex", flexDirection: "column", width: QR_SIDE_LEFT_W, flexShrink: 0, gap: MONEY_COL_GAP }}>
-              {grandShown && <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} bare />}
+              {grandShown && <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} bare stretch={installment ? "width" : undefined} />}
               {showOverallTotal && (
                 <OverallTotal
                   amount={overallTotalAmount}
@@ -1722,6 +1753,7 @@ export async function POST(req: Request) {
                   hasExcluded={hasExcludedMaxOffice}
                   lang={lang}
                   colWidth={QR_SIDE_LEFT_W}
+                  stretch={installment ? "width" : undefined}
                 />
               )}
               {installment && <PaymentSchedule plan={installment} lang={lang} bare />}
@@ -1738,33 +1770,38 @@ export async function POST(req: Request) {
         )}
 
         {moneyLayout === "totals-schedule" && installment && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              gap: MONEY_ROW_GAP,
-              margin: `0 ${MARGIN_X}px`,
-              marginTop: MONEY_ROW_TOP_MARGIN,
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column", width: TS_LEFT_W, flexShrink: 0 }}>
-              <OverallTotal
-                amount={overallTotalAmount}
-                maxOfficeAmount={maxOfficeQrAmount ?? 0}
-                thuHoAmount={thuHoQrAmount ?? 0}
-                hasExcluded={hasExcludedMaxOffice}
-                lang={lang}
-                colWidth={TS_LEFT_W}
-              />
+          // Hàng [ô tổng | Lịch thanh toán]: hai khối CAO BẰNG NHAU (kéo giãn theo khối cao hơn); các dòng chú thích của ô tổng nằm DƯỚI hàng, trong bề rộng cột trái.
+          <div style={{ display: "flex", flexDirection: "column", margin: `0 ${MARGIN_X}px`, marginTop: MONEY_ROW_TOP_MARGIN }}>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", gap: MONEY_ROW_GAP }}>
+              <div style={{ display: "flex", flexDirection: "column", width: TS_LEFT_W, flexShrink: 0 }}>
+                <OverallTotal
+                  amount={overallTotalAmount}
+                  maxOfficeAmount={maxOfficeQrAmount ?? 0}
+                  thuHoAmount={thuHoQrAmount ?? 0}
+                  hasExcluded={hasExcludedMaxOffice}
+                  lang={lang}
+                  colWidth={TS_LEFT_W}
+                  stretch="box"
+                  section="box"
+                />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", width: TS_RIGHT_W, flexShrink: 0 }}>
+                <PaymentSchedule plan={installment} lang={lang} bare fill />
+              </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", width: TS_RIGHT_W, flexShrink: 0 }}>
-              <PaymentSchedule plan={installment} lang={lang} bare />
-            </div>
+            <OverallTotal
+              amount={overallTotalAmount}
+              maxOfficeAmount={maxOfficeQrAmount ?? 0}
+              thuHoAmount={thuHoQrAmount ?? 0}
+              hasExcluded={hasExcludedMaxOffice}
+              lang={lang}
+              colWidth={TS_LEFT_W}
+              section="notes"
+            />
           </div>
         )}
 
-        {moneyLayout === "stack" && !showOverallTotal && <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} />}
+        {moneyLayout === "stack" && !showOverallTotal && <GrandTotal maxOfficeLines={maxOfficeLines} lang={lang} stretch={installment ? "width" : undefined} />}
 
         {moneyLayout === "stack" && showOverallTotal && (
           <OverallTotal
@@ -1773,6 +1810,7 @@ export async function POST(req: Request) {
             thuHoAmount={thuHoQrAmount ?? 0}
             hasExcluded={hasExcludedMaxOffice}
             lang={lang}
+            stretch={installment ? "width" : undefined}
           />
         )}
 
